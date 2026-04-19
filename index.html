@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🇫🇷 Mon Univers Français — Master Learning Portal</title>
+    <link rel="icon" type="image/png" href="images/favicon.png">
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box}
+        body{
+            font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Oxygen,Ubuntu,sans-serif;
+            line-height:1.6;color:#333;background:#f0f2f5;min-height:100vh;
+        }
+        .container{max-width:1100px;margin:0 auto;background:#fff;min-height:100vh;box-shadow:0 0 40px rgba(0,0,0,0.08)}
+
+        /* ── Hero ── */
+        .hero{
+            background:linear-gradient(135deg,#002395 0%,#0a3d91 40%,#ED2939 100%);
+            color:#fff;padding:36px 40px 30px;text-align:center;position:relative;overflow:hidden;
+        }
+        .hero::before{
+            content:'';position:absolute;inset:0;
+            background:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.04'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E") repeat;
+            pointer-events:none;
+        }
+        .hero-flag{font-size:2.4rem;margin-bottom:8px;display:block;filter:drop-shadow(0 3px 8px rgba(0,0,0,0.25))}
+        .hero h1{font-size:1.7rem;font-weight:700;letter-spacing:-0.3px;margin-bottom:6px;text-shadow:0 2px 6px rgba(0,0,0,0.2)}
+        .hero p{font-size:0.92rem;opacity:0.9;max-width:600px;margin:0 auto;line-height:1.5}
+
+        /* ── Quick Nav ── */
+        .quick-nav{
+            display:flex;flex-wrap:wrap;gap:8px;justify-content:center;
+            padding:16px 40px;background:#f8fafc;border-bottom:1px solid #e2e8f0;
+        }
+        .qn-pill{
+            font-size:0.78rem;font-weight:600;padding:6px 14px;border-radius:20px;
+            text-decoration:none;transition:all 0.2s;border:1px solid #e2e8f0;background:#fff;
+        }
+        .qn-pill:hover{transform:translateY(-1px);box-shadow:0 3px 10px rgba(0,0,0,0.08)}
+        .qn-pill.basics{color:#002395;border-color:#93c5fd}.qn-pill.basics:hover{background:#eff6ff}
+        .qn-pill.grammar{color:#5b21b6;border-color:#c4b5fd}.qn-pill.grammar:hover{background:#f5f3ff}
+        .qn-pill.vocab{color:#0d9488;border-color:#5eead4}.qn-pill.vocab:hover{background:#f0fdfa}
+        .qn-pill.practice{color:#d97706;border-color:#fcd34d}.qn-pill.practice:hover{background:#fffbeb}
+        .qn-pill.tef{color:#b91c1c;border-color:#fca5a5}.qn-pill.tef:hover{background:#fef2f2}
+        .qn-pill.speaking{color:#047857;border-color:#6ee7b7}.qn-pill.speaking:hover{background:#ecfdf5}
+
+        /* ── Content ── */
+        .main-content{padding:32px 40px 48px}
+
+        /* ── Section Group ── */
+        .section-group{margin-bottom:36px}
+        .section-header{
+            display:flex;align-items:center;gap:14px;
+            padding:14px 20px;border-radius:12px;margin-bottom:16px;
+        }
+        .section-header.basics    {background:linear-gradient(135deg,#eff6ff,#dbeafe);border:1px solid #93c5fd}
+        .section-header.grammar   {background:linear-gradient(135deg,#f5f3ff,#ede9fe);border:1px solid #c4b5fd}
+        .section-header.vocab     {background:linear-gradient(135deg,#f0fdfa,#ccfbf1);border:1px solid #5eead4}
+        .section-header.practice  {background:linear-gradient(135deg,#fffbeb,#fef3c7);border:1px solid #fcd34d}
+        .section-header.tef       {background:linear-gradient(135deg,#fef2f2,#fee2e2);border:1px solid #fca5a5}
+        .section-header.speaking  {background:linear-gradient(135deg,#ecfdf5,#d1fae5);border:1px solid #6ee7b7}
+        .sh-icon{
+            width:40px;height:40px;border-radius:11px;
+            display:flex;align-items:center;justify-content:center;
+            font-size:1.15rem;flex-shrink:0;color:#fff;
+        }
+        .sh-icon.basics   {background:linear-gradient(135deg,#002395,#1a56db)}
+        .sh-icon.grammar  {background:linear-gradient(135deg,#5b21b6,#7c3aed)}
+        .sh-icon.vocab    {background:linear-gradient(135deg,#0d9488,#14b8a6)}
+        .sh-icon.practice {background:linear-gradient(135deg,#d97706,#f59e0b)}
+        .sh-icon.tef      {background:linear-gradient(135deg,#b91c1c,#ef4444)}
+        .sh-icon.speaking {background:linear-gradient(135deg,#047857,#10b981)}
+        .sh-title{font-size:1.1rem;font-weight:600}
+        .sh-title.basics   {color:#002395}
+        .sh-title.grammar  {color:#5b21b6}
+        .sh-title.vocab    {color:#0d9488}
+        .sh-title.practice {color:#92400e}
+        .sh-title.tef      {color:#b91c1c}
+        .sh-title.speaking {color:#047857}
+        .sh-sub{font-size:0.78rem;margin-top:1px}
+        .sh-sub.basics   {color:#3b82f6}
+        .sh-sub.grammar  {color:#7c3aed}
+        .sh-sub.vocab    {color:#14b8a6}
+        .sh-sub.practice {color:#d97706}
+        .sh-sub.tef      {color:#ef4444}
+        .sh-sub.speaking {color:#10b981}
+
+        /* ── Resource Cards ── */
+        .res-grid{
+            display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:12px;
+        }
+        .res-card{
+            background:#fff;border:1px solid #e2e8f0;border-radius:12px;
+            overflow:hidden;text-decoration:none;color:inherit;
+            transition:all 0.2s ease;display:flex;flex-direction:column;position:relative;
+        }
+        .res-card::before{
+            content:'';position:absolute;left:0;top:0;bottom:0;
+            width:4px;border-radius:12px 0 0 12px;
+        }
+        .res-card.basics::before   {background:#002395}
+        .res-card.grammar::before  {background:#7c3aed}
+        .res-card.vocab::before    {background:#0d9488}
+        .res-card.practice::before {background:#d97706}
+        .res-card.tef::before      {background:#ED2939}
+        .res-card.speaking::before {background:#047857}
+        .res-card:hover{
+            transform:translateY(-2px);
+            box-shadow:0 8px 24px rgba(0,35,149,0.1);
+            border-color:#93c5fd;
+        }
+        .res-card-top{padding:16px 20px 14px;flex:1}
+        .res-emoji{font-size:1.4rem;margin-bottom:6px;display:block}
+        .res-title{font-size:0.95rem;font-weight:600;color:#1e293b;margin-bottom:4px;line-height:1.3}
+        .res-desc{font-size:0.8rem;color:#475569;line-height:1.55}
+        .res-card-bottom{
+            padding:8px 20px 10px;background:#f8fafc;border-top:1px solid #f1f5f9;
+            display:flex;align-items:center;gap:6px;
+        }
+        .res-tag{
+            font-size:0.68rem;font-weight:600;text-transform:uppercase;
+            letter-spacing:0.04em;padding:2px 8px;border-radius:4px;
+        }
+        .res-tag.ref      {background:#dbeafe;color:#1e40af}
+        .res-tag.course    {background:#ede9fe;color:#5b21b6}
+        .res-tag.app       {background:#d1fae5;color:#065f46}
+        .res-tag.exercises {background:#fef3c7;color:#92400e}
+        .res-tag.exam      {background:#fee2e2;color:#991b1b}
+        .res-tag.convo     {background:#ecfdf5;color:#047857}
+        .res-tag.arrow{
+            margin-left:auto;font-size:0.82rem;color:#94a3b8;
+            transition:transform 0.2s;
+        }
+        .res-card:hover .res-tag.arrow{transform:translateX(3px);color:#3b82f6}
+
+        /* ── Footer ── */
+        .portal-footer{
+            text-align:center;padding:20px 40px;background:#f8fafc;
+            border-top:1px solid #e2e8f0;color:#94a3b8;font-size:0.82rem;
+        }
+
+        @media(max-width:768px){
+            .hero{padding:28px 20px 22px}
+            .hero h1{font-size:1.3rem}
+            .main-content{padding:20px 16px 36px}
+            .quick-nav{padding:12px 16px}
+            .res-grid{grid-template-columns:1fr}
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+
+    <div class="hero">
+        <span class="hero-flag">🇫🇷</span>
+        <h1>Mon Univers Français</h1>
+        <p>Your complete French learning portal — tenses, grammar, vocabulary, conversation, and TEF prep, all in one place.</p>
+    </div>
+
+    <!-- Quick Jump Nav -->
+    <nav class="quick-nav">
+        <a href="#basics" class="qn-pill basics">📘 Basics &amp; Tenses</a>
+        <a href="#grammar" class="qn-pill grammar">📐 Grammar Deep Dives</a>
+        <a href="#vocab" class="qn-pill vocab">📚 Vocabulary</a>
+        <a href="#practice" class="qn-pill practice">✏️ Practice &amp; Exercises</a>
+        <a href="#tef" class="qn-pill tef">🎯 TEF Exam Prep</a>
+        <a href="#speaking" class="qn-pill speaking">🗣️ Speaking &amp; Conversation</a>
+    </nav>
+
+    <div class="main-content">
+
+        <!-- ═══════════ BASICS & TENSES ═══════════ -->
+        <div class="section-group" id="basics">
+            <div class="section-header basics">
+                <div class="sh-icon basics">📘</div>
+                <div>
+                    <div class="sh-title basics">Basics &amp; Tenses</div>
+                    <div class="sh-sub basics">Core tense systems — the foundation of all French conjugation</div>
+                </div>
+            </div>
+            <div class="res-grid">
+
+                <a href="https://shakti4640.github.io/les-temps-en-francais/index.html" target="_blank" class="res-card basics">
+                    <div class="res-card-top">
+                        <span class="res-emoji">📖</span>
+                        <div class="res-title">Les Temps en Français — Complete Tense Guide</div>
+                        <div class="res-desc">The comprehensive 21-chapter walkthrough of every French tense. From présent to subjonctif plus-que-parfait, with formulas, examples, and a visual timeline.</div>
+                    </div>
+                    <div class="res-card-bottom">
+                        <span class="res-tag course">Full Course</span>
+                        <span class="res-tag arrow">→</span>
+                    </div>
+                </a>
+
+                <a href="https://shakti4640.github.io/French-Tenses-Quick-Reference/" target="_blank" class="res-card basics">
+                    <div class="res-card-top">
+                        <span class="res-emoji">⚡</span>
+                        <div class="res-title">French Tenses — Quick Reference</div>
+                        <div class="res-desc">A compact cheat sheet of all tenses at a glance. Perfect for quick lookups — when to use each tense, how to form it, and one-line golden formulas.</div>
+                    </div>
+                    <div class="res-card-bottom">
+                        <span class="res-tag ref">Reference</span>
+                        <span class="res-tag arrow">→</span>
+                    </div>
+                </a>
+
+                <a href="https://shakti4640.github.io/french-gender-learning-app/" target="_blank" class="res-card basics">
+                    <div class="res-card-top">
+                        <span class="res-emoji">⚤</span>
+                        <div class="res-title">French Gender Learning App</div>
+                        <div class="res-desc">Interactive app to master le vs la. Practice noun genders with pattern-based rules, common exceptions, and quizzes to build intuition.</div>
+                    </div>
+                    <div class="res-card-bottom">
+                        <span class="res-tag app">Interactive App</span>
+                        <span class="res-tag arrow">→</span>
+                    </div>
+                </a>
+
+                <a href="https://shakti4640.github.io/Les-Temps-en-Francais-The-Moving-Parts-Machine/" target="_blank" class="res-card basics">
+                    <div class="res-card-top">
+                        <span class="res-emoji">⚙️</span>
+                        <div class="res-title">Les Temps en Français — The Moving Parts Machine</div>
+                        <div class="res-desc">A visual, interactive breakdown of how French tenses connect and build on each other. See the conjugation system as an interlocking machine of moving parts.</div>
+                    </div>
+                    <div class="res-card-bottom">
+                        <span class="res-tag app">Interactive</span>
+                        <span class="res-tag arrow">→</span>
+                    </div>
+                </a>
+
+            </div>
+        </div>
+
+        <!-- ═══════════ GRAMMAR DEEP DIVES ═══════════ -->
+        <div class="section-group" id="grammar">
+            <div class="section-header grammar">
+                <div class="sh-icon grammar">📐</div>
+                <div>
+                    <div class="sh-title grammar">Grammar Deep Dives</div>
+                    <div class="sh-sub grammar">Conjugations, prepositions, pronouns, connectors — the structural backbone</div>
+                </div>
+            </div>
+            <div class="res-grid">
+
+                <a href="https://shakti4640.github.io/les-Conjugaisons-et-Prepositions-en-Francais/" target="_blank" class="res-card grammar">
+                    <div class="res-card-top">
+                        <span class="res-emoji">🔗</span>
+                        <div class="res-title">Les Conjugaisons et Prépositions en Français</div>
+                        <div class="res-desc">Deep dive into conjugation patterns paired with preposition usage. How verbs connect to their complements — à, de, pour, en, and beyond.</div>
+                    </div>
+                    <div class="res-card-bottom">
+                        <span class="res-tag course">Course</span>
+                        <span class="res-tag arrow">→</span>
+                    </div>
+                </a>
+
+                <a href="https://shakti4640.github.io/French-pronouns-masterclass/" target="_blank" class="res-card grammar">
+                    <div class="res-card-top">
+                        <span class="res-emoji">👤</span>
+                        <div class="res-title">French Pronouns Masterclass</div>
+                        <div class="res-desc">Subject, object, reflexive, relative, demonstrative — every pronoun type explained with placement rules, contrasts, and real-world usage patterns.</div>
+                    </div>
+                    <div class="res-card-bottom">
+                        <span class="res-tag course">Masterclass</span>
+                        <span class="res-tag arrow">→</span>
+                    </div>
+                </a>
+
+                <a href="https://shakti4640.github.io/french-connecteurs-conjunctions-prepositions/" target="_blank" class="res-card grammar">
+                    <div class="res-card-top">
+                        <span class="res-emoji">🧩</span>
+                        <div class="res-title">Connecteurs, Conjonctions &amp; Prépositions</div>
+                        <div class="res-desc">The glue of French sentences — linking words, conjunctions, and prepositions that make your speech flow naturally. Essential for writing and TEF.</div>
+                    </div>
+                    <div class="res-card-bottom">
+                        <span class="res-tag ref">Reference</span>
+                        <span class="res-tag arrow">→</span>
+                    </div>
+                </a>
+
+                <a href="https://shakti4640.github.io/expressions-imperatives-francaises-du-quotidien/" target="_blank" class="res-card grammar">
+                    <div class="res-card-top">
+                        <span class="res-emoji">❗</span>
+                        <div class="res-title">Expressions Impératives du Quotidien</div>
+                        <div class="res-desc">Everyday imperative expressions — commands, advice, and instructions you'll actually use in daily French life. Practical and conversational.</div>
+                    </div>
+                    <div class="res-card-bottom">
+                        <span class="res-tag ref">Reference</span>
+                        <span class="res-tag arrow">→</span>
+                    </div>
+                </a>
+
+            </div>
+        </div>
+
+        <!-- ═══════════ VOCABULARY ═══════════ -->
+        <div class="section-group" id="vocab">
+            <div class="section-header vocab">
+                <div class="sh-icon vocab">📚</div>
+                <div>
+                    <div class="sh-title vocab">Vocabulary</div>
+                    <div class="sh-sub vocab">Build your word bank — thematic vocabulary for real-life situations</div>
+                </div>
+            </div>
+            <div class="res-grid">
+
+                <a href="https://shakti4640.github.io/vocabulaire-francais/" target="_blank" class="res-card vocab">
+                    <div class="res-card-top">
+                        <span class="res-emoji">🗂️</span>
+                        <div class="res-title">Vocabulaire Français</div>
+                        <div class="res-desc">Thematic vocabulary collections organized by topic — food, travel, work, emotions, and more. Build the word power you need for fluency and exams.</div>
+                    </div>
+                    <div class="res-card-bottom">
+                        <span class="res-tag ref">Reference</span>
+                        <span class="res-tag arrow">→</span>
+                    </div>
+                </a>
+
+            </div>
+        </div>
+
+        <!-- ═══════════ PRACTICE & EXERCISES ═══════════ -->
+        <div class="section-group" id="practice">
+            <div class="section-header practice">
+                <div class="sh-icon practice">✏️</div>
+                <div>
+                    <div class="sh-title practice">Practice &amp; Exercises</div>
+                    <div class="sh-sub practice">Put your knowledge to the test — articles, tenses, and targeted drills</div>
+                </div>
+            </div>
+            <div class="res-grid">
+
+                <a href="https://shakti4640.github.io/articles-francais-sur-les-temps/" target="_blank" class="res-card practice">
+                    <div class="res-card-top">
+                        <span class="res-emoji">📰</span>
+                        <div class="res-title">Articles Français sur les Temps</div>
+                        <div class="res-desc">Reading articles built around specific tenses. See each tense in context through real-world style passages — great for comprehension and pattern recognition.</div>
+                    </div>
+                    <div class="res-card-bottom">
+                        <span class="res-tag exercises">Reading Practice</span>
+                        <span class="res-tag arrow">→</span>
+                    </div>
+                </a>
+
+                <a href="https://shakti4640.github.io/l-exercices-francais-sur-les-temps/" target="_blank" class="res-card practice">
+                    <div class="res-card-top">
+                        <span class="res-emoji">🏋️</span>
+                        <div class="res-title">Exercices Français sur les Temps</div>
+                        <div class="res-desc">Targeted exercises for every tense — fill-in-the-blank, conjugation drills, and sentence transformations. Practice until the patterns become automatic.</div>
+                    </div>
+                    <div class="res-card-bottom">
+                        <span class="res-tag exercises">Exercises</span>
+                        <span class="res-tag arrow">→</span>
+                    </div>
+                </a>
+
+            </div>
+        </div>
+
+        <!-- ═══════════ TEF EXAM PREP ═══════════ -->
+        <div class="section-group" id="tef">
+            <div class="section-header tef">
+                <div class="sh-icon tef">🎯</div>
+                <div>
+                    <div class="sh-title tef">TEF Exam Preparation</div>
+                    <div class="sh-sub tef">Compréhension écrite, expression écrite, expression orale — section by section</div>
+                </div>
+            </div>
+            <div class="res-grid">
+
+                <a href="https://shakti4640.github.io/tef-expression-ecrite-section-b/" target="_blank" class="res-card tef">
+                    <div class="res-card-top">
+                        <span class="res-emoji">✍️</span>
+                        <div class="res-title">TEF Expression Écrite — Section B</div>
+                        <div class="res-desc">Structured writing practice for TEF Section B. Argumentative essays, opinion pieces, and formal letter formats with model answers and strategies.</div>
+                    </div>
+                    <div class="res-card-bottom">
+                        <span class="res-tag exam">TEF Writing</span>
+                        <span class="res-tag arrow">→</span>
+                    </div>
+                </a>
+
+                <a href="https://shakti4640.github.io/tef-expression-ecrite-section-b-other/" target="_blank" class="res-card tef">
+                    <div class="res-card-top">
+                        <span class="res-emoji">📝</span>
+                        <div class="res-title">TEF Expression Écrite — Section B (Extended)</div>
+                        <div class="res-desc">Additional writing exercises and alternative prompts for Section B. More practice scenarios to sharpen your written expression skills.</div>
+                    </div>
+                    <div class="res-card-bottom">
+                        <span class="res-tag exam">TEF Writing</span>
+                        <span class="res-tag arrow">→</span>
+                    </div>
+                </a>
+
+                <a href="https://shakti4640.github.io/tef-expression-orale-section-b/" target="_blank" class="res-card tef">
+                    <div class="res-card-top">
+                        <span class="res-emoji">🎙️</span>
+                        <div class="res-title">TEF Expression Orale — Section B</div>
+                        <div class="res-desc">Oral expression prep for TEF Section B. Practice presenting arguments, defending opinions, and structuring spoken responses under exam conditions.</div>
+                    </div>
+                    <div class="res-card-bottom">
+                        <span class="res-tag exam">TEF Speaking</span>
+                        <span class="res-tag arrow">→</span>
+                    </div>
+                </a>
+
+            </div>
+        </div>
+
+        <!-- ═══════════ SPEAKING & CONVERSATION ═══════════ -->
+        <div class="section-group" id="speaking">
+            <div class="section-header speaking">
+                <div class="sh-icon speaking">🗣️</div>
+                <div>
+                    <div class="sh-title speaking">Speaking &amp; Conversation</div>
+                    <div class="sh-sub speaking">From structured dialogues to progressive fluency — learn to actually speak</div>
+                </div>
+            </div>
+            <div class="res-grid">
+
+                <a href="https://shakti4640.github.io/Apprentissage-Conversation-Francaise-Quotidienne/" target="_blank" class="res-card speaking">
+                    <div class="res-card-top">
+                        <span class="res-emoji">💬</span>
+                        <div class="res-title">Conversation Française Quotidienne</div>
+                        <div class="res-desc">Daily conversation scenarios — greetings, shopping, restaurants, appointments, and social situations. Real dialogues you'll use every day in French life.</div>
+                    </div>
+                    <div class="res-card-bottom">
+                        <span class="res-tag convo">Conversation</span>
+                        <span class="res-tag arrow">→</span>
+                    </div>
+                </a>
+
+                <a href="https://shakti4640.github.io/Parler-Francais-progressivement/" target="_blank" class="res-card speaking">
+                    <div class="res-card-top">
+                        <span class="res-emoji">📈</span>
+                        <div class="res-title">Parler Français Progressivement</div>
+                        <div class="res-desc">A progressive speaking course — start simple and build complexity step by step. Designed to take you from basic phrases to confident, flowing conversation.</div>
+                    </div>
+                    <div class="res-card-bottom">
+                        <span class="res-tag course">Progressive Course</span>
+                        <span class="res-tag arrow">→</span>
+                    </div>
+                </a>
+
+            </div>
+        </div>
+
+    </div><!-- end .main-content -->
+
+    <div class="portal-footer">
+        16 resources · 6 categories · 1 language to master 🇫🇷
+    </div>
+
+</div>
+</body>
+</html>
