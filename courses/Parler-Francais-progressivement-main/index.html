@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="icon" type="image/png" href="images/favicon.png">
+<title>Table des matières — Parler Français B1→C1</title>
+
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --bg:#0f1117;--bg2:#161b27;--bg3:#1e2433;--bg4:#252d3d;
+  --border:#2d3548;--border2:#3a4560;
+  --text:#e8eaf0;--text2:#9aa3ba;--text3:#5e6880;
+  --accent:#4f8ef7;--accent2:#6ea8ff;--accentbg:#1a2540;
+  --gold:#d4a74a;--goldbg:#2a2010;
+  --green:#3ecf8e;--greenbg:#0d2b1e;
+  --purple:#a78bfa;--purplebg:#1e1730;
+  --red:#f87171;--redbg:#2b1010;
+  --radius:12px;--radius-sm:6px;
+}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--text);font-family:'DM Sans',system-ui,sans-serif;font-size:16px;line-height:1.7;min-height:100vh;}
+
+/* TOPBAR */
+.topbar{position:sticky;top:0;z-index:200;background:rgba(15,17,23,0.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:0 1.5rem;height:52px;display:flex;align-items:center;gap:1rem;}
+.topbar-left{display:flex;align-items:center;gap:10px;flex:1;min-width:0;}
+.toc-btn{display:flex;align-items:center;gap:6px;background:var(--bg3);border:1px solid var(--border);color:var(--text2);font-size:13px;padding:5px 12px;border-radius:var(--radius-sm);cursor:pointer;text-decoration:none;white-space:nowrap;transition:all .15s;}
+.toc-btn:hover{border-color:var(--accent);color:var(--accent);}
+.toc-btn svg{width:14px;height:14px;flex-shrink:0;}
+.ch-progress-label{font-size:12px;color:var(--text3);white-space:nowrap;}
+.topbar-track{flex:1;height:3px;background:var(--bg4);border-radius:2px;overflow:hidden;}
+.topbar-fill{height:100%;background:linear-gradient(90deg,var(--accent),var(--green));border-radius:2px;transition:width .3s;}
+.topbar-right{display:flex;align-items:center;gap:6px;}
+.nav-btn{display:flex;align-items:center;gap:5px;background:var(--bg3);border:1px solid var(--border);color:var(--text2);font-size:13px;padding:5px 12px;border-radius:var(--radius-sm);cursor:pointer;text-decoration:none;white-space:nowrap;transition:all .15s;}
+.nav-btn:hover{border-color:var(--accent);color:var(--accent);}
+.nav-btn.disabled{opacity:0.3;pointer-events:none;}
+.nav-btn svg{width:14px;height:14px;}
+
+/* HERO */
+.hero{padding:3rem 1.5rem 2rem;max-width:760px;margin:0 auto;}
+.hero-eyebrow{display:flex;align-items:center;gap:10px;margin-bottom:1rem;}
+.level-badge{font-size:11px;font-weight:500;letter-spacing:.08em;padding:3px 10px;border-radius:20px;}
+.badge-b1{background:var(--greenbg);color:var(--green);border:1px solid rgba(62,207,142,.25);}
+.badge-b2{background:var(--accentbg);color:var(--accent2);border:1px solid rgba(111,168,255,.25);}
+.badge-c1m{background:var(--goldbg);color:var(--gold);border:1px solid rgba(212,167,74,.25);}
+.badge-c1{background:var(--purplebg);color:var(--purple);border:1px solid rgba(167,139,250,.25);}
+.ch-num-tag{font-size:12px;color:var(--text3);font-weight:300;}
+.hero-title{font-family:'DM Serif Display',Georgia,serif;font-size:clamp(1.6rem,4vw,2.4rem);font-weight:400;line-height:1.2;color:var(--text);margin-bottom:.4rem;}
+.hero-title em{font-style:italic;color:var(--accent2);}
+.hero-phase{font-size:13px;color:var(--text3);font-weight:300;}
+
+/* SECTIONS */
+.content{max-width:760px;margin:0 auto;padding:0 1.5rem 4rem;}
+.section-block{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:1.75rem;margin-bottom:1.25rem;position:relative;}
+.section-block:hover{border-color:var(--border2);}
+.section-num{position:absolute;top:1.2rem;right:1.25rem;font-size:11px;color:var(--text3);font-weight:300;letter-spacing:.1em;text-transform:uppercase;}
+.section-label{display:flex;align-items:center;gap:8px;font-size:11px;font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:var(--text3);margin-bottom:1rem;}
+.label-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0;}
+.dot-gold{background:var(--gold);}
+.dot-green{background:var(--green);}
+.dot-accent{background:var(--accent);}
+.dot-purple{background:var(--purple);}
+.passage-text{font-family:'DM Serif Display',Georgia,serif;font-size:1.125rem;line-height:2;color:var(--text);font-weight:400;font-style:italic;}
+.vocab-text{font-size:.95rem;line-height:1.9;color:var(--text2);}
+.vocab-text strong{color:var(--accent2);font-weight:500;}
+.shadow-text{font-size:.95rem;line-height:1.8;color:var(--text2);}
+.shadow-text strong{color:var(--gold);font-weight:500;}
+.shadow-text em{color:var(--text);font-style:italic;}
+.challenge-inner{background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-sm);padding:1rem 1.25rem;margin-top:.75rem;font-size:1rem;color:var(--text);line-height:1.7;}
+.challenge-inner strong{color:var(--text2);font-size:.85rem;display:block;margin-bottom:.4rem;font-weight:400;letter-spacing:.05em;text-transform:uppercase;}
+
+/* BOTTOM NAV */
+.bottom-nav{max-width:760px;margin:0 auto;padding:0 1.5rem 3rem;display:flex;gap:.75rem;}
+.bottom-btn{flex:1;display:flex;align-items:center;justify-content:center;gap:8px;padding:1rem;background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);color:var(--text2);text-decoration:none;font-size:.9rem;transition:all .2s;cursor:pointer;}
+.bottom-btn:hover:not(.disabled){background:var(--bg3);border-color:var(--accent);color:var(--accent);}
+.bottom-btn.disabled{opacity:.3;pointer-events:none;}
+.bottom-btn svg{width:16px;height:16px;}
+.bottom-toc{background:var(--accentbg);border-color:rgba(79,142,247,.3);color:var(--accent2);}
+.bottom-toc:hover{background:var(--accentbg) !important;border-color:var(--accent) !important;color:var(--accent) !important;}
+
+/* KEYBOARD HINT */
+.key-hint{text-align:center;font-size:11px;color:var(--text3);padding-bottom:2rem;letter-spacing:.05em;}
+.kbd{display:inline-block;background:var(--bg3);border:1px solid var(--border2);border-radius:3px;padding:1px 6px;font-size:11px;color:var(--text2);}
+
+/* TOC PAGE */
+.toc-hero{padding:3rem 1.5rem 2rem;max-width:760px;margin:0 auto;text-align:center;}
+.toc-title{font-family:'DM Serif Display',Georgia,serif;font-size:2.2rem;color:var(--text);}
+.toc-title em{font-style:italic;color:var(--accent2);}
+.toc-sub{font-size:14px;color:var(--text3);margin-top:.5rem;font-weight:300;}
+.toc-stats{display:flex;justify-content:center;gap:2rem;margin-top:1.5rem;flex-wrap:wrap;}
+.toc-stat{text-align:center;}
+.toc-stat-n{font-family:'DM Serif Display',serif;font-size:1.8rem;color:var(--accent2);}
+.toc-stat-l{font-size:11px;color:var(--text3);letter-spacing:.1em;text-transform:uppercase;}
+.toc-content{max-width:760px;margin:0 auto;padding:0 1.5rem 4rem;}
+.phase-header{display:flex;align-items:center;gap:12px;margin:2rem 0 1rem;}
+.phase-line{flex:1;height:1px;background:var(--border);}
+.phase-title-toc{font-size:12px;font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:var(--text3);white-space:nowrap;}
+.ch-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:.6rem;}
+.ch-item{display:flex;align-items:center;gap:10px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:.65rem .9rem;text-decoration:none;transition:all .15s;color:var(--text2);}
+.ch-item:hover{border-color:var(--accent);color:var(--text);background:var(--bg3);}
+.ch-item-num{font-family:'DM Serif Display',serif;font-size:1rem;color:var(--text3);min-width:22px;line-height:1;}
+.ch-item-text{font-size:.8rem;line-height:1.3;}
+.ch-item-lvl{margin-left:auto;font-size:10px;padding:1px 6px;border-radius:20px;flex-shrink:0;}
+</style>
+
+</head>
+<body>
+
+<nav class="topbar">
+  <div class="topbar-left">
+    <span style="font-size:13px;color:var(--text2);font-weight:500;">Parler Français · B1 → C1</span>
+  </div>
+</nav>
+
+<header class="toc-hero">
+  <h1 class="toc-title">Parler <em>Français</em></h1>
+  <p class="toc-sub">Curriculum de shadowing &amp; lecture à voix haute · Du B1 au C1 · Objectif TEF Expression Orale</p>
+  <div class="toc-stats">
+    <div class="toc-stat"><div class="toc-stat-n">60</div><div class="toc-stat-l">Chapitres</div></div>
+    <div class="toc-stat"><div class="toc-stat-n">4</div><div class="toc-stat-l">Phases</div></div>
+    <div class="toc-stat"><div class="toc-stat-n">C1</div><div class="toc-stat-l">Objectif TEF</div></div>
+  </div>
+</header>
+
+<main class="toc-content">
+<div class="phase-header"><div class="phase-line"></div><span class="phase-title-toc">Phase 1 — B1 Consolidation</span><div class="phase-line"></div></div>
+<div class="ch-grid">
+<a href="chapitre_01.html" class="ch-item"><span class="ch-item-num">1</span><span class="ch-item-text">Le matin chez moi</span><span class="ch-item-lvl level-badge badge-b1">B1</span></a>
+<a href="chapitre_02.html" class="ch-item"><span class="ch-item-num">2</span><span class="ch-item-text">Au marché du dimanche</span><span class="ch-item-lvl level-badge badge-b1">B1</span></a>
+<a href="chapitre_03.html" class="ch-item"><span class="ch-item-num">3</span><span class="ch-item-text">Le temps qu'il fait</span><span class="ch-item-lvl level-badge badge-b1">B1</span></a>
+<a href="chapitre_04.html" class="ch-item"><span class="ch-item-num">4</span><span class="ch-item-text">Mon plat préféré</span><span class="ch-item-lvl level-badge badge-b1">B1</span></a>
+<a href="chapitre_05.html" class="ch-item"><span class="ch-item-num">5</span><span class="ch-item-text">Le trajet pour le travail</span><span class="ch-item-lvl level-badge badge-b1">B1</span></a>
+<a href="chapitre_06.html" class="ch-item"><span class="ch-item-num">6</span><span class="ch-item-text">Un week-end en famille</span><span class="ch-item-lvl level-badge badge-b1">B1</span></a>
+<a href="chapitre_07.html" class="ch-item"><span class="ch-item-num">7</span><span class="ch-item-text">La vie en ville</span><span class="ch-item-lvl level-badge badge-b1">B1</span></a>
+<a href="chapitre_08.html" class="ch-item"><span class="ch-item-num">8</span><span class="ch-item-text">Les vacances d'été</span><span class="ch-item-lvl level-badge badge-b1">B1</span></a>
+<a href="chapitre_09.html" class="ch-item"><span class="ch-item-num">9</span><span class="ch-item-text">Une journée au bureau</span><span class="ch-item-lvl level-badge badge-b1">B1</span></a>
+<a href="chapitre_10.html" class="ch-item"><span class="ch-item-num">10</span><span class="ch-item-text">Apprendre une langue</span><span class="ch-item-lvl level-badge badge-b1">B1</span></a>
+<a href="chapitre_11.html" class="ch-item"><span class="ch-item-num">11</span><span class="ch-item-text">Faire les courses</span><span class="ch-item-lvl level-badge badge-b1">B1</span></a>
+<a href="chapitre_12.html" class="ch-item"><span class="ch-item-num">12</span><span class="ch-item-text">Mon quartier</span><span class="ch-item-lvl level-badge badge-b1">B1</span></a>
+<a href="chapitre_13.html" class="ch-item"><span class="ch-item-num">13</span><span class="ch-item-text">Le sport et la santé</span><span class="ch-item-lvl level-badge badge-b1">B1</span></a>
+<a href="chapitre_14.html" class="ch-item"><span class="ch-item-num">14</span><span class="ch-item-text">Un souvenir d'enfance</span><span class="ch-item-lvl level-badge badge-b1">B1</span></a>
+<a href="chapitre_15.html" class="ch-item"><span class="ch-item-num">15</span><span class="ch-item-text">Les petits plaisirs du quotidien</span><span class="ch-item-lvl level-badge badge-b1">B1</span></a>
+</div>
+<div class="phase-header"><div class="phase-line"></div><span class="phase-title-toc">Phase 2 — B2 Acceleration</span><div class="phase-line"></div></div>
+<div class="ch-grid">
+<a href="chapitre_16.html" class="ch-item"><span class="ch-item-num">16</span><span class="ch-item-text">Les écrans dans notre vie</span><span class="ch-item-lvl level-badge badge-b2">B2</span></a>
+<a href="chapitre_17.html" class="ch-item"><span class="ch-item-num">17</span><span class="ch-item-text">Vivre dans une grande ville ou à la campagne</span><span class="ch-item-lvl level-badge badge-b2">B2</span></a>
+<a href="chapitre_18.html" class="ch-item"><span class="ch-item-num">18</span><span class="ch-item-text">L'importance de bien manger</span><span class="ch-item-lvl level-badge badge-b2">B2</span></a>
+<a href="chapitre_19.html" class="ch-item"><span class="ch-item-num">19</span><span class="ch-item-text">Le télétravail, une nouvelle réalité</span><span class="ch-item-lvl level-badge badge-b2">B2</span></a>
+<a href="chapitre_20.html" class="ch-item"><span class="ch-item-num">20</span><span class="ch-item-text">L'environnement, une responsabilité partagée</span><span class="ch-item-lvl level-badge badge-b2">B2</span></a>
+<a href="chapitre_21.html" class="ch-item"><span class="ch-item-num">21</span><span class="ch-item-text">L'éducation aujourd'hui</span><span class="ch-item-lvl level-badge badge-b2">B2</span></a>
+<a href="chapitre_22.html" class="ch-item"><span class="ch-item-num">22</span><span class="ch-item-text">Les réseaux sociaux et les jeunes</span><span class="ch-item-lvl level-badge badge-b2">B2</span></a>
+<a href="chapitre_23.html" class="ch-item"><span class="ch-item-num">23</span><span class="ch-item-text">Le transport urbain de demain</span><span class="ch-item-lvl level-badge badge-b2">B2</span></a>
+<a href="chapitre_24.html" class="ch-item"><span class="ch-item-num">24</span><span class="ch-item-text">L'équilibre entre vie professionnelle et vie personnelle</span><span class="ch-item-lvl level-badge badge-b2">B2</span></a>
+<a href="chapitre_25.html" class="ch-item"><span class="ch-item-num">25</span><span class="ch-item-text">Le tourisme de masse</span><span class="ch-item-lvl level-badge badge-b2">B2</span></a>
+<a href="chapitre_26.html" class="ch-item"><span class="ch-item-num">26</span><span class="ch-item-text">La lecture à l'ère numérique</span><span class="ch-item-lvl level-badge badge-b2">B2</span></a>
+<a href="chapitre_27.html" class="ch-item"><span class="ch-item-num">27</span><span class="ch-item-text">La place du sport dans la société</span><span class="ch-item-lvl level-badge badge-b2">B2</span></a>
+<a href="chapitre_28.html" class="ch-item"><span class="ch-item-num">28</span><span class="ch-item-text">Le logement, un défi contemporain</span><span class="ch-item-lvl level-badge badge-b2">B2</span></a>
+<a href="chapitre_29.html" class="ch-item"><span class="ch-item-num">29</span><span class="ch-item-text">L'intelligence artificielle au quotidien</span><span class="ch-item-lvl level-badge badge-b2">B2</span></a>
+<a href="chapitre_30.html" class="ch-item"><span class="ch-item-num">30</span><span class="ch-item-text">Le bonheur, une quête universelle</span><span class="ch-item-lvl level-badge badge-b2">B2</span></a>
+</div>
+<div class="phase-header"><div class="phase-line"></div><span class="phase-title-toc">Phase 3 — C1 Entry</span><div class="phase-line"></div></div>
+<div class="ch-grid">
+<a href="chapitre_31.html" class="ch-item"><span class="ch-item-num">31</span><span class="ch-item-text">Les inégalités sociales</span><span class="ch-item-lvl level-badge badge-c1m">C1-</span></a>
+<a href="chapitre_32.html" class="ch-item"><span class="ch-item-num">32</span><span class="ch-item-text">L'immigration, entre peurs et réalités</span><span class="ch-item-lvl level-badge badge-c1m">C1-</span></a>
+<a href="chapitre_33.html" class="ch-item"><span class="ch-item-num">33</span><span class="ch-item-text">La société numérique et ses paradoxes</span><span class="ch-item-lvl level-badge badge-c1m">C1-</span></a>
+<a href="chapitre_34.html" class="ch-item"><span class="ch-item-num">34</span><span class="ch-item-text">Le changement climatique, l'urgence silencieuse</span><span class="ch-item-lvl level-badge badge-c1m">C1-</span></a>
+<a href="chapitre_35.html" class="ch-item"><span class="ch-item-num">35</span><span class="ch-item-text">L'économie mondiale à la croisée des chemins</span><span class="ch-item-lvl level-badge badge-c1m">C1-</span></a>
+<a href="chapitre_36.html" class="ch-item"><span class="ch-item-num">36</span><span class="ch-item-text">L'identité culturelle dans un monde globalisé</span><span class="ch-item-lvl level-badge badge-c1m">C1-</span></a>
+<a href="chapitre_37.html" class="ch-item"><span class="ch-item-num">37</span><span class="ch-item-text">La santé mentale, un enjeu de société</span><span class="ch-item-lvl level-badge badge-c1m">C1-</span></a>
+<a href="chapitre_38.html" class="ch-item"><span class="ch-item-num">38</span><span class="ch-item-text">La démocratie à l'épreuve du populisme</span><span class="ch-item-lvl level-badge badge-c1m">C1-</span></a>
+<a href="chapitre_39.html" class="ch-item"><span class="ch-item-num">39</span><span class="ch-item-text">La consommation responsable</span><span class="ch-item-lvl level-badge badge-c1m">C1-</span></a>
+<a href="chapitre_40.html" class="ch-item"><span class="ch-item-num">40</span><span class="ch-item-text">Le rôle des médias dans la formation de l'opinion</span><span class="ch-item-lvl level-badge badge-c1m">C1-</span></a>
+<a href="chapitre_41.html" class="ch-item"><span class="ch-item-num">41</span><span class="ch-item-text">La justice sociale et le mérite</span><span class="ch-item-lvl level-badge badge-c1m">C1-</span></a>
+<a href="chapitre_42.html" class="ch-item"><span class="ch-item-num">42</span><span class="ch-item-text">La ville de demain</span><span class="ch-item-lvl level-badge badge-c1m">C1-</span></a>
+<a href="chapitre_43.html" class="ch-item"><span class="ch-item-num">43</span><span class="ch-item-text">L'éthique de la science</span><span class="ch-item-lvl level-badge badge-c1m">C1-</span></a>
+<a href="chapitre_44.html" class="ch-item"><span class="ch-item-num">44</span><span class="ch-item-text">Le vieillissement de la population</span><span class="ch-item-lvl level-badge badge-c1m">C1-</span></a>
+<a href="chapitre_45.html" class="ch-item"><span class="ch-item-num">45</span><span class="ch-item-text">La langue française dans le monde</span><span class="ch-item-lvl level-badge badge-c1m">C1-</span></a>
+</div>
+<div class="phase-header"><div class="phase-line"></div><span class="phase-title-toc">Phase 4 — C1 Mastery · TEF Simulation</span><div class="phase-line"></div></div>
+<div class="ch-grid">
+<a href="chapitre_46.html" class="ch-item"><span class="ch-item-num">46</span><span class="ch-item-text">Faut-il limiter la liberté d'expression ?</span><span class="ch-item-lvl level-badge badge-c1">C1</span></a>
+<a href="chapitre_47.html" class="ch-item"><span class="ch-item-num">47</span><span class="ch-item-text">Le progrès technique est-il toujours synonyme de progrès humain ?</span><span class="ch-item-lvl level-badge badge-c1">C1</span></a>
+<a href="chapitre_48.html" class="ch-item"><span class="ch-item-num">48</span><span class="ch-item-text">L'avenir du travail dans un monde automatisé</span><span class="ch-item-lvl level-badge badge-c1">C1</span></a>
+<a href="chapitre_49.html" class="ch-item"><span class="ch-item-num">49</span><span class="ch-item-text">La place de la culture dans une société en crise</span><span class="ch-item-lvl level-badge badge-c1">C1</span></a>
+<a href="chapitre_50.html" class="ch-item"><span class="ch-item-num">50</span><span class="ch-item-text">La responsabilité individuelle face aux enjeux collectifs</span><span class="ch-item-lvl level-badge badge-c1">C1</span></a>
+<a href="chapitre_51.html" class="ch-item"><span class="ch-item-num">51</span><span class="ch-item-text">L'éducation est-elle la clé de tous les problèmes ?</span><span class="ch-item-lvl level-badge badge-c1">C1</span></a>
+<a href="chapitre_52.html" class="ch-item"><span class="ch-item-num">52</span><span class="ch-item-text">La mondialisation culturelle : enrichissement ou appauvrissement ?</span><span class="ch-item-lvl level-badge badge-c1">C1</span></a>
+<a href="chapitre_53.html" class="ch-item"><span class="ch-item-num">53</span><span class="ch-item-text">Les limites de la croissance économique</span><span class="ch-item-lvl level-badge badge-c1">C1</span></a>
+<a href="chapitre_54.html" class="ch-item"><span class="ch-item-num">54</span><span class="ch-item-text">La solidarité internationale à l'épreuve des crises</span><span class="ch-item-lvl level-badge badge-c1">C1</span></a>
+<a href="chapitre_55.html" class="ch-item"><span class="ch-item-num">55</span><span class="ch-item-text">La vie privée à l'ère de la surveillance numérique</span><span class="ch-item-lvl level-badge badge-c1">C1</span></a>
+<a href="chapitre_56.html" class="ch-item"><span class="ch-item-num">56</span><span class="ch-item-text">Le rôle de la jeunesse dans la transformation sociale</span><span class="ch-item-lvl level-badge badge-c1">C1</span></a>
+<a href="chapitre_57.html" class="ch-item"><span class="ch-item-num">57</span><span class="ch-item-text">Peut-on encore croire au progrès ?</span><span class="ch-item-lvl level-badge badge-c1">C1</span></a>
+<a href="chapitre_58.html" class="ch-item"><span class="ch-item-num">58</span><span class="ch-item-text">L'alimentation de demain : entre science et tradition</span><span class="ch-item-lvl level-badge badge-c1">C1</span></a>
+<a href="chapitre_59.html" class="ch-item"><span class="ch-item-num">59</span><span class="ch-item-text">Le sens du voyage dans un monde hyperconnecté</span><span class="ch-item-lvl level-badge badge-c1">C1</span></a>
+<a href="chapitre_60.html" class="ch-item"><span class="ch-item-num">60</span><span class="ch-item-text">Quel monde voulons-nous laisser ?</span><span class="ch-item-lvl level-badge badge-c1">C1</span></a>
+</div>
+
+</main>
+<!-- Home Footer -->
+<div style="text-align:center;padding:20px 20px;background:#0f1117;border-top:1px solid #2d3548;">
+  <a href="https://shakti4640.github.io/mon-univers-francais/" style="display:inline-flex;align-items:center;gap:8px;padding:10px 24px;background:#1a2540;border:1px solid rgba(79,142,247,0.3);color:#6ea8ff;text-decoration:none;border-radius:20px;font-size:0.82rem;font-weight:500;font-family:'DM Sans',system-ui,sans-serif;letter-spacing:0.04em;transition:all 0.2s;" onmouseover="this.style.background='#1e2d50';this.style.borderColor='rgba(79,142,247,0.5)';this.style.transform='translateY(-1px)'" onmouseout="this.style.background='#1a2540';this.style.borderColor='rgba(79,142,247,0.3)';this.style.transform='none'">
+    <span style="font-size:1rem">🏠</span> Mon Univers Français
+  </a>
+</div>
+</body>
+</html>

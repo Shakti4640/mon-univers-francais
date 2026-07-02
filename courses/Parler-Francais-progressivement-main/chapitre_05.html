@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="icon" type="image/png" href="images/favicon.png">
+<title>Chapitre 5 — Le trajet pour le travail</title>
+
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --bg:#0f1117;--bg2:#161b27;--bg3:#1e2433;--bg4:#252d3d;
+  --border:#2d3548;--border2:#3a4560;
+  --text:#e8eaf0;--text2:#9aa3ba;--text3:#5e6880;
+  --accent:#4f8ef7;--accent2:#6ea8ff;--accentbg:#1a2540;
+  --gold:#d4a74a;--goldbg:#2a2010;
+  --green:#3ecf8e;--greenbg:#0d2b1e;
+  --purple:#a78bfa;--purplebg:#1e1730;
+  --red:#f87171;--redbg:#2b1010;
+  --radius:12px;--radius-sm:6px;
+}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--text);font-family:'DM Sans',system-ui,sans-serif;font-size:16px;line-height:1.7;min-height:100vh;}
+
+/* TOPBAR */
+.topbar{position:sticky;top:0;z-index:200;background:rgba(15,17,23,0.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:0 1.5rem;height:52px;display:flex;align-items:center;gap:1rem;}
+.topbar-left{display:flex;align-items:center;gap:10px;flex:1;min-width:0;}
+.toc-btn{display:flex;align-items:center;gap:6px;background:var(--bg3);border:1px solid var(--border);color:var(--text2);font-size:13px;padding:5px 12px;border-radius:var(--radius-sm);cursor:pointer;text-decoration:none;white-space:nowrap;transition:all .15s;}
+.toc-btn:hover{border-color:var(--accent);color:var(--accent);}
+.toc-btn svg{width:14px;height:14px;flex-shrink:0;}
+.ch-progress-label{font-size:12px;color:var(--text3);white-space:nowrap;}
+.topbar-track{flex:1;height:3px;background:var(--bg4);border-radius:2px;overflow:hidden;}
+.topbar-fill{height:100%;background:linear-gradient(90deg,var(--accent),var(--green));border-radius:2px;transition:width .3s;}
+.topbar-right{display:flex;align-items:center;gap:6px;}
+.nav-btn{display:flex;align-items:center;gap:5px;background:var(--bg3);border:1px solid var(--border);color:var(--text2);font-size:13px;padding:5px 12px;border-radius:var(--radius-sm);cursor:pointer;text-decoration:none;white-space:nowrap;transition:all .15s;}
+.nav-btn:hover{border-color:var(--accent);color:var(--accent);}
+.nav-btn.disabled{opacity:0.3;pointer-events:none;}
+.nav-btn svg{width:14px;height:14px;}
+
+/* HERO */
+.hero{padding:3rem 1.5rem 2rem;max-width:760px;margin:0 auto;}
+.hero-eyebrow{display:flex;align-items:center;gap:10px;margin-bottom:1rem;}
+.level-badge{font-size:11px;font-weight:500;letter-spacing:.08em;padding:3px 10px;border-radius:20px;}
+.badge-b1{background:var(--greenbg);color:var(--green);border:1px solid rgba(62,207,142,.25);}
+.badge-b2{background:var(--accentbg);color:var(--accent2);border:1px solid rgba(111,168,255,.25);}
+.badge-c1m{background:var(--goldbg);color:var(--gold);border:1px solid rgba(212,167,74,.25);}
+.badge-c1{background:var(--purplebg);color:var(--purple);border:1px solid rgba(167,139,250,.25);}
+.ch-num-tag{font-size:12px;color:var(--text3);font-weight:300;}
+.hero-title{font-family:'DM Serif Display',Georgia,serif;font-size:clamp(1.6rem,4vw,2.4rem);font-weight:400;line-height:1.2;color:var(--text);margin-bottom:.4rem;}
+.hero-title em{font-style:italic;color:var(--accent2);}
+.hero-phase{font-size:13px;color:var(--text3);font-weight:300;}
+
+/* SECTIONS */
+.content{max-width:760px;margin:0 auto;padding:0 1.5rem 4rem;}
+.section-block{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:1.75rem;margin-bottom:1.25rem;position:relative;}
+.section-block:hover{border-color:var(--border2);}
+.section-num{position:absolute;top:1.2rem;right:1.25rem;font-size:11px;color:var(--text3);font-weight:300;letter-spacing:.1em;text-transform:uppercase;}
+.section-label{display:flex;align-items:center;gap:8px;font-size:11px;font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:var(--text3);margin-bottom:1rem;}
+.label-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0;}
+.dot-gold{background:var(--gold);}
+.dot-green{background:var(--green);}
+.dot-accent{background:var(--accent);}
+.dot-purple{background:var(--purple);}
+.passage-text{font-family:'DM Serif Display',Georgia,serif;font-size:1.125rem;line-height:2;color:var(--text);font-weight:400;font-style:italic;}
+.vocab-text{font-size:.95rem;line-height:1.9;color:var(--text2);}
+.vocab-text strong{color:var(--accent2);font-weight:500;}
+.shadow-text{font-size:.95rem;line-height:1.8;color:var(--text2);}
+.shadow-text strong{color:var(--gold);font-weight:500;}
+.shadow-text em{color:var(--text);font-style:italic;}
+.challenge-inner{background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-sm);padding:1rem 1.25rem;margin-top:.75rem;font-size:1rem;color:var(--text);line-height:1.7;}
+.challenge-inner strong{color:var(--text2);font-size:.85rem;display:block;margin-bottom:.4rem;font-weight:400;letter-spacing:.05em;text-transform:uppercase;}
+
+/* BOTTOM NAV */
+.bottom-nav{max-width:760px;margin:0 auto;padding:0 1.5rem 3rem;display:flex;gap:.75rem;}
+.bottom-btn{flex:1;display:flex;align-items:center;justify-content:center;gap:8px;padding:1rem;background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);color:var(--text2);text-decoration:none;font-size:.9rem;transition:all .2s;cursor:pointer;}
+.bottom-btn:hover:not(.disabled){background:var(--bg3);border-color:var(--accent);color:var(--accent);}
+.bottom-btn.disabled{opacity:.3;pointer-events:none;}
+.bottom-btn svg{width:16px;height:16px;}
+.bottom-toc{background:var(--accentbg);border-color:rgba(79,142,247,.3);color:var(--accent2);}
+.bottom-toc:hover{background:var(--accentbg) !important;border-color:var(--accent) !important;color:var(--accent) !important;}
+
+/* KEYBOARD HINT */
+.key-hint{text-align:center;font-size:11px;color:var(--text3);padding-bottom:2rem;letter-spacing:.05em;}
+.kbd{display:inline-block;background:var(--bg3);border:1px solid var(--border2);border-radius:3px;padding:1px 6px;font-size:11px;color:var(--text2);}
+
+/* TOC PAGE */
+.toc-hero{padding:3rem 1.5rem 2rem;max-width:760px;margin:0 auto;text-align:center;}
+.toc-title{font-family:'DM Serif Display',Georgia,serif;font-size:2.2rem;color:var(--text);}
+.toc-title em{font-style:italic;color:var(--accent2);}
+.toc-sub{font-size:14px;color:var(--text3);margin-top:.5rem;font-weight:300;}
+.toc-stats{display:flex;justify-content:center;gap:2rem;margin-top:1.5rem;flex-wrap:wrap;}
+.toc-stat{text-align:center;}
+.toc-stat-n{font-family:'DM Serif Display',serif;font-size:1.8rem;color:var(--accent2);}
+.toc-stat-l{font-size:11px;color:var(--text3);letter-spacing:.1em;text-transform:uppercase;}
+.toc-content{max-width:760px;margin:0 auto;padding:0 1.5rem 4rem;}
+.phase-header{display:flex;align-items:center;gap:12px;margin:2rem 0 1rem;}
+.phase-line{flex:1;height:1px;background:var(--border);}
+.phase-title-toc{font-size:12px;font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:var(--text3);white-space:nowrap;}
+.ch-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:.6rem;}
+.ch-item{display:flex;align-items:center;gap:10px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:.65rem .9rem;text-decoration:none;transition:all .15s;color:var(--text2);}
+.ch-item:hover{border-color:var(--accent);color:var(--text);background:var(--bg3);}
+.ch-item-num{font-family:'DM Serif Display',serif;font-size:1rem;color:var(--text3);min-width:22px;line-height:1;}
+.ch-item-text{font-size:.8rem;line-height:1.3;}
+.ch-item-lvl{margin-left:auto;font-size:10px;padding:1px 6px;border-radius:20px;flex-shrink:0;}
+</style>
+
+</head>
+<body>
+
+<nav class="topbar">
+  <div class="topbar-left">
+    <a href="index.html" class="toc-btn"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M2 4h12M2 8h8M2 12h10"/></svg> Table des matières</a>
+    <span class="ch-progress-label">Ch. 5/60</span>
+    <div class="topbar-track"><div class="topbar-fill" style="width:8%"></div></div>
+  </div>
+  <div class="topbar-right">
+    <a href="chapitre_04.html" class="nav-btn"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M10 3L5 8l5 5"/></svg> Préc.</a>
+    <a href="chapitre_06.html" class="nav-btn">Suiv. <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 3l5 5-5 5"/></svg></a>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="hero-eyebrow">
+    <span class="level-badge badge-b1">B1</span>
+    <span class="ch-num-tag">Chapitre 5 · Phase 1 · B1 Consolidation</span>
+  </div>
+  <h1 class="hero-title">Le trajet pour le travail</h1>
+</header>
+
+<main class="content">
+
+  <div class="section-block">
+    <span class="section-num">01</span>
+    <div class="section-label"><span class="label-dot dot-gold"></span>Passage — Lisez à voix haute</div>
+    <p class="passage-text">Tous les matins, je prends le métro pour aller au travail. Je descends les escaliers de la station, je passe mon titre de transport sur la borne, et j'attends sur le quai. Le trajet dure environ trente minutes, ce qui me laisse le temps de faire quelque chose d'utile. En général, j'écoute un podcast en français ou je lis quelques pages d'un roman sur mon téléphone. Autour de moi, les gens sont silencieux, chacun dans son monde, les yeux fixés sur un écran ou perdus dans le vide. La station où je descends se trouve juste en face de mon bureau, ce qui est très pratique. Quand il fait beau, je préfère descendre un arrêt plus tôt et marcher le reste du chemin. Cela me donne un peu d'air frais et me permet de bouger avant de rester assis toute la journée. Ce petit moment de marche est devenu une habitude que j'apprécie beaucoup.</p>
+  </div>
+
+  <div class="section-block">
+    <span class="section-num">02</span>
+    <div class="section-label"><span class="label-dot dot-green"></span>Vocabulaire clé</div>
+    <p class="vocab-text">Le mot <strong>quai</strong> désigne la plateforme où l'on attend le métro ou le train avant de monter. Une <strong>borne</strong> est le petit appareil sur lequel on passe son titre de transport pour valider l'accès. L'expression <strong>perdus dans le vide</strong> décrit un regard absent, quand quelqu'un ne regarde rien de précis. Le verbe <strong>bouger</strong> signifie simplement faire un mouvement physique, ici marcher un peu. Enfin, <strong>apprécier</strong> exprime le fait de trouver quelque chose agréable et d'en être reconnaissant.</p>
+  </div>
+
+  <div class="section-block">
+    <span class="section-num">03</span>
+    <div class="section-label"><span class="label-dot dot-accent"></span>Consigne de shadowing</div>
+    <p class="shadow-text"><strong>Travaillez la fluidité de la série d'actions</strong> dans « je descends les escaliers, je passe mon titre de transport, et j'attends sur le quai » — enchaînez les trois actions avec un rythme régulier, sans pause trop longue entre elles.</p>
+  </div>
+
+  <div class="section-block">
+    <span class="section-num">04</span>
+    <div class="section-label"><span class="label-dot dot-purple"></span>Défi oral</div>
+    <div class="challenge-inner"><strong>Après trois lectures à voix haute, fermez la page et dites de mémoire :</strong><br>
+« Mon trajet en métro est un moment calme où je lis, j'écoute, et je me prépare pour la journée. »</div>
+  </div>
+
+</main>
+
+<div class="bottom-nav">
+  <a href="chapitre_04.html" class="bottom-btn"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M10 3L5 8l5 5"/></svg> Chapitre précédent</a>
+  <a href="index.html" class="bottom-btn bottom-toc"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M2 4h12M2 8h8M2 12h10"/></svg> Sommaire</a>
+  <a href="chapitre_06.html" class="bottom-btn">Chapitre suivant <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 3l5 5-5 5"/></svg></a>
+</div>
+
+<p class="key-hint"><kbd class="kbd">←</kbd> chapitre précédent &nbsp;·&nbsp; <kbd class="kbd">→</kbd> chapitre suivant</p>
+
+<script>
+document.addEventListener('keydown', function(e) {
+  if(e.key === 'ArrowLeft' && true) window.location.href = 'chapitre_04.html';
+  if(e.key === 'ArrowRight' && true) window.location.href = 'chapitre_06.html';
+});
+</script>
+</body>
+</html>

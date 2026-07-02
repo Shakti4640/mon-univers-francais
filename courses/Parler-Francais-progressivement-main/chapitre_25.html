@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="icon" type="image/png" href="images/favicon.png">
+<title>Chapitre 25 — Le tourisme de masse</title>
+
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --bg:#0f1117;--bg2:#161b27;--bg3:#1e2433;--bg4:#252d3d;
+  --border:#2d3548;--border2:#3a4560;
+  --text:#e8eaf0;--text2:#9aa3ba;--text3:#5e6880;
+  --accent:#4f8ef7;--accent2:#6ea8ff;--accentbg:#1a2540;
+  --gold:#d4a74a;--goldbg:#2a2010;
+  --green:#3ecf8e;--greenbg:#0d2b1e;
+  --purple:#a78bfa;--purplebg:#1e1730;
+  --red:#f87171;--redbg:#2b1010;
+  --radius:12px;--radius-sm:6px;
+}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--text);font-family:'DM Sans',system-ui,sans-serif;font-size:16px;line-height:1.7;min-height:100vh;}
+
+/* TOPBAR */
+.topbar{position:sticky;top:0;z-index:200;background:rgba(15,17,23,0.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:0 1.5rem;height:52px;display:flex;align-items:center;gap:1rem;}
+.topbar-left{display:flex;align-items:center;gap:10px;flex:1;min-width:0;}
+.toc-btn{display:flex;align-items:center;gap:6px;background:var(--bg3);border:1px solid var(--border);color:var(--text2);font-size:13px;padding:5px 12px;border-radius:var(--radius-sm);cursor:pointer;text-decoration:none;white-space:nowrap;transition:all .15s;}
+.toc-btn:hover{border-color:var(--accent);color:var(--accent);}
+.toc-btn svg{width:14px;height:14px;flex-shrink:0;}
+.ch-progress-label{font-size:12px;color:var(--text3);white-space:nowrap;}
+.topbar-track{flex:1;height:3px;background:var(--bg4);border-radius:2px;overflow:hidden;}
+.topbar-fill{height:100%;background:linear-gradient(90deg,var(--accent),var(--green));border-radius:2px;transition:width .3s;}
+.topbar-right{display:flex;align-items:center;gap:6px;}
+.nav-btn{display:flex;align-items:center;gap:5px;background:var(--bg3);border:1px solid var(--border);color:var(--text2);font-size:13px;padding:5px 12px;border-radius:var(--radius-sm);cursor:pointer;text-decoration:none;white-space:nowrap;transition:all .15s;}
+.nav-btn:hover{border-color:var(--accent);color:var(--accent);}
+.nav-btn.disabled{opacity:0.3;pointer-events:none;}
+.nav-btn svg{width:14px;height:14px;}
+
+/* HERO */
+.hero{padding:3rem 1.5rem 2rem;max-width:760px;margin:0 auto;}
+.hero-eyebrow{display:flex;align-items:center;gap:10px;margin-bottom:1rem;}
+.level-badge{font-size:11px;font-weight:500;letter-spacing:.08em;padding:3px 10px;border-radius:20px;}
+.badge-b1{background:var(--greenbg);color:var(--green);border:1px solid rgba(62,207,142,.25);}
+.badge-b2{background:var(--accentbg);color:var(--accent2);border:1px solid rgba(111,168,255,.25);}
+.badge-c1m{background:var(--goldbg);color:var(--gold);border:1px solid rgba(212,167,74,.25);}
+.badge-c1{background:var(--purplebg);color:var(--purple);border:1px solid rgba(167,139,250,.25);}
+.ch-num-tag{font-size:12px;color:var(--text3);font-weight:300;}
+.hero-title{font-family:'DM Serif Display',Georgia,serif;font-size:clamp(1.6rem,4vw,2.4rem);font-weight:400;line-height:1.2;color:var(--text);margin-bottom:.4rem;}
+.hero-title em{font-style:italic;color:var(--accent2);}
+.hero-phase{font-size:13px;color:var(--text3);font-weight:300;}
+
+/* SECTIONS */
+.content{max-width:760px;margin:0 auto;padding:0 1.5rem 4rem;}
+.section-block{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:1.75rem;margin-bottom:1.25rem;position:relative;}
+.section-block:hover{border-color:var(--border2);}
+.section-num{position:absolute;top:1.2rem;right:1.25rem;font-size:11px;color:var(--text3);font-weight:300;letter-spacing:.1em;text-transform:uppercase;}
+.section-label{display:flex;align-items:center;gap:8px;font-size:11px;font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:var(--text3);margin-bottom:1rem;}
+.label-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0;}
+.dot-gold{background:var(--gold);}
+.dot-green{background:var(--green);}
+.dot-accent{background:var(--accent);}
+.dot-purple{background:var(--purple);}
+.passage-text{font-family:'DM Serif Display',Georgia,serif;font-size:1.125rem;line-height:2;color:var(--text);font-weight:400;font-style:italic;}
+.vocab-text{font-size:.95rem;line-height:1.9;color:var(--text2);}
+.vocab-text strong{color:var(--accent2);font-weight:500;}
+.shadow-text{font-size:.95rem;line-height:1.8;color:var(--text2);}
+.shadow-text strong{color:var(--gold);font-weight:500;}
+.shadow-text em{color:var(--text);font-style:italic;}
+.challenge-inner{background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-sm);padding:1rem 1.25rem;margin-top:.75rem;font-size:1rem;color:var(--text);line-height:1.7;}
+.challenge-inner strong{color:var(--text2);font-size:.85rem;display:block;margin-bottom:.4rem;font-weight:400;letter-spacing:.05em;text-transform:uppercase;}
+
+/* BOTTOM NAV */
+.bottom-nav{max-width:760px;margin:0 auto;padding:0 1.5rem 3rem;display:flex;gap:.75rem;}
+.bottom-btn{flex:1;display:flex;align-items:center;justify-content:center;gap:8px;padding:1rem;background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);color:var(--text2);text-decoration:none;font-size:.9rem;transition:all .2s;cursor:pointer;}
+.bottom-btn:hover:not(.disabled){background:var(--bg3);border-color:var(--accent);color:var(--accent);}
+.bottom-btn.disabled{opacity:.3;pointer-events:none;}
+.bottom-btn svg{width:16px;height:16px;}
+.bottom-toc{background:var(--accentbg);border-color:rgba(79,142,247,.3);color:var(--accent2);}
+.bottom-toc:hover{background:var(--accentbg) !important;border-color:var(--accent) !important;color:var(--accent) !important;}
+
+/* KEYBOARD HINT */
+.key-hint{text-align:center;font-size:11px;color:var(--text3);padding-bottom:2rem;letter-spacing:.05em;}
+.kbd{display:inline-block;background:var(--bg3);border:1px solid var(--border2);border-radius:3px;padding:1px 6px;font-size:11px;color:var(--text2);}
+
+/* TOC PAGE */
+.toc-hero{padding:3rem 1.5rem 2rem;max-width:760px;margin:0 auto;text-align:center;}
+.toc-title{font-family:'DM Serif Display',Georgia,serif;font-size:2.2rem;color:var(--text);}
+.toc-title em{font-style:italic;color:var(--accent2);}
+.toc-sub{font-size:14px;color:var(--text3);margin-top:.5rem;font-weight:300;}
+.toc-stats{display:flex;justify-content:center;gap:2rem;margin-top:1.5rem;flex-wrap:wrap;}
+.toc-stat{text-align:center;}
+.toc-stat-n{font-family:'DM Serif Display',serif;font-size:1.8rem;color:var(--accent2);}
+.toc-stat-l{font-size:11px;color:var(--text3);letter-spacing:.1em;text-transform:uppercase;}
+.toc-content{max-width:760px;margin:0 auto;padding:0 1.5rem 4rem;}
+.phase-header{display:flex;align-items:center;gap:12px;margin:2rem 0 1rem;}
+.phase-line{flex:1;height:1px;background:var(--border);}
+.phase-title-toc{font-size:12px;font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:var(--text3);white-space:nowrap;}
+.ch-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:.6rem;}
+.ch-item{display:flex;align-items:center;gap:10px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:.65rem .9rem;text-decoration:none;transition:all .15s;color:var(--text2);}
+.ch-item:hover{border-color:var(--accent);color:var(--text);background:var(--bg3);}
+.ch-item-num{font-family:'DM Serif Display',serif;font-size:1rem;color:var(--text3);min-width:22px;line-height:1;}
+.ch-item-text{font-size:.8rem;line-height:1.3;}
+.ch-item-lvl{margin-left:auto;font-size:10px;padding:1px 6px;border-radius:20px;flex-shrink:0;}
+</style>
+
+</head>
+<body>
+
+<nav class="topbar">
+  <div class="topbar-left">
+    <a href="index.html" class="toc-btn"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M2 4h12M2 8h8M2 12h10"/></svg> Table des matières</a>
+    <span class="ch-progress-label">Ch. 25/60</span>
+    <div class="topbar-track"><div class="topbar-fill" style="width:42%"></div></div>
+  </div>
+  <div class="topbar-right">
+    <a href="chapitre_24.html" class="nav-btn"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M10 3L5 8l5 5"/></svg> Préc.</a>
+    <a href="chapitre_26.html" class="nav-btn">Suiv. <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 3l5 5-5 5"/></svg></a>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="hero-eyebrow">
+    <span class="level-badge badge-b2">B2</span>
+    <span class="ch-num-tag">Chapitre 25 · Phase 2 · B2 Acceleration</span>
+  </div>
+  <h1 class="hero-title">Le tourisme de masse</h1>
+</header>
+
+<main class="content">
+
+  <div class="section-block">
+    <span class="section-num">01</span>
+    <div class="section-label"><span class="label-dot dot-gold"></span>Passage — Lisez à voix haute</div>
+    <p class="passage-text">Le tourisme est l'une des industries les plus importantes au monde, et il contribue de manière significative à l'économie de nombreux pays. Cependant, le tourisme de masse pose des problèmes de plus en plus visibles, tant sur le plan environnemental que social. Je pense que voyager est une expérience enrichissante qui ouvre l'esprit et permet de découvrir d'autres cultures. Néanmoins, quand des millions de visiteurs se concentrent dans les mêmes lieux au même moment, les conséquences peuvent être désastreuses. Les sites historiques s'abîment, les écosystèmes fragiles sont perturbés, et les habitants des zones touristiques voient leur quotidien transformé par la hausse des prix et la perte de leur identité locale. Il me semble que la solution ne consiste pas à arrêter de voyager, mais à voyager autrement. Privilégier les destinations moins connues, respecter les coutumes locales, séjourner plus longtemps dans un même endroit plutôt que de courir d'un site à l'autre, voilà des pratiques qui pourraient changer la donne. Par conséquent, le concept de tourisme durable gagne du terrain et séduit de plus en plus de voyageurs conscients de leur impact. Selon moi, chaque touriste devrait se poser une question simple avant de partir : est-ce que ma visite apporte quelque chose de positif à l'endroit que je vais découvrir ?</p>
+  </div>
+
+  <div class="section-block">
+    <span class="section-num">02</span>
+    <div class="section-label"><span class="label-dot dot-green"></span>Vocabulaire clé</div>
+    <p class="vocab-text">L'adjectif <strong>désastreux</strong> qualifie quelque chose qui cause des dommages très graves et étendus. Le verbe <strong>s'abîmer</strong> signifie se détériorer, perdre de sa qualité ou de sa beauté avec le temps. Le mot <strong>coutume</strong> désigne une habitude ou une tradition propre à un groupe ou à une région. L'expression <strong>changer la donne</strong> signifie modifier profondément une situation existante. Enfin, <strong>gagner du terrain</strong> signifie progresser, devenir de plus en plus répandu ou accepté.</p>
+  </div>
+
+  <div class="section-block">
+    <span class="section-num">03</span>
+    <div class="section-label"><span class="label-dot dot-accent"></span>Consigne de shadowing</div>
+    <p class="shadow-text"><strong>Pratiquez l'énumération de propositions</strong> dans « Privilégier les destinations moins connues, respecter les coutumes locales, séjourner plus longtemps... » — chaque proposition est un bloc autonome. Respirez légèrement entre chacune et maintenez une intonation montante jusqu'à la dernière.</p>
+  </div>
+
+  <div class="section-block">
+    <span class="section-num">04</span>
+    <div class="section-label"><span class="label-dot dot-purple"></span>Défi oral</div>
+    <div class="challenge-inner"><strong>Après trois lectures à voix haute, fermez la page et dites de mémoire :</strong><br>
+« Le tourisme de masse cause des dégâts, mais voyager de manière plus responsable peut changer les choses. »</div>
+  </div>
+
+</main>
+
+<div class="bottom-nav">
+  <a href="chapitre_24.html" class="bottom-btn"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M10 3L5 8l5 5"/></svg> Chapitre précédent</a>
+  <a href="index.html" class="bottom-btn bottom-toc"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M2 4h12M2 8h8M2 12h10"/></svg> Sommaire</a>
+  <a href="chapitre_26.html" class="bottom-btn">Chapitre suivant <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 3l5 5-5 5"/></svg></a>
+</div>
+
+<p class="key-hint"><kbd class="kbd">←</kbd> chapitre précédent &nbsp;·&nbsp; <kbd class="kbd">→</kbd> chapitre suivant</p>
+
+<script>
+document.addEventListener('keydown', function(e) {
+  if(e.key === 'ArrowLeft' && true) window.location.href = 'chapitre_24.html';
+  if(e.key === 'ArrowRight' && true) window.location.href = 'chapitre_26.html';
+});
+</script>
+</body>
+</html>
