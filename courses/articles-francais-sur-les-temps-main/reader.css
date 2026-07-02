@@ -1,0 +1,302 @@
+/* =========================================================
+   Reader enhancements — modern look + mobile readability
+   Layered on top of styles.css. No content is removed.
+   ========================================================= */
+
+/* ---------- Page surface ---------- */
+body {
+    background: linear-gradient(135deg, #eef2ff 0%, #f0f4f8 50%, #fef2f2 100%) !important;
+    line-height: 1.75;
+}
+.container {
+    border-radius: 0;
+    box-shadow: 0 0 40px rgba(0, 35, 149, 0.08);
+}
+
+/* =========================================================
+   HERO-STYLE HEADER (matches reference chapter-1 / chapter-2)
+   The existing <header> is upgraded in place by reader.js.
+   ========================================================= */
+.container > header.hero-section {
+    position: sticky;
+    top: 0;
+    z-index: 1500;
+    display: block;                                  /* override any flex from styles.css */
+    background: linear-gradient(135deg, #002395 0%, #0a3d91 40%, #1a56db 100%);
+    color: #fff;
+    padding: 14px 40px 12px 68px;                    /* tighter; left pad leaves room for hamburger */
+    text-align: center;
+    overflow: hidden;
+    border-bottom: none;
+    box-shadow: 0 3px 12px rgba(0, 35, 149, 0.20);
+}
+.container > header.hero-section::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.04'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E") repeat;
+    pointer-events: none;
+}
+
+/* Mood-tinted hero gradients */
+.container > header.hero-section.mood-indicatif    { background: linear-gradient(135deg, #002395 0%, #0a3d91 40%, #1a56db 100%); }
+.container > header.hero-section.mood-conditionnel { background: linear-gradient(135deg, #4c1d95 0%, #5b21b6 40%, #7c3aed 100%); }
+.container > header.hero-section.mood-subjonctif   { background: linear-gradient(135deg, #0f766e 0%, #0d9488 40%, #14b8a6 100%); }
+.container > header.hero-section.mood-imperatif    { background: linear-gradient(135deg, #991b1b 0%, #ED2939 40%, #ef4444 100%); }
+.container > header.hero-section.mood-other        { background: linear-gradient(135deg, #b45309 0%, #d97706 40%, #f59e0b 100%); }
+
+.hero-crumb {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 3px 10px;
+    background: rgba(255, 255, 255, 0.14);
+    border: 1px solid rgba(255, 255, 255, 0.22);
+    border-radius: 999px;
+    font-size: 0.64rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 5px;
+    backdrop-filter: blur(4px);
+    position: relative;              /* sits above the ::before pattern */
+    z-index: 1;
+}
+.hero-num {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 17px;
+    height: 17px;
+    background: #fff;
+    border-radius: 50%;
+    font-weight: 800;
+    font-size: 0.64rem;
+    letter-spacing: 0;
+}
+.container > header.hero-section.mood-indicatif    .hero-num { color: #002395; }
+.container > header.hero-section.mood-conditionnel .hero-num { color: #5b21b6; }
+.container > header.hero-section.mood-subjonctif   .hero-num { color: #0d9488; }
+.container > header.hero-section.mood-imperatif    .hero-num { color: #ED2939; }
+.container > header.hero-section.mood-other        .hero-num { color: #d97706; }
+
+.hero-title {
+    position: relative;
+    z-index: 1;
+    font-size: 1.2rem;
+    font-weight: 700;
+    letter-spacing: -0.2px;
+    margin: 0 0 2px;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.22);
+    line-height: 1.2;
+}
+.hero-sub {
+    position: relative;
+    z-index: 1;
+    font-size: 0.78rem;
+    opacity: 0.9;
+    margin: 0;
+    line-height: 1.4;
+    max-width: 680px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* =========================================================
+   CONTENT READABILITY
+   ========================================================= */
+.content {
+    font-size: 1.02rem;
+    color: #1f2937;
+}
+
+/* Hide the in-body <h1> title (and the <hr> right after it) — the new
+   hero header already shows this info, so the duplicate is redundant. */
+.content .px-2 > h1[id^="tense-"]:first-child { display: none; }
+.content .px-2 > h1[id^="tense-"]:first-child + hr { display: none; }
+
+/* Alternating paragraph backgrounds for easy scanning on mobile */
+.content > p,
+.content .px-2 > p {
+    padding: 14px 18px;
+    border-radius: 8px;
+    margin-bottom: 14px;
+    border-left: 3px solid transparent;
+    transition: background 0.2s ease, border-color 0.2s ease;
+}
+.content > p:nth-of-type(odd),
+.content .px-2 > p:nth-of-type(odd) {
+    background: #f8fafc;
+    border-left-color: #e2e8f0;
+}
+.content > p:nth-of-type(even),
+.content .px-2 > p:nth-of-type(even) {
+    background: #eef2ff;
+    border-left-color: #c7d2fe;
+}
+.content > p:hover,
+.content .px-2 > p:hover { border-left-color: #002395; }
+
+.content h1 { font-size: 1.75rem; letter-spacing: -0.2px; }
+.content h2 { font-size: 1.3rem;  color: #1e3a8a; }
+.content h3 { font-size: 1.1rem; }
+.content hr { border-top-color: #dbeafe; }
+
+.content blockquote {
+    background: linear-gradient(135deg, #fff5f5, #fff1f2);
+    border-left-width: 5px;
+    box-shadow: 0 1px 3px rgba(237, 41, 57, 0.08);
+}
+
+.content table {
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 35, 149, 0.06);
+}
+.content th { letter-spacing: 0.4px; }
+
+.nav-bar {
+    background: linear-gradient(180deg, #f8fafc, #eef2ff);
+    gap: 10px;
+}
+.nav-button { border-radius: 10px; }
+
+/* Progress indicator refresh */
+#progress-track {
+    background: rgba(0, 35, 149, 0.12);
+    border-color: #1a56db;
+}
+#progress-fill { background: linear-gradient(180deg, #002395, #ED2939); }
+#progress-pct  { color: #002395; }
+
+/* =========================================================
+   HAMBURGER BUTTON + PANEL (top-left, fixed)
+   ========================================================= */
+#reader-hamburger {
+    position: fixed;
+    top: 14px;
+    left: 14px;
+    width: 44px;
+    height: 44px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    background: rgba(30, 30, 46, 0.92);
+    border: 1px solid #3a3a55;
+    border-radius: 10px;
+    cursor: pointer;
+    z-index: 99999;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35);
+    transition: background 0.18s ease, transform 0.18s ease;
+    -webkit-tap-highlight-color: transparent;
+}
+#reader-hamburger:hover { background: #2a2a3e; transform: translateY(-1px); }
+#reader-hamburger span {
+    display: block;
+    width: 20px;
+    height: 2px;
+    background: #e5e7eb;
+    border-radius: 2px;
+    transition: transform 0.25s ease, opacity 0.25s ease;
+}
+#reader-hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+#reader-hamburger.open span:nth-child(2) { opacity: 0; }
+#reader-hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+#reader-menu {
+    position: fixed;
+    top: 68px;
+    left: 14px;
+    min-width: 220px;
+    max-width: calc(100vw - 28px);
+    background: #1e1e2e;
+    border: 1px solid #3a3a55;
+    border-radius: 12px;
+    padding: 14px;
+    z-index: 99998;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.45);
+    display: none;
+    opacity: 0;
+    transform: translateY(-8px);
+    transition: opacity 0.2s ease, transform 0.2s ease;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+#reader-menu.open {
+    display: block;
+    opacity: 1;
+    transform: translateY(0);
+}
+#reader-menu .reader-menu-title {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    color: #94a3b8;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+    padding-left: 2px;
+}
+
+/* When the highlight toolbar gets moved into the panel, unpin it. */
+#reader-menu #highlight-toolbar {
+    position: static !important;
+    top: auto !important;
+    left: auto !important;
+    transform: none !important;
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    display: flex !important;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px !important;
+    width: 100%;
+}
+#reader-menu #highlight-toolbar button {
+    width: 100%;
+    text-align: left;
+    padding: 9px 14px !important;
+    font-size: 13px !important;
+}
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+@media (max-width: 768px) {
+    .container > header.hero-section {
+        padding: 10px 14px 9px 56px;
+    }
+    .hero-title { font-size: 0.98rem; }
+    .hero-sub   { font-size: 0.7rem; line-height: 1.35; }
+    .hero-crumb { font-size: 0.56rem; padding: 2px 8px; margin-bottom: 3px; gap: 6px; }
+    .hero-num   { width: 15px; height: 15px; font-size: 0.56rem; }
+
+    .content { padding: 22px 16px 32px !important; }
+    .content > p,
+    .content .px-2 > p {
+        padding: 12px 14px;
+        font-size: 0.98rem;
+        text-align: left;
+        hyphens: auto;
+    }
+    .content h1 { font-size: 1.4rem; margin-top: 22px; }
+    .content h2 { font-size: 1.15rem; }
+    .content h3 { font-size: 1.02rem; }
+
+    .nav-bar {
+        flex-wrap: wrap;
+        justify-content: center;
+        padding: 14px 16px;
+        gap: 8px;
+    }
+    .nav-button { padding: 8px 14px; font-size: 0.85em; }
+
+    #progress-track { width: 6px; height: 100px; top: 16px; right: 10px; }
+    #progress-pct   { right: 6px; font-size: 11px; }
+
+    #reader-hamburger { top: 10px; left: 10px; width: 42px; height: 42px; }
+    #reader-menu { top: 60px; left: 10px; right: 10px; max-width: none; }
+}
