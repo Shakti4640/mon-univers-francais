@@ -1,0 +1,1397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>French Tenses Mastery — Two Worlds</title>
+<style>
+  :root{
+    --bg:#f5f5f5;
+    --ink:#1f2a33;
+    --muted:#5a6b76;
+    --card:#ffffff;
+    --border:#d8dde2;
+    --worldA:#eef4fb;
+    --worldA-border:#bcd3ea;
+    --worldB:#eefaf3;
+    --worldB-border:#b8e3cd;
+    --accent:#2a6ed4;
+    --accent-green:#1f9a6b;
+    --stem:#1f2a33;
+    --ending:#c0392b;
+    --highlight:#fff59d;
+    --badge:#1f9a6b;
+    --nav-bg:#ffffffee;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);font-family:'Segoe UI','Helvetica Neue',Arial,sans-serif;font-size:16px;line-height:1.55}
+  a{color:var(--accent);text-decoration:none}
+
+  /* Top sticky nav */
+  .topnav{
+    position:sticky;top:0;z-index:50;
+    background:var(--nav-bg);backdrop-filter:blur(8px);
+    border-bottom:1px solid var(--border);
+    padding:10px 20px;display:flex;gap:10px;align-items:center;flex-wrap:wrap;
+  }
+  .topnav .title{font-weight:700;margin-right:14px;font-size:16px}
+  .topnav button{
+    background:#fff;border:1px solid var(--border);padding:7px 14px;border-radius:20px;
+    cursor:pointer;font-size:14px;color:var(--ink);transition:all .15s;
+  }
+  .topnav button:hover{border-color:var(--accent);color:var(--accent)}
+  .topnav button.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+
+  /* Layout */
+  .container{max-width:960px;margin:0 auto;padding:24px 20px 80px 20px}
+  h1{font-size:28px;margin:8px 0 4px 0}
+  .lede{color:var(--muted);margin-bottom:28px}
+
+  .world-header{
+    margin:36px 0 16px 0;padding:18px 22px;border-radius:10px;
+    border:1px solid var(--border);background:#fff;
+  }
+  .world-header.a{background:linear-gradient(180deg,#eef4fb,#f8fbff);border-color:var(--worldA-border)}
+  .world-header.b{background:linear-gradient(180deg,#eefaf3,#f6fcf9);border-color:var(--worldB-border)}
+  .world-header h2{margin:0 0 6px 0;font-size:22px}
+  .world-header p{margin:0;color:var(--muted)}
+
+  /* Tense cards */
+  .card{
+    border:1px solid var(--border);border-radius:12px;padding:22px 24px;margin:18px 0;
+    background:var(--card);position:relative;
+  }
+  .card.worldA{background:var(--worldA);border-color:var(--worldA-border)}
+  .card.worldB{background:var(--worldB);border-color:var(--worldB-border)}
+  .card h3{margin:0 0 4px 0;font-size:20px}
+  .card .subtitle{color:var(--muted);font-size:14px;margin-bottom:14px}
+  .badge{
+    position:absolute;top:18px;right:20px;background:var(--badge);color:#fff;
+    font-size:11px;font-weight:700;letter-spacing:.5px;padding:4px 9px;border-radius:10px;
+  }
+
+  /* Blocks inside card */
+  .block{margin:14px 0}
+  .block .label{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);margin-bottom:4px}
+  .block .body{font-size:15px}
+  .formula{
+    background:#fff;border:1px dashed var(--border);border-radius:8px;padding:10px 14px;
+    font-family:'Consolas',monospace;font-size:15px;
+  }
+
+  /* Conjugation tables */
+  table.conj{border-collapse:collapse;width:100%;margin-top:8px;background:#fff;border-radius:8px;overflow:hidden;font-size:15px}
+  table.conj th,table.conj td{border:1px solid var(--border);padding:8px 12px;text-align:left}
+  table.conj th{background:#fafbfc;font-weight:600;color:var(--muted);font-size:13px}
+  .stem{color:var(--stem);font-weight:600}
+  .ending{color:var(--ending);font-weight:700}
+
+  /* Example sentences */
+  .examples{margin-top:10px}
+  .example{background:#fff;border-left:3px solid var(--accent);padding:10px 14px;border-radius:4px;margin:8px 0;font-size:15px}
+  .card.worldB .example{border-left-color:var(--accent-green)}
+  .example .fr{font-weight:500}
+  .example .en{color:var(--muted);font-size:14px;display:block;margin-top:3px}
+  .pp{background:var(--highlight);padding:1px 4px;border-radius:3px;font-weight:600}
+
+  /* Memory anchor */
+  .anchor{
+    margin-top:14px;background:#fffde7;border:1px solid #f1e5a1;border-radius:8px;
+    padding:10px 14px;font-size:15px;
+  }
+  .anchor .label{color:#a07d00;margin-bottom:4px}
+
+  /* Right-side progress indicator — hamburger drawer */
+  .hamburger{
+    position:fixed;top:14px;right:16px;z-index:60;
+    width:42px;height:42px;border-radius:10px;
+    background:#fff;border:1px solid var(--border);
+    display:flex;align-items:center;justify-content:center;
+    cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.08);
+    transition:all .15s;
+  }
+  .hamburger:hover{border-color:var(--accent);color:var(--accent)}
+  .hamburger svg{width:20px;height:20px}
+  .hamburger.open{background:var(--accent);color:#fff;border-color:var(--accent)}
+
+  .progress{
+    position:fixed;right:14px;top:68px;
+    background:#ffffffee;border:1px solid var(--border);border-radius:12px;
+    padding:12px 8px;font-size:11px;max-height:75vh;overflow-y:auto;z-index:55;
+    box-shadow:0 6px 20px rgba(0,0,0,.12);width:240px;
+    transform:translateX(110%);opacity:0;pointer-events:none;
+    transition:transform .2s ease, opacity .2s ease;
+  }
+  .progress.open{transform:translateX(0);opacity:1;pointer-events:auto}
+  .progress h4{margin:2px 6px 8px 6px;font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.6px}
+  .progress a{display:block;padding:7px 10px;color:var(--ink);border-radius:6px;font-size:13px;line-height:1.3;margin:2px 0}
+  .progress a:hover{background:#f0f3f6}
+  .progress a.current{background:var(--accent);color:#fff}
+  .progress a.current-b{background:var(--accent-green);color:#fff}
+
+  /* Bottom arrows */
+  .bottom-nav{display:flex;justify-content:space-between;margin-top:36px;padding-top:18px;border-top:1px solid var(--border)}
+  .bottom-nav button{
+    background:#fff;border:1px solid var(--border);padding:10px 18px;border-radius:8px;
+    cursor:pointer;font-size:15px;color:var(--ink);
+  }
+  .bottom-nav button:hover{border-color:var(--accent);color:var(--accent)}
+
+  /* Compound master box */
+  .master-box{
+    background:#fff;border:2px solid var(--accent-green);border-radius:10px;
+    padding:16px 20px;margin:18px 0 24px 0;
+  }
+  .master-box h3{margin:0 0 8px 0;color:var(--accent-green)}
+  .master-box .rule{margin:6px 0;font-size:14px}
+
+  /* Cheat sheet */
+  table.cheat{border-collapse:collapse;width:100%;background:#fff;margin-top:10px}
+  table.cheat th,table.cheat td{border:1px solid var(--border);padding:10px 12px;text-align:left;font-size:14px;vertical-align:top}
+  table.cheat th{background:#fafbfc;color:var(--muted)}
+
+  .mnemonic{
+    background:#fff;border:1px solid var(--border);border-radius:10px;padding:16px 20px;margin-top:14px;
+  }
+  .mnemonic .letters{font-family:'Consolas',monospace;font-size:18px;letter-spacing:2px;color:var(--accent);margin-bottom:10px}
+  .mnemonic ul{columns:2;column-gap:30px;margin:8px 0;padding-left:20px}
+  .mnemonic li{margin:3px 0;font-size:14px;break-inside:avoid}
+
+  /* Filter modes */
+  body[data-filter="a"] .card.worldB,body[data-filter="a"] .world-header.b,body[data-filter="a"] #compound-intro,body[data-filter="a"] #cheat-section{display:none}
+  body[data-filter="b"] .card.worldA,body[data-filter="b"] .world-header.a{display:none}
+
+  /* ── Tense Relationship Diagram ── */
+  .tense-map{background:#fff;border:1px solid var(--border);border-radius:14px;padding:24px 20px;margin:20px 0 28px 0;overflow-x:auto}
+  .tense-map h3{margin:0 0 16px 0;font-size:17px;color:var(--ink)}
+  .tense-map-grid{display:grid;grid-template-columns:140px 1fr 1fr;gap:0;min-width:560px}
+  .tmg-header{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);padding:6px 10px;background:#fafbfc;border:1px solid var(--border)}
+  .tmg-header:first-child{border-radius:8px 0 0 0}
+  .tmg-header:last-child{border-radius:0 8px 0 0}
+  .tmg-row-label{font-size:13px;font-weight:700;padding:10px 10px;border:1px solid var(--border);border-top:none;background:#fafbfc;color:var(--muted);display:flex;align-items:center}
+  .tmg-cell{font-size:13px;padding:10px 12px;border:1px solid var(--border);border-top:none;border-left:none}
+  .tmg-cell a{color:var(--accent);font-weight:600;text-decoration:none}
+  .tmg-cell a:hover{text-decoration:underline}
+  .tmg-cell.worldB-cell{background:var(--worldB)}
+  .tmg-cell.worldA-cell{background:var(--worldA)}
+  .tmg-formula{font-family:'Consolas',monospace;font-size:12px;color:var(--muted);display:block;margin-top:3px}
+  .map-legend{display:flex;gap:16px;margin-top:12px;font-size:12px;flex-wrap:wrap}
+  .map-legend span{display:flex;align-items:center;gap:6px}
+  .map-dot{width:10px;height:10px;border-radius:50%;display:inline-block}
+
+  /* ── Contrast / Don't confuse box ── */
+  .contrast-box{margin-top:14px;background:#fff;border:1px solid #f0c060;border-radius:8px;padding:12px 16px}
+  .contrast-box .label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:#a07d00;margin-bottom:8px}
+  .contrast-pair{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:6px}
+  .contrast-side{background:#fafafa;border-radius:6px;padding:10px 12px;font-size:14px}
+  .contrast-side strong{display:block;margin-bottom:4px;font-size:13px}
+  .contrast-side .cs-ex{color:var(--muted);font-size:13px;margin-top:4px;font-style:italic}
+  @media(max-width:600px){.contrast-pair{grid-template-columns:1fr}}
+
+  /* ── Irregular stems master box ── */
+  .stems-box{background:#fff;border:1px solid var(--worldA-border);border-radius:12px;padding:18px 20px;margin:18px 0}
+  .stems-box h4{margin:0 0 12px 0;font-size:15px;color:var(--accent)}
+  .stems-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:8px}
+  .stem-item{background:var(--worldA);border:1px solid var(--worldA-border);border-radius:6px;padding:8px 12px;font-size:14px}
+  .stem-item .si-verb{font-weight:700;color:var(--ink)}
+  .stem-item .si-arrow{color:var(--muted);margin:0 4px}
+  .stem-item .si-stem{color:var(--accent);font-family:'Consolas',monospace;font-weight:700}
+
+  /* ── Verb example filter ── */
+  .verb-filter-bar{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0 6px 0;align-items:center}
+  .verb-filter-bar .vfb-label{font-size:12px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.5px}
+  .vf-btn{background:#fff;border:1px solid var(--border);padding:5px 12px;border-radius:14px;cursor:pointer;font-size:13px;color:var(--ink);transition:all .15s}
+  .vf-btn:hover{border-color:var(--accent);color:var(--accent)}
+  .vf-btn.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+  .example[data-verb]{transition:opacity .2s}
+  .example[data-verb].hidden{display:none}
+
+  /* ── Futur Proche special styling ── */
+  .badge-proche{background:#7b5ea7;color:#fff}
+  .card.worldA-proche{background:linear-gradient(135deg,#f3eeff,#eef4fb);border-color:#c9b8e8}
+
+  /* ── Progress panel world icons ── */
+  .progress a .pw-icon{margin-right:4px;font-size:11px}
+
+  /* Scroll offset so sticky nav doesn't hide tense titles */
+  .card{scroll-margin-top:80px}
+  .world-header{scroll-margin-top:80px}
+
+  @media (max-width: 900px){
+    .progress{right:8px;width:220px}
+  }
+</style>
+</head>
+<body data-filter="all">
+
+<nav class="topnav">
+  <span class="title">🇫🇷 French Tenses Mastery</span>
+  <button data-filter="a">World A — Simple</button>
+  <button data-filter="b">World B — Compound</button>
+  <button data-filter="all" class="active">All Tenses</button>
+</nav>
+
+<button class="hamburger" id="hamburger" aria-label="Open tense navigator" aria-expanded="false">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round">
+    <line x1="4" y1="7"  x2="20" y2="7"/>
+    <line x1="4" y1="12" x2="20" y2="12"/>
+    <line x1="4" y1="17" x2="20" y2="17"/>
+  </svg>
+</button>
+
+<aside class="progress" id="progress">
+  <h4>You are here</h4>
+</aside>
+
+<main class="container">
+  <h1>French Tenses — Two Worlds, One Mastery</h1>
+  <p class="lede">Every French tense falls into one of two worlds. Learn the split, and the whole system clicks into place.</p>
+
+  <!-- TENSE RELATIONSHIP MAP -->
+  <div class="tense-map" id="tense-map">
+    <h3>🗺️ The Complete System at a Glance — How Every Tense Is Built</h3>
+    <div class="tense-map-grid">
+      <div class="tmg-header">Tense Family</div>
+      <div class="tmg-header">🌊 World A — Simple (stem + endings)</div>
+      <div class="tmg-header">🌿 World B — Compound (avoir/être + PP)</div>
+
+      <div class="tmg-row-label">Indicative Present</div>
+      <div class="tmg-cell worldA-cell"><a href="#tense-present">Présent</a><span class="tmg-formula">infinitive stem + present endings</span></div>
+      <div class="tmg-cell worldB-cell"><a href="#tense-passe-compose">Passé Composé</a><span class="tmg-formula">avoir/être [Présent] + PP</span></div>
+
+      <div class="tmg-row-label">Past Background</div>
+      <div class="tmg-cell worldA-cell"><a href="#tense-imparfait">Imparfait</a><span class="tmg-formula">nous-form stem + ais/ais/ait/ions/iez/aient</span></div>
+      <div class="tmg-cell worldB-cell"><a href="#tense-plus-que-parfait">Plus-que-parfait</a><span class="tmg-formula">avoir/être [Imparfait] + PP</span></div>
+
+      <div class="tmg-row-label">Literary Past</div>
+      <div class="tmg-cell worldA-cell"><a href="#tense-passe-simple">Passé Simple</a><span class="tmg-formula">ps-stem + a/as/a/âmes/âtes/èrent etc.</span></div>
+      <div class="tmg-cell worldB-cell"><a href="#tense-passe-anterieur">Passé Antérieur</a><span class="tmg-formula">avoir/être [Passé Simple] + PP</span></div>
+
+      <div class="tmg-row-label">Future</div>
+      <div class="tmg-cell worldA-cell"><a href="#tense-futur-proche">Futur Proche</a> · <a href="#tense-futur-simple">Futur Simple</a><span class="tmg-formula">aller+inf · infinitive + ai/as/a/ons/ez/ont</span></div>
+      <div class="tmg-cell worldB-cell"><a href="#tense-futur-anterieur">Futur Antérieur</a><span class="tmg-formula">avoir/être [Futur Simple] + PP</span></div>
+
+      <div class="tmg-row-label">Conditional</div>
+      <div class="tmg-cell worldA-cell"><a href="#tense-conditionnel">Conditionnel Présent</a><span class="tmg-formula">future stem + ais/ais/ait/ions/iez/aient</span></div>
+      <div class="tmg-cell worldB-cell"><a href="#tense-conditionnel-passe">Conditionnel Passé</a><span class="tmg-formula">avoir/être [Conditionnel Présent] + PP</span></div>
+
+      <div class="tmg-row-label">Subjunctive</div>
+      <div class="tmg-cell worldA-cell"><a href="#tense-subj-present">Subjonctif Présent</a> · <a href="#tense-subj-imparfait">Subjonctif Imparfait</a><span class="tmg-formula">ils-form stem + e/es/e/ions/iez/ent</span></div>
+      <div class="tmg-cell worldB-cell"><a href="#tense-subj-passe">Subjonctif Passé</a> · <a href="#tense-subj-pqp">Subj. Plus-que-parfait</a><span class="tmg-formula">avoir/être [Subj. Présent/Imparfait] + PP</span></div>
+
+      <div class="tmg-row-label">Imperative</div>
+      <div class="tmg-cell worldA-cell"><a href="#tense-imperatif">Impératif Présent</a><span class="tmg-formula">present tu/nous/vous forms, no pronoun</span></div>
+      <div class="tmg-cell worldB-cell" style="color:var(--muted);font-size:13px;font-style:italic">— (Impératif has no compound form)</div>
+    </div>
+    <div class="map-legend">
+      <span><span class="map-dot" style="background:#bcd3ea"></span> World A — Simple tenses</span>
+      <span><span class="map-dot" style="background:#b8e3cd"></span> World B — Compound tenses (need PP)</span>
+      <span style="color:var(--muted)">💡 Each row is a tense family — the compound version is built by putting the auxiliary into the matching simple tense.</span>
+    </div>
+  </div>
+
+  <!-- IRREGULAR STEMS MASTER BOX -->
+  <div class="stems-box" id="irregular-stems">
+    <h4>⚡ Irregular Future/Conditional Stems — Memorize These Once</h4>
+    <p style="font-size:14px;color:var(--muted);margin:0 0 12px 0">These stems are shared by <strong>Futur Simple</strong> and <strong>Conditionnel Présent</strong>. The stem always ends in <strong>R</strong>.</p>
+    <div class="stems-grid">
+      <div class="stem-item"><span class="si-verb">être</span><span class="si-arrow">→</span><span class="si-stem">ser-</span></div>
+      <div class="stem-item"><span class="si-verb">avoir</span><span class="si-arrow">→</span><span class="si-stem">aur-</span></div>
+      <div class="stem-item"><span class="si-verb">aller</span><span class="si-arrow">→</span><span class="si-stem">ir-</span></div>
+      <div class="stem-item"><span class="si-verb">faire</span><span class="si-arrow">→</span><span class="si-stem">fer-</span></div>
+      <div class="stem-item"><span class="si-verb">venir</span><span class="si-arrow">→</span><span class="si-stem">viendr-</span></div>
+      <div class="stem-item"><span class="si-verb">tenir</span><span class="si-arrow">→</span><span class="si-stem">tiendr-</span></div>
+      <div class="stem-item"><span class="si-verb">voir</span><span class="si-arrow">→</span><span class="si-stem">verr-</span></div>
+      <div class="stem-item"><span class="si-verb">pouvoir</span><span class="si-arrow">→</span><span class="si-stem">pourr-</span></div>
+      <div class="stem-item"><span class="si-verb">vouloir</span><span class="si-arrow">→</span><span class="si-stem">voudr-</span></div>
+      <div class="stem-item"><span class="si-verb">devoir</span><span class="si-arrow">→</span><span class="si-stem">devr-</span></div>
+      <div class="stem-item"><span class="si-verb">savoir</span><span class="si-arrow">→</span><span class="si-stem">saur-</span></div>
+      <div class="stem-item"><span class="si-verb">courir</span><span class="si-arrow">→</span><span class="si-stem">courr-</span></div>
+      <div class="stem-item"><span class="si-verb">envoyer</span><span class="si-arrow">→</span><span class="si-stem">enverr-</span></div>
+      <div class="stem-item"><span class="si-verb">falloir</span><span class="si-arrow">→</span><span class="si-stem">faudr-</span></div>
+      <div class="stem-item"><span class="si-verb">pleuvoir</span><span class="si-arrow">→</span><span class="si-stem">pleuvr-</span></div>
+      <div class="stem-item"><span class="si-verb">recevoir</span><span class="si-arrow">→</span><span class="si-stem">recevr-</span></div>
+    </div>
+  </div>
+
+  <!-- WORLD A HEADER -->
+  <section class="world-header a" id="world-a-header">
+    <h2>🌊 World A — Simple Tenses</h2>
+    <p>Built directly from a stem + endings. <strong>No auxiliary. No past participle. No agreement.</strong> Pure conjugation.</p>
+  </section>
+
+  <!-- CARDS GO HERE -->
+  <div id="cards-root">
+
+  <!-- VERB FILTER BAR -->
+  <div class="verb-filter-bar" id="verb-filter-bar">
+    <span class="vfb-label">Filter examples by verb:</span>
+    <button class="vf-btn active" data-verb="all">All verbs</button>
+    <button class="vf-btn" data-verb="être">ÊTRE</button>
+    <button class="vf-btn" data-verb="avoir">AVOIR</button>
+    <button class="vf-btn" data-verb="venir">VENIR</button>
+    <button class="vf-btn" data-verb="partir">PARTIR</button>
+    <button class="vf-btn" data-verb="aller">ALLER</button>
+    <button class="vf-btn" data-verb="prendre">PRENDRE</button>
+    <button class="vf-btn" data-verb="mettre">METTRE</button>
+    <button class="vf-btn" data-verb="faire">FAIRE</button>
+    <button class="vf-btn" data-verb="dire">DIRE</button>
+    <button class="vf-btn" data-verb="voir">VOIR</button>
+  </div>
+
+  <!-- 1. Présent -->
+  <article class="card worldA" id="tense-present">
+    <h3>1. Présent de l'Indicatif <span style="font-weight:normal;color:var(--muted);font-size:15px">· Present</span></h3>
+    <div class="subtitle">The "now" tense — what's happening, what's true, what's habitual.</div>
+
+    <div class="block"><div class="label">When to use</div>
+      <div class="body">Actions happening right now, general truths, habits, and things about to happen very soon. "Je mange" = I eat / I am eating / I do eat — one form, three English meanings.</div></div>
+
+    <div class="block"><div class="label">Formula</div>
+      <div class="formula">infinitive stem (drop -ER / -IR / -RE) + present endings</div></div>
+
+    <div class="block"><div class="label">Where the stem comes from</div>
+      <div class="body">Take the infinitive and drop the ending: <span class="stem">parler</span> → <span class="stem">parl-</span>, <span class="stem">finir</span> → <span class="stem">fin-</span>, <span class="stem">vendre</span> → <span class="stem">vend-</span>.</div></div>
+
+    <div class="block"><div class="label">Endings</div>
+      <table class="conj">
+        <tr><th>Pronoun</th><th>-ER</th><th>-IR</th><th>-RE</th></tr>
+        <tr><td>Je</td><td class="ending">-e</td><td class="ending">-is</td><td class="ending">-s</td></tr>
+        <tr><td>Tu</td><td class="ending">-es</td><td class="ending">-is</td><td class="ending">-s</td></tr>
+        <tr><td>Il/Elle/On</td><td class="ending">-e</td><td class="ending">-it</td><td class="ending">—</td></tr>
+        <tr><td>Nous</td><td class="ending">-ons</td><td class="ending">-issons</td><td class="ending">-ons</td></tr>
+        <tr><td>Vous</td><td class="ending">-ez</td><td class="ending">-issez</td><td class="ending">-ez</td></tr>
+        <tr><td>Ils/Elles</td><td class="ending">-ent</td><td class="ending">-issent</td><td class="ending">-ent</td></tr>
+      </table>
+    </div>
+
+    <div class="block"><div class="label">Examples</div>
+      <div class="examples">
+        <div class="example" data-verb="être"><span class="fr"><strong>ÊTRE:</strong> Je <span class="stem">suis</span> fatigué après cette longue journée au bureau.</span><span class="en">I am tired after this long day at the office.</span></div>
+        <div class="example" data-verb="être"><span class="fr"><strong>ÊTRE:</strong> Nous <span class="stem">sommes</span> en retard, le train part dans cinq minutes.</span><span class="en">We are late, the train leaves in five minutes.</span></div>
+        <div class="example" data-verb="être"><span class="fr"><strong>ÊTRE:</strong> Vous <span class="stem">êtes</span> les bienvenus chez moi à tout moment.</span><span class="en">You are welcome at my place any time.</span></div>
+
+        <div class="example" data-verb="avoir"><span class="fr"><strong>AVOIR:</strong> J'<span class="stem">ai</span> une idée brillante pour notre projet de week-end.</span><span class="en">I have a brilliant idea for our weekend project.</span></div>
+        <div class="example" data-verb="avoir"><span class="fr"><strong>AVOIR:</strong> Tu <span class="stem">as</span> raison, cette solution est plus élégante.</span><span class="en">You are right, this solution is more elegant.</span></div>
+        <div class="example" data-verb="avoir"><span class="fr"><strong>AVOIR:</strong> Ils <span class="stem">ont</span> beaucoup de travail cette semaine.</span><span class="en">They have a lot of work this week.</span></div>
+
+        <div class="example" data-verb="prendre"><span class="fr"><strong>PRENDRE:</strong> Je <span class="stem">prends</span> toujours un café avant de commencer à coder.</span><span class="en">I always have a coffee before starting to code.</span></div>
+        <div class="example" data-verb="prendre"><span class="fr"><strong>PRENDRE:</strong> Nous <span class="stem">prenons</span> le métro pour aller au musée.</span><span class="en">We take the subway to go to the museum.</span></div>
+        <div class="example" data-verb="prendre"><span class="fr"><strong>PRENDRE:</strong> Ils <span class="stem">prennent</span> leur temps pour bien faire les choses.</span><span class="en">They take their time to do things well.</span></div>
+      </div>
+    </div>
+
+    <div class="anchor"><div class="label">🧠 Memory anchor</div>
+      Say "<em>E-ES-E, ONS-EZ-ENT</em>" like a six-note melody. That's your -ER skeleton. For -IR verbs, slip "iss" into <em>nous/vous/ils</em> — they need the extra kick. The present is the heartbeat — every other tense grows out of it.
+    </div>
+
+    <div class="contrast-box">
+      <div class="label">⚠️ Don't confuse with</div>
+      <div class="contrast-pair">
+        <div class="contrast-side">
+          <strong>Présent → ongoing/habitual</strong>
+          <div>Je mange une pomme.</div>
+          <div class="cs-ex">I eat / I am eating / I do eat an apple. (happening now or regularly)</div>
+        </div>
+        <div class="contrast-side">
+          <strong>Futur Proche → about to happen</strong>
+          <div>Je vais manger une pomme.</div>
+          <div class="cs-ex">I am going to eat an apple. (imminent, planned soon)</div>
+        </div>
+      </div>
+    </div>
+  </article>
+
+  <!-- 2. Imparfait -->
+  <article class="card worldA" id="tense-imparfait">
+    <h3>2. Imparfait <span style="font-weight:normal;color:var(--muted);font-size:15px">· Imperfect</span></h3>
+    <div class="subtitle">The "used to / was doing" tense — background, habits, ongoing states in the past.</div>
+
+    <div class="block"><div class="label">When to use</div>
+      <div class="body">Paint the scene of the past: what was going on, how things were, what you used to do. "Il faisait beau, les oiseaux chantaient..." — it sets the stage.</div></div>
+
+    <div class="block"><div class="label">Formula</div>
+      <div class="formula">Imperfect stem + imperfect endings</div></div>
+
+    <div class="block"><div class="label">Where the stem comes from</div>
+      <div class="body">Take the <em>nous</em>-form of the Present, drop <span class="ending">-ons</span>. <span class="stem">nous parlons</span> → <span class="stem">parl-</span>; <span class="stem">nous finissons</span> → <span class="stem">finiss-</span>; <span class="stem">nous prenons</span> → <span class="stem">pren-</span>. <strong>Exception: ÊTRE → ét-</strong>.</div></div>
+
+    <div class="block"><div class="label">Endings (same for all three groups)</div>
+      <table class="conj">
+        <tr><th>Pronoun</th><th>Ending</th><th>Example (PARLER → parl-)</th></tr>
+        <tr><td>Je</td><td class="ending">-ais</td><td><span class="stem">parl</span><span class="ending">ais</span></td></tr>
+        <tr><td>Tu</td><td class="ending">-ais</td><td><span class="stem">parl</span><span class="ending">ais</span></td></tr>
+        <tr><td>Il/Elle/On</td><td class="ending">-ait</td><td><span class="stem">parl</span><span class="ending">ait</span></td></tr>
+        <tr><td>Nous</td><td class="ending">-ions</td><td><span class="stem">parl</span><span class="ending">ions</span></td></tr>
+        <tr><td>Vous</td><td class="ending">-iez</td><td><span class="stem">parl</span><span class="ending">iez</span></td></tr>
+        <tr><td>Ils/Elles</td><td class="ending">-aient</td><td><span class="stem">parl</span><span class="ending">aient</span></td></tr>
+      </table>
+    </div>
+
+    <div class="block"><div class="label">Examples</div>
+      <div class="examples">
+        <div class="example" data-verb="être"><span class="fr"><strong>ÊTRE:</strong> Quand j'<span class="stem">étais</span> petit, je rêvais de devenir astronaute.</span><span class="en">When I was little, I dreamed of becoming an astronaut.</span></div>
+        <div class="example" data-verb="être"><span class="fr"><strong>ÊTRE:</strong> Nous <span class="stem">étions</span> amis depuis l'école primaire.</span><span class="en">We had been friends since primary school.</span></div>
+        <div class="example" data-verb="être"><span class="fr"><strong>ÊTRE:</strong> Ils <span class="stem">étaient</span> toujours en retard aux réunions.</span><span class="en">They were always late to meetings.</span></div>
+
+        <div class="example" data-verb="avoir"><span class="fr"><strong>AVOIR:</strong> J'<span class="stem">avais</span> seulement dix ans quand j'ai vu la mer pour la première fois.</span><span class="en">I was only ten when I saw the sea for the first time.</span></div>
+        <div class="example" data-verb="avoir"><span class="fr"><strong>AVOIR:</strong> Tu <span class="stem">avais</span> l'air inquiet hier soir, tout va bien ?</span><span class="en">You looked worried last night, is everything okay?</span></div>
+        <div class="example" data-verb="avoir"><span class="fr"><strong>AVOIR:</strong> Elles <span class="stem">avaient</span> toutes les réponses avant la fin du quiz.</span><span class="en">They had all the answers before the end of the quiz.</span></div>
+
+        <div class="example" data-verb="faire"><span class="fr"><strong>FAIRE:</strong> Je <span class="stem">faisais</span> mes devoirs quand le téléphone a sonné.</span><span class="en">I was doing my homework when the phone rang.</span></div>
+        <div class="example" data-verb="faire"><span class="fr"><strong>FAIRE:</strong> Nous <span class="stem">faisions</span> du vélo tous les dimanches matin.</span><span class="en">We used to bike every Sunday morning.</span></div>
+        <div class="example" data-verb="faire"><span class="fr"><strong>FAIRE:</strong> Ils <span class="stem">faisaient</span> semblant de ne pas comprendre le problème.</span><span class="en">They were pretending not to understand the problem.</span></div>
+      </div>
+    </div>
+
+    <div class="anchor"><div class="label">🧠 Memory anchor</div>
+      Imparfait = <strong>"I"</strong>mperfect = <strong>"I"</strong>ncomplete = <strong>"I"</strong>-ending. All six endings contain the letter <strong>I</strong>: <em>-ais, -ais, -ait, -ions, -iez, -aient</em>. If there's no "i" in the ending, it's not Imparfait.
+    </div>
+
+    <div class="contrast-box">
+      <div class="label">⚠️ Don't confuse with — Imparfait vs Passé Composé</div>
+      <div class="contrast-pair">
+        <div class="contrast-side">
+          <strong>Imparfait → background, duration, habit</strong>
+          <div>Il <em>pleuvait</em> quand je suis sorti.</div>
+          <div class="cs-ex">It was raining (ongoing backdrop) when I went out.</div>
+          <div style="margin-top:6px">Je <em>mangeais</em> des croissants chaque matin.</div>
+          <div class="cs-ex">I used to eat croissants every morning. (repeated habit)</div>
+        </div>
+        <div class="contrast-side">
+          <strong>Passé Composé → specific, completed event</strong>
+          <div>Il <em>a plu</em> toute la journée.</div>
+          <div class="cs-ex">It rained all day. (completed, over)</div>
+          <div style="margin-top:6px">J'<em>ai mangé</em> un croissant ce matin.</div>
+          <div class="cs-ex">I ate a croissant this morning. (one specific event)</div>
+        </div>
+      </div>
+    </div>
+  </article>
+
+  <!-- 3. Passé Simple -->
+  <article class="card worldA" id="tense-passe-simple">
+    <h3>3. Passé Simple <span style="font-weight:normal;color:var(--muted);font-size:15px">· Simple Past / Preterite</span></h3>
+    <div class="subtitle">The literary past — for stories, novels, and history books. You'll read it more than you'll speak it.</div>
+
+    <div class="block"><div class="label">When to use</div>
+      <div class="body">Completed actions in formal writing, fairy tales, historical narration. "Il se leva, ouvrit la porte et partit." In speech, the Passé Composé replaces it — but you must recognize this tense when reading.</div></div>
+
+    <div class="block"><div class="label">Formula</div>
+      <div class="formula">Passé simple stem + passé simple endings</div></div>
+
+    <div class="block"><div class="label">Where the stem comes from</div>
+      <div class="body">For regular verbs: infinitive minus ending. For irregulars: usually the past participle gives the clue (pris → pr-, vu → v-, fait → f-). Check the endings table for the tell-tale vowel (a / i / u).</div></div>
+
+    <div class="block"><div class="label">Endings</div>
+      <table class="conj">
+        <tr><th>Pronoun</th><th>-ER (a-group)</th><th>-IR / -RE (i-group)</th><th>u-group (irregular)</th></tr>
+        <tr><td>Je</td><td class="ending">-ai</td><td class="ending">-is</td><td class="ending">-us</td></tr>
+        <tr><td>Tu</td><td class="ending">-as</td><td class="ending">-is</td><td class="ending">-us</td></tr>
+        <tr><td>Il/Elle/On</td><td class="ending">-a</td><td class="ending">-it</td><td class="ending">-ut</td></tr>
+        <tr><td>Nous</td><td class="ending">-âmes</td><td class="ending">-îmes</td><td class="ending">-ûmes</td></tr>
+        <tr><td>Vous</td><td class="ending">-âtes</td><td class="ending">-îtes</td><td class="ending">-ûtes</td></tr>
+        <tr><td>Ils/Elles</td><td class="ending">-èrent</td><td class="ending">-irent</td><td class="ending">-urent</td></tr>
+      </table>
+    </div>
+
+    <div class="block"><div class="label">Examples</div>
+      <div class="examples">
+        <div class="example" data-verb="être"><span class="fr"><strong>ÊTRE:</strong> Il <span class="stem">fut</span> le premier roi à unifier le royaume.</span><span class="en">He was the first king to unify the kingdom.</span></div>
+        <div class="example" data-verb="être"><span class="fr"><strong>ÊTRE:</strong> Nous <span class="stem">fûmes</span> surpris par la nouvelle annoncée ce matin-là.</span><span class="en">We were surprised by the news announced that morning.</span></div>
+        <div class="example" data-verb="être"><span class="fr"><strong>ÊTRE:</strong> Ils <span class="stem">furent</span> les héros de cette bataille légendaire.</span><span class="en">They were the heroes of this legendary battle.</span></div>
+
+        <div class="example" data-verb="avoir"><span class="fr"><strong>AVOIR:</strong> Elle <span class="stem">eut</span> soudain une idée lumineuse qui changea tout.</span><span class="en">She suddenly had a brilliant idea that changed everything.</span></div>
+        <div class="example" data-verb="avoir"><span class="fr"><strong>AVOIR:</strong> J'<span class="stem">eus</span> peur en entendant ce bruit étrange dans la nuit.</span><span class="en">I was afraid when I heard that strange noise in the night.</span></div>
+        <div class="example" data-verb="avoir"><span class="fr"><strong>AVOIR:</strong> Ils <span class="stem">eurent</span> raison de se méfier du vieux sorcier.</span><span class="en">They were right to distrust the old wizard.</span></div>
+
+        <div class="example" data-verb="prendre"><span class="fr"><strong>PRENDRE:</strong> Le héros <span class="stem">prit</span> son épée et s'élança vers le dragon.</span><span class="en">The hero took his sword and charged at the dragon.</span></div>
+        <div class="example" data-verb="prendre"><span class="fr"><strong>PRENDRE:</strong> Nous <span class="stem">prîmes</span> la route au lever du soleil.</span><span class="en">We took to the road at sunrise.</span></div>
+        <div class="example" data-verb="prendre"><span class="fr"><strong>PRENDRE:</strong> Ils <span class="stem">prirent</span> le château sans verser une goutte de sang.</span><span class="en">They took the castle without spilling a drop of blood.</span></div>
+      </div>
+    </div>
+
+    <div class="anchor"><div class="label">🧠 Memory anchor</div>
+      Look for the <strong>accented circumflex</strong> (^) in the <em>nous/vous</em> forms — that little hat is the signature of Passé Simple. <em>"fûmes, fûtes"</em> literally wear hats. If you spot a ^ on a verb in a novel, you're almost certainly reading Passé Simple.
+    </div>
+  </article>
+
+  <!-- 3.5 Futur Proche (NEW) -->
+  <article class="card worldA worldA-proche" id="tense-futur-proche">
+    <span class="badge badge-proche">SPOKEN FRENCH #1</span>
+    <h3>3b. Futur Proche <span style="font-weight:normal;color:var(--muted);font-size:15px">· Near Future / Going-to Future</span></h3>
+    <div class="subtitle">The most-used future in everyday French conversation — "going to do something."</div>
+
+    <div class="block"><div class="label">When to use</div>
+      <div class="body">Immediate or planned future actions. Any time you'd say "I'm going to…" in English. In spoken French this is used <em>far more</em> than the Futur Simple for near or planned events. "Je vais partir dans cinq minutes." — it feels personal and certain.</div></div>
+
+    <div class="block"><div class="label">Formula</div>
+      <div class="formula">ALLER (conjugated in Present) + infinitive of the main verb</div></div>
+
+    <div class="block"><div class="label">Conjugation of ALLER (Présent)</div>
+      <table class="conj">
+        <tr><th>Pronoun</th><th>ALLER</th><th>+ Infinitive</th></tr>
+        <tr><td>Je</td><td class="stem">vais</td><td class="ending">+ infinitif</td></tr>
+        <tr><td>Tu</td><td class="stem">vas</td><td class="ending">+ infinitif</td></tr>
+        <tr><td>Il/Elle/On</td><td class="stem">va</td><td class="ending">+ infinitif</td></tr>
+        <tr><td>Nous</td><td class="stem">allons</td><td class="ending">+ infinitif</td></tr>
+        <tr><td>Vous</td><td class="stem">allez</td><td class="ending">+ infinitif</td></tr>
+        <tr><td>Ils/Elles</td><td class="stem">vont</td><td class="ending">+ infinitif</td></tr>
+      </table>
+    </div>
+
+    <div class="block"><div class="label">Examples</div>
+      <div class="examples">
+        <div class="example" data-verb="être"><span class="fr"><strong>ÊTRE:</strong> Je <span class="stem">vais être</span> en retard si tu ne dépêches pas.</span><span class="en">I'm going to be late if you don't hurry.</span></div>
+        <div class="example" data-verb="être"><span class="fr"><strong>ÊTRE:</strong> On <span class="stem">va être</span> cinq pour le dîner, préviens le restaurant.</span><span class="en">There are going to be five of us for dinner, let the restaurant know.</span></div>
+        <div class="example" data-verb="avoir"><span class="fr"><strong>AVOIR:</strong> Tu <span class="stem">vas avoir</span> besoin de ce document pour la réunion.</span><span class="en">You're going to need this document for the meeting.</span></div>
+        <div class="example" data-verb="avoir"><span class="fr"><strong>AVOIR:</strong> Nous <span class="stem">allons avoir</span> une surprise extraordinaire ce soir.</span><span class="en">We're going to have an extraordinary surprise tonight.</span></div>
+        <div class="example" data-verb="partir"><span class="fr"><strong>PARTIR:</strong> Elle <span class="stem">va partir</span> en vacances vendredi prochain.</span><span class="en">She's going to leave on vacation next Friday.</span></div>
+        <div class="example" data-verb="venir"><span class="fr"><strong>VENIR:</strong> Ils <span class="stem">vont venir</span> nous rendre visite ce week-end.</span><span class="en">They're going to come visit us this weekend.</span></div>
+        <div class="example" data-verb="prendre"><span class="fr"><strong>PRENDRE:</strong> Je <span class="stem">vais prendre</span> le métro, la voiture c'est trop compliqué.</span><span class="en">I'm going to take the metro, the car is too complicated.</span></div>
+        <div class="example" data-verb="faire"><span class="fr"><strong>FAIRE:</strong> Nous <span class="stem">allons faire</span> une randonnée si le temps le permet.</span><span class="en">We're going to go hiking if the weather allows.</span></div>
+        <div class="example" data-verb="voir"><span class="fr"><strong>VOIR:</strong> Vous <span class="stem">allez voir</span> à quel point cette ville est belle.</span><span class="en">You're going to see just how beautiful this city is.</span></div>
+      </div>
+    </div>
+
+    <div class="anchor"><div class="label">🧠 Memory anchor</div>
+      <strong>"ALLER + infinitif = on the move toward the future."</strong> The verb <em>aller</em> (to go) physically moves you forward — and that's exactly what this tense does in time. No stems to memorize, no special endings: just conjugate <em>aller</em> and drop the infinitive right after. Easiest future in French.
+    </div>
+
+    <div class="contrast-box">
+      <div class="label">⚠️ Futur Proche vs Futur Simple — when to use which?</div>
+      <div class="contrast-pair">
+        <div class="contrast-side">
+          <strong>Futur Proche → personal, imminent, planned</strong>
+          <div>Je <em>vais commencer</em> le régime lundi.</div>
+          <div class="cs-ex">I'm going to start the diet on Monday. (personal decision, soon)</div>
+        </div>
+        <div class="contrast-side">
+          <strong>Futur Simple → more distant, general, formal</strong>
+          <div>Un jour, les robots <em>remplaceront</em> certains emplois.</div>
+          <div class="cs-ex">One day, robots will replace some jobs. (prediction, distant future)</div>
+        </div>
+      </div>
+    </div>
+  </article>
+
+  <!-- 4. Futur Simple -->
+  <article class="card worldA" id="tense-futur-simple">
+    <h3>4. Futur Simple <span style="font-weight:normal;color:var(--muted);font-size:15px">· Simple Future</span></h3>
+    <div class="subtitle">The "will" tense — definite future plans and predictions.</div>
+
+    <div class="block"><div class="label">When to use</div>
+      <div class="body">Concrete future actions, promises, predictions. "Demain, je partirai à l'aube." It's the tense of certainty about what lies ahead.</div></div>
+
+    <div class="block"><div class="label">Formula</div>
+      <div class="formula">Future stem (= infinitive, usually) + AVOIR present endings (shortened)</div></div>
+
+    <div class="block"><div class="label">Where the stem comes from</div>
+      <div class="body">For -ER and -IR verbs: the infinitive itself. For -RE verbs: drop the final -e (vendre → vendr-). Irregulars have unique stems you must memorize: <span class="stem">être → ser-</span>, <span class="stem">avoir → aur-</span>, <span class="stem">aller → ir-</span>, <span class="stem">faire → fer-</span>, <span class="stem">venir → viendr-</span>, <span class="stem">voir → verr-</span>, <span class="stem">pouvoir → pourr-</span>.</div></div>
+
+    <div class="block"><div class="label">Endings (same for everyone — they ARE the avoir present)</div>
+      <table class="conj">
+        <tr><th>Pronoun</th><th>Ending</th><th>Example (PARLER → parler-)</th></tr>
+        <tr><td>Je</td><td class="ending">-ai</td><td><span class="stem">parler</span><span class="ending">ai</span></td></tr>
+        <tr><td>Tu</td><td class="ending">-as</td><td><span class="stem">parler</span><span class="ending">as</span></td></tr>
+        <tr><td>Il/Elle/On</td><td class="ending">-a</td><td><span class="stem">parler</span><span class="ending">a</span></td></tr>
+        <tr><td>Nous</td><td class="ending">-ons</td><td><span class="stem">parler</span><span class="ending">ons</span></td></tr>
+        <tr><td>Vous</td><td class="ending">-ez</td><td><span class="stem">parler</span><span class="ending">ez</span></td></tr>
+        <tr><td>Ils/Elles</td><td class="ending">-ont</td><td><span class="stem">parler</span><span class="ending">ont</span></td></tr>
+      </table>
+    </div>
+
+    <div class="block"><div class="label">Examples</div>
+      <div class="examples">
+        <div class="example" data-verb="être"><span class="fr"><strong>ÊTRE:</strong> Je <span class="stem">serai</span> à Paris la semaine prochaine pour la conférence.</span><span class="en">I will be in Paris next week for the conference.</span></div>
+        <div class="example" data-verb="être"><span class="fr"><strong>ÊTRE:</strong> Nous <span class="stem">serons</span> prêts à signer le contrat vendredi matin.</span><span class="en">We will be ready to sign the contract Friday morning.</span></div>
+        <div class="example" data-verb="être"><span class="fr"><strong>ÊTRE:</strong> Vous <span class="stem">serez</span> surpris par la beauté de cette région.</span><span class="en">You will be surprised by the beauty of this region.</span></div>
+
+        <div class="example" data-verb="avoir"><span class="fr"><strong>AVOIR:</strong> J'<span class="stem">aurai</span> terminé le rapport avant lundi, promis.</span><span class="en">I will have finished the report before Monday, I promise.</span></div>
+        <div class="example" data-verb="avoir"><span class="fr"><strong>AVOIR:</strong> Tu <span class="stem">auras</span> de bonnes nouvelles très bientôt, j'en suis sûr.</span><span class="en">You will have good news very soon, I'm sure.</span></div>
+        <div class="example" data-verb="avoir"><span class="fr"><strong>AVOIR:</strong> Ils <span class="stem">auront</span> besoin de notre soutien dans les mois à venir.</span><span class="en">They will need our support in the months ahead.</span></div>
+
+        <div class="example" data-verb="aller"><span class="fr"><strong>ALLER:</strong> J'<span class="stem">irai</span> au marché demain acheter des fruits frais.</span><span class="en">I will go to the market tomorrow to buy fresh fruit.</span></div>
+        <div class="example" data-verb="aller"><span class="fr"><strong>ALLER:</strong> Nous <span class="stem">irons</span> voir le nouveau film samedi soir.</span><span class="en">We will go see the new movie Saturday night.</span></div>
+        <div class="example" data-verb="aller"><span class="fr"><strong>ALLER:</strong> Ils <span class="stem">iront</span> en Italie pour leur lune de miel.</span><span class="en">They will go to Italy for their honeymoon.</span></div>
+      </div>
+    </div>
+
+    <div class="anchor"><div class="label">🧠 Memory anchor</div>
+      <strong>"Future = Infinitive + Avoir"</strong>. Literally. "Je parler + ai" = "I have to speak (in the future)." The endings <em>-ai, -as, -a, -ons, -ez, -ont</em> ARE the present tense of <em>avoir</em>. Stem always ends in <strong>R</strong> — R for "Road ahead."
+    </div>
+
+    <div class="contrast-box">
+      <div class="label">⚠️ Don't confuse — Futur Simple vs Conditionnel Présent</div>
+      <div class="contrast-pair">
+        <div class="contrast-side">
+          <strong>Futur Simple → will (certain)</strong>
+          <div>Demain il <em>fera</em> beau.</div>
+          <div class="cs-ex">Tomorrow it will be sunny. (prediction/fact)</div>
+        </div>
+        <div class="contrast-side">
+          <strong>Conditionnel → would (hypothetical)</strong>
+          <div>Si c'était l'été, il <em>ferait</em> beau.</div>
+          <div class="cs-ex">If it were summer, it would be sunny. (unreal condition)</div>
+        </div>
+      </div>
+    </div>
+  </article>
+
+  <!-- 5. Conditionnel Présent -->
+  <article class="card worldA" id="tense-conditionnel">
+    <h3>5. Conditionnel Présent <span style="font-weight:normal;color:var(--muted);font-size:15px">· Present Conditional</span></h3>
+    <div class="subtitle">The "would" tense — polite requests, hypotheticals, dreams.</div>
+
+    <div class="block"><div class="label">When to use</div>
+      <div class="body">"If I could, I would..." Dreams, hypothetical situations, polite requests ("Je voudrais un café"), and reported future in the past ("He said he would come").</div></div>
+
+    <div class="block"><div class="label">Formula</div>
+      <div class="formula">Future stem + Imparfait endings</div></div>
+
+    <div class="block"><div class="label">Where the stem comes from</div>
+      <div class="body"><strong>Same stem as Futur Simple</strong> — infinitive (or the irregular future stem). Just swap the endings: take the imparfait endings instead.</div></div>
+
+    <div class="block"><div class="label">Endings (borrowed from Imparfait)</div>
+      <table class="conj">
+        <tr><th>Pronoun</th><th>Ending</th><th>Example (PARLER → parler-)</th></tr>
+        <tr><td>Je</td><td class="ending">-ais</td><td><span class="stem">parler</span><span class="ending">ais</span></td></tr>
+        <tr><td>Tu</td><td class="ending">-ais</td><td><span class="stem">parler</span><span class="ending">ais</span></td></tr>
+        <tr><td>Il/Elle/On</td><td class="ending">-ait</td><td><span class="stem">parler</span><span class="ending">ait</span></td></tr>
+        <tr><td>Nous</td><td class="ending">-ions</td><td><span class="stem">parler</span><span class="ending">ions</span></td></tr>
+        <tr><td>Vous</td><td class="ending">-iez</td><td><span class="stem">parler</span><span class="ending">iez</span></td></tr>
+        <tr><td>Ils/Elles</td><td class="ending">-aient</td><td><span class="stem">parler</span><span class="ending">aient</span></td></tr>
+      </table>
+    </div>
+
+    <div class="block"><div class="label">Examples</div>
+      <div class="examples">
+        <div class="example" data-verb="être"><span class="fr"><strong>ÊTRE:</strong> Je <span class="stem">serais</span> plus heureux si je vivais près de la mer.</span><span class="en">I would be happier if I lived by the sea.</span></div>
+        <div class="example" data-verb="être"><span class="fr"><strong>ÊTRE:</strong> Nous <span class="stem">serions</span> ravis de vous accueillir chez nous.</span><span class="en">We would be delighted to welcome you at our place.</span></div>
+        <div class="example" data-verb="être"><span class="fr"><strong>ÊTRE:</strong> Ce <span class="stem">serait</span> une erreur de refuser cette opportunité rare.</span><span class="en">It would be a mistake to refuse this rare opportunity.</span></div>
+
+        <div class="example" data-verb="avoir"><span class="fr"><strong>AVOIR:</strong> J'<span class="stem">aurais</span> besoin d'un peu plus de temps pour réfléchir.</span><span class="en">I would need a bit more time to think.</span></div>
+        <div class="example" data-verb="avoir"><span class="fr"><strong>AVOIR:</strong> Tu <span class="stem">aurais</span> dû me prévenir avant de tout changer.</span><span class="en">You should have warned me before changing everything.</span></div>
+        <div class="example" data-verb="avoir"><span class="fr"><strong>AVOIR:</strong> Elles <span class="stem">auraient</span> tort de ne pas tenter leur chance.</span><span class="en">They would be wrong not to try their luck.</span></div>
+
+        <div class="example" data-verb="voir"><span class="fr"><strong>VOIR:</strong> Je <span class="stem">verrais</span> bien un bon film ce soir, pas toi ?</span><span class="en">I could really go for a good film tonight, couldn't you?</span></div>
+        <div class="example" data-verb="voir"><span class="fr"><strong>VOIR:</strong> Nous <span class="stem">verrions</span> volontiers les enfants le week-end prochain.</span><span class="en">We would gladly see the children next weekend.</span></div>
+        <div class="example" data-verb="voir"><span class="fr"><strong>VOIR:</strong> Ils <span class="stem">verraient</span> la différence immédiatement avec ce nouvel écran.</span><span class="en">They would see the difference immediately with this new screen.</span></div>
+      </div>
+    </div>
+
+    <div class="anchor"><div class="label">🧠 Memory anchor</div>
+      <strong>Conditionnel = Future body + Imparfait clothes.</strong> Same stem as the future, same endings as the imparfait. If "would" fits in English, Conditionnel fits in French. The double-R stems (verrai → verrais) mean "really would."
+    </div>
+
+    <div class="contrast-box">
+      <div class="label">⚠️ Don't confuse — Conditionnel Présent vs Conditionnel Passé</div>
+      <div class="contrast-pair">
+        <div class="contrast-side">
+          <strong>Conditionnel Présent → would do</strong>
+          <div>Si j'avais de l'argent, je <em>voyagerais</em>.</div>
+          <div class="cs-ex">If I had money, I would travel. (still possible in theory)</div>
+        </div>
+        <div class="contrast-side">
+          <strong>Conditionnel Passé → would have done</strong>
+          <div>Si j'avais eu de l'argent, j'<em>aurais voyagé</em>.</div>
+          <div class="cs-ex">If I had had money, I would have traveled. (past regret, impossible now)</div>
+        </div>
+      </div>
+    </div>
+  </article>
+
+  <!-- 6. Subjonctif Présent -->
+  <article class="card worldA" id="tense-subj-present">
+    <h3>6. Subjonctif Présent <span style="font-weight:normal;color:var(--muted);font-size:15px">· Present Subjunctive</span></h3>
+    <div class="subtitle">The "emotion / doubt / necessity" mood — triggered by specific phrases, not time.</div>
+
+    <div class="block"><div class="label">When to use</div>
+      <div class="body">After expressions of necessity (<em>il faut que</em>), emotion (<em>je suis content que</em>), doubt (<em>je ne pense pas que</em>), and desire (<em>je veux que</em>). It's a mood, not a tense — it signals <strong>subjectivity</strong>.</div></div>
+
+    <div class="block"><div class="label">Formula</div>
+      <div class="formula">Subjunctive stem + subjunctive endings (led by <em>que</em>)</div></div>
+
+    <div class="block"><div class="label">Where the stem comes from</div>
+      <div class="body">Take the <em>ils/elles</em>-form of the Present, drop <span class="ending">-ent</span>. <span class="stem">ils parlent</span> → <span class="stem">parl-</span>; <span class="stem">ils finissent</span> → <span class="stem">finiss-</span>. For <em>nous</em>/<em>vous</em>, many verbs switch to the imparfait stem — "boot verbs." Irregulars like <span class="stem">être (soi-/soy-)</span>, <span class="stem">avoir (ai-/ay-)</span>, <span class="stem">aller (aill-/all-)</span>, <span class="stem">faire (fass-)</span> must be memorized.</div></div>
+
+    <div class="block"><div class="label">Endings</div>
+      <table class="conj">
+        <tr><th>Pronoun</th><th>Ending</th><th>Example (que je PARLE)</th></tr>
+        <tr><td>que je</td><td class="ending">-e</td><td><span class="stem">parl</span><span class="ending">e</span></td></tr>
+        <tr><td>que tu</td><td class="ending">-es</td><td><span class="stem">parl</span><span class="ending">es</span></td></tr>
+        <tr><td>qu'il/elle/on</td><td class="ending">-e</td><td><span class="stem">parl</span><span class="ending">e</span></td></tr>
+        <tr><td>que nous</td><td class="ending">-ions</td><td><span class="stem">parl</span><span class="ending">ions</span></td></tr>
+        <tr><td>que vous</td><td class="ending">-iez</td><td><span class="stem">parl</span><span class="ending">iez</span></td></tr>
+        <tr><td>qu'ils/elles</td><td class="ending">-ent</td><td><span class="stem">parl</span><span class="ending">ent</span></td></tr>
+      </table>
+    </div>
+
+    <div class="block"><div class="label">Examples</div>
+      <div class="examples">
+        <div class="example" data-verb="être"><span class="fr"><strong>ÊTRE:</strong> Il faut que je <span class="stem">sois</span> à l'aéroport une heure avant le vol.</span><span class="en">I have to be at the airport an hour before the flight.</span></div>
+        <div class="example" data-verb="être"><span class="fr"><strong>ÊTRE:</strong> Je doute qu'ils <span class="stem">soient</span> encore là quand nous arriverons.</span><span class="en">I doubt they will still be there when we arrive.</span></div>
+        <div class="example" data-verb="être"><span class="fr"><strong>ÊTRE:</strong> Il est important que nous <span class="stem">soyons</span> honnêtes entre nous.</span><span class="en">It's important that we be honest with each other.</span></div>
+
+        <div class="example" data-verb="avoir"><span class="fr"><strong>AVOIR:</strong> Je veux que tu <span class="stem">aies</span> le temps de te reposer ce week-end.</span><span class="en">I want you to have the time to rest this weekend.</span></div>
+        <div class="example" data-verb="avoir"><span class="fr"><strong>AVOIR:</strong> Il faut qu'on <span class="stem">ait</span> toutes les pièces avant de commencer.</span><span class="en">We must have all the pieces before starting.</span></div>
+        <div class="example" data-verb="avoir"><span class="fr"><strong>AVOIR:</strong> Je suis heureux qu'elles <span class="stem">aient</span> enfin trouvé un logement.</span><span class="en">I'm happy they have finally found a place to live.</span></div>
+
+        <div class="example" data-verb="faire"><span class="fr"><strong>FAIRE:</strong> Il faut que je <span class="stem">fasse</span> les courses avant la fermeture.</span><span class="en">I need to do the shopping before closing time.</span></div>
+        <div class="example" data-verb="faire"><span class="fr"><strong>FAIRE:</strong> Je ne pense pas qu'elle <span class="stem">fasse</span> exprès de te blesser.</span><span class="en">I don't think she hurts you on purpose.</span></div>
+        <div class="example" data-verb="faire"><span class="fr"><strong>FAIRE:</strong> Il est essentiel que nous <span class="stem">fassions</span> preuve de patience.</span><span class="en">It's essential that we show patience.</span></div>
+      </div>
+    </div>
+
+    <div class="anchor"><div class="label">🧠 Memory anchor</div>
+      The subjunctive always rides on the word <strong>"QUE"</strong>. No "que," no subjunctive. Think of "<em>que</em>" as the train — you can't board the subjunctive without it. The endings mostly echo the <em>-ER</em> present, so even irregular verbs feel familiar once you have the stem.
+    </div>
+
+    <div class="contrast-box">
+      <div class="label">⚠️ Don't confuse — Subjonctif vs Indicatif after "que"</div>
+      <div class="contrast-pair">
+        <div class="contrast-side">
+          <strong>Subjonctif → emotion/doubt/necessity</strong>
+          <div>Je veux qu'il <em>vienne</em>.</div>
+          <div class="cs-ex">I want him to come. (my desire = subjunctive trigger)</div>
+          <div style="margin-top:6px">Il faut qu'elle <em>soit</em> là.</div>
+          <div class="cs-ex">She has to be there. (necessity)</div>
+        </div>
+        <div class="contrast-side">
+          <strong>Indicatif → fact/certainty after "que"</strong>
+          <div>Je sais qu'il <em>vient</em>.</div>
+          <div class="cs-ex">I know he is coming. (certain fact → indicatif)</div>
+          <div style="margin-top:6px">Il est certain qu'elle <em>est</em> là.</div>
+          <div class="cs-ex">It is certain she is there. (certainty → indicatif)</div>
+        </div>
+      </div>
+    </div>
+  </article>
+
+  <!-- 7. Subjonctif Imparfait -->
+  <article class="card worldA" id="tense-subj-imparfait">
+    <h3>7. Subjonctif Imparfait <span style="font-weight:normal;color:var(--muted);font-size:15px">· Imperfect Subjunctive</span></h3>
+    <div class="subtitle">The literary cousin of the subjunctive — used in formal writing when the main verb is in the past.</div>
+
+    <div class="block"><div class="label">When to use</div>
+      <div class="body">Almost extinct in speech, but alive in literature and formal texts. Used for sequence of tenses: past-tense main clause + subjunctive subordinate clause. In modern French, the Subjonctif Présent usually replaces it.</div></div>
+
+    <div class="block"><div class="label">Formula</div>
+      <div class="formula">Passé Simple stem (tu-form minus -s) + imperfect subjunctive endings</div></div>
+
+    <div class="block"><div class="label">Where the stem comes from</div>
+      <div class="body">Start from the <em>tu</em>-form of the Passé Simple and drop the final <span class="ending">-s</span>: <span class="stem">tu parlas → parla-</span>; <span class="stem">tu finis → fini-</span>; <span class="stem">tu fus → fu-</span>; <span class="stem">tu eus → eu-</span>; <span class="stem">tu pris → pri-</span>.</div></div>
+
+    <div class="block"><div class="label">Endings</div>
+      <table class="conj">
+        <tr><th>Pronoun</th><th>-a stems</th><th>-i stems</th><th>-u stems</th></tr>
+        <tr><td>que je</td><td class="ending">-asse</td><td class="ending">-isse</td><td class="ending">-usse</td></tr>
+        <tr><td>que tu</td><td class="ending">-asses</td><td class="ending">-isses</td><td class="ending">-usses</td></tr>
+        <tr><td>qu'il/elle</td><td class="ending">-ât</td><td class="ending">-ît</td><td class="ending">-ût</td></tr>
+        <tr><td>que nous</td><td class="ending">-assions</td><td class="ending">-issions</td><td class="ending">-ussions</td></tr>
+        <tr><td>que vous</td><td class="ending">-assiez</td><td class="ending">-issiez</td><td class="ending">-ussiez</td></tr>
+        <tr><td>qu'ils/elles</td><td class="ending">-assent</td><td class="ending">-issent</td><td class="ending">-ussent</td></tr>
+      </table>
+    </div>
+
+    <div class="block"><div class="label">Examples</div>
+      <div class="examples">
+        <div class="example" data-verb="être"><span class="fr"><strong>ÊTRE:</strong> Il aurait fallu qu'il <span class="stem">fût</span> présent ce jour-là.</span><span class="en">He should have been present that day.</span></div>
+        <div class="example" data-verb="être"><span class="fr"><strong>ÊTRE:</strong> Nous souhaitions qu'ils <span class="stem">fussent</span> à l'abri du danger.</span><span class="en">We wished that they be safe from danger.</span></div>
+        <div class="example" data-verb="être"><span class="fr"><strong>ÊTRE:</strong> On craignait qu'elle ne <span class="stem">fût</span> trop fragile pour ce voyage.</span><span class="en">It was feared that she might be too fragile for this journey.</span></div>
+
+        <div class="example" data-verb="avoir"><span class="fr"><strong>AVOIR:</strong> Il voulait qu'on <span class="stem">eût</span> du courage en toutes circonstances.</span><span class="en">He wanted us to have courage in all circumstances.</span></div>
+        <div class="example" data-verb="avoir"><span class="fr"><strong>AVOIR:</strong> Je regrettais qu'ils n'<span class="stem">eussent</span> aucune pitié.</span><span class="en">I regretted that they had no pity.</span></div>
+        <div class="example" data-verb="avoir"><span class="fr"><strong>AVOIR:</strong> Il semblait impossible qu'elle <span class="stem">eût</span> tant de patience.</span><span class="en">It seemed impossible that she had so much patience.</span></div>
+
+        <div class="example" data-verb="prendre"><span class="fr"><strong>PRENDRE:</strong> Il exigeait que nous <span class="stem">prissions</span> nos responsabilités.</span><span class="en">He demanded that we take our responsibilities.</span></div>
+        <div class="example" data-verb="prendre"><span class="fr"><strong>PRENDRE:</strong> Elle craignait qu'il ne <span class="stem">prît</span> une mauvaise décision.</span><span class="en">She feared that he might make a bad decision.</span></div>
+        <div class="example" data-verb="prendre"><span class="fr"><strong>PRENDRE:</strong> Il aurait voulu qu'ils <span class="stem">prissent</span> le temps de l'écouter.</span><span class="en">He would have liked them to take the time to listen to him.</span></div>
+      </div>
+    </div>
+
+    <div class="anchor"><div class="label">🧠 Memory anchor</div>
+      All "il/elle" forms wear a <strong>hat (^)</strong> — just like Passé Simple's nous/vous. The doubled consonants (<em>-asse, -isse, -usse</em>) sound like a <em>hiss</em>. Say it with the accent of a 19th-century novelist and you'll feel it.
+    </div>
+  </article>
+
+  <!-- 8. Impératif Présent -->
+  <article class="card worldA" id="tense-imperatif">
+    <h3>8. Impératif Présent <span style="font-weight:normal;color:var(--muted);font-size:15px">· Imperative (Commands)</span></h3>
+    <div class="subtitle">The "do it!" mood — orders, advice, encouragement. Only 3 persons, no pronouns.</div>
+
+    <div class="block"><div class="label">When to use</div>
+      <div class="body">Give commands, requests, suggestions, warnings. "Viens!" "Allons-y!" "Parlez plus fort!" Only three forms exist: <em>tu</em>, <em>nous</em>, <em>vous</em> — and the subject pronoun is dropped entirely.</div></div>
+
+    <div class="block"><div class="label">Formula</div>
+      <div class="formula">Present tense forms minus the subject pronoun (with one small tweak for -ER verbs)</div></div>
+
+    <div class="block"><div class="label">Where the stem comes from</div>
+      <div class="body">Just take the <em>tu</em>, <em>nous</em>, <em>vous</em> forms from the Present. <strong>Special rule:</strong> For -ER verbs (and <em>aller</em>), drop the final -s from the <em>tu</em> form: "tu parles → parle!" Irregulars: <span class="stem">être → sois, soyons, soyez</span>; <span class="stem">avoir → aie, ayons, ayez</span>.</div></div>
+
+    <div class="block"><div class="label">Forms</div>
+      <table class="conj">
+        <tr><th>Person</th><th>-ER (parler)</th><th>-IR (finir)</th><th>-RE (vendre)</th><th>ÊTRE</th><th>AVOIR</th></tr>
+        <tr><td>(tu)</td><td class="stem">Parle</td><td class="stem">Finis</td><td class="stem">Vends</td><td class="stem">Sois</td><td class="stem">Aie</td></tr>
+        <tr><td>(nous)</td><td class="stem">Parlons</td><td class="stem">Finissons</td><td class="stem">Vendons</td><td class="stem">Soyons</td><td class="stem">Ayons</td></tr>
+        <tr><td>(vous)</td><td class="stem">Parlez</td><td class="stem">Finissez</td><td class="stem">Vendez</td><td class="stem">Soyez</td><td class="stem">Ayez</td></tr>
+      </table>
+    </div>
+
+    <div class="block"><div class="label">Examples</div>
+      <div class="examples">
+        <div class="example" data-verb="être"><span class="fr"><strong>ÊTRE:</strong> <span class="stem">Sois</span> patient, tout s'arrangera avec le temps.</span><span class="en">Be patient, everything will work out with time.</span></div>
+        <div class="example" data-verb="être"><span class="fr"><strong>ÊTRE:</strong> <span class="stem">Soyons</span> réalistes et gardons la tête froide.</span><span class="en">Let's be realistic and keep a cool head.</span></div>
+        <div class="example" data-verb="être"><span class="fr"><strong>ÊTRE:</strong> <span class="stem">Soyez</span> les bienvenus dans notre humble demeure.</span><span class="en">Be welcome in our humble home.</span></div>
+
+        <div class="example" data-verb="avoir"><span class="fr"><strong>AVOIR:</strong> <span class="stem">Aie</span> confiance en toi, tu en es capable.</span><span class="en">Have confidence in yourself, you can do it.</span></div>
+        <div class="example" data-verb="avoir"><span class="fr"><strong>AVOIR:</strong> <span class="stem">Ayons</span> le courage de dire la vérité, même quand c'est difficile.</span><span class="en">Let's have the courage to tell the truth, even when it's hard.</span></div>
+        <div class="example" data-verb="avoir"><span class="fr"><strong>AVOIR:</strong> <span class="stem">Ayez</span> la gentillesse de patienter quelques minutes.</span><span class="en">Kindly wait a few minutes.</span></div>
+
+        <div class="example" data-verb="aller"><span class="fr"><strong>ALLER:</strong> <span class="stem">Va</span> chercher du pain à la boulangerie, s'il te plaît.</span><span class="en">Go get some bread at the bakery, please.</span></div>
+        <div class="example" data-verb="aller"><span class="fr"><strong>ALLER:</strong> <span class="stem">Allons</span>-y, sinon nous allons rater le début du concert.</span><span class="en">Let's go, otherwise we'll miss the start of the concert.</span></div>
+        <div class="example" data-verb="aller"><span class="fr"><strong>ALLER:</strong> <span class="stem">Allez</span> voir ce musée, il vaut vraiment le détour.</span><span class="en">Go see that museum, it's really worth the visit.</span></div>
+      </div>
+    </div>
+
+    <div class="anchor"><div class="label">🧠 Memory anchor</div>
+      <strong>"Drop the pronoun, drop the drama."</strong> If you can say it in the present, you can command in the imperative — just erase "tu/nous/vous." And remember: -ER verbs lose their <em>s</em> in the <em>tu</em>-form. "Tu parles" → "Parle!" The silent <em>s</em> bows out.
+    </div>
+  </article>
+
+  <!-- ========== WORLD B HEADER ========== -->
+  <section class="world-header b" id="world-b-header">
+    <h2>🌿 World B — Compound Tenses</h2>
+    <p>Built as <strong>[conjugated avoir/être] + [past participle]</strong>. Agreement rules apply. Every compound tense shares the same anatomy — only the auxiliary changes tense.</p>
+  </section>
+
+  <!-- COMPOUND MASTER BOX -->
+  <div class="master-box" id="compound-intro">
+    <h3>⚙️ The Compound Machine — One Formula Fits All Seven</h3>
+    <div class="rule"><strong>FORMULA =</strong> [conjugated AVOIR or ÊTRE in tense X] + [past participle]</div>
+    <div class="rule"><strong>Agreement rule:</strong></div>
+    <div class="rule">• With <strong>ÊTRE</strong> (motion verbs + reflexives): past participle agrees with the <strong>subject</strong> in gender + number. <em>Elle est partie. Ils sont venus.</em></div>
+    <div class="rule">• With <strong>AVOIR</strong>: past participle agrees ONLY if the direct object <strong>precedes</strong> the verb. <em>J'ai mangé la pomme → La pomme que j'ai mangée.</em></div>
+    <div class="rule" style="margin-top:10px;color:var(--muted)"><em>The past participle itself is fixed per verb — memorize it once, use it in all 7 compound tenses.</em></div>
+    <div class="rule" style="margin-top:6px"><strong>Past participles of our verbs:</strong> été (être), eu (avoir), venu (venir), parti (partir), mis (mettre), pris (prendre), fait (faire), allé (aller), dit (dire), vu (voir).</div>
+  </div>
+
+  <!-- 9. Passé Composé -->
+  <article class="card worldB" id="tense-passe-compose">
+    <span class="badge">PP REQUIRED</span>
+    <h3>1. Passé Composé <span style="font-weight:normal;color:var(--muted);font-size:15px">· Present Perfect / Simple Past (spoken)</span></h3>
+    <div class="subtitle">The everyday past tense — used in conversation for completed actions.</div>
+
+    <div class="block"><div class="label">When to use</div>
+      <div class="body">Specific, completed events in the past. "Hier, j'ai vu un film." In spoken French, this replaces the Passé Simple.</div></div>
+
+    <div class="block"><div class="label">Formula</div>
+      <div class="formula">AVOIR / ÊTRE (Présent) + Past Participle</div></div>
+
+    <div class="block"><div class="label">Auxiliary in Présent</div>
+      <table class="conj">
+        <tr><th>Pronoun</th><th>AVOIR</th><th>ÊTRE</th></tr>
+        <tr><td>Je/J'</td><td class="stem">ai</td><td class="stem">suis</td></tr>
+        <tr><td>Tu</td><td class="stem">as</td><td class="stem">es</td></tr>
+        <tr><td>Il/Elle/On</td><td class="stem">a</td><td class="stem">est</td></tr>
+        <tr><td>Nous</td><td class="stem">avons</td><td class="stem">sommes</td></tr>
+        <tr><td>Vous</td><td class="stem">avez</td><td class="stem">êtes</td></tr>
+        <tr><td>Ils/Elles</td><td class="stem">ont</td><td class="stem">sont</td></tr>
+      </table>
+    </div>
+
+    <div class="block"><div class="label">Examples</div>
+      <div class="examples">
+        <div class="example" data-verb="être"><span class="fr"><strong>ÊTRE-aux · VENIR:</strong> Elle est <span class="pp">venue</span> me voir hier soir après le travail.</span><span class="en">She came to see me yesterday evening after work.</span></div>
+        <div class="example" data-verb="être"><span class="fr"><strong>ÊTRE-aux · PARTIR:</strong> Nous sommes <span class="pp">partis</span> avant la fin du spectacle.</span><span class="en">We left before the end of the show.</span></div>
+        <div class="example" data-verb="être"><span class="fr"><strong>ÊTRE-aux · ALLER:</strong> Ils sont <span class="pp">allés</span> au marché très tôt ce matin.</span><span class="en">They went to the market very early this morning.</span></div>
+
+        <div class="example" data-verb="avoir"><span class="fr"><strong>AVOIR-aux · PRENDRE:</strong> J'ai <span class="pp">pris</span> le train de sept heures pour arriver à temps.</span><span class="en">I took the seven o'clock train to arrive on time.</span></div>
+        <div class="example" data-verb="avoir"><span class="fr"><strong>AVOIR-aux · METTRE:</strong> Tu as <span class="pp">mis</span> trop de sel dans la soupe.</span><span class="en">You put too much salt in the soup.</span></div>
+        <div class="example" data-verb="avoir"><span class="fr"><strong>AVOIR-aux · DIRE:</strong> Elle a <span class="pp">dit</span> la vérité, même si cela lui coûtait cher.</span><span class="en">She told the truth, even though it cost her dearly.</span></div>
+
+        <div class="example" data-verb="avoir"><span class="fr"><strong>AVOIR-aux · VOIR (with preceding COD!):</strong> La pièce que j'ai <span class="pp">vue</span> hier était magnifique.</span><span class="en">The play I saw yesterday was magnificent.</span></div>
+        <div class="example" data-verb="être"><span class="fr"><strong>ÊTRE-aux + agreement:</strong> Mes sœurs sont <span class="pp">venues</span> pour le mariage de leur cousin.</span><span class="en">My sisters came for their cousin's wedding.</span></div>
+        <div class="example" data-verb="être"><span class="fr"><strong>ÊTRE-aux + agreement:</strong> Les invités sont <span class="pp">partis</span> contents de la soirée.</span><span class="en">The guests left happy with the evening.</span></div>
+      </div>
+    </div>
+
+    <div class="anchor"><div class="label">🧠 Memory anchor</div>
+      <strong>"Passé Composé = Present Avoir/Être + PP."</strong> If the speaker sounds casual, this is the past tense they're using. Remember: 17 verbs + all reflexives → <em>être</em>. Everything else → <em>avoir</em>. The mnemonic DR MRS VANDERTRAMP is at the bottom of this guide.
+    </div>
+
+    <div class="contrast-box">
+      <div class="label">⚠️ Don't confuse — Passé Composé vs Plus-que-parfait</div>
+      <div class="contrast-pair">
+        <div class="contrast-side">
+          <strong>Passé Composé → simple past event</strong>
+          <div>Quand je suis arrivé, elle <em>est partie</em>.</div>
+          <div class="cs-ex">When I arrived, she left. (two events at same level)</div>
+        </div>
+        <div class="contrast-side">
+          <strong>Plus-que-parfait → past before the past</strong>
+          <div>Quand je suis arrivé, elle <em>était déjà partie</em>.</div>
+          <div class="cs-ex">When I arrived, she had already left. (her leaving was earlier)</div>
+        </div>
+      </div>
+    </div>
+  </article>
+
+  <!-- 10. Plus-que-parfait -->
+  <article class="card worldB" id="tense-plus-que-parfait">
+    <span class="badge">PP REQUIRED</span>
+    <h3>2. Plus-que-parfait <span style="font-weight:normal;color:var(--muted);font-size:15px">· Pluperfect / Past Perfect</span></h3>
+    <div class="subtitle">The "past before the past" — an action that happened before another past action.</div>
+
+    <div class="block"><div class="label">When to use</div>
+      <div class="body">"When I arrived, he <em>had already left</em>." Two past events, and this one came first. Signals "earlier than another past."</div></div>
+
+    <div class="block"><div class="label">Formula</div>
+      <div class="formula">AVOIR / ÊTRE (Imparfait) + Past Participle</div></div>
+
+    <div class="block"><div class="label">Auxiliary in Imparfait</div>
+      <table class="conj">
+        <tr><th>Pronoun</th><th>AVOIR</th><th>ÊTRE</th></tr>
+        <tr><td>J'</td><td class="stem">avais</td><td class="stem">étais</td></tr>
+        <tr><td>Tu</td><td class="stem">avais</td><td class="stem">étais</td></tr>
+        <tr><td>Il/Elle/On</td><td class="stem">avait</td><td class="stem">était</td></tr>
+        <tr><td>Nous</td><td class="stem">avions</td><td class="stem">étions</td></tr>
+        <tr><td>Vous</td><td class="stem">aviez</td><td class="stem">étiez</td></tr>
+        <tr><td>Ils/Elles</td><td class="stem">avaient</td><td class="stem">étaient</td></tr>
+      </table>
+    </div>
+
+    <div class="block"><div class="label">Examples</div>
+      <div class="examples">
+        <div class="example" data-verb="être"><span class="fr"><strong>ÊTRE-aux · VENIR:</strong> Ils étaient <span class="pp">venus</span> bien avant que le concert ne commence.</span><span class="en">They had come well before the concert started.</span></div>
+        <div class="example" data-verb="être"><span class="fr"><strong>ÊTRE-aux · PARTIR:</strong> Quand je suis arrivé, elle était déjà <span class="pp">partie</span>.</span><span class="en">When I arrived, she had already left.</span></div>
+        <div class="example" data-verb="être"><span class="fr"><strong>ÊTRE-aux · ALLER:</strong> Nous étions <span class="pp">allés</span> au restaurant avant de rentrer chez nous.</span><span class="en">We had gone to the restaurant before heading home.</span></div>
+
+        <div class="example" data-verb="avoir"><span class="fr"><strong>AVOIR-aux · PRENDRE:</strong> Il avait <span class="pp">pris</span> sa décision bien avant la réunion.</span><span class="en">He had made his decision well before the meeting.</span></div>
+        <div class="example" data-verb="avoir"><span class="fr"><strong>AVOIR-aux · METTRE:</strong> J'avais <span class="pp">mis</span> le manteau avant de sortir, mais il faisait déjà chaud.</span><span class="en">I had put on the coat before going out, but it was already warm.</span></div>
+        <div class="example" data-verb="avoir"><span class="fr"><strong>AVOIR-aux · DIRE:</strong> Tu avais <span class="pp">dit</span> que tu viendrais, mais tu n'es jamais venu.</span><span class="en">You had said you would come, but you never did.</span></div>
+
+        <div class="example" data-verb="être"><span class="fr"><strong>ÊTRE-aux:</strong> Elles étaient <span class="pp">venues</span> pour leur grand-mère malade.</span><span class="en">They had come for their sick grandmother.</span></div>
+        <div class="example" data-verb="avoir"><span class="fr"><strong>AVOIR-aux · VOIR:</strong> Nous avions <span class="pp">vu</span> ce film trois fois avant de le comprendre.</span><span class="en">We had seen that film three times before understanding it.</span></div>
+        <div class="example" data-verb="avoir"><span class="fr"><strong>AVOIR-aux preceding COD:</strong> Les lettres qu'elle avait <span class="pp">écrites</span> n'ont jamais été envoyées.</span><span class="en">The letters she had written were never sent.</span></div>
+      </div>
+    </div>
+
+    <div class="anchor"><div class="label">🧠 Memory anchor</div>
+      <strong>"Imparfait aux + PP = step deeper into the past."</strong> If Passé Composé is one floor down, Plus-que-parfait is the basement. English "<em>had</em> + past participle" → French <em>avais/étais + PP</em>. Same logic, different vocabulary.
+    </div>
+  </article>
+
+  <!-- 11. Passé Antérieur -->
+  <article class="card worldB" id="tense-passe-anterieur">
+    <span class="badge">PP REQUIRED</span>
+    <h3>3. Passé Antérieur <span style="font-weight:normal;color:var(--muted);font-size:15px">· Anterior Past</span></h3>
+    <div class="subtitle">The literary "past before the Passé Simple" — pair it with Passé Simple in formal writing.</div>
+
+    <div class="block"><div class="label">When to use</div>
+      <div class="body">Strictly literary. Used after conjunctions like <em>après que, dès que, lorsque, aussitôt que</em> when the main clause is in Passé Simple. "Dès qu'il <em>eut fini</em>, il partit."</div></div>
+
+    <div class="block"><div class="label">Formula</div>
+      <div class="formula">AVOIR / ÊTRE (Passé Simple) + Past Participle</div></div>
+
+    <div class="block"><div class="label">Auxiliary in Passé Simple</div>
+      <table class="conj">
+        <tr><th>Pronoun</th><th>AVOIR</th><th>ÊTRE</th></tr>
+        <tr><td>J'</td><td class="stem">eus</td><td class="stem">fus</td></tr>
+        <tr><td>Tu</td><td class="stem">eus</td><td class="stem">fus</td></tr>
+        <tr><td>Il/Elle/On</td><td class="stem">eut</td><td class="stem">fut</td></tr>
+        <tr><td>Nous</td><td class="stem">eûmes</td><td class="stem">fûmes</td></tr>
+        <tr><td>Vous</td><td class="stem">eûtes</td><td class="stem">fûtes</td></tr>
+        <tr><td>Ils/Elles</td><td class="stem">eurent</td><td class="stem">furent</td></tr>
+      </table>
+    </div>
+
+    <div class="block"><div class="label">Examples</div>
+      <div class="examples">
+        <div class="example" data-verb="être"><span class="fr"><strong>ÊTRE-aux · VENIR:</strong> Dès qu'il fut <span class="pp">venu</span>, la fête put enfin commencer.</span><span class="en">As soon as he had come, the party could finally begin.</span></div>
+        <div class="example" data-verb="être"><span class="fr"><strong>ÊTRE-aux · PARTIR:</strong> Après qu'elle fut <span class="pp">partie</span>, le silence s'installa dans la maison.</span><span class="en">After she had left, silence filled the house.</span></div>
+        <div class="example" data-verb="être"><span class="fr"><strong>ÊTRE-aux · ALLER:</strong> Lorsqu'ils furent <span class="pp">allés</span> au château, ils comprirent tout.</span><span class="en">When they had gone to the castle, they understood everything.</span></div>
+
+        <div class="example" data-verb="avoir"><span class="fr"><strong>AVOIR-aux · PRENDRE:</strong> Aussitôt qu'il eut <span class="pp">pris</span> sa décision, il l'annonça à tous.</span><span class="en">As soon as he had made his decision, he announced it to everyone.</span></div>
+        <div class="example" data-verb="avoir"><span class="fr"><strong>AVOIR-aux · METTRE:</strong> Quand elle eut <span class="pp">mis</span> son manteau, elle sortit dans la tempête.</span><span class="en">When she had put on her coat, she went out into the storm.</span></div>
+        <div class="example" data-verb="avoir"><span class="fr"><strong>AVOIR-aux · DIRE:</strong> Après qu'il eut <span class="pp">dit</span> ces mots, personne n'osa répondre.</span><span class="en">After he had spoken those words, no one dared respond.</span></div>
+
+        <div class="example" data-verb="avoir"><span class="fr"><strong>AVOIR-aux · VOIR:</strong> Dès qu'elle eut <span class="pp">vu</span> la scène, elle appela la police.</span><span class="en">As soon as she had seen the scene, she called the police.</span></div>
+        <div class="example" data-verb="être"><span class="fr"><strong>ÊTRE-aux:</strong> Après qu'ils furent <span class="pp">venus</span>, la discussion prit un autre tour.</span><span class="en">After they had come, the discussion took another turn.</span></div>
+        <div class="example" data-verb="avoir"><span class="fr"><strong>AVOIR-aux:</strong> Nous eûmes <span class="pp">fait</span> le tour du jardin avant le coucher du soleil.</span><span class="en">We had gone round the garden before sunset.</span></div>
+      </div>
+    </div>
+
+    <div class="anchor"><div class="label">🧠 Memory anchor</div>
+      <strong>"Passé Simple aux + PP."</strong> If you see "<em>eut</em>" or "<em>fut</em>" followed by a participle in a novel, you're looking at the Passé Antérieur. It's the literary cousin of the Plus-que-parfait — same meaning, different register.
+    </div>
+  </article>
+
+  <!-- 12. Futur Antérieur -->
+  <article class="card worldB" id="tense-futur-anterieur">
+    <span class="badge">PP REQUIRED</span>
+    <h3>4. Futur Antérieur <span style="font-weight:normal;color:var(--muted);font-size:15px">· Future Perfect</span></h3>
+    <div class="subtitle">The "will have done" tense — an action completed before another future action.</div>
+
+    <div class="block"><div class="label">When to use</div>
+      <div class="body">"By tomorrow, I <em>will have finished</em> the project." Expresses a future action that will already be done by a specific future point. Often after <em>quand, dès que, lorsque</em> with a future main clause.</div></div>
+
+    <div class="block"><div class="label">Formula</div>
+      <div class="formula">AVOIR / ÊTRE (Futur Simple) + Past Participle</div></div>
+
+    <div class="block"><div class="label">Auxiliary in Futur Simple</div>
+      <table class="conj">
+        <tr><th>Pronoun</th><th>AVOIR</th><th>ÊTRE</th></tr>
+        <tr><td>J'</td><td class="stem">aurai</td><td class="stem">serai</td></tr>
+        <tr><td>Tu</td><td class="stem">auras</td><td class="stem">seras</td></tr>
+        <tr><td>Il/Elle/On</td><td class="stem">aura</td><td class="stem">sera</td></tr>
+        <tr><td>Nous</td><td class="stem">aurons</td><td class="stem">serons</td></tr>
+        <tr><td>Vous</td><td class="stem">aurez</td><td class="stem">serez</td></tr>
+        <tr><td>Ils/Elles</td><td class="stem">auront</td><td class="stem">seront</td></tr>
+      </table>
+    </div>
+
+    <div class="block"><div class="label">Examples</div>
+      <div class="examples">
+        <div class="example" data-verb="être"><span class="fr"><strong>ÊTRE-aux · VENIR:</strong> Quand tu seras <span class="pp">venu</span>, nous pourrons tout t'expliquer.</span><span class="en">When you have come, we'll be able to explain everything.</span></div>
+        <div class="example" data-verb="être"><span class="fr"><strong>ÊTRE-aux · PARTIR:</strong> Elle sera <span class="pp">partie</span> avant que nous arrivions.</span><span class="en">She will have left before we arrive.</span></div>
+        <div class="example" data-verb="être"><span class="fr"><strong>ÊTRE-aux · ALLER:</strong> Ils seront <span class="pp">allés</span> chercher les clés d'ici ce soir.</span><span class="en">They will have gone to get the keys by tonight.</span></div>
+
+        <div class="example" data-verb="avoir"><span class="fr"><strong>AVOIR-aux · PRENDRE:</strong> J'aurai <span class="pp">pris</span> ma décision avant la fin de la semaine.</span><span class="en">I will have made my decision by the end of the week.</span></div>
+        <div class="example" data-verb="avoir"><span class="fr"><strong>AVOIR-aux · METTRE:</strong> Tu auras <span class="pp">mis</span> la table avant qu'ils arrivent, n'est-ce pas ?</span><span class="en">You will have set the table before they arrive, right?</span></div>
+        <div class="example" data-verb="avoir"><span class="fr"><strong>AVOIR-aux · DIRE:</strong> Elle aura <span class="pp">dit</span> adieu à tout le monde avant midi.</span><span class="en">She will have said goodbye to everyone before noon.</span></div>
+
+        <div class="example" data-verb="avoir"><span class="fr"><strong>AVOIR-aux · VOIR:</strong> Nous aurons <span class="pp">vu</span> trois pays en deux semaines à ce rythme.</span><span class="en">We will have seen three countries in two weeks at this rate.</span></div>
+        <div class="example" data-verb="être"><span class="fr"><strong>ÊTRE-aux:</strong> Les enfants seront <span class="pp">venus</span> me chercher avant la nuit.</span><span class="en">The children will have come to pick me up before night.</span></div>
+        <div class="example" data-verb="avoir"><span class="fr"><strong>AVOIR-aux:</strong> Ils auront <span class="pp">fini</span> les travaux d'ici le printemps.</span><span class="en">They will have finished the work by spring.</span></div>
+      </div>
+    </div>
+
+    <div class="anchor"><div class="label">🧠 Memory anchor</div>
+      <strong>"Future aux + PP = promise already kept."</strong> It's the tense of confident anticipation: by <em>then</em>, it will already be done. Think of it as time-traveling forward, then looking back.
+    </div>
+  </article>
+
+  <!-- 13. Conditionnel Passé -->
+  <article class="card worldB" id="tense-conditionnel-passe">
+    <span class="badge">PP REQUIRED</span>
+    <h3>5. Conditionnel Passé <span style="font-weight:normal;color:var(--muted);font-size:15px">· Past Conditional</span></h3>
+    <div class="subtitle">The "would have" tense — regrets, missed opportunities, polite past reproaches.</div>
+
+    <div class="block"><div class="label">When to use</div>
+      <div class="body">"I <em>would have come</em> if I had known." Contrary-to-fact past: things that didn't happen but could have. Also softens criticism: "Tu <em>aurais dû</em> me le dire" (you should have told me).</div></div>
+
+    <div class="block"><div class="label">Formula</div>
+      <div class="formula">AVOIR / ÊTRE (Conditionnel Présent) + Past Participle</div></div>
+
+    <div class="block"><div class="label">Auxiliary in Conditionnel Présent</div>
+      <table class="conj">
+        <tr><th>Pronoun</th><th>AVOIR</th><th>ÊTRE</th></tr>
+        <tr><td>J'</td><td class="stem">aurais</td><td class="stem">serais</td></tr>
+        <tr><td>Tu</td><td class="stem">aurais</td><td class="stem">serais</td></tr>
+        <tr><td>Il/Elle/On</td><td class="stem">aurait</td><td class="stem">serait</td></tr>
+        <tr><td>Nous</td><td class="stem">aurions</td><td class="stem">serions</td></tr>
+        <tr><td>Vous</td><td class="stem">auriez</td><td class="stem">seriez</td></tr>
+        <tr><td>Ils/Elles</td><td class="stem">auraient</td><td class="stem">seraient</td></tr>
+      </table>
+    </div>
+
+    <div class="block"><div class="label">Examples</div>
+      <div class="examples">
+        <div class="example" data-verb="être"><span class="fr"><strong>ÊTRE-aux · VENIR:</strong> Je serais <span class="pp">venu</span> plus tôt si j'avais su pour la fête.</span><span class="en">I would have come earlier if I had known about the party.</span></div>
+        <div class="example" data-verb="être"><span class="fr"><strong>ÊTRE-aux · PARTIR:</strong> Elle serait <span class="pp">partie</span> sans un mot si tu ne l'avais pas retenue.</span><span class="en">She would have left without a word if you hadn't held her back.</span></div>
+        <div class="example" data-verb="être"><span class="fr"><strong>ÊTRE-aux · ALLER:</strong> Nous serions <span class="pp">allés</span> à la plage, mais il pleuvait trop fort.</span><span class="en">We would have gone to the beach, but it was raining too hard.</span></div>
+
+        <div class="example" data-verb="avoir"><span class="fr"><strong>AVOIR-aux · PRENDRE:</strong> J'aurais <span class="pp">pris</span> le temps de réfléchir si tu m'en avais laissé l'occasion.</span><span class="en">I would have taken time to think if you had given me the chance.</span></div>
+        <div class="example" data-verb="avoir"><span class="fr"><strong>AVOIR-aux · METTRE:</strong> Tu aurais <span class="pp">mis</span> combien de temps à résoudre ce problème ?</span><span class="en">How long would you have taken to solve this problem?</span></div>
+        <div class="example" data-verb="avoir"><span class="fr"><strong>AVOIR-aux · DIRE:</strong> Elle aurait <span class="pp">dit</span> non, mais personne ne lui a posé la question.</span><span class="en">She would have said no, but no one asked her.</span></div>
+
+        <div class="example" data-verb="avoir"><span class="fr"><strong>AVOIR-aux · VOIR:</strong> Nous aurions <span class="pp">vu</span> l'éclipse si le ciel avait été dégagé.</span><span class="en">We would have seen the eclipse if the sky had been clear.</span></div>
+        <div class="example" data-verb="être"><span class="fr"><strong>ÊTRE-aux agreement:</strong> Les filles seraient <span class="pp">venues</span>, mais elles étaient malades.</span><span class="en">The girls would have come, but they were sick.</span></div>
+        <div class="example" data-verb="avoir"><span class="fr"><strong>AVOIR-aux reproach:</strong> Vous auriez <span class="pp">dû</span> nous prévenir bien plus tôt.</span><span class="en">You should have warned us much earlier.</span></div>
+      </div>
+    </div>
+
+    <div class="anchor"><div class="label">🧠 Memory anchor</div>
+      <strong>"Conditionnel aux + PP = the parallel universe."</strong> Something that would have happened but didn't. English "<em>would have</em> / <em>should have</em>" is your direct translation cue.
+    </div>
+  </article>
+
+  <!-- 14. Subjonctif Passé -->
+  <article class="card worldB" id="tense-subj-passe">
+    <span class="badge">PP REQUIRED</span>
+    <h3>6. Subjonctif Passé <span style="font-weight:normal;color:var(--muted);font-size:15px">· Past Subjunctive</span></h3>
+    <div class="subtitle">Subjunctive mood, but for events that have already happened (or will have happened).</div>
+
+    <div class="block"><div class="label">When to use</div>
+      <div class="body">Same triggers as the present subjunctive (necessity, emotion, doubt), but the action is in the <strong>past relative to the main verb</strong>. "Je suis content que tu <em>sois venu</em>" — I'm happy you came.</div></div>
+
+    <div class="block"><div class="label">Formula</div>
+      <div class="formula">AVOIR / ÊTRE (Subjonctif Présent) + Past Participle</div></div>
+
+    <div class="block"><div class="label">Auxiliary in Subjonctif Présent</div>
+      <table class="conj">
+        <tr><th>Pronoun</th><th>AVOIR</th><th>ÊTRE</th></tr>
+        <tr><td>que j'</td><td class="stem">aie</td><td class="stem">sois</td></tr>
+        <tr><td>que tu</td><td class="stem">aies</td><td class="stem">sois</td></tr>
+        <tr><td>qu'il/elle</td><td class="stem">ait</td><td class="stem">soit</td></tr>
+        <tr><td>que nous</td><td class="stem">ayons</td><td class="stem">soyons</td></tr>
+        <tr><td>que vous</td><td class="stem">ayez</td><td class="stem">soyez</td></tr>
+        <tr><td>qu'ils/elles</td><td class="stem">aient</td><td class="stem">soient</td></tr>
+      </table>
+    </div>
+
+    <div class="block"><div class="label">Examples</div>
+      <div class="examples">
+        <div class="example" data-verb="être"><span class="fr"><strong>ÊTRE-aux · VENIR:</strong> Je suis ravi que tu sois <span class="pp">venu</span> à mon anniversaire.</span><span class="en">I'm delighted that you came to my birthday.</span></div>
+        <div class="example" data-verb="être"><span class="fr"><strong>ÊTRE-aux · PARTIR:</strong> Il est dommage qu'elle soit <span class="pp">partie</span> si tôt.</span><span class="en">It's a shame that she left so early.</span></div>
+        <div class="example" data-verb="être"><span class="fr"><strong>ÊTRE-aux · ALLER:</strong> Je doute qu'ils soient <span class="pp">allés</span> au bon endroit.</span><span class="en">I doubt they went to the right place.</span></div>
+
+        <div class="example" data-verb="avoir"><span class="fr"><strong>AVOIR-aux · PRENDRE:</strong> Il faut que j'aie <span class="pp">pris</span> ma douche avant huit heures.</span><span class="en">I must have taken my shower before eight.</span></div>
+        <div class="example" data-verb="avoir"><span class="fr"><strong>AVOIR-aux · METTRE:</strong> Je ne pense pas qu'il ait <span class="pp">mis</span> le chèque dans l'enveloppe.</span><span class="en">I don't think he put the check in the envelope.</span></div>
+        <div class="example" data-verb="avoir"><span class="fr"><strong>AVOIR-aux · DIRE:</strong> Je suis surpris qu'elle ait <span class="pp">dit</span> oui sans hésiter.</span><span class="en">I'm surprised she said yes without hesitation.</span></div>
+
+        <div class="example" data-verb="avoir"><span class="fr"><strong>AVOIR-aux · VOIR:</strong> Il est possible qu'il ait <span class="pp">vu</span> quelque chose d'important.</span><span class="en">It's possible he saw something important.</span></div>
+        <div class="example" data-verb="être"><span class="fr"><strong>ÊTRE-aux:</strong> C'est incroyable qu'elle soit <span class="pp">venue</span> sous cette tempête.</span><span class="en">It's incredible that she came in this storm.</span></div>
+        <div class="example" data-verb="avoir"><span class="fr"><strong>AVOIR-aux:</strong> Je suis fier que tu aies <span class="pp">fait</span> cet effort pour ta famille.</span><span class="en">I'm proud that you made this effort for your family.</span></div>
+      </div>
+    </div>
+
+    <div class="anchor"><div class="label">🧠 Memory anchor</div>
+      <strong>"Que + subjunctive aux + PP."</strong> Same trigger words as the present subjunctive — only the auxiliary tells the story of time. If the main clause says "I'm happy" (now) and the action already happened, you need this tense.
+    </div>
+  </article>
+
+  <!-- 15. Subjonctif Plus-que-parfait -->
+  <article class="card worldB" id="tense-subj-pqp">
+    <span class="badge">PP REQUIRED</span>
+    <h3>7. Subjonctif Plus-que-parfait <span style="font-weight:normal;color:var(--muted);font-size:15px">· Pluperfect Subjunctive</span></h3>
+    <div class="subtitle">The rarest of the rare — deep literary subjunctive for "had done" in formal writing.</div>
+
+    <div class="block"><div class="label">When to use</div>
+      <div class="body">Classical literature only. Used like the Plus-que-parfait but in subjunctive contexts, when the main verb is already in a past tense. Often replaced in practice by the Subjonctif Passé.</div></div>
+
+    <div class="block"><div class="label">Formula</div>
+      <div class="formula">AVOIR / ÊTRE (Subjonctif Imparfait) + Past Participle</div></div>
+
+    <div class="block"><div class="label">Auxiliary in Subjonctif Imparfait</div>
+      <table class="conj">
+        <tr><th>Pronoun</th><th>AVOIR</th><th>ÊTRE</th></tr>
+        <tr><td>que j'</td><td class="stem">eusse</td><td class="stem">fusse</td></tr>
+        <tr><td>que tu</td><td class="stem">eusses</td><td class="stem">fusses</td></tr>
+        <tr><td>qu'il/elle</td><td class="stem">eût</td><td class="stem">fût</td></tr>
+        <tr><td>que nous</td><td class="stem">eussions</td><td class="stem">fussions</td></tr>
+        <tr><td>que vous</td><td class="stem">eussiez</td><td class="stem">fussiez</td></tr>
+        <tr><td>qu'ils/elles</td><td class="stem">eussent</td><td class="stem">fussent</td></tr>
+      </table>
+    </div>
+
+    <div class="block"><div class="label">Examples</div>
+      <div class="examples">
+        <div class="example" data-verb="être"><span class="fr"><strong>ÊTRE-aux · VENIR:</strong> Il eût fallu qu'il fût <span class="pp">venu</span> plus tôt pour tout changer.</span><span class="en">He would have had to come earlier to change everything.</span></div>
+        <div class="example" data-verb="être"><span class="fr"><strong>ÊTRE-aux · PARTIR:</strong> On craignait qu'elle ne fût déjà <span class="pp">partie</span> au moment des faits.</span><span class="en">It was feared she had already left at the time of the events.</span></div>
+        <div class="example" data-verb="être"><span class="fr"><strong>ÊTRE-aux · ALLER:</strong> Nul ne pensait qu'ils fussent <span class="pp">allés</span> aussi loin dans leur quête.</span><span class="en">No one thought they had gone so far in their quest.</span></div>
+
+        <div class="example" data-verb="avoir"><span class="fr"><strong>AVOIR-aux · PRENDRE:</strong> Il regrettait qu'elle eût <span class="pp">pris</span> une telle décision sans le consulter.</span><span class="en">He regretted that she had taken such a decision without consulting him.</span></div>
+        <div class="example" data-verb="avoir"><span class="fr"><strong>AVOIR-aux · METTRE:</strong> On doutait qu'il eût <span class="pp">mis</span> tout son cœur dans ce travail.</span><span class="en">It was doubted that he had put all his heart into this work.</span></div>
+        <div class="example" data-verb="avoir"><span class="fr"><strong>AVOIR-aux · DIRE:</strong> Bien que nous eussions <span class="pp">dit</span> la vérité, personne ne nous crut.</span><span class="en">Although we had told the truth, no one believed us.</span></div>
+
+        <div class="example" data-verb="avoir"><span class="fr"><strong>AVOIR-aux · VOIR:</strong> Je ne pensais point qu'il eût <span class="pp">vu</span> ce qui s'était passé cette nuit-là.</span><span class="en">I did not think he had seen what had happened that night.</span></div>
+        <div class="example" data-verb="être"><span class="fr"><strong>ÊTRE-aux:</strong> Il eût été surprenant qu'elle fût <span class="pp">venue</span> sans invitation.</span><span class="en">It would have been surprising that she had come without an invitation.</span></div>
+        <div class="example" data-verb="avoir"><span class="fr"><strong>AVOIR-aux:</strong> Quoiqu'ils eussent <span class="pp">fait</span> de leur mieux, ils échouèrent.</span><span class="en">Although they had done their best, they failed.</span></div>
+      </div>
+    </div>
+
+    <div class="anchor"><div class="label">🧠 Memory anchor</div>
+      <strong>"Eût / fût + PP — the ghost tense."</strong> You'll find it in 19th-century French literature and formal legal texts. If you can understand it when you read, you already speak more French than most French people. A literary badge of honor.
+    </div>
+  </article>
+
+  <!-- ========== AGREEMENT CHEAT SHEET ========== -->
+  <section id="cheat-section">
+    <div class="world-header" style="background:linear-gradient(180deg,#fff8e1,#fffdf4);border-color:#ecd98a">
+      <h2>🎯 The Agreement Cheat Sheet</h2>
+      <p>Every compound tense lives or dies by this table. Master it once, apply it forever.</p>
+    </div>
+
+    <table class="cheat">
+      <tr><th>Auxiliary</th><th>Verb Type</th><th>Agreement?</th><th>Example</th></tr>
+      <tr>
+        <td><strong>AVOIR</strong></td>
+        <td>Most verbs</td>
+        <td><strong>NO</strong> — unless the direct object (COD) precedes the verb</td>
+        <td><em>J'ai mangé la pomme.</em><br><em>La pomme que j'ai <strong>mangée</strong>.</em> ← agrees because "la pomme" is before</td>
+      </tr>
+      <tr>
+        <td><strong>ÊTRE</strong></td>
+        <td>DR MRS VANDERTRAMP verbs + all reflexive verbs</td>
+        <td><strong>YES</strong> — past participle agrees with the subject in gender + number</td>
+        <td><em>Elle est <strong>partie</strong>.</em><br><em>Ils sont <strong>venus</strong>.</em><br><em>Elles se sont <strong>levées</strong>.</em></td>
+      </tr>
+    </table>
+
+    <div class="mnemonic">
+      <div class="letters">D · R · M · R · S · V · A · N · D · E · R · T · R · A · M · P</div>
+      <p style="margin:0 0 8px 0"><strong>The 17 ÊTRE verbs</strong> — mostly motion and state changes. All reflexive verbs (<em>se laver, se lever, se coucher</em>...) also use <em>être</em>.</p>
+      <ul>
+        <li><strong>D</strong>evenir — to become</li>
+        <li><strong>R</strong>evenir — to come back</li>
+        <li><strong>M</strong>onter — to go up</li>
+        <li><strong>R</strong>ester — to stay</li>
+        <li><strong>S</strong>ortir — to go out</li>
+        <li><strong>V</strong>enir — to come</li>
+        <li><strong>A</strong>ller — to go</li>
+        <li><strong>N</strong>aître — to be born</li>
+        <li><strong>D</strong>escendre — to go down</li>
+        <li><strong>E</strong>ntrer — to enter</li>
+        <li><strong>R</strong>entrer — to return home</li>
+        <li><strong>T</strong>omber — to fall</li>
+        <li><strong>R</strong>etourner — to go back</li>
+        <li><strong>A</strong>rriver — to arrive</li>
+        <li><strong>M</strong>ourir — to die</li>
+        <li><strong>P</strong>artir — to leave</li>
+        <li><strong>+ passer, apparaître</strong> (sometimes)</li>
+      </ul>
+    </div>
+  </section>
+
+  </div><!-- /cards-root -->
+
+  <div class="bottom-nav">
+    <button id="prev-btn">← Previous tense</button>
+    <button id="next-btn">Next tense →</button>
+  </div>
+</main>
+
+<script>
+/* Progress + filter + arrow nav + verb filter */
+document.addEventListener('DOMContentLoaded', function(){
+  // Hamburger toggle
+  const hamburger = document.getElementById('hamburger');
+  const progressPanel = document.getElementById('progress');
+  hamburger.addEventListener('click', (e)=>{
+    e.stopPropagation();
+    const isOpen = progressPanel.classList.toggle('open');
+    hamburger.classList.toggle('open', isOpen);
+    hamburger.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+  });
+  document.addEventListener('click', (e)=>{
+    if(!progressPanel.contains(e.target) && e.target !== hamburger && !hamburger.contains(e.target)){
+      progressPanel.classList.remove('open');
+      hamburger.classList.remove('open');
+      hamburger.setAttribute('aria-expanded','false');
+    }
+  });
+  progressPanel.addEventListener('click', (e)=>{
+    if(e.target.tagName === 'A'){
+      setTimeout(()=>{
+        progressPanel.classList.remove('open');
+        hamburger.classList.remove('open');
+        hamburger.setAttribute('aria-expanded','false');
+      }, 120);
+    }
+  });
+
+  // World filter tabs
+  const buttons = document.querySelectorAll('.topnav button');
+  buttons.forEach(b=>b.addEventListener('click',()=>{
+    buttons.forEach(x=>x.classList.remove('active'));
+    b.classList.add('active');
+    document.body.setAttribute('data-filter', b.dataset.filter);
+    buildProgress();
+  }));
+
+  // Progress side panel with world icons
+  const progress = document.getElementById('progress');
+  function buildProgress(){
+    const filter = document.body.getAttribute('data-filter');
+    progress.innerHTML = '<h4>You are here</h4>';
+    const cards = Array.from(document.querySelectorAll('.card')).filter(c=>{
+      if(filter==='a') return c.classList.contains('worldA');
+      if(filter==='b') return c.classList.contains('worldB');
+      return true;
+    });
+    cards.forEach(c=>{
+      const a = document.createElement('a');
+      a.href = '#' + c.id;
+      const icon = c.classList.contains('worldB') ? '🌿' : '🌊';
+      a.innerHTML = `<span class="pw-icon">${icon}</span>${c.querySelector('h3').textContent}`;
+      a.dataset.target = c.id;
+      progress.appendChild(a);
+    });
+  }
+  buildProgress();
+
+  // Arrow + bottom nav
+  function getVisibleCards(){
+    const filter = document.body.getAttribute('data-filter');
+    return Array.from(document.querySelectorAll('.card')).filter(c=>{
+      if(filter==='a') return c.classList.contains('worldA');
+      if(filter==='b') return c.classList.contains('worldB');
+      return true;
+    });
+  }
+  function currentIndex(){
+    const cards = getVisibleCards();
+    const scrollY = window.scrollY + 120;
+    let idx = 0;
+    for(let i=0;i<cards.length;i++){
+      if(cards[i].offsetTop <= scrollY) idx = i;
+    }
+    return {cards, idx};
+  }
+  function jump(delta){
+    const {cards, idx} = currentIndex();
+    const target = cards[Math.max(0, Math.min(cards.length-1, idx+delta))];
+    if(target) target.scrollIntoView({behavior:'smooth', block:'start'});
+  }
+  document.getElementById('prev-btn').addEventListener('click', ()=>jump(-1));
+  document.getElementById('next-btn').addEventListener('click', ()=>jump(1));
+  document.addEventListener('keydown', (e)=>{
+    if(e.target.tagName==='INPUT'||e.target.tagName==='TEXTAREA') return;
+    if(e.key==='ArrowRight'){ jump(1); e.preventDefault(); }
+    if(e.key==='ArrowLeft'){ jump(-1); e.preventDefault(); }
+  });
+
+  // Highlight current in progress panel
+  function highlight(){
+    const {cards, idx} = currentIndex();
+    const current = cards[idx];
+    if(!current) return;
+    document.querySelectorAll('.progress a').forEach(a=>{
+      a.classList.remove('current','current-b');
+      if(a.dataset.target === current.id){
+        if(current.classList.contains('worldB')) a.classList.add('current-b');
+        else a.classList.add('current');
+      }
+    });
+  }
+  window.addEventListener('scroll', highlight, {passive:true});
+  highlight();
+
+  // ── Verb filter ──
+  const vfBtns = document.querySelectorAll('.vf-btn');
+  vfBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      vfBtns.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      const verb = btn.dataset.verb;
+      document.querySelectorAll('.example[data-verb]').forEach(ex => {
+        if(verb === 'all' || ex.dataset.verb === verb){
+          ex.classList.remove('hidden');
+        } else {
+          ex.classList.add('hidden');
+        }
+      });
+      // If a card has all examples hidden, dim it slightly
+      document.querySelectorAll('.card').forEach(card => {
+        const total = card.querySelectorAll('.example[data-verb]').length;
+        const visible = card.querySelectorAll('.example[data-verb]:not(.hidden)').length;
+        card.style.opacity = (total > 0 && visible === 0) ? '0.45' : '1';
+      });
+    });
+  });
+});
+</script>
+</body>
+</html>
