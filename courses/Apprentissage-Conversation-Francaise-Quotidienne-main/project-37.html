@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="images/favicon.png">
+    <title>Project 37: "Make Someone Do Something" — French Daily Sentences</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.75;
+            color: #1a202c;
+            background-color: #f7fafc;
+        }
+        .container {
+            max-width: 1800px;
+            margin: 0 auto;
+            background: white;
+            min-height: 100vh;
+            box-shadow: 0 0 30px rgba(0,0,0,0.08);
+            padding: 48px 52px;
+        }
+        
+        .content { max-width: 1700px; margin: 0 auto; color: #1a202c; }
+        .content h1 {
+            color: #1a202c; margin: 32px 0 20px;
+            padding-bottom: 12px;
+            border-bottom: 4px solid #3b82f6;
+            font-size: 2.1em;
+            font-weight: 700;
+        }
+        .content h2 {
+            color: #1a202c; margin: 28px 0 16px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #60a5fa;
+            font-size: 1.6em;
+            font-weight: 600;
+        }
+        .content h3 { color: #1a202c; margin: 22px 0 12px; font-size: 1.3em; font-weight: 600; }
+        .content h4 { color: #2d3748; margin: 18px 0 10px; font-size: 1.1em; font-weight: 600; }
+        .content p  { margin-bottom: 16px; line-height: 1.8; color: #1a202c; }
+        .content ul, .content ol { margin: 12px 0 18px 30px; color: #1a202c; }
+        .content li { margin-bottom: 8px; line-height: 1.75; color: #1a202c; }
+        .content hr { border: none; border-top: 2px solid #e2e8f0; margin: 26px 0; }
+        .content pre {
+            background: #f7fafc !important;
+            border: 1px solid #cbd5e0 !important;
+            border-left: 4px solid #3b82f6 !important;
+            padding: 18px !important; overflow-x: auto; margin: 18px 0; border-radius: 6px;
+            font-family: 'Consolas','Monaco','Courier New',monospace !important;
+            font-size: 0.9em !important;
+        }
+        .content pre:not([style*="color"]) { color: #1a202c !important; }
+        .content code {
+            font-family: 'Consolas','Monaco','Courier New',monospace !important;
+            font-size: 0.88em !important;
+        }
+        .content code:not(pre code) {
+            background: #dbeafe !important;
+            color: #1a202c !important;
+            padding: 2px 6px;
+            border-radius: 3px;
+        }
+        .content pre code { background: transparent !important; padding: 0; }
+        .content table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+        .content th {
+            background: linear-gradient(135deg, #3b82f6 0%, #60a5fa 100%);
+            color: white; padding: 12px 16px; text-align: left;
+            font-weight: 600;
+        }
+        .content td { padding: 11px 16px; border: 1px solid #e2e8f0; color: #1a202c; }
+        .content tr:nth-child(even) td { background: #eff6ff; }
+        .content blockquote {
+            border-left: 4px solid #3b82f6; background: #eff6ff;
+            padding: 14px 20px; margin: 18px 0; border-radius: 0 6px 6px 0;
+            color: #1a202c;
+        }
+        .content strong { color: #1a202c; font-weight: 600; }
+        .px-2 { padding: 0; }
+        .chat-message { background: transparent; padding: 0; margin: 0; }
+
+        /* Bottom nav bar only */
+        .nav-bar {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 24px 0;
+            margin-top: 50px;
+            border-top: 3px solid #60a5fa;
+        }
+        .nav-button {
+            display: inline-flex; align-items: center; gap: 8px;
+            padding: 12px 26px;
+            background: linear-gradient(135deg, #3b82f6 0%, #60a5fa 100%);
+            color: white !important; text-decoration: none;
+            border-radius: 8px; font-weight: 600; font-size: 0.95em;
+            transition: all 0.2s;
+            box-shadow: 0 2px 8px rgba(59,130,246,0.35);
+        }
+        .nav-button:hover { transform: translateY(-2px); box-shadow: 0 4px 14px rgba(59,130,246,0.5); }
+        .nav-button.disabled { background: #cbd5e1; box-shadow: none; pointer-events: none; }
+        .nav-button.home {
+            background: linear-gradient(135deg, #ef4444 0%, #f87171 100%);
+            box-shadow: 0 2px 8px rgba(239,68,68,0.35);
+        }
+        .nav-button.home:hover { box-shadow: 0 4px 14px rgba(239,68,68,0.5); }
+        .page-info { color: #718096; font-size: 0.9em; text-align: center; }
+
+        /* Progress bar */
+        #progress-track {
+            position: fixed; top: 20px; right: 20px;
+            width: 10px; height: 150px;
+            background: rgba(59,130,246,0.2);
+            border: 2px solid #3b82f6;
+            border-radius: 6px; overflow: hidden; z-index: 1000;
+        }
+        #progress-fill {
+            width: 100%;
+            background: linear-gradient(180deg, #3b82f6, #2563eb);
+            height: 0%;
+            transition: height 0.15s ease;
+        }
+        #progress-pct {
+            position: fixed; top: 0px; right: 16px;
+            color: #2563eb; font-size: 14px; font-weight: bold;
+            z-index: 1001;
+            text-shadow: 0 1px 2px rgba(255,255,255,0.9);
+            line-height: 20px;
+        }
+
+    </style>
+<link rel="stylesheet" href="assets/chapters.css?v=20260421203847"><script src="assets/chapters.js?v=20260421203847" defer></script>
+</head>
+<body>
+    <div class="container">
+        <div class="content">
+            <div class="chat-message" data-index="13">
+<div class="px-2"><h1>🟠 PROJECT 37: "Make Someone Do Something"</h1>
+<h2><em>Managing a team, raising children, getting services done — you don't do it yourself</em></h2>
+<hr>
+<h1>🎯 THE HYPOTHETICAL PROBLEM</h1>
+<p>→ You are a project manager in a marketing agency in Paris<br>
+→ You have a team of 8 people — designers, writers, developers<br>
+→ Your job is NOT to do everything yourself — it's to <strong>make things happen through others</strong><br>
+→ Your boss asks: "Did you send the report?" → You say: "No — I <strong>had</strong> Sophie <strong>send</strong> it."<br>
+→ A client asks: "Who designed this?" → You say: "I <strong>had it designed</strong> by our team."<br>
+→ At home, your child won't eat → You <strong>make</strong> him eat his vegetables<br>
+→ You go to a mechanic → You <strong>have</strong> your car repaired<br>
+→ You go to a hairdresser → You <strong>get</strong> your hair cut<br>
+→ In English, these use "make," "have," "get," "let" — all different words<br>
+→ In French, ONE structure handles almost all of them: <strong>FAIRE + INFINITIF</strong><br>
+→ You try: "J'ai fait Sophie envoyer le rapport" — your boss winces<br>
+→ The correct version: "J'ai <strong>fait envoyer</strong> le rapport <strong>par</strong> Sophie" or "J'ai <strong>fait envoyer</strong> le rapport <strong>à</strong> Sophie"<br>
+→ The word order, the pronoun placement, and the logic are <strong>completely different from English</strong></p>
+<p><strong>The core realization:</strong><br>
+→ In English: "I made him wait" → Subject + made + PERSON + verb<br>
+→ In French: "Je l'ai fait attendre" → Subject + PERSON(pronoun) + faire + infinitif<br>
+→ The person who performs the action is NOT the subject — they're the <strong>caused agent</strong><br>
+→ Faire and the infinitive act as a <strong>single unit</strong> — nothing separates them<br>
+→ This structure is everywhere: parenting, management, services, daily life</p>
+<hr>
+<h1>🔍 HOW TO APPROACH IT</h1>
+<p>→ Think of "faire + infinitif" as a <strong>remote control</strong><br>
+→ YOU press the button (faire) → SOMEONE ELSE performs the action (infinitif)<br>
+→ You are the <strong>causer</strong> — they are the <strong>doer</strong></p>
+<h2>The Three Core Meanings</h2>
+<table><thead><tr><th>Meaning</th><th>English Equivalent</th><th>French Structure</th><th>Example</th></tr></thead><tbody><tr><td><strong>Force/Cause</strong></td><td>Make someone do</td><td>faire + infinitif</td><td>Je <strong>fais</strong> travailler mon équipe</td></tr><tr><td><strong>Arrange/Commission</strong></td><td>Have something done</td><td>faire + infinitif</td><td>Je <strong>fais</strong> réparer ma voiture</td></tr><tr><td><strong>Allow</strong> (with laisser)</td><td>Let someone do</td><td>laisser + infinitif</td><td>Je <strong>laisse</strong> partir les enfants</td></tr></tbody></table>
+<p>→ <strong>Faire</strong> covers meanings 1 and 2<br>
+→ <strong>Laisser</strong> covers meaning 3 — structurally identical but different intent<br>
+→ We'll focus on faire but include laisser in Block I</p>
+<hr>
+<h1>🔧 HOW CAN WE SOLVE IT</h1>
+<h2>The Basic Formula</h2>
+<code>SUBJECT + FAIRE (conjugated) + INFINITIF + COMPLEMENT</code>
+<p><strong>Key rule:</strong> Faire and the infinitive are <strong>INSEPARABLE</strong> — nothing goes between them</p>
+<p>→ ✅ Je fais <strong>manger</strong> les enfants (I make the children eat)<br>
+→ ❌ <del>Je fais les enfants manger</del> (WRONG — nothing between faire and infinitif)</p>
+<h2>Where Does the "Caused Person" Go?</h2>
+<h3>Case 1 — Only ONE object (the person who does the action)</h3>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>Je fais travailler Marie.
+</span>        │          │
+     infinitif   person (direct object)</code></pre></div>
+<p>→ Marie is the <strong>COD</strong> of faire — she receives the action of "making"<br>
+→ Pronoun: Je <strong>la</strong> fais travailler (P19 — COD pronoun)</p>
+<h3>Case 2 — TWO objects (person + thing)</h3>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>Je fais envoyer le rapport à Marie.
+</span>           │          │         │
+       infinitif    thing    person (indirect — à)</code></pre></div>
+<p>→ "Le rapport" = COD (the thing being sent)<br>
+→ "À Marie" = COI (the person being made to send)<br>
+→ When BOTH a thing AND a person exist → person becomes COI with <strong>à</strong><br>
+→ Pronoun: Je <strong>le lui</strong> fais envoyer (P36 — double pronouns!)</p>
+<h3>Case 3 — Passive meaning with "par"</h3>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>Je fais réparer la voiture par le mécanicien.
+</span>           │          │              │
+       infinitif    thing      agent (by whom)</code></pre></div>
+<p>→ Emphasis on the thing being done — the agent uses <strong>par</strong><br>
+→ Common for services: having things done BY professionals<br>
+→ Pronoun for thing: Je <strong>la</strong> fais réparer (par le mécanicien)</p>
+<hr>
+<h2>Pronoun Placement Rule</h2>
+<p>→ Pronouns go <strong>BEFORE faire</strong> — not before the infinitive<br>
+→ This is different from other modal+infinitif structures (P36: je vais <strong>te le</strong> dire — pronouns before infinitif)</p>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>MODAL + INFINITIF:     Je vais LE faire.      (pronoun before infinitif)
+</span>FAIRE + INFINITIF:     Je LE fais réparer.     (pronoun before faire)</code></pre></div>
+<p>→ <strong>Why?</strong> Because faire+infinitif acts as a SINGLE verbal unit — the pronoun goes before the whole unit</p>
+<hr>
+<h1>✅ WHAT COULD BE DONE — THE 100 SENTENCES</h1>
+<h2>🔹 BLOCK A — Making People Do Things: One Object (Person = COD)</h2>
+<p><em>Scenario: Managing your team — getting people to perform actions</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English Meaning</th><th>Structure Breakdown</th></tr></thead><tbody><tr><td>1</td><td>Je fais travailler mon équipe.</td><td>I make my team work.</td><td>faire + infinitif + person(COD)</td></tr><tr><td>2</td><td>Tu fais attendre les clients.</td><td>You make the clients wait.</td><td>faire + infinitif + person(COD)</td></tr><tr><td>3</td><td>Il fait rire tout le monde.</td><td>He makes everyone laugh.</td><td>faire + infinitif + person(COD)</td></tr><tr><td>4</td><td>Elle fait pleurer les enfants.</td><td>She makes the children cry.</td><td>faire + infinitif + person(COD)</td></tr><tr><td>5</td><td>On fait participer tous les membres.</td><td>We make all the members participate.</td><td>faire + infinitif + person(COD)</td></tr><tr><td>6</td><td>Le professeur fait lire les élèves.</td><td>The teacher makes the students read.</td><td>faire + infinitif + person(COD)</td></tr><tr><td>7</td><td>Ce film fait réfléchir les spectateurs.</td><td>This film makes the viewers think.</td><td>faire + infinitif + person(COD) — abstract causer</td></tr><tr><td>8</td><td>Le bruit fait fuir les oiseaux.</td><td>The noise makes the birds flee.</td><td>faire + infinitif + person(COD) — non-human causer</td></tr><tr><td>9</td><td>Cette nouvelle fait pleurer ma mère.</td><td>This news makes my mother cry.</td><td>faire + infinitif + person(COD) — emotional cause</td></tr><tr><td>10</td><td>La musique fait danser les gens.</td><td>The music makes people dance.</td><td>faire + infinitif + person(COD) — abstract causer</td></tr></tbody></table>
+<p><strong>🧠 Structure unlocked:</strong> <code>Subject + FAIRE + INFINITIF + person/thing that performs the action</code><br>
+→ When there's only ONE complement → it's a <strong>COD</strong><br>
+→ The person being "made to do" something is treated as a direct object of faire<br>
+→ Notice: the infinitive always comes IMMEDIATELY after faire — person goes AFTER the infinitive</p>
+<hr>
+<h2>🔹 BLOCK B — Making People Do Things: With Pronouns (Person = COD Pronoun)</h2>
+<p><em>Scenario: Same situations as Block A — but replacing the person with a pronoun</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English Meaning</th><th>Pronoun Used</th><th>Original Noun</th></tr></thead><tbody><tr><td>11</td><td>Je les fais travailler.</td><td>I make them work.</td><td>les (COD)</td><td>mon équipe</td></tr><tr><td>12</td><td>Tu les fais attendre.</td><td>You make them wait.</td><td>les (COD)</td><td>les clients</td></tr><tr><td>13</td><td>Il le fait rire.</td><td>He makes him laugh.</td><td>le (COD)</td><td>tout le monde → him</td></tr><tr><td>14</td><td>Elle les fait pleurer.</td><td>She makes them cry.</td><td>les (COD)</td><td>les enfants</td></tr><tr><td>15</td><td>On les fait participer.</td><td>We make them participate.</td><td>les (COD)</td><td>tous les membres</td></tr><tr><td>16</td><td>Le professeur les fait lire.</td><td>The teacher makes them read.</td><td>les (COD)</td><td>les élèves</td></tr><tr><td>17</td><td>Ce film me fait réfléchir.</td><td>This film makes me think.</td><td>me (COD)</td><td>moi</td></tr><tr><td>18</td><td>Tu me fais rire.</td><td>You make me laugh.</td><td>me (COD)</td><td>moi</td></tr><tr><td>19</td><td>Elle nous fait attendre.</td><td>She makes us wait.</td><td>nous (COD)</td><td>nous</td></tr><tr><td>20</td><td>Ça te fait pleurer ?</td><td>Does that make you cry?</td><td>te (COD)</td><td>toi</td></tr></tbody></table>
+<p><strong>🧠 Structure unlocked:</strong> <code>Subject + [PRONOUN] + FAIRE + INFINITIF</code><br>
+→ Pronoun goes <strong>BEFORE faire</strong> — not before the infinitive<br>
+→ ✅ Tu <strong>me</strong> fais rire<br>
+→ ❌ <del>Tu fais me rire</del> (WRONG — pronoun must precede faire)<br>
+→ This is the KEY difference from standard modal+infinitif (je vais <strong>te</strong> voir = pronoun before infinitif)</p>
+<hr>
+<h2>🔹 BLOCK C — Having Things Done: Services &amp; Professional Actions</h2>
+<p><em>Scenario: You don't do it yourself — you hire someone or use a service</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English Meaning</th><th>What's Being Done</th></tr></thead><tbody><tr><td>21</td><td>Je fais réparer ma voiture.</td><td>I'm having my car repaired.</td><td>Car repair</td></tr><tr><td>22</td><td>Elle fait construire une maison.</td><td>She's having a house built.</td><td>House construction</td></tr><tr><td>23</td><td>On fait livrer les courses à domicile.</td><td>We have groceries delivered to our home.</td><td>Grocery delivery</td></tr><tr><td>24</td><td>Il fait nettoyer son appartement chaque semaine.</td><td>He has his apartment cleaned every week.</td><td>Cleaning service</td></tr><tr><td>25</td><td>Nous faisons installer la fibre optique.</td><td>We're having fiber optic installed.</td><td>Installation service</td></tr><tr><td>26</td><td>Tu fais couper tes cheveux où ?</td><td>Where do you get your hair cut?</td><td>Haircut</td></tr><tr><td>27</td><td>Elle fait développer ses photos en ligne.</td><td>She has her photos developed online.</td><td>Photo service</td></tr><tr><td>28</td><td>Je fais traduire mes documents par un professionnel.</td><td>I have my documents translated by a professional.</td><td>Translation service — <strong>par</strong> = by whom</td></tr><tr><td>29</td><td>On fait vérifier les comptes par un expert-comptable.</td><td>We have the accounts checked by an accountant.</td><td>Audit service — <strong>par</strong></td></tr><tr><td>30</td><td>Vous faites garder vos enfants ?</td><td>Do you have your children looked after?</td><td>Childcare service</td></tr></tbody></table>
+<p><strong>🧠 Structure unlocked:</strong> <code>Subject + FAIRE + INFINITIF + thing being done (+ par + agent)</code><br>
+→ This is the <strong>"having something done" meaning</strong> — extremely common in daily French<br>
+→ The person who DOES the action can be introduced with <strong>par</strong> (by) — or left unstated<br>
+→ When unstated → focus is on the action, not the doer: "Je fais réparer ma voiture" (by someone, doesn't matter who)</p>
+<hr>
+<h2>🔹 BLOCK D — Having Things Done: With Pronouns</h2>
+<p><em>Scenario: Referring back to things already mentioned — replacing the thing with a pronoun</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English Meaning</th><th>Pronoun</th><th>Original Noun</th></tr></thead><tbody><tr><td>31</td><td>Je la fais réparer.</td><td>I'm having it (f) repaired.</td><td>la (COD)</td><td>ma voiture</td></tr><tr><td>32</td><td>Elle la fait construire.</td><td>She's having it (f) built.</td><td>la (COD)</td><td>une maison</td></tr><tr><td>33</td><td>On les fait livrer.</td><td>We're having them delivered.</td><td>les (COD)</td><td>les courses</td></tr><tr><td>34</td><td>Il le fait nettoyer.</td><td>He has it (m) cleaned.</td><td>le (COD)</td><td>son appartement</td></tr><tr><td>35</td><td>Nous la faisons installer.</td><td>We're having it (f) installed.</td><td>la (COD)</td><td>la fibre optique</td></tr><tr><td>36</td><td>Tu les fais couper souvent ?</td><td>Do you get them cut often?</td><td>les (COD)</td><td>tes cheveux</td></tr><tr><td>37</td><td>Elle les fait développer.</td><td>She has them developed.</td><td>les (COD)</td><td>ses photos</td></tr><tr><td>38</td><td>Je les fais traduire.</td><td>I have them translated.</td><td>les (COD)</td><td>mes documents</td></tr><tr><td>39</td><td>On les fait vérifier.</td><td>We have them checked.</td><td>les (COD)</td><td>les comptes</td></tr><tr><td>40</td><td>Vous les faites garder le mercredi ?</td><td>Do you have them looked after on Wednesdays?</td><td>les (COD)</td><td>vos enfants</td></tr></tbody></table>
+<p><strong>🧠 Structure unlocked:</strong> <code>Subject + [COD PRONOUN] + FAIRE + INFINITIF</code><br>
+→ Same pronoun placement rule as Block B — pronoun before faire<br>
+→ The thing being "had done" is the COD → le/la/les replaces it<br>
+→ These sentences are the <strong>backbone of service-related French</strong></p>
+<hr>
+<h2>🔹 BLOCK E — Two Objects: Person (à) + Thing</h2>
+<p><em>Scenario: You're making someone do something TO a thing — both person and thing present</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English Meaning</th><th>Structure: who does what</th></tr></thead><tbody><tr><td>41</td><td>Je fais lire le rapport à Marie.</td><td>I make Marie read the report. / I have Marie read the report.</td><td>lire = action / le rapport = COD / à Marie = COI (person forced)</td></tr><tr><td>42</td><td>Tu fais envoyer le colis à ton assistant.</td><td>You have your assistant send the package.</td><td>envoyer = action / le colis = COD / à ton assistant = COI</td></tr><tr><td>43</td><td>Il fait écrire la lettre à sa secrétaire.</td><td>He has his secretary write the letter.</td><td>écrire = action / la lettre = COD / à sa secrétaire = COI</td></tr><tr><td>44</td><td>Elle fait goûter le plat aux invités.</td><td>She has the guests taste the dish.</td><td>goûter = action / le plat = COD / aux invités = COI</td></tr><tr><td>45</td><td>On fait corriger les copies aux stagiaires.</td><td>We have the interns correct the papers.</td><td>corriger = action / les copies = COD / aux stagiaires = COI</td></tr><tr><td>46</td><td>Le patron fait signer le contrat au client.</td><td>The boss has the client sign the contract.</td><td>signer = action / le contrat = COD / au client = COI</td></tr><tr><td>47</td><td>Je fais préparer le dossier à Sophie.</td><td>I have Sophie prepare the file.</td><td>préparer = action / le dossier = COD / à Sophie = COI</td></tr><tr><td>48</td><td>Elle fait apprendre la leçon aux enfants.</td><td>She makes the children learn the lesson.</td><td>apprendre = action / la leçon = COD / aux enfants = COI</td></tr><tr><td>49</td><td>On fait présenter le projet au nouveau.</td><td>We have the new person present the project.</td><td>présenter = action / le projet = COD / au nouveau = COI</td></tr><tr><td>50</td><td>Tu fais porter les valises au groom.</td><td>You have the bellboy carry the suitcases.</td><td>porter = action / les valises = COD / au groom = COI</td></tr></tbody></table>
+<p><strong>🧠 Critical structure unlocked:</strong> When BOTH a thing and a person are present:<br>
+→ Thing = <strong>COD</strong> (direct object of the infinitive)<br>
+→ Person = <strong>COI</strong> (introduced by <strong>à</strong>)</p>
+<p>Compare with Block A (one object):</p>
+<ul>
+<li>One object: Je fais travailler <strong>Marie</strong> → Marie = COD</li>
+<li>Two objects: Je fais lire le rapport <strong>à Marie</strong> → Marie = COI (because "le rapport" already takes the COD slot)</li>
+</ul>
+<p>→ <strong>The person gets DEMOTED from COD to COI when a thing is present</strong><br>
+→ This is the most confusing aspect of faire causatif — and the most important to master</p>
+<hr>
+<h2>🔹 BLOCK F — Two Objects with Double Pronouns</h2>
+<p><em>Scenario: Replacing BOTH the person and the thing with pronouns — maximum compression</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English Meaning</th><th>Pronouns</th><th>Original</th></tr></thead><tbody><tr><td>51</td><td>Je le lui fais lire.</td><td>I have him/her read it.</td><td>le(COD) + lui(COI)</td><td>le rapport + à Marie</td></tr><tr><td>52</td><td>Tu le lui fais envoyer.</td><td>You have him/her send it.</td><td>le(COD) + lui(COI)</td><td>le colis + à ton assistant</td></tr><tr><td>53</td><td>Il la lui fait écrire.</td><td>He has him/her write it (f).</td><td>la(COD) + lui(COI)</td><td>la lettre + à sa secrétaire</td></tr><tr><td>54</td><td>Elle le leur fait goûter.</td><td>She has them taste it.</td><td>le(COD) + leur(COI)</td><td>le plat + aux invités</td></tr><tr><td>55</td><td>On les leur fait corriger.</td><td>We have them correct them.</td><td>les(COD) + leur(COI)</td><td>les copies + aux stagiaires</td></tr><tr><td>56</td><td>Le patron le lui fait signer.</td><td>The boss has him sign it.</td><td>le(COD) + lui(COI)</td><td>le contrat + au client</td></tr><tr><td>57</td><td>Je le lui fais préparer.</td><td>I have him/her prepare it.</td><td>le(COD) + lui(COI)</td><td>le dossier + à Sophie</td></tr><tr><td>58</td><td>Elle la leur fait apprendre.</td><td>She makes them learn it (f).</td><td>la(COD) + leur(COI)</td><td>la leçon + aux enfants</td></tr><tr><td>59</td><td>On le lui fait présenter.</td><td>We have him/her present it.</td><td>le(COD) + lui(COI)</td><td>le projet + au nouveau</td></tr><tr><td>60</td><td>Tu les lui fais porter.</td><td>You have him carry them.</td><td>les(COD) + lui(COI)</td><td>les valises + au groom</td></tr></tbody></table>
+<p><strong>🧠 Structure unlocked:</strong> <code>Subject + [COD pronoun] + [COI pronoun] + FAIRE + INFINITIF</code><br>
+→ P36 double pronoun order applies perfectly: le/la/les (Col 2) before lui/leur (Col 3)<br>
+→ Both pronouns go before <strong>faire</strong> — not before the infinitive<br>
+→ ✅ Je <strong>le lui</strong> fais envoyer<br>
+→ ❌ <del>Je fais le lui envoyer</del> (WRONG)<br>
+→ ❌ <del>Je fais envoyer le lui</del> (WRONG)</p>
+<hr>
+<h2>🔹 BLOCK G — Faire Causatif in All Tenses</h2>
+<p><em>Scenario: One situation across every tense — tracking how faire+infinitif behaves</em></p>
+<p><strong>Base situation:</strong> "Having the report sent by Marie" — across all tenses</p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>Tense</th><th>English Meaning</th></tr></thead><tbody><tr><td>61</td><td>Je fais envoyer le rapport à Marie.</td><td>Présent</td><td>I have Marie send the report.</td></tr><tr><td>62</td><td>Je faisais envoyer le rapport à Marie.</td><td>Imparfait</td><td>I used to have Marie send the report.</td></tr><tr><td>63</td><td>J'ai fait envoyer le rapport à Marie.</td><td>Passé composé</td><td>I had Marie send the report.</td></tr><tr><td>64</td><td>J'avais fait envoyer le rapport à Marie.</td><td>Plus-que-parfait</td><td>I had had Marie send the report. (P32)</td></tr><tr><td>65</td><td>Je ferai envoyer le rapport à Marie.</td><td>Futur simple</td><td>I will have Marie send the report. (P16)</td></tr><tr><td>66</td><td>Je ferais envoyer le rapport à Marie.</td><td>Conditionnel présent</td><td>I would have Marie send the report. (P17)</td></tr><tr><td>67</td><td>J'aurais fait envoyer le rapport à Marie.</td><td>Conditionnel passé</td><td>I would have had Marie send the report. (P35)</td></tr><tr><td>68</td><td>Je vais faire envoyer le rapport à Marie.</td><td>Futur proche</td><td>I'm going to have Marie send the report.</td></tr><tr><td>69</td><td>Fais envoyer le rapport à Marie.</td><td>Impératif</td><td>Have Marie send the report. (P13)</td></tr><tr><td>70</td><td>Ne fais pas envoyer le rapport à Marie.</td><td>Impératif négatif</td><td>Don't have Marie send the report.</td></tr></tbody></table>
+<p><strong>Now the same with pronouns:</strong></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>Tense</th><th>English Meaning</th></tr></thead><tbody><tr><td>71</td><td>Je le lui fais envoyer.</td><td>Présent</td><td>I have her send it.</td></tr><tr><td>72</td><td>Je le lui faisais envoyer.</td><td>Imparfait</td><td>I used to have her send it.</td></tr><tr><td>73</td><td>Je le lui ai fait envoyer.</td><td>Passé composé</td><td>I had her send it.</td></tr><tr><td>74</td><td>Je le lui avais fait envoyer.</td><td>Plus-que-parfait</td><td>I had had her send it.</td></tr><tr><td>75</td><td>Je le lui ferai envoyer.</td><td>Futur simple</td><td>I'll have her send it.</td></tr></tbody></table>
+<p><strong>🧠 Critical rule unlocked:</strong> In compound tenses, the past participle of faire is <strong>always "fait" — INVARIABLE</strong><br>
+→ ✅ Je les ai <strong>fait</strong> envoyer (not <del>faits</del> — no agreement even with preceding "les")<br>
+→ This is a <strong>special grammar rule</strong>: when faire is followed by an infinitive, its past participle NEVER agrees<br>
+→ This contradicts the normal P9/P36 agreement rule — faire+infinitif is the EXCEPTION</p>
+<hr>
+<h2>🔹 BLOCK H — Se Faire + Infinitif: Things Done TO Yourself</h2>
+<p><em>Scenario: Things that happen to you — you are the recipient of the caused action</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English Meaning</th><th>Nuance</th></tr></thead><tbody><tr><td>76</td><td>Je me suis fait couper les cheveux.</td><td>I got my hair cut.</td><td>Service done to self</td></tr><tr><td>77</td><td>Elle s'est fait voler son sac.</td><td>She got her bag stolen.</td><td>⚠️ Negative event — "got" = suffered</td></tr><tr><td>78</td><td>Il s'est fait renvoyer.</td><td>He got fired.</td><td>Negative — suffered the action</td></tr><tr><td>79</td><td>Tu t'es fait avoir.</td><td>You got tricked / ripped off.</td><td>Idiomatic — very common in spoken French</td></tr><tr><td>80</td><td>On s'est fait surprendre par la pluie.</td><td>We got caught by the rain.</td><td>Unexpected event suffered</td></tr><tr><td>81</td><td>Nous nous sommes fait cambrioler.</td><td>We got burgled.</td><td>Crime suffered</td></tr><tr><td>82</td><td>Vous vous êtes fait arnaquer.</td><td>You got scammed.</td><td>Consumer complaint</td></tr><tr><td>83</td><td>Ils se sont fait arrêter par la police.</td><td>They got arrested by the police.</td><td>Legal context</td></tr><tr><td>84</td><td>Je me suis fait opérer du genou.</td><td>I had knee surgery.</td><td>Medical — service chosen</td></tr><tr><td>85</td><td>Elle s'est fait tatouer le bras.</td><td>She got her arm tattooed.</td><td>Body modification — chosen</td></tr></tbody></table>
+<p><strong>🧠 Critical structure unlocked:</strong> <code>Subject + SE FAIRE + INFINITIF = to get something done TO oneself</code></p>
+<p>→ <strong>Two very different meanings depending on context:</strong></p>
+<table><thead><tr><th>Context</th><th>Meaning</th><th>Example</th></tr></thead><tbody><tr><td><strong>Voluntary service</strong></td><td>I had X done (I chose it)</td><td>Je me suis fait couper les cheveux</td></tr><tr><td><strong>Involuntary event</strong></td><td>I got X-ed (it happened to me)</td><td>Je me suis fait voler mon sac</td></tr></tbody></table>
+<p>→ ⚠️ <strong>Agreement rule for se faire:</strong> past participle "fait" remains <strong>INVARIABLE</strong> even with être auxiliary<br>
+→ ✅ Elle <strong>s'est fait</strong> voler (not <del>s'est faite voler</del>)<br>
+→ Same exception as Block G — faire + infinitif = fait never agrees</p>
+<p>→ Sentence 79: "Se faire avoir" = to get tricked — one of the most common idiomatic uses<br>
+→ Sentence 82: "Se faire arnaquer" = to get scammed — essential consumer French</p>
+<hr>
+<h2>🔹 BLOCK I — LAISSER + Infinitif: Letting / Allowing</h2>
+<p><em>Scenario: Not forcing — but PERMITTING actions to happen</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English Meaning</th><th>Difference from Faire</th></tr></thead><tbody><tr><td>86</td><td>Je laisse partir les enfants.</td><td>I let the children leave.</td><td>Permission — not force</td></tr><tr><td>87</td><td>Tu laisses entrer le chat ?</td><td>Are you letting the cat in?</td><td>Permission — question</td></tr><tr><td>88</td><td>Elle laisse parler son collègue.</td><td>She lets her colleague speak.</td><td>Non-interference</td></tr><tr><td>89</td><td>Il ne laisse jamais personne toucher ses affaires.</td><td>He never lets anyone touch his things.</td><td>Refusal of permission — ne...jamais + personne (P39)</td></tr><tr><td>90</td><td>On les laisse jouer dehors.</td><td>We let them play outside.</td><td>Pronoun: les before laisser</td></tr><tr><td>91</td><td>Laisse-moi tranquille.</td><td>Leave me alone.</td><td>⚠️ Fixed expression — imperative</td></tr><tr><td>92</td><td>Laisse-moi t'expliquer.</td><td>Let me explain to you.</td><td>Imperative + double pronoun — moi before infinitif</td></tr><tr><td>93</td><td>Ne me laisse pas tomber.</td><td>Don't let me down. / Don't drop me.</td><td>Negative imperative — pronoun before laisser</td></tr><tr><td>94</td><td>Je l'ai laissé partir.</td><td>I let him leave.</td><td>Passé composé — ⚠️ agreement question below</td></tr><tr><td>95</td><td>Elle s'est laissé convaincre.</td><td>She let herself be convinced.</td><td>Se laisser — reflexive + infinitif</td></tr></tbody></table>
+<p><strong>🧠 Structure unlocked:</strong> <code>Subject + LAISSER + INFINITIF = to let/allow someone to do something</code><br>
+→ Structurally identical to faire + infinitif<br>
+→ Pronoun placement follows the SAME rules — pronoun before laisser<br>
+→ ✅ Je <strong>les</strong> laisse jouer (not <del>Je laisse les jouer</del>)</p>
+<p>→ ⚠️ <strong>Agreement rule for laisser:</strong> DIFFERENT from faire<br>
+→ Traditional grammar: "Je l'ai laissé<strong>e</strong> partir" (elle → agreement with COD)<br>
+→ Modern reform (2016): "Je l'ai laissé partir" (no agreement — aligned with faire)<br>
+→ <strong>Both are now accepted</strong> — but faire NEVER agrees, laisser traditionally does</p>
+<hr>
+<h3>FAIRE vs. LAISSER — The Meaning Map</h3>
+<table><thead><tr><th>What You Mean</th><th>Structure</th><th>Example</th><th>Emotional Color</th></tr></thead><tbody><tr><td>I MAKE them do it (force/cause)</td><td>faire + infinitif</td><td>Je <strong>fais</strong> travailler mon équipe</td><td>Authority / control</td></tr><tr><td>I HAVE it done (commission)</td><td>faire + infinitif</td><td>Je <strong>fais</strong> réparer ma voiture</td><td>Delegation / service</td></tr><tr><td>I LET them do it (allow)</td><td>laisser + infinitif</td><td>Je <strong>laisse</strong> jouer les enfants</td><td>Permission / freedom</td></tr><tr><td>I LET it happen (non-interference)</td><td>laisser + infinitif</td><td>Je <strong>laisse</strong> passer le temps</td><td>Passivity / acceptance</td></tr></tbody></table>
+<hr>
+<h2>🔹 BLOCK J — Full Conversational Flow: A Manager's Day</h2>
+<p><em>Scenario: From morning to evening — managing people, getting services, allowing things</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English Meaning</th><th>Structure Type</th></tr></thead><tbody><tr><td>96</td><td>Ce matin, j'ai fait préparer la salle de réunion par le stagiaire.</td><td>This morning, I had the intern prepare the meeting room.</td><td>faire + inf + par (service/delegation)</td></tr><tr><td>97</td><td>J'ai fait relire le contrat à notre avocate avant de le signer — elle me l'a fait corriger à trois endroits.</td><td>I had our lawyer reread the contract before signing it — she had me correct it in three places.</td><td>faire + inf + à (two objects) → double pronoun + faire causatif reversed</td></tr><tr><td>98</td><td>À midi, je me suis fait livrer un repas au bureau parce que je n'avais pas le temps de sortir.</td><td>At noon, I had a meal delivered to the office because I didn't have time to go out.</td><td>se faire + inf (service to self)</td></tr><tr><td>99</td><td>L'après-midi, j'ai laissé mon équipe gérer la présentation — ils se sont très bien débrouillés, ça m'a fait plaisir.</td><td>In the afternoon, I let my team handle the presentation — they did very well, it made me happy.</td><td>laisser + inf (permission) → faire + plaisir (idiomatic)</td></tr><tr><td>100</td><td>Si j'avais tout fait moi-même, j'aurais fini à minuit — c'est en faisant faire les choses aux autres qu'on avance.</td><td>If I had done everything myself, I'd have finished at midnight — it's by having others do things that you move forward.</td><td>P34 si-clause + faire faire (double faire!) + gérondif preview (P38: en faisant)</td></tr></tbody></table>
+<hr>
+<h3>⚠️ Sentence 100 — FAIRE FAIRE: The Double Faire</h3>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>C'est en faisant faire les choses aux autres qu'on avance.
+</span>              │      │
+         faire(gérondif)  faire(infinitif)
+         "by making"      "do/make"</code></pre></div>
+<p>→ "Faire faire" = to have something made / to make someone do<br>
+→ "Je fais <strong>faire</strong> une robe" = I'm having a dress <strong>made</strong><br>
+→ "Il a fait <strong>faire</strong> des travaux" = He had renovations <strong>done</strong><br>
+→ This is NOT a typo — it's faire (conjugated) + faire (infinitif) = to have someone DO/MAKE something<br>
+→ Perfectly grammatical and extremely common</p>
+<hr>
+<h1>✅ WHAT SHOULD DO</h1>
+<p>→ <strong>Memorize the inseparability rule FIRST:</strong> faire + infinitif = ONE UNIT — nothing goes between them<br>
+→ <strong>Master the one-object vs. two-object distinction:</strong></p>
+<ul>
+<li>One object → person = COD → Je fais travailler <strong>Marie</strong> → Je <strong>la</strong> fais travailler</li>
+<li>Two objects → person = COI (à) → Je fais lire le rapport <strong>à Marie</strong> → Je <strong>le lui</strong> fais lire</li>
+</ul>
+<p>→ <strong>Practice the service meaning</strong> — you'll use it daily:</p>
+<ul>
+<li>Je fais réparer... / Je fais couper... / Je fais livrer... / Je fais installer...</li>
+</ul>
+<p>→ <strong>Learn se faire early</strong> — it covers both chosen services AND suffered events:</p>
+<ul>
+<li>Se faire couper les cheveux (chosen) / Se faire voler (suffered)</li>
+</ul>
+<p>→ <strong>Remember fait is INVARIABLE</strong> with infinitif — no agreement ever:</p>
+<ul>
+<li>✅ Elle s'est <strong>fait</strong> couper les cheveux (not <del>faite</del>)</li>
+<li>✅ Je les ai <strong>fait</strong> envoyer (not <del>faits</del>)</li>
+</ul>
+<p>→ <strong>Connect to P36</strong> — double pronoun order applies perfectly inside faire causatif<br>
+→ <strong>Connect to P19/P20</strong> — single pronoun placement applies but goes before FAIRE, not before infinitif</p>
+<hr>
+<h1>❌ WHAT SHOULD NOT DO</h1>
+<p>→ ❌ <strong>NEVER separate faire from the infinitive:</strong></p>
+<ul>
+<li>❌ <del>Je fais Marie travailler</del> → ✅ Je fais travailler Marie</li>
+<li>❌ <del>Je fais le rapport envoyer</del> → ✅ Je fais envoyer le rapport</li>
+<li>English puts the person between "make" and the verb — French NEVER does</li>
+</ul>
+<p>→ ❌ <strong>NEVER put the pronoun before the infinitive (as with other modals):</strong></p>
+<ul>
+<li>❌ <del>Je fais le envoyer</del> → ✅ Je <strong>le</strong> fais envoyer</li>
+<li>Compare: Je vais <strong>le</strong> faire (pronoun before infinitif) vs. Je <strong>le</strong> fais envoyer (pronoun before faire)</li>
+</ul>
+<p>→ ❌ <strong>NEVER agree the past participle "fait" when followed by infinitif:</strong></p>
+<ul>
+<li>❌ <del>Elle s'est faite couper les cheveux</del> → ✅ Elle s'est <strong>fait</strong> couper</li>
+<li>❌ <del>Les robes que j'ai faites faire</del> → ✅ Les robes que j'ai <strong>fait</strong> faire</li>
+<li>This is the ONE exception to normal agreement rules</li>
+</ul>
+<p>→ ❌ <strong>NEVER confuse faire (force/cause) with laisser (allow):</strong></p>
+<ul>
+<li>"Je fais manger les enfants" = I MAKE the children eat (they might not want to)</li>
+<li>"Je laisse manger les enfants" = I LET the children eat (they want to, I allow it)</li>
+<li>Completely different power dynamics — wrong choice changes meaning dramatically</li>
+</ul>
+<p>→ ❌ <strong>NEVER use "par" and "à" interchangeably without understanding the difference:</strong></p>
+<ul>
+<li>"Je fais envoyer le rapport <strong>à</strong> Marie" = I make Marie send the report (Marie = doer)</li>
+<li>"Je fais envoyer le rapport <strong>par</strong> Marie" = I have the report sent by Marie (report = focus)</li>
+<li>⚠️ Sometimes ambiguous: "Je fais lire la lettre <strong>à</strong> Marie" = I make Marie read the letter OR I have the letter read TO Marie → context determines meaning</li>
+</ul>
+<p>→ ❌ <strong>NEVER use faire causatif when YOU do the action yourself:</strong></p>
+<ul>
+<li>"I repaired my car" (myself) = J'ai réparé ma voiture</li>
+<li>"I had my car repaired" (by someone) = J'ai <strong>fait</strong> réparer ma voiture</li>
+<li>Adding "faire" means you DIDN'T do it — someone else did</li>
+</ul>
+<hr>
+<h1>🔀 WHEN TO USE WHAT</h1>
+<table><thead><tr><th>What You Mean</th><th>Structure</th><th>Example</th><th>Context</th></tr></thead><tbody><tr><td>I do it myself</td><td>Simple verb</td><td>Je répare ma voiture</td><td>DIY / personal action</td></tr><tr><td>I make someone do it</td><td>faire + infinitif</td><td>Je fais réparer ma voiture</td><td>Delegation / services</td></tr><tr><td>I let someone do it</td><td>laisser + infinitif</td><td>Je laisse jouer les enfants</td><td>Permission / freedom</td></tr><tr><td>I get something done TO me (chosen)</td><td>se faire + infinitif</td><td>Je me fais couper les cheveux</td><td>Services received</td></tr><tr><td>Something is done TO me (suffered)</td><td>se faire + infinitif</td><td>Je me suis fait voler</td><td>Victimhood / passive experience</td></tr><tr><td>I have something MADE</td><td>faire faire</td><td>Je fais faire une robe</td><td>Commissioning creation</td></tr><tr><td>Making someone + thing</td><td>faire + inf + thing + à person</td><td>Je fais lire le rapport à Marie</td><td>Two-object causative</td></tr><tr><td>Same with pronouns</td><td>COD + COI + faire + inf</td><td>Je le lui fais lire</td><td>Compressed causative — P36</td></tr></tbody></table>
+<hr>
+<h1>🚫 WHEN NOT TO USE</h1>
+<p>→ <strong>When you performed the action yourself</strong> → just use the simple verb</p>
+<ul>
+<li>"I cooked dinner" = J'ai préparé le dîner (not <del>J'ai fait préparer</del>, unless someone else cooked)</li>
+</ul>
+<p>→ <strong>When expressing passive voice without a causer</strong> → use être + participe passé (P24)</p>
+<ul>
+<li>"The bridge was built in 1900" = Le pont a été construit en 1900</li>
+<li>NOT faire causatif — there's no specific "causer" being highlighted</li>
+</ul>
+<p>→ <strong>When the subject causes something TO THEMSELVES reflexively (emotion)</strong> → use se faire only for actions, not emotions</p>
+<ul>
+<li>"I made myself sad" → Je me suis rendu triste (NOT <del>Je me suis fait trister</del>)</li>
+<li>Se faire works for <strong>physical actions and events</strong> — not for emotional self-causation</li>
+</ul>
+<p>→ <strong>When "faire" means "to do/make" literally — not causatively:</strong></p>
+<ul>
+<li>"Je fais un gâteau" = I'm making a cake (myself — literal faire)</li>
+<li>"Je fais faire un gâteau" = I'm having a cake made (by someone else — causative faire)</li>
+<li>One "faire" = doing it yourself / Two "faire" = having it done</li>
+</ul>
+<hr>
+<h1>⚠️ COMMON PITFALLS AND FAILURE MODES</h1>
+<table><thead><tr><th>Pitfall</th><th>What Learners Do Wrong</th><th>Why It Fails</th><th>Correct Version</th></tr></thead><tbody><tr><td><strong>Separating faire + inf</strong></td><td>Je fais Marie travailler</td><td>English word order bleeds in — nothing goes between faire and infinitif</td><td>Je fais <strong>travailler Marie</strong></td></tr><tr><td><strong>Pronoun before infinitif</strong></td><td>Je fais le réparer</td><td>Treating faire+inf like vouloir+inf — wrong placement</td><td>Je <strong>le</strong> fais réparer</td></tr><tr><td><strong>Agreement on fait</strong></td><td>Elle s'est faite opérer</td><td>Fait NEVER agrees before infinitif</td><td>Elle s'est <strong>fait</strong> opérer</td></tr><tr><td><strong>COD vs. COI confusion</strong></td><td>Je fais lire Marie le rapport</td><td>Person should be COI when thing is present</td><td>Je fais lire le rapport <strong>à</strong> Marie</td></tr><tr><td><strong>Faire vs. laisser</strong></td><td>Je fais jouer les enfants (meaning "I let them")</td><td>Faire = force/cause — laisser = allow</td><td>Je <strong>laisse</strong> jouer les enfants</td></tr><tr><td><strong>Double faire panic</strong></td><td>Thinking "faire faire" is an error</td><td>It's perfectly correct — faire(cause) + faire(make/do)</td><td>Je fais <strong>faire</strong> des travaux</td></tr><tr><td><strong>"Par" vs. "à" ambiguity</strong></td><td>Je fais lire la lettre à Marie (meaning read BY her or TO her?)</td><td>Ambiguous — context or restructure needed</td><td>Clarify: "à" can mean both</td></tr><tr><td><strong>Forgetting se faire for services</strong></td><td>J'ai coupé mes cheveux (meaning someone else cut them)</td><td>This means YOU cut your own hair</td><td>Je me suis <strong>fait</strong> couper les cheveux</td></tr><tr><td><strong>Using causatif for self-action</strong></td><td>Je fais réparer ma voiture (when you repaired it yourself)</td><td>Faire causatif = someone else did it</td><td>J'ai réparé ma voiture (myself)</td></tr></tbody></table>
+<hr>
+<h1>🔑 KEY TAKEAWAY</h1>
+<blockquote>
+<p><strong>P36 gave you the ability to stack pronouns — compressing objects into fluid sentences.</strong><br>
+<strong>P37 gives you the ability to express CAUSATION — making, having, and letting others perform actions.</strong></p>
+<p>Faire + infinitif is one of the most distinctly French structures:</p>
+<ul>
+<li>It has NO direct English equivalent that works the same way</li>
+<li>Faire and the infinitive are INSEPARABLE — this is non-negotiable</li>
+<li>Pronouns go before FAIRE — not before the infinitive</li>
+<li>Past participle "fait" NEVER agrees when followed by an infinitive</li>
+</ul>
+<p>The three levels of control:</p>
+<ul>
+<li><strong>FAIRE</strong> = I cause/force it to happen → authority, delegation, services</li>
+<li><strong>LAISSER</strong> = I allow it to happen → permission, freedom, non-interference</li>
+<li><strong>Simple verb</strong> = I do it myself → personal action</li>
+</ul>
+<p>You now control WHO does WHAT and WHETHER you're the doer or the causer.<br>
+But there's one more way to connect actions: what about doing TWO things AT THE SAME TIME?</p>
+</blockquote>
+<hr>
+<h1>🌉 BRIDGE TO PROJECT 38</h1>
+<blockquote>
+<p>You can now say "I make someone do something" — one person causes, another acts<br>
+But what about expressing <strong>simultaneity</strong> — two actions happening at the same moment?</p>
+<p>→ "I listen to music <strong>while working</strong>" — two actions, one person, same time<br>
+→ "<strong>By studying</strong> every day, you will improve" — method and result linked<br>
+→ "He left <strong>smiling</strong>" — action + manner happening together</p>
+<p>In French: <strong>EN + PARTICIPE PRÉSENT</strong> = the gérondif<br>
+→ "J'écoute de la musique <strong>en travaillant</strong>"<br>
+→ "<strong>En étudiant</strong> chaque jour, tu progresseras"<br>
+→ "Il est parti <strong>en souriant</strong>"</p>
+<p>Project 38 unlocks: <strong>Gérondif</strong> — expressing simultaneous actions, method, manner, and condition<br>
+→ The "-ing" equivalent that French builds completely differently from English<br>
+→ Combined with everything learned so far — creating multi-layered, sophisticated sentences</p>
+</blockquote>
+<hr>
+<h1>✅ PROJECT 37 COMPLETE</h1>
+<blockquote>
+<p><strong>Are you ready for PROJECT 38: "While Doing, By Doing"?</strong><br>
+→ ~100 sentences covering the gérondif (en + participe présent)<br>
+→ Scenario: A day of multitasking — doing things simultaneously, describing how you accomplish tasks<br>
+→ Builds on P37 (faire causatif — verbal unit concept), P14 (reflexive verbs), and integrates with all tenses</p>
+</blockquote>
+</div>
+</div>
+
+<!-- ========== data-index="15" ========== -->
+
+        </div>
+
+        <div class="nav-bar">
+            <a href="project-36.html" class="nav-button prev">← Previous Chapter</a>
+            <div class="page-info">
+                <a href="index.html" class="nav-button home">📚 Table of Contents</a><br>
+                <span style="margin-top:8px;display:block">Chapter 37 of 50</span>
+            </div>
+            <a href="project-38.html" class="nav-button next">Next Chapter →</a>
+        </div>
+    </div>
+
+    
+    <div id="progress-track"><div id="progress-fill"></div></div>
+    <div id="progress-pct">0%</div>
+
+
+    <script>
+    const fill = document.getElementById('progress-fill');
+    const pct  = document.getElementById('progress-pct');
+    function updateProgress() {
+        const scrollTop = window.scrollY;
+        const docHeight = document.body.scrollHeight - window.innerHeight;
+        const scrolled  = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+        fill.style.height = scrolled + '%';
+        pct.textContent   = Math.round(scrolled) + '%';
+    }
+    window.addEventListener('scroll', updateProgress);
+    updateProgress();
+
+    document.addEventListener('keydown', function(e) {
+        if (['INPUT','TEXTAREA'].includes(document.activeElement.tagName)) return;
+        if (e.key === 'ArrowLeft') {
+            const b = document.querySelector('.nav-button.prev');
+            if (b && !b.classList.contains('disabled')) window.location.href = b.href;
+        }
+        if (e.key === 'ArrowRight') {
+            const b = document.querySelector('.nav-button.next');
+            if (b && !b.classList.contains('disabled')) window.location.href = b.href;
+        }
+    });
+    </script>
+
+</body>
+</html>

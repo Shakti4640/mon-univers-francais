@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="images/favicon.png">
+    <title>Project 27: "Maybe, Probably, Possibly" — French Daily Sentences</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.75;
+            color: #1a202c;
+            background-color: #f7fafc;
+        }
+        .container {
+            max-width: 1800px;
+            margin: 0 auto;
+            background: white;
+            min-height: 100vh;
+            box-shadow: 0 0 30px rgba(0,0,0,0.08);
+            padding: 48px 52px;
+        }
+        
+        .content { max-width: 1700px; margin: 0 auto; color: #1a202c; }
+        .content h1 {
+            color: #1a202c; margin: 32px 0 20px;
+            padding-bottom: 12px;
+            border-bottom: 4px solid #3b82f6;
+            font-size: 2.1em;
+            font-weight: 700;
+        }
+        .content h2 {
+            color: #1a202c; margin: 28px 0 16px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #60a5fa;
+            font-size: 1.6em;
+            font-weight: 600;
+        }
+        .content h3 { color: #1a202c; margin: 22px 0 12px; font-size: 1.3em; font-weight: 600; }
+        .content h4 { color: #2d3748; margin: 18px 0 10px; font-size: 1.1em; font-weight: 600; }
+        .content p  { margin-bottom: 16px; line-height: 1.8; color: #1a202c; }
+        .content ul, .content ol { margin: 12px 0 18px 30px; color: #1a202c; }
+        .content li { margin-bottom: 8px; line-height: 1.75; color: #1a202c; }
+        .content hr { border: none; border-top: 2px solid #e2e8f0; margin: 26px 0; }
+        .content pre {
+            background: #f7fafc !important;
+            border: 1px solid #cbd5e0 !important;
+            border-left: 4px solid #3b82f6 !important;
+            padding: 18px !important; overflow-x: auto; margin: 18px 0; border-radius: 6px;
+            font-family: 'Consolas','Monaco','Courier New',monospace !important;
+            font-size: 0.9em !important;
+        }
+        .content pre:not([style*="color"]) { color: #1a202c !important; }
+        .content code {
+            font-family: 'Consolas','Monaco','Courier New',monospace !important;
+            font-size: 0.88em !important;
+        }
+        .content code:not(pre code) {
+            background: #dbeafe !important;
+            color: #1a202c !important;
+            padding: 2px 6px;
+            border-radius: 3px;
+        }
+        .content pre code { background: transparent !important; padding: 0; }
+        .content table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+        .content th {
+            background: linear-gradient(135deg, #3b82f6 0%, #60a5fa 100%);
+            color: white; padding: 12px 16px; text-align: left;
+            font-weight: 600;
+        }
+        .content td { padding: 11px 16px; border: 1px solid #e2e8f0; color: #1a202c; }
+        .content tr:nth-child(even) td { background: #eff6ff; }
+        .content blockquote {
+            border-left: 4px solid #3b82f6; background: #eff6ff;
+            padding: 14px 20px; margin: 18px 0; border-radius: 0 6px 6px 0;
+            color: #1a202c;
+        }
+        .content strong { color: #1a202c; font-weight: 600; }
+        .px-2 { padding: 0; }
+        .chat-message { background: transparent; padding: 0; margin: 0; }
+
+        /* Bottom nav bar only */
+        .nav-bar {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 24px 0;
+            margin-top: 50px;
+            border-top: 3px solid #60a5fa;
+        }
+        .nav-button {
+            display: inline-flex; align-items: center; gap: 8px;
+            padding: 12px 26px;
+            background: linear-gradient(135deg, #3b82f6 0%, #60a5fa 100%);
+            color: white !important; text-decoration: none;
+            border-radius: 8px; font-weight: 600; font-size: 0.95em;
+            transition: all 0.2s;
+            box-shadow: 0 2px 8px rgba(59,130,246,0.35);
+        }
+        .nav-button:hover { transform: translateY(-2px); box-shadow: 0 4px 14px rgba(59,130,246,0.5); }
+        .nav-button.disabled { background: #cbd5e1; box-shadow: none; pointer-events: none; }
+        .nav-button.home {
+            background: linear-gradient(135deg, #ef4444 0%, #f87171 100%);
+            box-shadow: 0 2px 8px rgba(239,68,68,0.35);
+        }
+        .nav-button.home:hover { box-shadow: 0 4px 14px rgba(239,68,68,0.5); }
+        .page-info { color: #718096; font-size: 0.9em; text-align: center; }
+
+        /* Progress bar */
+        #progress-track {
+            position: fixed; top: 20px; right: 20px;
+            width: 10px; height: 150px;
+            background: rgba(59,130,246,0.2);
+            border: 2px solid #3b82f6;
+            border-radius: 6px; overflow: hidden; z-index: 1000;
+        }
+        #progress-fill {
+            width: 100%;
+            background: linear-gradient(180deg, #3b82f6, #2563eb);
+            height: 0%;
+            transition: height 0.15s ease;
+        }
+        #progress-pct {
+            position: fixed; top: 0px; right: 16px;
+            color: #2563eb; font-size: 14px; font-weight: bold;
+            z-index: 1001;
+            text-shadow: 0 1px 2px rgba(255,255,255,0.9);
+            line-height: 20px;
+        }
+
+    </style>
+<link rel="stylesheet" href="assets/chapters.css?v=20260421203847"><script src="assets/chapters.js?v=20260421203847" defer></script>
+</head>
+<body>
+    <div class="container">
+        <div class="content">
+            <div class="chat-message" data-index="23">
+<div class="px-2"><h1>🟡 PROJECT 27: "Maybe, Probably, Possibly"</h1>
+<h2><em>You're not sure about something — you need to express probability at every level</em></h2>
+<hr>
+<h1>🎯 THE HYPOTHETICAL PROBLEM</h1>
+<p>→ You're living in France — and life is full of <strong>uncertainty</strong><br>
+→ Your colleague asks: "Est-ce que Marc vient à la réunion ?"<br>
+→ You don't KNOW for sure — but you have a sense:</p>
+<p><strong>You try:</strong></p>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>❌ "Oui." (Too certain — you don't actually know)
+</span>❌ "Non." (Too certain — you're just guessing)
+❌ "Je ne sais pas." (True but unhelpful — you DO have an impression)</code></pre></div>
+<p><strong>A French person would say:</strong></p>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>✅ "Il devrait venir." (He should be coming — fairly likely)
+</span>✅ "Il viendra peut-être." (He might come — uncertain)
+✅ "Il est probable qu'il vienne." (It's likely he'll come — formal)
+✅ "Il doit être en route." (He must be on the way — strong assumption)
+✅ "Sans doute qu'il sera là." (No doubt he'll be there — quite confident)</code></pre></div>
+<p>→ Each of these carries a <strong>different certainty level</strong><br>
+→ French has a <strong>rich, layered system</strong> for expressing how sure you are</p>
+<p>→ Your friend asks about the weather: "Il va pleuvoir demain ?"</p>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>✅ "Peut-être." (Maybe.)
+</span>✅ "C'est possible." (It's possible.)
+✅ "Probablement." (Probably.)
+✅ "Ça m'étonnerait." (I'd be surprised — probably not.)
+✅ "J'en doute." (I doubt it.)
+✅ "Certainement pas." (Certainly not.)</code></pre></div>
+<p>→ You realize: between "definitely yes" and "definitely no" there are <strong>at least 15 levels</strong> of French probability<br>
+→ Choosing the wrong one makes you sound either <strong>overconfident</strong> or <strong>completely vague</strong><br>
+→ Mastering this system makes you sound like a <strong>nuanced, intelligent speaker</strong></p>
+<p><strong>The core realization:</strong><br>
+→ Project 22 taught you to express <strong>opinions</strong> (what you THINK)<br>
+→ Project 26 taught you to express <strong>obligations</strong> (what you MUST do)<br>
+→ Project 27 teaches you to express <strong>probability</strong> (what MIGHT happen)<br>
+→ These three systems together cover <strong>how French people talk about the uncertain future</strong><br>
+→ And each one uses different grammar — indicatif, conditionnel, subjonctif, or special adverbs</p>
+<hr>
+<h1>🔍 HOW TO APPROACH IT</h1>
+<p>→ Think of probability as a <strong>thermometer</strong> — from 0% (impossible) to 100% (certain):</p>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>100% ⚡ CERTAIN        → C'est sûr / Certainement / Sans aucun doute
+</span> 90% 🔥 VERY LIKELY    → Il doit + inf / Sûrement / Il est clair que
+ 80% ☀️ PROBABLE       → Probablement / Sans doute / Il est probable que
+ 70% 🌤️ FAIRLY LIKELY  → Il devrait + inf / Il y a de fortes chances que
+ 50% 🌥️ POSSIBLE       → Peut-être / C'est possible / Il se peut que
+ 30% 🌧️ UNLIKELY       → Ce n'est pas sûr / Ça m'étonnerait / J'en doute
+ 10% ❄️ VERY UNLIKELY  → C'est peu probable / Il est peu probable que
+  0% ⛔ IMPOSSIBLE     → C'est impossible / Certainement pas / Il est exclu que</code></pre></div>
+<p>→ Your job: Learn the <strong>structures, adverbs, and expressions</strong> at each level<br>
+→ AND know which ones trigger <strong>indicatif</strong>, <strong>subjonctif</strong>, or <strong>conditionnel</strong></p>
+<hr>
+<h1>🔧 HOW CAN WE SOLVE IT</h1>
+<h2>THE PROBABILITY GRAMMAR MAP</h2>
+<table><thead><tr><th>Certainty Level</th><th>Grammar After QUE</th><th>Why</th></tr></thead><tbody><tr><td><strong>Certain</strong> (je suis sûr que, il est clair que)</td><td><strong>INDICATIF</strong></td><td>Presented as FACT</td></tr><tr><td><strong>Probable</strong> (il est probable que)</td><td><strong>INDICATIF</strong> (formal) or <strong>SUBJONCTIF</strong> (common)</td><td>Gray zone — both accepted</td></tr><tr><td><strong>Possible</strong> (il est possible que, il se peut que)</td><td><strong>SUBJONCTIF</strong></td><td>NOT certain → subjective</td></tr><tr><td><strong>Doubtful</strong> (je doute que, il est peu probable que)</td><td><strong>SUBJONCTIF</strong></td><td>Doubt → subjective</td></tr><tr><td><strong>Impossible</strong> (il est impossible que, il est exclu que)</td><td><strong>SUBJONCTIF</strong></td><td>Denial of reality → subjective</td></tr></tbody></table>
+<p>→ <strong>Rule of thumb:</strong> The LESS certain you are → the more likely you need <strong>SUBJONCTIF</strong><br>
+→ The MORE certain you are → <strong>INDICATIF</strong><br>
+→ Connection to Project 23: Same certainty-to-doubt spectrum that triggers subjonctif</p>
+<hr>
+<h2>THE THREE PROBABILITY TOOLS</h2>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>TOOL 1: ADVERBS (standalone words that modify the sentence)
+</span>→ peut-être, probablement, sans doute, certainement, sûrement
+
+TOOL 2: IMPERSONAL EXPRESSIONS (il est + adjective + que)
+→ il est possible que, il est probable que, il est certain que
+
+TOOL 3: VERB-BASED PROBABILITY (devoir, pouvoir, aller in special uses)
+→ il doit être, il pourrait venir, ça va sûrement marcher</code></pre></div>
+<hr>
+<h1>✅ WHAT COULD BE DONE — THE 100 SENTENCES</h1>
+<hr>
+<h2>🔹 BLOCK A — "Peut-être" — The Universal "Maybe"</h2>
+<p><em>Scenario: Daily conversations where you're not sure — the most common probability word</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English</th><th>Position of Peut-être</th><th>Grammar Note</th></tr></thead><tbody><tr><td>1</td><td><strong>Peut-être</strong> qu'il viendra demain.</td><td>Maybe he'll come tomorrow.</td><td>Beginning + que</td><td>Most common spoken form</td></tr><tr><td>2</td><td><strong>Peut-être</strong> qu'elle est déjà partie.</td><td>Maybe she already left.</td><td>Beginning + que</td><td>Spoken French</td></tr><tr><td>3</td><td><strong>Peut-être</strong> qu'on devrait attendre.</td><td>Maybe we should wait.</td><td>Beginning + que</td><td>Spoken French</td></tr><tr><td>4</td><td>Il viendra <strong>peut-être</strong> demain.</td><td>He might come tomorrow.</td><td>Middle of sentence</td><td>Standard placement</td></tr><tr><td>5</td><td>Elle est <strong>peut-être</strong> malade.</td><td>She might be sick.</td><td>Middle — after être</td><td>Standard placement</td></tr><tr><td>6</td><td>C'est <strong>peut-être</strong> vrai.</td><td>It might be true.</td><td>Middle — after c'est</td><td>Standard placement</td></tr><tr><td>7</td><td>Il a <strong>peut-être</strong> oublié.</td><td>He may have forgotten.</td><td>Between auxiliary and PP</td><td>Passé composé position</td></tr><tr><td>8</td><td>On pourra <strong>peut-être</strong> y aller samedi.</td><td>We might be able to go Saturday.</td><td>After modal verb</td><td>With pouvoir</td></tr><tr><td>9</td><td><strong>Peut-être</strong> viendra-t-il demain.</td><td>Perhaps he will come tomorrow.</td><td>Beginning + inversion</td><td>Formal/literary</td></tr><tr><td>10</td><td>— Tu viens ce soir ? — <strong>Peut-être</strong>.</td><td>— Are you coming tonight? — Maybe.</td><td>Standalone answer</td><td>Very common</td></tr></tbody></table>
+<p><strong>🧠 "PEUT-ÊTRE" — The Three Positions:</strong></p>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>POSITION 1 — BEGINNING + QUE (spoken French — most natural):
+</span>→ Peut-être QU'il viendra.
+→ Peut-être QU'elle est malade.
+→ This is how 90% of French speakers use it daily
+
+POSITION 2 — MIDDLE OF SENTENCE (standard written):
+→ Il viendra peut-être.
+→ Elle est peut-être malade.
+→ Placed AFTER the verb (or between auxiliary and PP)
+
+POSITION 3 — BEGINNING + INVERSION (formal/literary):
+→ Peut-être viendra-T-IL demain.
+→ Peut-être est-ELLE malade.
+→ When peut-être starts a sentence without "que" → subject-verb INVERSION required
+→ Very formal — rarely used in speech
+
+POSITION 4 — STANDALONE:
+→ "Tu viens ?" — "Peut-être."
+→ One-word answer = universal and casual</code></pre></div>
+<p><strong>🧠 CRITICAL — "Peut-être que" does NOT trigger subjonctif:</strong></p>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>❌ Peut-être qu'il vienne.      (WRONG)
+</span>✅ Peut-être qu'il viendra.     (CORRECT — indicatif)
+✅ Peut-être qu'il est malade.  (CORRECT — indicatif)
+
+WHY? → "Peut-être que" is treated as an ADVERB phrase — not a doubt trigger
+→ It modifies the sentence — it doesn't change the mood
+→ Same as "probablement" — no subjonctif</code></pre></div>
+<hr>
+<h2>🔹 BLOCK B — Probability Adverbs: From Uncertain to Certain</h2>
+<p><em>Scenario: Quick one-word or short-phrase probability markers in conversation</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English</th><th>Certainty Level</th></tr></thead><tbody><tr><td>11</td><td>Il est <strong>éventuellement</strong> disponible.</td><td>He's possibly available.</td><td>🌥️ 40% — weak possibility</td></tr><tr><td>12</td><td>Il viendra <strong>possiblement</strong>.</td><td>He'll possibly come.</td><td>🌥️ 45% — slightly formal</td></tr><tr><td>13</td><td>Elle arrivera <strong>probablement</strong> en retard.</td><td>She'll probably arrive late.</td><td>☀️ 75% — likely</td></tr><tr><td>14</td><td>Il est <strong>vraisemblablement</strong> parti.</td><td>He has most likely left.</td><td>☀️ 80% — formal/likely</td></tr><tr><td>15</td><td><strong>Sans doute</strong> qu'il a raison.</td><td>No doubt he's right.</td><td>☀️ 80% — fairly confident</td></tr><tr><td>16</td><td>Il sera <strong>sans doute</strong> en retard.</td><td>He'll no doubt be late.</td><td>☀️ 80% — fairly confident</td></tr><tr><td>17</td><td>Elle viendra <strong>sûrement</strong>.</td><td>She'll surely come.</td><td>🔥 85% — quite confident</td></tr><tr><td>18</td><td>C'est <strong>certainement</strong> la meilleure option.</td><td>It's certainly the best option.</td><td>🔥 90% — very confident</td></tr><tr><td>19</td><td><strong>Assurément</strong>, c'est un bon choix.</td><td>Assuredly, it's a good choice.</td><td>🔥 90% — very formal</td></tr><tr><td>20</td><td>C'est <strong>forcément</strong> lui.</td><td>It's necessarily him. / It has to be him.</td><td>⚡ 95% — logical certainty</td></tr></tbody></table>
+<p><strong>🧠 THE ADVERB CERTAINTY LADDER:</strong></p>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>🌥️ 40%  éventuellement     = possibly (CAUTION — see note below)
+</span>🌥️ 45%  possiblement       = possibly (less common)
+🌥️ 50%  peut-être          = maybe
+☀️ 75%  probablement       = probably
+☀️ 80%  sans doute         = no doubt (CAUTION — see note below)
+☀️ 80%  vraisemblablement  = most likely (formal)
+🔥 85%  sûrement           = surely
+🔥 90%  certainement       = certainly
+🔥 90%  assurément         = assuredly (very formal)
+⚡ 95%  forcément          = necessarily / has to be
+⚡ 95%  à coup sûr         = for sure
+⚡ 100% sans aucun doute   = without any doubt</code></pre></div>
+<p><strong>⚠️ CRITICAL TRAPS — Two False Friends:</strong></p>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>TRAP 1: "ÉVENTUELLEMENT" ≠ "eventually"
+</span>
+ENGLISH "eventually" = in the end, after time passes
+FRENCH "éventuellement" = possibly, if the occasion arises
+
+❌ "Je finirai éventuellement" ≠ "I'll eventually finish"
+✅ "Je finirai éventuellement" = "I might possibly finish"
+✅ "I'll eventually finish" = "Je finirai par finir" / "Je finirai un jour"
+
+TRAP 2: "SANS DOUTE" ≠ "without a doubt" (100%)
+
+ENGLISH "without a doubt" = absolutely certain (100%)
+FRENCH "sans doute" = probably / most likely (~80%)
+FRENCH "sans AUCUN doute" = without ANY doubt (100%)
+
+❌ "Sans doute" = 100% certain
+✅ "Sans doute" = ~80% — fairly confident but not absolute
+✅ "Sans aucun doute" = 100% — absolute certainty</code></pre></div>
+<hr>
+<h2>🔹 BLOCK C — "Devoir" as Probability — "Must Be" / "Must Have"</h2>
+<p><em>Scenario: You're making assumptions based on evidence — logical deduction</em><br>
+<em>Connection to Project 26: Devoir as obligation — now its SECOND meaning: probability</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English</th><th>Tense</th><th>Certainty</th></tr></thead><tbody><tr><td>21</td><td>Il <strong>doit</strong> être chez lui.</td><td>He must be at home.</td><td>Présent</td><td>🔥 85% — strong assumption</td></tr><tr><td>22</td><td>Elle <strong>doit</strong> avoir trente ans.</td><td>She must be thirty.</td><td>Présent</td><td>🔥 85% — estimate</td></tr><tr><td>23</td><td>Tu <strong>dois</strong> être fatigué après ce voyage.</td><td>You must be tired after that trip.</td><td>Présent</td><td>🔥 85% — logical</td></tr><tr><td>24</td><td>Il <strong>doit</strong> y avoir une explication.</td><td>There must be an explanation.</td><td>Présent</td><td>🔥 85% — logical</td></tr><tr><td>25</td><td>Ça <strong>doit</strong> être difficile pour toi.</td><td>That must be difficult for you.</td><td>Présent</td><td>🔥 85% — empathetic</td></tr><tr><td>26</td><td>Il <strong>doit</strong> faire froid dehors.</td><td>It must be cold outside.</td><td>Présent</td><td>🔥 85% — assumption</td></tr><tr><td>27</td><td>Elle <strong>a dû</strong> oublier notre rendez-vous.</td><td>She must have forgotten our appointment.</td><td>Passé composé</td><td>🔥 85% — past assumption</td></tr><tr><td>28</td><td>Ils <strong>ont dû</strong> se perdre.</td><td>They must have gotten lost.</td><td>Passé composé</td><td>🔥 85% — past assumption</td></tr><tr><td>29</td><td>Il <strong>a dû</strong> pleuvoir cette nuit.</td><td>It must have rained last night.</td><td>Passé composé</td><td>🔥 85% — evidence-based</td></tr><tr><td>30</td><td>Tu <strong>as dû</strong> te tromper de numéro.</td><td>You must have dialed the wrong number.</td><td>Passé composé</td><td>🔥 85% — logical deduction</td></tr></tbody></table>
+<p><strong>🧠 DEVOIR AS PROBABILITY — The Second Face of "Devoir":</strong></p>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>PRÉSENT — CURRENT ASSUMPTION:
+</span>→ Il doit être malade. = He must be sick (right now — I assume)
+→ Ça doit coûter cher. = That must cost a lot (I assume)
+
+PASSÉ COMPOSÉ — PAST ASSUMPTION:
+→ Elle a dû partir. = She must have left (I assume she did)
+→ Il a dû pleuvoir. = It must have rained (I see evidence)
+
+HOW TO TELL OBLIGATION FROM PROBABILITY:
+→ Context + logic
+
+OBLIGATION: "Je dois partir à 8h." (I HAVE TO leave at 8 — it's my duty)
+→ Specific time/action + personal subject = obligation
+
+PROBABILITY: "Il doit être 8h." (It MUST BE 8 o'clock — I'm guessing)
+→ Estimation + être/avoir + no personal duty = probability
+
+PROBABILITY: "Elle a dû oublier." (She MUST HAVE forgotten — I'm deducing)
+→ Explaining something that already happened = probability</code></pre></div>
+<p><strong>🧠 CRITICAL DISTINCTION — "A dû" (probability) vs. "A dû" (obligation):</strong></p>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>SAME FORM — different meaning:
+</span>
+"J'ai dû annuler mon rendez-vous."
+→ OBLIGATION: I had to cancel my appointment. (I was forced to)
+
+"Elle a dû oublier."
+→ PROBABILITY: She must have forgotten. (I'm guessing)
+
+HOW TO TELL:
+→ Obligation: subject ACTS (annuler = active decision forced by circumstances)
+→ Probability: subject's STATE is assumed (oublier = you're guessing about what happened)
+→ Context always clarifies — but be aware of the ambiguity</code></pre></div>
+<hr>
+<h2>🔹 BLOCK D — "Pouvoir" as Possibility — "Could / Might"</h2>
+<p><em>Scenario: Expressing what COULD happen — open possibility, not certainty</em><br>
+<em>Connection to Project 17: Conditionnel of pouvoir for politeness — now for probability</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English</th><th>Tense/Mood</th><th>Certainty</th></tr></thead><tbody><tr><td>31</td><td>Il <strong>peut</strong> arriver à tout moment.</td><td>He can arrive at any moment.</td><td>Présent</td><td>🌥️ 50% — open possibility</td></tr><tr><td>32</td><td>Ça <strong>peut</strong> être vrai.</td><td>That could be true.</td><td>Présent</td><td>🌥️ 50% — open</td></tr><tr><td>33</td><td>Elle <strong>peut</strong> avoir raison.</td><td>She may be right.</td><td>Présent</td><td>🌥️ 50% — open</td></tr><tr><td>34</td><td>Ça <strong>pourrait</strong> marcher.</td><td>That could work.</td><td>Conditionnel</td><td>🌥️ 50% — hypothetical</td></tr><tr><td>35</td><td>Il <strong>pourrait</strong> pleuvoir demain.</td><td>It could rain tomorrow.</td><td>Conditionnel</td><td>🌥️ 50% — uncertain future</td></tr><tr><td>36</td><td>Elle <strong>pourrait</strong> être en retard.</td><td>She might be late.</td><td>Conditionnel</td><td>🌥️ 50% — possible</td></tr><tr><td>37</td><td>On <strong>pourrait</strong> avoir un problème.</td><td>We could have a problem.</td><td>Conditionnel</td><td>🌥️ 50% — warning</td></tr><tr><td>38</td><td>Il <strong>aurait pu</strong> oublier.</td><td>He could have forgotten.</td><td>Conditionnel passé</td><td>🌥️ 50% — past possibility</td></tr><tr><td>39</td><td>Ça <strong>aurait pu</strong> être pire.</td><td>It could have been worse.</td><td>Conditionnel passé</td><td>🌥️ — past possibility</td></tr><tr><td>40</td><td>Elle <strong>pourrait</strong> ne pas venir.</td><td>She might not come.</td><td>Conditionnel (neg)</td><td>🌥️ 50% — uncertain</td></tr></tbody></table>
+<p><strong>🧠 DEVOIR vs. POUVOIR for Probability:</strong></p>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>DEVOIR (probability) = STRONG assumption (~85%)
+</span>→ "Il doit être malade." = He MUST be sick (I'm fairly sure)
+→ Based on EVIDENCE or LOGIC — you're deducing
+
+POUVOIR (possibility) = OPEN possibility (~50%)
+→ "Il peut être malade." = He COULD be sick (it's possible)
+→ No strong evidence — just acknowledging a possibility
+
+POUVOIR (conditionnel) = HYPOTHETICAL possibility (~50%)
+→ "Il pourrait être malade." = He MIGHT be sick (hypothetically)
+→ Softer than présent — more tentative
+
+SCALE:
+💨 Il pourrait être malade.  (might — very tentative)
+🌥️ Il peut être malade.     (could — open possibility)
+🔥 Il doit être malade.     (must — strong assumption)
+⚡ Il est malade.            (is — stated as fact)</code></pre></div>
+<hr>
+<h2>🔹 BLOCK E — Impersonal Probability Expressions with QUE</h2>
+<p><em>Scenario: Formal or semi-formal contexts — stating likelihood using "il est + adjective + que"</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English</th><th>Certainty</th><th>Mood After QUE</th></tr></thead><tbody><tr><td>41</td><td><strong>Il est certain que</strong> la réunion <strong>aura</strong> lieu demain.</td><td>It's certain the meeting will take place tomorrow.</td><td>⚡ 100%</td><td>INDICATIF</td></tr><tr><td>42</td><td><strong>Il est évident que</strong> tu <strong>as</strong> raison.</td><td>It's obvious you're right.</td><td>⚡ 100%</td><td>INDICATIF</td></tr><tr><td>43</td><td><strong>Il est clair que</strong> la situation <strong>est</strong> grave.</td><td>It's clear the situation is serious.</td><td>⚡ 95%</td><td>INDICATIF</td></tr><tr><td>44</td><td><strong>Il est sûr que</strong> nous <strong>gagnerons</strong>.</td><td>It's sure we'll win.</td><td>⚡ 95%</td><td>INDICATIF</td></tr><tr><td>45</td><td><strong>Il est probable que</strong> le train <strong>sera</strong> en retard.</td><td>It's likely the train will be late.</td><td>☀️ 75%</td><td>INDICATIF (or subj)</td></tr><tr><td>46</td><td><strong>Il est vraisemblable que</strong> l'entreprise <strong>fermera</strong>.</td><td>It's likely the company will close.</td><td>☀️ 75%</td><td>INDICATIF (formal)</td></tr><tr><td>47</td><td>**Il est possible qu'**il <strong>vienne</strong> demain.</td><td>It's possible he'll come tomorrow.</td><td>🌥️ 50%</td><td>SUBJONCTIF</td></tr><tr><td>48</td><td>**Il se peut qu'**elle <strong>soit</strong> en retard.</td><td>It may be that she's late.</td><td>🌥️ 50%</td><td>SUBJONCTIF</td></tr><tr><td>49</td><td>**Il est peu probable qu'**ils <strong>acceptent</strong>.</td><td>It's unlikely they'll accept.</td><td>🌧️ 25%</td><td>SUBJONCTIF</td></tr><tr><td>50</td><td>**Il est impossible qu'**il <strong>ait</strong> fait ça.</td><td>It's impossible he did that.</td><td>⛔ 0%</td><td>SUBJONCTIF</td></tr></tbody></table>
+<p><strong>🧠 THE IMPERSONAL EXPRESSION MAP — Mood Determined by Certainty:</strong></p>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>⚡ CERTAIN → INDICATIF:
+</span>→ Il est certain que...      + indicatif
+→ Il est évident que...      + indicatif
+→ Il est clair que...        + indicatif
+→ Il est sûr que...          + indicatif
+→ Il est vrai que...         + indicatif
+
+☀️ PROBABLE → INDICATIF (formal) or SUBJONCTIF (common):
+→ Il est probable que...     + indicatif OR subjonctif
+→ Il est vraisemblable que... + indicatif (formal)
+
+🌥️ POSSIBLE → SUBJONCTIF:
+→ Il est possible que...     + subjonctif
+→ Il se peut que...          + subjonctif
+
+🌧️ UNLIKELY → SUBJONCTIF:
+→ Il est peu probable que... + subjonctif
+→ Il est douteux que...      + subjonctif
+→ Il est rare que...         + subjonctif
+
+⛔ IMPOSSIBLE → SUBJONCTIF:
+→ Il est impossible que...   + subjonctif
+→ Il est exclu que...        + subjonctif
+→ Il est impensable que...   + subjonctif
+
+CONNECTION TO PROJECT 23:
+→ Same rule: certainty → indicatif / uncertainty-doubt → subjonctif
+→ The probability scale IS the subjonctif trigger scale</code></pre></div>
+<p><strong>🧠 SPECIAL NOTE — "Il est probable que" — The Gray Zone:</strong></p>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>Strict grammar: Il est probable que + INDICATIF
+</span>→ "Il est probable que le train sera en retard." (indicatif)
+
+Modern usage: Many speakers use SUBJONCTIF
+→ "Il est probable que le train soit en retard." (subjonctif)
+
+BOTH are accepted — but:
+→ Exams / formal writing → indicatif (traditional rule)
+→ Daily speech → either is fine
+→ "Il est PEU probable que" → always SUBJONCTIF (doubt is stronger)</code></pre></div>
+<hr>
+<h2>🔹 BLOCK F — Conversational Probability Expressions</h2>
+<p><em>Scenario: Quick, natural phrases for expressing likelihood in daily conversation</em></p>
+<table><thead><tr><th>#</th><th>French Expression</th><th>English</th><th>Certainty</th><th>Register</th></tr></thead><tbody><tr><td>51</td><td><strong>C'est possible.</strong></td><td>It's possible.</td><td>🌥️ 50%</td><td>Universal</td></tr><tr><td>52</td><td><strong>C'est fort possible.</strong></td><td>It's quite possible.</td><td>🌥️ 60%</td><td>Universal</td></tr><tr><td>53</td><td><strong>C'est bien possible.</strong></td><td>It's very possible.</td><td>☀️ 65%</td><td>Universal</td></tr><tr><td>54</td><td><strong>C'est probable.</strong></td><td>It's likely.</td><td>☀️ 75%</td><td>Universal</td></tr><tr><td>55</td><td><strong>C'est fort probable.</strong></td><td>It's very likely.</td><td>☀️ 80%</td><td>Slightly formal</td></tr><tr><td>56</td><td><strong>C'est peu probable.</strong></td><td>It's unlikely.</td><td>🌧️ 25%</td><td>Universal</td></tr><tr><td>57</td><td><strong>Il y a des chances que</strong> ça <strong>marche</strong>.</td><td>There's a chance it'll work.</td><td>🌥️ 50%</td><td>Casual (+ subj)</td></tr><tr><td>58</td><td><strong>Il y a de fortes chances que</strong> ça <strong>réussisse</strong>.</td><td>There's a good chance it'll succeed.</td><td>☀️ 75%</td><td>Neutral (+ subj)</td></tr><tr><td>59</td><td><strong>Il y a peu de chances que</strong> ça <strong>change</strong>.</td><td>There's little chance it'll change.</td><td>🌧️ 25%</td><td>Neutral (+ subj)</td></tr><tr><td>60</td><td><strong>Il n'y a aucune chance que</strong> ça <strong>fonctionne</strong>.</td><td>There's no chance it'll work.</td><td>⛔ 0%</td><td>Strong (+ subj)</td></tr></tbody></table>
+<p><strong>🧠 "IL Y A DES CHANCES QUE" — The Chance System:</strong></p>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>Il y a des chances que...           (~50% — some chance)
+</span>Il y a de fortes/grandes chances que... (~75% — good chance)
+Il y a de bonnes chances que...     (~70% — good chance)
+Il y a peu de chances que...        (~25% — small chance)
+Il y a très peu de chances que...   (~10% — very small chance)
+Il n'y a aucune chance que...       (0% — no chance)
+
+ALL trigger SUBJONCTIF after "que"
+→ "Il y a des chances qu'il vienne." (subjonctif)
+→ "Il n'y a aucune chance qu'il vienne." (subjonctif)</code></pre></div>
+<hr>
+<h2>🔹 BLOCK G — Expressing Doubt and Unlikelihood</h2>
+<p><em>Scenario: You think something probably WON'T happen — expressing skepticism</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English</th><th>Certainty</th><th>Structure</th></tr></thead><tbody><tr><td>61</td><td><strong>J'en doute.</strong></td><td>I doubt it.</td><td>🌧️ 25%</td><td>Standalone — very common</td></tr><tr><td>62</td><td><strong>J'en doute fort.</strong></td><td>I seriously doubt it.</td><td>🌧️ 15%</td><td>Intensified doubt</td></tr><tr><td>63</td><td><strong>Je doute que</strong> ce <strong>soit</strong> vrai.</td><td>I doubt it's true.</td><td>🌧️ 25%</td><td>douter que + subj</td></tr><tr><td>64</td><td>**Je doute qu'**il <strong>puisse</strong> venir.</td><td>I doubt he can come.</td><td>🌧️ 25%</td><td>douter que + subj</td></tr><tr><td>65</td><td><strong>Ça m'étonnerait.</strong></td><td>I'd be surprised. / I doubt it.</td><td>🌧️ 25%</td><td>Standalone — very common</td></tr><tr><td>66</td><td>**Ça m'étonnerait qu'**il <strong>soit</strong> à l'heure.</td><td>I'd be surprised if he's on time.</td><td>🌧️ 25%</td><td>ça m'étonnerait que + subj</td></tr><tr><td>67</td><td>**Ça m'étonnerait qu'**on <strong>ait</strong> une réponse aujourd'hui.</td><td>I'd be surprised if we get an answer today.</td><td>🌧️ 25%</td><td>ça m'étonnerait que + subj</td></tr><tr><td>68</td><td><strong>Ce n'est pas sûr que</strong> ça <strong>marche</strong>.</td><td>It's not certain it'll work.</td><td>🌥️ 40%</td><td>ce n'est pas sûr que + subj</td></tr><tr><td>69</td><td>**Ce n'est pas certain qu'**il <strong>vienne</strong>.</td><td>It's not certain he'll come.</td><td>🌥️ 40%</td><td>ce n'est pas certain que + subj</td></tr><tr><td>70</td><td><strong>Rien n'est sûr.</strong></td><td>Nothing is certain.</td><td>🌥️ General uncertainty</td><td>Standalone</td></tr></tbody></table>
+<p><strong>🧠 "ÇA M'ÉTONNERAIT" — The French Native's Favorite Doubt Expression:</strong></p>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>"Ça m'étonnerait" is THE most natural way to express doubt in spoken French:
+</span>
+→ "Tu penses qu'il viendra ?" — "Ça m'étonnerait."
+   = "I'd be surprised" = "I doubt it" = "Probably not"
+
+→ "Ça m'étonnerait que + SUBJONCTIF" for full sentences:
+   → "Ça m'étonnerait qu'il soit là."
+   → "Ça m'étonnerait qu'on ait le temps."
+
+→ Literally: "That would surprise me" (conditionnel of étonner)
+→ Functionally: "I don't think so" / "Probably not"
+→ Much more natural than "Je doute que..." in daily conversation
+
+INTENSIFIED:
+→ "Ça m'étonnerait beaucoup." = I really doubt it.
+→ "Ça m'étonnerait fort." = I seriously doubt it.</code></pre></div>
+<p><strong>🧠 NEGATIVE CERTAINTY → SUBJONCTIF (Connection to Project 22-23):</strong></p>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>AFFIRMATIVE → INDICATIF:
+</span>→ Il est sûr que c'EST vrai.        (certain → indicatif)
+→ Il est certain qu'il VIENDRA.     (certain → indicatif)
+
+NEGATIVE → SUBJONCTIF:
+→ Il n'est pas sûr que ce SOIT vrai.     (not certain → subjonctif)
+→ Il n'est pas certain qu'il VIENNE.     (not certain → subjonctif)
+→ Ce n'est pas sûr que ça MARCHE.        (not certain → subjonctif)
+
+Same pattern as negative opinions in Project 22:
+→ Affirmative belief → indicatif
+→ Negative belief / doubt → subjonctif</code></pre></div>
+<hr>
+<h2>🔹 BLOCK H — Conditionnel for Unconfirmed Information</h2>
+<p><em>Scenario: News, rumors, unverified claims — "reportedly" / "allegedly"</em><br>
+<em>Connection to Project 24: Conditionnel journalistique previewed in passive — now expanded</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English</th><th>Context</th><th>Certainty</th></tr></thead><tbody><tr><td>71</td><td>Le président <strong>serait</strong> malade.</td><td>The president is reportedly sick.</td><td>News — unconfirmed</td><td>🌥️ Unverified</td></tr><tr><td>72</td><td>L'entreprise <strong>fermerait</strong> ses portes en décembre.</td><td>The company would reportedly close in December.</td><td>News — rumor</td><td>🌥️ Unverified</td></tr><tr><td>73</td><td>Trois personnes <strong>auraient été</strong> blessées.</td><td>Three people were reportedly injured.</td><td>News — unconfirmed</td><td>🌥️ Unverified</td></tr><tr><td>74</td><td>Il <strong>y aurait</strong> plus de cent victimes.</td><td>There would reportedly be over a hundred victims.</td><td>News — early report</td><td>🌥️ Unverified</td></tr><tr><td>75</td><td>Le suspect <strong>se serait</strong> enfui à l'étranger.</td><td>The suspect reportedly fled abroad.</td><td>News — unconfirmed</td><td>🌥️ Unverified</td></tr><tr><td>76</td><td>Selon les témoins, l'accident <strong>aurait eu</strong> lieu vers minuit.</td><td>According to witnesses, the accident reportedly happened around midnight.</td><td>News — witness-based</td><td>🌥️ Unverified</td></tr><tr><td>77</td><td>D'après certaines sources, le gouvernement <strong>envisagerait</strong> de nouvelles mesures.</td><td>According to some sources, the government would reportedly be considering new measures.</td><td>News — political</td><td>🌥️ Unverified</td></tr><tr><td>78</td><td>Le joueur <strong>aurait signé</strong> un contrat de trois ans.</td><td>The player reportedly signed a three-year contract.</td><td>Sports news</td><td>🌥️ Unverified</td></tr><tr><td>79</td><td>La réunion <strong>aurait été</strong> annulée.</td><td>The meeting was reportedly cancelled.</td><td>Workplace rumor</td><td>🌥️ Unverified</td></tr><tr><td>80</td><td>Il <strong>paraîtrait que</strong> le directeur va démissionner.</td><td>Apparently the director is going to resign.</td><td>Office gossip</td><td>🌥️ Hearsay</td></tr></tbody></table>
+<p><strong>🧠 "CONDITIONNEL JOURNALISTIQUE" — The Reporting Conditional:</strong></p>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>French media uses CONDITIONNEL to signal UNCONFIRMED information:
+</span>
+CONFIRMED (indicatif):
+→ "Le président EST malade."        = Confirmed fact
+→ "Trois personnes ONT ÉTÉ blessées." = Confirmed
+
+UNCONFIRMED (conditionnel):
+→ "Le président SERAIT malade."      = Reportedly sick (not confirmed)
+→ "Trois personnes AURAIENT ÉTÉ blessées." = Reportedly injured
+
+THIS IS NOT THE SAME AS:
+→ Conditionnel for politeness (Project 17): "Je voudrais un café"
+→ Conditionnel for hypothetical (Project 18/33): "Si j'étais riche..."
+→ Conditionnel for reported speech (Project 25): "Il a dit qu'il viendrait"
+
+THIS IS: Conditionnel for UNVERIFIED CLAIMS
+→ The speaker distances themselves from the truth of the statement
+→ = "This is what we've heard, but we haven't confirmed it"
+
+USED IN:
+→ News broadcasts
+→ Newspaper articles
+→ Office gossip
+→ Rumors
+→ Any situation where you're passing along unverified information</code></pre></div>
+<p><strong>🧠 CONNECTION TO PROJECT 22:</strong></p>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>"Il paraîtrait que" = It would seem that / Apparently
+</span>→ Conditionnel of "il paraît que" (Project 22 — hearsay)
+→ Even MORE distanced than "il paraît que"
+→ "Il paraît que le directeur va démissionner" = I heard (present — somewhat direct)
+→ "Il paraîtrait que le directeur va démissionner" = I heard (conditionnel — even more distant)</code></pre></div>
+<hr>
+<h2>🔹 BLOCK I — Expressing Near-Certainty and Absolute Certainty</h2>
+<p><em>Scenario: You're quite sure or completely sure — stating confidence</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English</th><th>Certainty</th><th>Structure</th></tr></thead><tbody><tr><td>81</td><td><strong>C'est sûr</strong>, il viendra.</td><td>It's certain, he'll come.</td><td>⚡ 95%</td><td>Standalone + statement</td></tr><tr><td>82</td><td><strong>C'est certain</strong>, elle a compris.</td><td>It's certain, she understood.</td><td>⚡ 95%</td><td>Standalone + statement</td></tr><tr><td>83</td><td><strong>J'en suis sûr(e).</strong></td><td>I'm sure of it.</td><td>⚡ 95%</td><td>Standalone — very common</td></tr><tr><td>84</td><td><strong>J'en suis convaincu(e).</strong></td><td>I'm convinced of it.</td><td>⚡ 95%</td><td>Standalone — strong</td></tr><tr><td>85</td><td><strong>Il est certain que</strong> ça <strong>va</strong> changer.</td><td>It's certain things will change.</td><td>⚡ 95%</td><td>il est certain que + indic</td></tr><tr><td>86</td><td><strong>Il ne fait aucun doute que</strong> c'<strong>est</strong> vrai.</td><td>There's no doubt it's true.</td><td>⚡ 100%</td><td>il ne fait aucun doute que + indic</td></tr><tr><td>87</td><td><strong>Sans aucun doute</strong>, c'est la meilleure solution.</td><td>Without any doubt, it's the best solution.</td><td>⚡ 100%</td><td>Standalone adverb</td></tr><tr><td>88</td><td><strong>De toute évidence</strong>, il a menti.</td><td>Obviously, he lied.</td><td>⚡ 95%</td><td>Standalone adverb — formal</td></tr><tr><td>89</td><td><strong>Bien sûr</strong> qu'il viendra !</td><td>Of course he'll come!</td><td>⚡ 95%</td><td>Casual certainty</td></tr><tr><td>90</td><td><strong>Évidemment</strong> qu'elle a raison.</td><td>Obviously she's right.</td><td>⚡ 95%</td><td>Casual certainty</td></tr></tbody></table>
+<p><strong>🧠 CERTAINTY EXPRESSIONS — Complete:</strong></p>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>CASUAL CERTAINTY:
+</span>→ Bien sûr (que)...           (Of course...)
+→ Évidemment (que)...         (Obviously...)
+→ Bien entendu...             (Of course... — slightly formal)
+→ Naturellement...            (Naturally...)
+
+STANDARD CERTAINTY:
+→ C'est sûr...                (It's certain...)
+→ C'est certain...            (It's certain...)
+→ J'en suis sûr(e)...        (I'm sure of it...)
+→ J'en suis certain(e)...    (I'm certain of it...)
+
+STRONG CERTAINTY:
+→ J'en suis convaincu(e)...  (I'm convinced...)
+→ J'en suis persuadé(e)...   (I'm persuaded...)
+→ Sans aucun doute...         (Without any doubt...)
+→ Il ne fait aucun doute que... (There's no doubt that...)
+
+FORMAL CERTAINTY:
+→ De toute évidence...        (Obviously... — formal)
+→ Il est incontestable que... (It's undeniable that...)
+→ Il va de soi que...         (It goes without saying that...)
+→ Assurément...               (Assuredly...)
+
+ALL CERTAINTY EXPRESSIONS → INDICATIF after "que"</code></pre></div>
+<hr>
+<h2>🔹 BLOCK J — Full Probability Conversations</h2>
+<p><em>Scenario: Real dialogues mixing different probability levels naturally</em></p>
+<table><thead><tr><th>#</th><th>Speaker</th><th>French</th><th>English</th><th>Certainty Level</th></tr></thead><tbody><tr><td>91</td><td>A:</td><td>Tu penses qu'il va pleuvoir demain ?</td><td>Do you think it'll rain tomorrow?</td><td>Question</td></tr><tr><td>92</td><td>B:</td><td><strong>C'est possible</strong>, mais <strong>je ne suis pas sûr</strong>.</td><td>It's possible, but I'm not sure.</td><td>🌥️ 50% + uncertainty</td></tr><tr><td>93</td><td>A:</td><td>La météo dit que oui.</td><td>The forecast says yes.</td><td>External source</td></tr><tr><td>94</td><td>B:</td><td>Alors <strong>il est probable que</strong> ça <strong>pleuve</strong>.</td><td>Then it's likely it'll rain.</td><td>☀️ 75% + subjonctif</td></tr><tr><td>95</td><td>A:</td><td>On annule le pique-nique ?</td><td>Do we cancel the picnic?</td><td>Decision question</td></tr><tr><td>96</td><td>B:</td><td><strong>Peut-être</strong> qu'on <strong>devrait</strong> attendre demain matin pour décider.</td><td>Maybe we should wait until tomorrow morning to decide.</td><td>🌥️ 50% + soft suggestion</td></tr><tr><td>97</td><td>A:</td><td>Et si Marie ne vient pas ?</td><td>And if Marie doesn't come?</td><td>Condition (P18)</td></tr><tr><td>98</td><td>B:</td><td><strong>Ça m'étonnerait</strong> qu'elle ne <strong>vienne</strong> pas. Elle <strong>doit</strong> être en route.</td><td>I'd be surprised if she didn't come. She must be on her way.</td><td>🌧️ doubt (she won't miss it) + 🔥 85% assumption</td></tr><tr><td>99</td><td>A:</td><td>Tu es sûr ?</td><td>Are you sure?</td><td>Checking certainty</td></tr><tr><td>100</td><td>B:</td><td><strong>Presque sûr</strong>. En tout cas, <strong>il y a de fortes chances</strong> qu'elle <strong>soit</strong> là.</td><td>Almost sure. In any case, there's a good chance she'll be there.</td><td>🔥 ~85% + ☀️ 75%</td></tr></tbody></table>
+<p><strong>🧠 Notice the natural flow:</strong><br>
+→ Probability levels shift fluidly within a single conversation<br>
+→ The same speaker can go from "c'est possible" (50%) to "elle doit être en route" (85%) in two sentences<br>
+→ The grammar shifts accordingly — subjonctif for possibility, indicatif for assumptions<br>
+→ This is how real French conversations handle uncertainty</p>
+<hr>
+<h1>✅ WHAT SHOULD DO</h1>
+<p>→ <strong>Memorize the probability thermometer</strong> — know which expressions sit at which certainty level<br>
+→ <strong>Start with the Big 5 daily expressions:</strong> peut-être, probablement, sans doute, ça m'étonnerait, il doit + inf<br>
+→ <strong>Practice "devoir" for probability</strong> — it's the most natural way to express "must be" assumptions<br>
+→ <strong>Use "ça m'étonnerait" immediately</strong> — it's the native's go-to for doubt<br>
+→ <strong>Know the subjonctif triggers:</strong> il est possible que, il se peut que, il y a des chances que, douter que<br>
+→ <strong>Know the indicatif triggers:</strong> il est certain que, il est clair que, il est sûr que<br>
+→ <strong>Recognize conditionnel journalistique</strong> in news — don't confuse it with other conditionnel uses<br>
+→ <strong>Learn the two false friends:</strong> éventuellement ≠ eventually / sans doute ≠ without a doubt (100%)</p>
+<hr>
+<h1>❌ WHAT SHOULD NOT DO</h1>
+<p>→ ❌ Do NOT confuse "sans doute" with "sans aucun doute"</p>
+<table><thead><tr><th>Expression</th><th>Actual Meaning</th><th>Certainty</th></tr></thead><tbody><tr><td><strong>Sans doute</strong></td><td>Probably / most likely</td><td>☀️ ~80%</td></tr><tr><td><strong>Sans aucun doute</strong></td><td>Without any doubt</td><td>⚡ 100%</td></tr></tbody></table>
+<p>→ ❌ Do NOT confuse "éventuellement" with "eventually"</p>
+<table><thead><tr><th>Wrong</th><th>Correct</th></tr></thead><tbody><tr><td><del>Je finirai éventuellement</del> (meaning "in the end")</td><td>Je finirai <strong>par finir</strong> / Je finirai <strong>un jour</strong></td></tr><tr><td>"Éventuellement, on pourrait essayer"</td><td>= Possibly, we could try (correct French meaning)</td></tr></tbody></table>
+<p>→ ❌ Do NOT use indicatif after "il est possible que"</p>
+<table><thead><tr><th>Wrong</th><th>Correct</th></tr></thead><tbody><tr><td><del>Il est possible qu'il <strong>viendra</strong></del></td><td>Il est possible qu'il <strong>vienne</strong> (subjonctif)</td></tr><tr><td><del>Il se peut qu'elle <strong>est</strong> malade</del></td><td>Il se peut qu'elle <strong>soit</strong> malade (subjonctif)</td></tr></tbody></table>
+<p>→ ❌ Do NOT use subjonctif after certainty expressions</p>
+<table><thead><tr><th>Wrong</th><th>Correct</th></tr></thead><tbody><tr><td><del>Il est certain qu'il <strong>vienne</strong></del></td><td>Il est certain qu'il <strong>viendra</strong> (indicatif)</td></tr><tr><td><del>Il est évident qu'elle <strong>ait</strong> raison</del></td><td>Il est évident qu'elle <strong>a</strong> raison (indicatif)</td></tr></tbody></table>
+<p>→ ❌ Do NOT use "peut-être que" with subjonctif</p>
+<table><thead><tr><th>Wrong</th><th>Correct</th></tr></thead><tbody><tr><td><del>Peut-être qu'il <strong>vienne</strong></del></td><td>Peut-être qu'il <strong>viendra</strong> (indicatif)</td></tr></tbody></table>
+<p>→ ❌ Do NOT forget inversion after "peut-être" at the start (formal writing)</p>
+<table><thead><tr><th>Informal (spoken — OK)</th><th>Formal (written — required)</th></tr></thead><tbody><tr><td>Peut-être qu'il viendra.</td><td>Peut-être viendra-<strong>t</strong>-il. (inversion)</td></tr></tbody></table>
+<p>→ ❌ Do NOT overuse "devoir" for probability with first person — it can sound like obligation</p>
+<table><thead><tr><th>Ambiguous</th><th>Clearer</th></tr></thead><tbody><tr><td><del>Je dois être fatigué</del> (obligation or probability?)</td><td>Je suis <strong>probablement</strong> fatigué / Je suis <strong>sans doute</strong> fatigué</td></tr></tbody></table>
+<hr>
+<h1>🔀 WHEN TO USE WHAT — THE COMPLETE PROBABILITY MAP</h1>
+<table><thead><tr><th>Certainty</th><th>Best Structures</th><th>Mood</th><th>Example</th></tr></thead><tbody><tr><td>⛔ 0% Impossible</td><td>Il est impossible que + subj / Il est exclu que + subj</td><td>SUBJ</td><td>Il est impossible qu'il ait fait ça</td></tr><tr><td>❄️ 10% Very unlikely</td><td>Il est très peu probable que + subj / Ça m'étonnerait beaucoup</td><td>SUBJ</td><td>Il est très peu probable qu'il vienne</td></tr><tr><td>🌧️ 25% Unlikely</td><td>Ça m'étonnerait que + subj / Je doute que + subj / C'est peu probable</td><td>SUBJ</td><td>Ça m'étonnerait qu'il soit là</td></tr><tr><td>🌥️ 50% Possible</td><td>Peut-être (que) / C'est possible / Il est possible que + subj / Il se peut que + subj</td><td>SUBJ (after que) / INDIC (adverbs)</td><td>Il est possible qu'il vienne / Peut-être qu'il viendra</td></tr><tr><td>☀️ 75% Probable</td><td>Probablement / Sans doute / Il est probable que / Il y a de fortes chances que + subj</td><td>INDIC or SUBJ</td><td>Il est probable qu'il viendra/vienne</td></tr><tr><td>🔥 85% Very likely</td><td>Il doit + inf / Sûrement / Certainement</td><td>INDIC</td><td>Il doit être chez lui</td></tr><tr><td>⚡ 95% Almost certain</td><td>C'est sûr / J'en suis sûr(e) / Il est certain que + indic / Forcément</td><td>INDIC</td><td>Il est certain qu'il viendra</td></tr><tr><td>⚡ 100% Absolute</td><td>Sans aucun doute / Il ne fait aucun doute que + indic</td><td>INDIC</td><td>Sans aucun doute, c'est vrai</td></tr></tbody></table>
+<hr>
+<h1>🚫 WHEN NOT TO USE</h1>
+<table><thead><tr><th>Situation</th><th>Do NOT Use</th><th>Use Instead</th><th>Why</th></tr></thead><tbody><tr><td>You KNOW for certain</td><td>Probability expressions</td><td>Direct statement</td><td>"Il est là" — not "Il doit être là"</td></tr><tr><td>You have NO information at all</td><td>Devoir (probability)</td><td>"Je ne sais pas"</td><td>Devoir implies you have SOME basis for guessing</td></tr><tr><td>Formal writing — uncertainty</td><td>"Peut-être que"</td><td>"Il est possible que" / "Il se pourrait que"</td><td>More formal register</td></tr><tr><td>Legal / official certainty</td><td>"Sans doute"</td><td>"Sans aucun doute" / "Il est certain que"</td><td>"Sans doute" is only ~80% — not enough for legal</td></tr><tr><td>Casual conversation — certainty</td><td>"Il est incontestable que"</td><td>"C'est sûr" / "Bien sûr"</td><td>Too formal for casual context</td></tr><tr><td>News reporting — confirmed facts</td><td>Conditionnel journalistique</td><td>Indicatif</td><td>Conditionnel = unconfirmed — don't use for facts</td></tr></tbody></table>
+<hr>
+<h1>⚠️ COMMON PITFALLS AND FAILURE MODES</h1>
+<table><thead><tr><th>Pitfall</th><th>What Learners Do</th><th>Why It's Wrong</th><th>Fix</th></tr></thead><tbody><tr><td><strong>Sans doute = 100%</strong></td><td>Using "sans doute" for absolute certainty</td><td>Sans doute ≈ 80% — not 100%</td><td>Use "sans <strong>aucun</strong> doute" for 100%</td></tr><tr><td><strong>Éventuellement = eventually</strong></td><td>"Il finira éventuellement" meaning "in the end"</td><td>False friend — éventuellement = possibly</td><td>"Il finira par finir" = eventually</td></tr><tr><td><strong>Subjonctif after peut-être</strong></td><td>Peut-être qu'il vienne</td><td>Peut-être que takes indicatif</td><td>Peut-être qu'il viendra</td></tr><tr><td><strong>Indicatif after il est possible</strong></td><td>Il est possible qu'il viendra</td><td>Il est possible que takes subjonctif</td><td>Il est possible qu'il vienne</td></tr><tr><td><strong>Subjonctif after il est certain</strong></td><td>Il est certain qu'il vienne</td><td>Certainty takes indicatif</td><td>Il est certain qu'il viendra</td></tr><tr><td><strong>Devoir ambiguity</strong></td><td>Not knowing if "il doit" = obligation or probability</td><td>Context determines meaning</td><td>Add context or use adverb instead</td></tr><tr><td><strong>Conditionnel confused</strong></td><td>Thinking news conditionnel = hypothetical</td><td>Journalistic conditionnel = unconfirmed report</td><td>Recognize context — news vs. imagination</td></tr><tr><td><strong>"J'en doute" vs. "Je doute que"</strong></td><td>Using wrong structure</td><td>J'en doute = standalone / Je doute que + subjonctif</td><td>J'en doute. / Je doute qu'il vienne.</td></tr><tr><td><strong>Forgetting "en" in j'en doute</strong></td><td>"Je doute" (standalone)</td><td>Sounds incomplete — needs "en" for "about it"</td><td>"J'<strong>en</strong> doute" — connection to Project 20</td></tr><tr><td><strong>Mixing certainty levels</strong></td><td>"Il est certain que c'est peut-être vrai"</td><td>Contradictory — certain + maybe</td><td>Choose one level and commit</td></tr></tbody></table>
+<hr>
+<h1>🔑 KEY TAKEAWAY</h1>
+<blockquote>
+<p><strong>Probability in French is a precision instrument — not a blunt tool.</strong></p>
+<p>→ English speakers often have just "maybe / probably / definitely"<br>
+→ French gives you <strong>15+ graduated expressions</strong> from 0% to 100%<br>
+→ Each one carries:</p>
+<table><thead><tr><th>Signal</th><th>Controlled By</th></tr></thead><tbody><tr><td><strong>Certainty level</strong></td><td>Which expression you choose</td></tr><tr><td><strong>Grammar mood</strong></td><td>Indicatif (certain) vs. Subjonctif (uncertain)</td></tr><tr><td><strong>Register</strong></td><td>Casual (peut-être, ça m'étonnerait) vs. Formal (il est vraisemblable, de toute évidence)</td></tr><tr><td><strong>Source</strong></td><td>Your own deduction (devoir) vs. Hearsay (il paraît que) vs. Unconfirmed report (conditionnel journalistique)</td></tr></tbody></table>
+<p>→ Three master tools:</p>
+<table><thead><tr><th>Tool</th><th>Best For</th><th>Example</th></tr></thead><tbody><tr><td><strong>Adverbs</strong></td><td>Quick probability markers</td><td>Probablement, peut-être, sûrement</td></tr><tr><td><strong>Impersonal expressions</strong></td><td>Formal / precise probability</td><td>Il est possible que, Il est certain que</td></tr><tr><td><strong>Verb-based</strong></td><td>Natural, conversational</td><td>Il doit être..., Ça pourrait être...</td></tr></tbody></table>
+<p>→ You now have the <strong>complete uncertainty toolkit</strong> of French<br>
+→ Combined with opinions (P22), emotions (P23), and obligations (P26) — you can express any <strong>attitude toward reality</strong></p>
+<p>→ But you've been expressing attitudes in <strong>single sentences</strong><br>
+→ Real speech requires <strong>connecting ideas logically</strong> — cause and consequence</p>
+</blockquote>
+<hr>
+<h1>🌉 BRIDGE TO PROJECT 28</h1>
+<blockquote>
+<p>You can now express what you think (P22), feel (P23), must do (P26), and how likely things are (P27)<br>
+But when someone asks <strong>"WHY?"</strong> — you need to explain <strong>reasons and consequences</strong>:</p>
+<p>→ "Je suis en retard <strong>parce que</strong> le train était en retard."<br>
+→ "Il pleut, <strong>donc</strong> on reste à la maison."<br>
+→ "<strong>Puisque</strong> tu es là, on peut commencer."<br>
+→ "<strong>Comme</strong> il faisait froid, j'ai mis un manteau."</p>
+<p>→ French has <strong>multiple cause/consequence connectors</strong> — each one has a different logic, position, and register<br>
+→ Using the wrong one sounds awkward or illogical<br>
+→ Using the right one makes your reasoning <strong>crystal clear</strong></p>
+<p>→ Project 28: <strong>"Because, Therefore, Since"</strong><br>
+→ Cause and consequence connectors — the logic engine of French</p>
+</blockquote>
+<hr>
+<h1>✅ PROJECT 27 COMPLETE</h1>
+<blockquote>
+<p><strong>Are you ready for PROJECT 28: "Because, Therefore, Since"?</strong><br>
+→ ~100 sentences covering cause/consequence connectors (parce que, car, puisque, donc, alors, c'est pourquoi, etc.)<br>
+→ Scenario: You need to explain reasons and consequences logically in conversation<br>
+→ Builds on all opinion/emotion/obligation/probability structures — now LINKING them with logic</p>
+</blockquote>
+</div>
+</div>
+
+<!-- ========== data-index="25" ========== -->
+
+        </div>
+
+        <div class="nav-bar">
+            <a href="project-26.html" class="nav-button prev">← Previous Chapter</a>
+            <div class="page-info">
+                <a href="index.html" class="nav-button home">📚 Table of Contents</a><br>
+                <span style="margin-top:8px;display:block">Chapter 27 of 50</span>
+            </div>
+            <a href="project-28.html" class="nav-button next">Next Chapter →</a>
+        </div>
+    </div>
+
+    
+    <div id="progress-track"><div id="progress-fill"></div></div>
+    <div id="progress-pct">0%</div>
+
+
+    <script>
+    const fill = document.getElementById('progress-fill');
+    const pct  = document.getElementById('progress-pct');
+    function updateProgress() {
+        const scrollTop = window.scrollY;
+        const docHeight = document.body.scrollHeight - window.innerHeight;
+        const scrolled  = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+        fill.style.height = scrolled + '%';
+        pct.textContent   = Math.round(scrolled) + '%';
+    }
+    window.addEventListener('scroll', updateProgress);
+    updateProgress();
+
+    document.addEventListener('keydown', function(e) {
+        if (['INPUT','TEXTAREA'].includes(document.activeElement.tagName)) return;
+        if (e.key === 'ArrowLeft') {
+            const b = document.querySelector('.nav-button.prev');
+            if (b && !b.classList.contains('disabled')) window.location.href = b.href;
+        }
+        if (e.key === 'ArrowRight') {
+            const b = document.querySelector('.nav-button.next');
+            if (b && !b.classList.contains('disabled')) window.location.href = b.href;
+        }
+    });
+    </script>
+
+</body>
+</html>

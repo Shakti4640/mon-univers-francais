@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="images/favicon.png">
+    <title>Project 40: "Suit Up or Dress Down" — French Daily Sentences</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.75;
+            color: #1a202c;
+            background-color: #f7fafc;
+        }
+        .container {
+            max-width: 1800px;
+            margin: 0 auto;
+            background: white;
+            min-height: 100vh;
+            box-shadow: 0 0 30px rgba(0,0,0,0.08);
+            padding: 48px 52px;
+        }
+        
+        .content { max-width: 1700px; margin: 0 auto; color: #1a202c; }
+        .content h1 {
+            color: #1a202c; margin: 32px 0 20px;
+            padding-bottom: 12px;
+            border-bottom: 4px solid #3b82f6;
+            font-size: 2.1em;
+            font-weight: 700;
+        }
+        .content h2 {
+            color: #1a202c; margin: 28px 0 16px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #60a5fa;
+            font-size: 1.6em;
+            font-weight: 600;
+        }
+        .content h3 { color: #1a202c; margin: 22px 0 12px; font-size: 1.3em; font-weight: 600; }
+        .content h4 { color: #2d3748; margin: 18px 0 10px; font-size: 1.1em; font-weight: 600; }
+        .content p  { margin-bottom: 16px; line-height: 1.8; color: #1a202c; }
+        .content ul, .content ol { margin: 12px 0 18px 30px; color: #1a202c; }
+        .content li { margin-bottom: 8px; line-height: 1.75; color: #1a202c; }
+        .content hr { border: none; border-top: 2px solid #e2e8f0; margin: 26px 0; }
+        .content pre {
+            background: #f7fafc !important;
+            border: 1px solid #cbd5e0 !important;
+            border-left: 4px solid #3b82f6 !important;
+            padding: 18px !important; overflow-x: auto; margin: 18px 0; border-radius: 6px;
+            font-family: 'Consolas','Monaco','Courier New',monospace !important;
+            font-size: 0.9em !important;
+        }
+        .content pre:not([style*="color"]) { color: #1a202c !important; }
+        .content code {
+            font-family: 'Consolas','Monaco','Courier New',monospace !important;
+            font-size: 0.88em !important;
+        }
+        .content code:not(pre code) {
+            background: #dbeafe !important;
+            color: #1a202c !important;
+            padding: 2px 6px;
+            border-radius: 3px;
+        }
+        .content pre code { background: transparent !important; padding: 0; }
+        .content table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+        .content th {
+            background: linear-gradient(135deg, #3b82f6 0%, #60a5fa 100%);
+            color: white; padding: 12px 16px; text-align: left;
+            font-weight: 600;
+        }
+        .content td { padding: 11px 16px; border: 1px solid #e2e8f0; color: #1a202c; }
+        .content tr:nth-child(even) td { background: #eff6ff; }
+        .content blockquote {
+            border-left: 4px solid #3b82f6; background: #eff6ff;
+            padding: 14px 20px; margin: 18px 0; border-radius: 0 6px 6px 0;
+            color: #1a202c;
+        }
+        .content strong { color: #1a202c; font-weight: 600; }
+        .px-2 { padding: 0; }
+        .chat-message { background: transparent; padding: 0; margin: 0; }
+
+        /* Bottom nav bar only */
+        .nav-bar {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 24px 0;
+            margin-top: 50px;
+            border-top: 3px solid #60a5fa;
+        }
+        .nav-button {
+            display: inline-flex; align-items: center; gap: 8px;
+            padding: 12px 26px;
+            background: linear-gradient(135deg, #3b82f6 0%, #60a5fa 100%);
+            color: white !important; text-decoration: none;
+            border-radius: 8px; font-weight: 600; font-size: 0.95em;
+            transition: all 0.2s;
+            box-shadow: 0 2px 8px rgba(59,130,246,0.35);
+        }
+        .nav-button:hover { transform: translateY(-2px); box-shadow: 0 4px 14px rgba(59,130,246,0.5); }
+        .nav-button.disabled { background: #cbd5e1; box-shadow: none; pointer-events: none; }
+        .nav-button.home {
+            background: linear-gradient(135deg, #ef4444 0%, #f87171 100%);
+            box-shadow: 0 2px 8px rgba(239,68,68,0.35);
+        }
+        .nav-button.home:hover { box-shadow: 0 4px 14px rgba(239,68,68,0.5); }
+        .page-info { color: #718096; font-size: 0.9em; text-align: center; }
+
+        /* Progress bar */
+        #progress-track {
+            position: fixed; top: 20px; right: 20px;
+            width: 10px; height: 150px;
+            background: rgba(59,130,246,0.2);
+            border: 2px solid #3b82f6;
+            border-radius: 6px; overflow: hidden; z-index: 1000;
+        }
+        #progress-fill {
+            width: 100%;
+            background: linear-gradient(180deg, #3b82f6, #2563eb);
+            height: 0%;
+            transition: height 0.15s ease;
+        }
+        #progress-pct {
+            position: fixed; top: 0px; right: 16px;
+            color: #2563eb; font-size: 14px; font-weight: bold;
+            z-index: 1001;
+            text-shadow: 0 1px 2px rgba(255,255,255,0.9);
+            line-height: 20px;
+        }
+
+    </style>
+<link rel="stylesheet" href="assets/chapters.css?v=20260421203847"><script src="assets/chapters.js?v=20260421203847" defer></script>
+</head>
+<body>
+    <div class="container">
+        <div class="content">
+            <div class="chat-message" data-index="19">
+<div class="px-2"><h1>🟠 PROJECT 40: "Suit Up or Dress Down"</h1>
+<h2><em>The same day lived twice — once as a corporate executive, once as a student</em></h2>
+<hr>
+<h1>🎯 THE HYPOTHETICAL PROBLEM</h1>
+<p>→ You wake up on Monday morning in Lyon<br>
+→ <strong>Version A:</strong> You are a 45-year-old corporate executive — meetings with clients, lunch with the CEO, email to the board<br>
+→ <strong>Version B:</strong> You are a 22-year-old university student — texting friends, chatting in the cafeteria, joking at a party<br>
+→ Both versions of you speak French — but it's NOT the same French<br>
+→ The executive says: "Pourriez-vous m'accorder quelques instants ?"<br>
+→ The student says: "T'as deux secondes ?"<br>
+→ <strong>Same meaning.</strong> Completely different language.<br>
+→ You've spent 39 projects learning HOW to build French sentences<br>
+→ Project 40 teaches you how to <strong>ADJUST those sentences</strong> to match the social situation<br>
+→ You already touched on tu/vous (P1), formal future (P16), conditionnel for politeness (P17)<br>
+→ But register is not just one feature — it's a <strong>COMPLETE SYSTEM</strong> that affects:</p>
+<ol>
+<li><strong>Pronouns</strong> (tu vs. vous / on vs. nous)</li>
+<li><strong>Vocabulary</strong> (words change entirely)</li>
+<li><strong>Sentence length</strong> (short and chopped vs. long and elaborate)</li>
+<li><strong>Negation</strong> (NE drops in casual speech)</li>
+<li><strong>Question forms</strong> (inversion vs. intonation)</li>
+<li><strong>Verb tenses</strong> (passé simple in writing vs. passé composé in speech)</li>
+<li><strong>Filler words</strong> (absent in formal, everywhere in casual)</li>
+<li><strong>Pronunciation shortcuts</strong> (full pronunciation vs. swallowed sounds)</li>
+</ol>
+<p><strong>The core realization:</strong><br>
+→ Grammar is the SKELETON — register is the CLOTHING<br>
+→ The same skeleton (subject + verb + object) gets dressed differently for every social context<br>
+→ Using formal French with friends makes you sound cold and distant<br>
+→ Using casual French with a boss makes you sound disrespectful and unprofessional<br>
+→ Mastering register = mastering <strong>social survival</strong> in France</p>
+<hr>
+<h1>🔍 HOW TO APPROACH IT</h1>
+<p>→ Think of French as having <strong>four main registers</strong> — like gears in a car</p>
+<table><thead><tr><th>Register</th><th>Name</th><th>Used With</th><th>Tone</th></tr></thead><tbody><tr><td>🎩 <strong>R4</strong></td><td>Soutenu (Formal/Literary)</td><td>Official documents, speeches, literature, very formal meetings</td><td>Elegant, distant, impressive</td></tr><tr><td>👔 <strong>R3</strong></td><td>Courant (Standard)</td><td>Professional emails, meetings, strangers, news, teachers</td><td>Correct, neutral, respectful</td></tr><tr><td>👕 <strong>R2</strong></td><td>Familier (Casual)</td><td>Friends, family, close colleagues, everyday conversation</td><td>Relaxed, warm, natural</td></tr><tr><td>🩳 <strong>R1</strong></td><td>Argotique (Slang/Very casual)</td><td>Close friends, youth, texting, jokes</td><td>Raw, playful, tribal</td></tr></tbody></table>
+<p>→ Most French courses teach ONLY R3 (standard)<br>
+→ Most French PEOPLE speak in R2 (casual) daily<br>
+→ French literature and official speech use R4 (formal)<br>
+→ French youth and social media use R1 (slang)<br>
+→ <strong>You need to RECOGNIZE all four and PRODUCE at least R3 and R2</strong></p>
+<hr>
+<h1>🔧 HOW CAN WE SOLVE IT</h1>
+<h2>The Eight Dimensions of Register</h2>
+<table><thead><tr><th>Dimension</th><th>Formal (R4/R3)</th><th>Casual (R2/R1)</th><th>Project Connection</th></tr></thead><tbody><tr><td><strong>1. Address</strong></td><td>Vous</td><td>Tu</td><td>P1</td></tr><tr><td><strong>2. "We"</strong></td><td>Nous</td><td>On</td><td>P1</td></tr><tr><td><strong>3. Negation</strong></td><td>Full ne...pas</td><td>NE drops</td><td>P5, P39</td></tr><tr><td><strong>4. Questions</strong></td><td>Inversion / Est-ce que</td><td>Intonation only</td><td>P4</td></tr><tr><td><strong>5. Vocabulary</strong></td><td>Formal/standard words</td><td>Casual/slang words</td><td>All projects</td></tr><tr><td><strong>6. Sentence length</strong></td><td>Long, complete, subordinated</td><td>Short, chopped, fragmented</td><td>All projects</td></tr><tr><td><strong>7. Verb tenses</strong></td><td>Futur simple, passé simple (written), subjonctif</td><td>Futur proche, passé composé, indicatif replacing subjonctif</td><td>P12, P16, P31</td></tr><tr><td><strong>8. Fillers/Shortcuts</strong></td><td>None — clean speech</td><td>Euh, ben, genre, du coup, quoi, bref</td><td>P43 preview</td></tr></tbody></table>
+<p>→ We'll explore each dimension through real sentence comparisons</p>
+<hr>
+<h1>✅ WHAT COULD BE DONE — THE 100 SENTENCES</h1>
+<h2>🔹 BLOCK A — Greetings &amp; First Contact: Four Register Levels</h2>
+<p><em>Scenario: You arrive somewhere and greet someone — the register changes everything</em></p>
+<table><thead><tr><th>#</th><th>🎩 R4 Formal</th><th>👔 R3 Standard</th><th>👕 R2 Casual</th><th>🩳 R1 Slang</th></tr></thead><tbody><tr><td>1</td><td>Veuillez agréer mes salutations distinguées.</td><td>Bonjour, enchanté de vous rencontrer.</td><td>Salut, ça va ?</td><td>Wesh, ça roule ?</td></tr><tr><td>2</td><td>Je vous prie de bien vouloir m'excuser pour ce retard.</td><td>Excusez-moi pour le retard.</td><td>Désolé pour le retard.</td><td>Pardon, j'suis à la bourre.</td></tr><tr><td>3</td><td>Auriez-vous l'amabilité de vous présenter ?</td><td>Pourriez-vous vous présenter ?</td><td>Tu peux te présenter ?</td><td>C'est qui toi ?</td></tr><tr><td>4</td><td>Permettez-moi de me présenter : je suis Monsieur Dupont.</td><td>Bonjour, je suis Marc Dupont.</td><td>Salut, moi c'est Marc.</td><td>Yo, Marc.</td></tr><tr><td>5</td><td>Je vous saurais gré de bien vouloir patienter.</td><td>Pourriez-vous patienter un instant ?</td><td>Tu peux attendre deux minutes ?</td><td>Bouge pas, j'reviens.</td></tr></tbody></table>
+<p><strong>🧠 Dimension unlocked: VOCABULARY + ADDRESS + SENTENCE LENGTH all shift together</strong><br>
+→ R4: "Veuillez agréer" / "Je vous saurais gré" — these are FORMULAIC expressions, not built from grammar rules<br>
+→ R3: Conditionnel (P17) for politeness — "Pourriez-vous..."<br>
+→ R2: Tu + direct request — "Tu peux...?"<br>
+→ R1: Slang vocabulary + shortened pronunciation — "j'suis" = "je suis" / "à la bourre" = en retard</p>
+<hr>
+<h2>🔹 BLOCK B — Asking Questions: The Three Question Forms Across Registers</h2>
+<p><em>Scenario: You need information — the same question in different registers</em></p>
+<table><thead><tr><th>#</th><th>Question Meaning</th><th>🎩 R4/R3 Inversion</th><th>👔 R3 Est-ce que</th><th>👕 R2/R1 Intonation</th></tr></thead><tbody><tr><td>6</td><td>Where do you live?</td><td>Où habitez-vous ?</td><td>Où est-ce que vous habitez ?</td><td>Tu habites où ? / T'habites où ?</td></tr><tr><td>7</td><td>What did you do?</td><td>Qu'avez-vous fait ?</td><td>Qu'est-ce que vous avez fait ?</td><td>T'as fait quoi ?</td></tr><tr><td>8</td><td>When did he arrive?</td><td>Quand est-il arrivé ?</td><td>Quand est-ce qu'il est arrivé ?</td><td>Il est arrivé quand ?</td></tr><tr><td>9</td><td>Why did she leave?</td><td>Pour quelle raison est-elle partie ?</td><td>Pourquoi est-ce qu'elle est partie ?</td><td>Elle est partie pourquoi ? / Pourquoi elle est partie ?</td></tr><tr><td>10</td><td>Do you have time?</td><td>Disposez-vous de quelques instants ?</td><td>Est-ce que vous avez du temps ?</td><td>T'as le temps ?</td></tr></tbody></table>
+<p><strong>🧠 Dimension unlocked: QUESTION FORMATION shifts with register (P4 expanded)</strong></p>
+<table><thead><tr><th>Register</th><th>Preferred Question Form</th><th>Example</th></tr></thead><tbody><tr><td>🎩 R4</td><td><strong>Inversion</strong> (subject-verb flip)</td><td>Où habitez-<strong>vous</strong> ?</td></tr><tr><td>👔 R3</td><td><strong>Est-ce que</strong> (safe, neutral)</td><td>Où <strong>est-ce que</strong> vous habitez ?</td></tr><tr><td>👕 R2</td><td><strong>Intonation</strong> (question word at END or rising tone)</td><td>Tu habites <strong>où</strong> ?</td></tr><tr><td>🩳 R1</td><td><strong>Intonation + shortcuts</strong></td><td>T'habites <strong>où</strong> ? / <strong>Où</strong> t'habites ?</td></tr></tbody></table>
+<p>→ In casual French, the question word often moves to the END: "Tu fais <strong>quoi</strong> ?" "T'es <strong>où</strong> ?"<br>
+→ In formal French, inversion is expected: "<strong>Que</strong> faites-<strong>vous</strong> ?" "<strong>Où</strong> êtes-<strong>vous</strong> ?"<br>
+→ Using inversion with friends sounds bizarre — using intonation in a formal letter sounds uneducated</p>
+<hr>
+<h2>🔹 BLOCK C — Negation Across Registers: The Disappearing NE</h2>
+<p><em>Scenario: Denying the same things — formally and casually</em></p>
+<table><thead><tr><th>#</th><th>🎩 R4/R3 Full Negation</th><th>👕 R2 Casual (NE drops)</th><th>🩳 R1 Slang</th><th>Negation Type</th></tr></thead><tbody><tr><td>11</td><td>Je <strong>ne</strong> sais <strong>pas</strong>.</td><td>Je sais <strong>pas</strong>. / J'sais pas.</td><td>Chais pas. / Chépa.</td><td>ne...pas (P5)</td></tr><tr><td>12</td><td>Il **n'**y a <strong>plus</strong> de pain.</td><td>Y a <strong>plus</strong> de pain.</td><td>Y a <strong>pu</strong> d'pain.</td><td>ne...plus</td></tr><tr><td>13</td><td>Je <strong>ne</strong> comprends <strong>rien</strong>.</td><td>Je comprends <strong>rien</strong>. / J'comprends rien.</td><td>J'pige <strong>que dalle</strong>.</td><td>ne...rien → slang: que dalle = rien</td></tr><tr><td>14</td><td>Je <strong>ne</strong> connais <strong>personne</strong> ici.</td><td>Je connais <strong>personne</strong> ici.</td><td>J'connais <strong>personne</strong>.</td><td>ne...personne</td></tr><tr><td>15</td><td>Il **n'**a <strong>jamais</strong> dit cela.</td><td>Il a <strong>jamais</strong> dit ça.</td><td>Il a <strong>jamais</strong> dit ça, j'te jure.</td><td>ne...jamais</td></tr><tr><td>16</td><td>Ce **n'**est <strong>pas</strong> grave.</td><td>C'est <strong>pas</strong> grave.</td><td>C'est <strong>pas</strong> grave. / Pas grave. / T'inquiète.</td><td>ne...pas → ultra-shortened</td></tr><tr><td>17</td><td>Je <strong>ne</strong> sais <strong>pas</strong> si cela est possible.</td><td>Je sais <strong>pas</strong> si c'est possible.</td><td>Chais pas si c'est possible.</td><td>ne...pas + indirect speech (P25)</td></tr><tr><td>18</td><td>Il **n'**y a <strong>aucun</strong> problème.</td><td>Y a <strong>aucun</strong> problème. / Aucun souci.</td><td>Aucun souci. / Pas de souci.</td><td>ne...aucun → casual: just "aucun"</td></tr><tr><td>19</td><td>Je **n'**ai <strong>que</strong> cinq minutes.</td><td>J'ai <strong>que</strong> cinq minutes.</td><td>J'ai que cinq minutes, là.</td><td>ne...que — NE drops in casual</td></tr><tr><td>20</td><td>Il <strong>ne</strong> faut <strong>ni</strong> crier <strong>ni</strong> s'énerver.</td><td>Faut ni crier ni s'énerver.</td><td>Faut pas gueuler ni s'énerver.</td><td>ni...ni → casual replaces with "pas...ni"</td></tr></tbody></table>
+<p><strong>🧠 Dimension unlocked: NEGATION changes dramatically with register</strong></p>
+<table><thead><tr><th>Register</th><th>NE Status</th><th>Example</th></tr></thead><tbody><tr><td>🎩 R4 / 👔 R3</td><td>NE always present</td><td>Je <strong>ne</strong> sais <strong>pas</strong></td></tr><tr><td>👕 R2</td><td>NE <strong>dropped</strong> in speech</td><td>Je sais <strong>pas</strong> / J'sais pas</td></tr><tr><td>🩳 R1</td><td>NE dropped + slang replacements</td><td><strong>Chais pas</strong> / <strong>Que dalle</strong></td></tr></tbody></table>
+<p>→ <strong>In spoken French, 95% of speakers drop NE</strong> — this is the NORM, not an error<br>
+→ In writing, NE is always required — even in casual texts (though texting drops it too)<br>
+→ Sentence 13: R1 replaces "rien" with "<strong>que dalle</strong>" — very common youth slang meaning "nothing"<br>
+→ Sentence 16: "T'inquiète" = "Ne t'inquiète pas" — compressed to TWO syllables in casual French<br>
+→ This will be explored in depth in P47 (spoken vs. written French)</p>
+<hr>
+<h2>🔹 BLOCK D — "We" — NOUS vs. ON Across Registers</h2>
+<p><em>Scenario: Talking about group actions — "we" changes form based on formality</em></p>
+<table><thead><tr><th>#</th><th>🎩 R4/R3 with NOUS</th><th>👕 R2/R1 with ON</th><th>Context</th></tr></thead><tbody><tr><td>21</td><td>Nous devons terminer ce rapport avant vendredi.</td><td>On doit finir ce rapport avant vendredi.</td><td>Office — obligation</td></tr><tr><td>22</td><td>Nous avons décidé de reporter la réunion.</td><td>On a décidé de reporter la réunion.</td><td>Team decision</td></tr><tr><td>23</td><td>Nous ne pouvons pas accepter ces conditions.</td><td>On peut pas accepter ces conditions.</td><td>Negotiation</td></tr><tr><td>24</td><td>Nous nous sommes rencontrés à l'université.</td><td>On s'est rencontrés à la fac.</td><td>Personal history</td></tr><tr><td>25</td><td>Nous vous serions reconnaissants de bien vouloir répondre.</td><td>On serait contents si vous pouviez répondre.</td><td>Formal request → casual equivalent</td></tr><tr><td>26</td><td>Nous n'avons jamais eu ce genre de problème.</td><td>On a jamais eu ce genre de problème.</td><td>Denial</td></tr><tr><td>27</td><td>Nous aurions dû anticiper cette situation.</td><td>On aurait dû voir ça venir.</td><td>Regret (P35)</td></tr><tr><td>28</td><td>Nous irons au restaurant ce soir.</td><td>On va aller au resto ce soir.</td><td>Plans — futur simple vs. futur proche</td></tr><tr><td>29</td><td>Nous sommes arrivés en avance.</td><td>On est arrivés en avance.</td><td>Past event</td></tr><tr><td>30</td><td>Si nous avions le choix, nous resterions.</td><td>Si on avait le choix, on resterait.</td><td>Si-clause (P33)</td></tr></tbody></table>
+<p><strong>🧠 Dimension unlocked: NOUS vs. ON</strong></p>
+<table><thead><tr><th>Register</th><th>"We"</th><th>Example</th></tr></thead><tbody><tr><td>🎩 R4 / 👔 R3 (written/formal)</td><td><strong>Nous</strong> + nous-conjugation</td><td><strong>Nous</strong> dev<strong>ons</strong></td></tr><tr><td>👕 R2 / 🩳 R1 (spoken/casual)</td><td><strong>On</strong> + il/elle-conjugation</td><td><strong>On</strong> doi<strong>t</strong></td></tr></tbody></table>
+<p>→ In modern spoken French, <strong>ON has almost completely replaced NOUS</strong> for "we"<br>
+→ NOUS sounds formal, stiff, or old-fashioned in casual conversation<br>
+→ ON is grammatically 3rd person singular → verb conjugation matches il/elle<br>
+→ BUT past participle can agree in plural when ON clearly means "we":</p>
+<ul>
+<li>"On est arrivé<strong>s</strong>" ✅ (we arrived — plural agreement accepted)</li>
+<li>"On est arrivé" ✅ (also accepted — grammatically singular)<br>
+→ Sentence 28: R3 uses futur simple ("Nous <strong>irons</strong>") / R2 uses futur proche ("On <strong>va aller</strong>") — another register marker</li>
+</ul>
+<hr>
+<h2>🔹 BLOCK E — Vocabulary Swaps: Same Meaning, Different Words</h2>
+<p><em>Scenario: The same concepts expressed with formal, standard, casual, and slang vocabulary</em></p>
+<table><thead><tr><th>#</th><th>Concept</th><th>🎩 R4 Formal</th><th>👔 R3 Standard</th><th>👕 R2 Casual</th><th>🩳 R1 Slang</th></tr></thead><tbody><tr><td>31</td><td>Money</td><td>des fonds</td><td>de l'argent</td><td>de l'argent / des sous</td><td>du fric / de la thune / du blé</td></tr><tr><td>32</td><td>To eat</td><td>se restaurer</td><td>manger / déjeuner</td><td>manger</td><td>bouffer</td></tr><tr><td>33</td><td>Food</td><td>de la nourriture</td><td>de la nourriture / à manger</td><td>à manger / à bouffer</td><td>de la bouffe</td></tr><tr><td>34</td><td>To work</td><td>exercer une activité professionnelle</td><td>travailler</td><td>bosser</td><td>taffer / trimer</td></tr><tr><td>35</td><td>Job/Work</td><td>un emploi / une profession</td><td>un travail / un métier</td><td>un boulot</td><td>un taf / un job</td></tr><tr><td>36</td><td>A car</td><td>un véhicule / une automobile</td><td>une voiture</td><td>une voiture</td><td>une caisse / une bagnole</td></tr><tr><td>37</td><td>A house</td><td>une résidence / un domicile</td><td>une maison</td><td>une maison / un appart</td><td>une baraque</td></tr><tr><td>38</td><td>A man</td><td>un individu / un monsieur</td><td>un homme</td><td>un homme / un gars</td><td>un mec / un type</td></tr><tr><td>39</td><td>A woman</td><td>une dame / une personne</td><td>une femme</td><td>une femme / une fille</td><td>une meuf / une nana</td></tr><tr><td>40</td><td>Tired</td><td>épuisé / exténué</td><td>fatigué</td><td>fatigué / crevé</td><td>crevé / claqué / mort</td></tr></tbody></table>
+<p><strong>🧠 Dimension unlocked: VOCABULARY is the most visible register marker</strong></p>
+<p>→ Using "bouffer" in a formal email = shocking<br>
+→ Using "se restaurer" with friends = ridiculous<br>
+→ Sentence 39: "<strong>meuf</strong>" = verlan (reversed syllables) of "femme" → fe-mme → me-uf → meuf — P47 will explore verlan<br>
+→ Sentence 40: "<strong>crevé</strong>" literally means "burst/dead" — used casually for "exhausted"</p>
+<p><strong>The vocabulary scale:</strong></p>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>FORMAL ←————————————————→ SLANG
+</span>épuisé → fatigué → crevé → claqué → mort
+(exhausted) (tired)  (dead tired) (wrecked) (dead)</code></pre></div>
+<p>→ Each step to the right = more casual, more expressive, less appropriate for professional contexts</p>
+<hr>
+<h2>🔹 BLOCK F — Making Requests: The Politeness Gradient</h2>
+<p><em>Scenario: You need someone to close the door — from ultra-formal to ultra-casual</em></p>
+<table><thead><tr><th>#</th><th>French Request</th><th>Register</th><th>Politeness Tool</th></tr></thead><tbody><tr><td>41</td><td>Auriez-vous l'obligeance de fermer la porte, s'il vous plaît ?</td><td>🎩 R4</td><td>Conditionnel (P17) + formal formula + inversion</td></tr><tr><td>42</td><td>Pourriez-vous fermer la porte, s'il vous plaît ?</td><td>👔 R3</td><td>Conditionnel (P17) + vous + SVP</td></tr><tr><td>43</td><td>Vous pouvez fermer la porte, s'il vous plaît ?</td><td>👔 R3 (lighter)</td><td>Présent + vous + SVP — less formal but still polite</td></tr><tr><td>44</td><td>Tu peux fermer la porte ?</td><td>👕 R2</td><td>Présent + tu — friendly request</td></tr><tr><td>45</td><td>Tu fermes la porte ?</td><td>👕 R2 (direct)</td><td>Simple présent as request — context makes it a request</td></tr><tr><td>46</td><td>Ferme la porte, s'il te plaît.</td><td>👕 R2</td><td>Impératif (P13) + STP — direct but polite</td></tr><tr><td>47</td><td>Ferme la porte.</td><td>👕 R2 (blunt)</td><td>Impératif alone — neutral to slightly blunt</td></tr><tr><td>48</td><td>La porte !</td><td>🩳 R1</td><td>Just the noun — ultra-compressed — context does everything</td></tr><tr><td>49</td><td>Si tu pouvais fermer la porte, ce serait gentil.</td><td>👔 R3/👕 R2</td><td>Si-clause (P33) — soft hypothetical request</td></tr><tr><td>50</td><td>Si ça ne vous dérangeait pas de fermer la porte...</td><td>👔 R3</td><td>Si-clause (P33) — very polite, trailing off</td></tr></tbody></table>
+<p><strong>🧠 Dimension unlocked: THE POLITENESS GRADIENT</strong></p>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>MOST POLITE ←——————————————————————————→ MOST DIRECT
+</span>Auriez-vous l'obligeance → Pourriez-vous → Vous pouvez → Tu peux → Ferme → La porte !
+     R4 ultra-formal          R3 polite      R3 light     R2 casual  R2 direct  R1 raw</code></pre></div>
+<p>→ <strong>Four tools for increasing politeness</strong> (all from Previous Chapters):</p>
+<ol>
+<li><strong>Conditionnel</strong> (P17): "Pourriez-vous..." — softer than present</li>
+<li><strong>Si-clause</strong> (P33): "Si tu pouvais..." — even softer (hypothetical)</li>
+<li><strong>Vous</strong> (P1): adds formality distance</li>
+<li><strong>Longer sentence</strong> = more polite (more words = more effort = more respect)</li>
+</ol>
+<p>→ <strong>Four tools for increasing directness:</strong></p>
+<ol>
+<li><strong>Impératif</strong> (P13): "Ferme la porte"</li>
+<li><strong>Tu</strong>: reduces distance</li>
+<li><strong>Shorter sentence</strong>: fewer words = less ceremony</li>
+<li><strong>Just the noun</strong>: "La porte !" = maximum compression</li>
+</ol>
+<hr>
+<h2>🔹 BLOCK G — Telling Stories: Tense Choices Across Registers</h2>
+<p><em>Scenario: The same story told formally (written) vs. casually (spoken)</em></p>
+<h3>The Story: "Yesterday I went to the market. I was looking for tomatoes. I found some beautiful ones. I bought three kilos."</h3>
+<table><thead><tr><th>#</th><th>🎩 R4 Written/Literary</th><th>Register Features</th></tr></thead><tbody><tr><td>51</td><td>Hier, je me rendis au marché.</td><td><strong>Passé simple</strong> — literary past tense (never spoken)</td></tr><tr><td>52</td><td>Je cherchais des tomates.</td><td>Imparfait (P10) — same across all registers</td></tr><tr><td>53</td><td>J'en trouvai de fort belles.</td><td>Passé simple + "fort" (literary "very") + en (P20)</td></tr><tr><td>54</td><td>J'en achetai trois kilogrammes.</td><td>Passé simple + full word "kilogrammes"</td></tr></tbody></table>
+<table><thead><tr><th>#</th><th>👔 R3 Standard</th><th>Register Features</th></tr></thead><tbody><tr><td>55</td><td>Hier, je suis allé au marché.</td><td><strong>Passé composé</strong> (P9) — standard past</td></tr><tr><td>56</td><td>Je cherchais des tomates.</td><td>Imparfait — same</td></tr><tr><td>57</td><td>J'en ai trouvé de très belles.</td><td>Passé composé + "très" (standard "very")</td></tr><tr><td>58</td><td>J'en ai acheté trois kilos.</td><td>Passé composé + abbreviated "kilos"</td></tr></tbody></table>
+<table><thead><tr><th>#</th><th>👕 R2 Casual Spoken</th><th>Register Features</th></tr></thead><tbody><tr><td>59</td><td>Hier, j'suis allé au marché.</td><td>Passé composé + <strong>contracted "j'suis"</strong></td></tr><tr><td>60</td><td>Je cherchais des tomates.</td><td>Imparfait — same (imparfait doesn't change much across registers)</td></tr><tr><td>61</td><td>J'en ai trouvé des super belles.</td><td>Passé composé + "<strong>super</strong>" (casual intensifier)</td></tr><tr><td>62</td><td>J'en ai pris trois kilos.</td><td>"Pris" replaces "acheté" — <strong>vaguer, more casual verb</strong></td></tr></tbody></table>
+<table><thead><tr><th>#</th><th>🩳 R1 Very Casual / Youth</th><th>Register Features</th></tr></thead><tbody><tr><td>63</td><td>Hier, chuis allé au marché.</td><td><strong>"Chuis"</strong> = je suis (ultra-contracted)</td></tr><tr><td>64</td><td>Je cherchais des tomates, tu vois.</td><td>Imparfait + <strong>filler "tu vois"</strong></td></tr><tr><td>65</td><td>J'en ai trouvé des trop belles.</td><td>"<strong>Trop</strong>" = very (youth intensifier — literally "too much")</td></tr><tr><td>66</td><td>J'en ai pris genre trois kilos.</td><td>"<strong>Genre</strong>" = like/about (filler — P43 preview)</td></tr></tbody></table>
+<p><strong>🧠 Dimension unlocked: TENSE CHOICE is a register marker</strong></p>
+<table><thead><tr><th>Tense</th><th>Register Where Used</th></tr></thead><tbody><tr><td><strong>Passé simple</strong> (je parlai, je fis, je vis)</td><td>🎩 R4 only — literature, formal history, speeches</td></tr><tr><td><strong>Passé composé</strong> (j'ai parlé)</td><td>👔 R3 + 👕 R2 + 🩳 R1 — ALL spoken French</td></tr><tr><td><strong>Futur simple</strong> (je parlerai)</td><td>👔 R3 — predictions, formal plans, written</td></tr><tr><td><strong>Futur proche</strong> (je vais parler)</td><td>👕 R2 + 🩳 R1 — immediate plans, spoken</td></tr><tr><td><strong>Subjonctif</strong> (que je fasse)</td><td>👔 R3 — maintained / 👕 R2 — sometimes replaced by indicatif</td></tr><tr><td><strong>Imparfait</strong></td><td>All registers — barely changes</td></tr><tr><td><strong>Conditionnel</strong></td><td>All registers — but more frequent in polite R3/R4</td></tr></tbody></table>
+<p>→ <strong>Passé simple is NEVER spoken</strong> — if you use it in conversation, people will think you're joking or insane<br>
+→ You must RECOGNIZE it (reading novels, history) but NEVER produce it in speech<br>
+→ <strong>Futur simple vs. futur proche</strong> — register marker:</p>
+<ul>
+<li>R3: "Il <strong>pleuvra</strong> demain" (futur simple — formal)</li>
+<li>R2: "Il <strong>va pleuvoir</strong> demain" (futur proche — casual)</li>
+</ul>
+<hr>
+<h2>🔹 BLOCK H — Email vs. Text Message: Written Register Extremes</h2>
+<p><em>Scenario: Writing the same message to a client (formal email) vs. to a friend (text message)</em></p>
+<h3>Message: "Can you send me the document? I need it before Friday. Thanks."</h3>
+<table><thead><tr><th>#</th><th>Formal Email (R3/R4)</th><th>Register Features</th></tr></thead><tbody><tr><td>67</td><td>Madame, Monsieur,</td><td>Formal salutation — gender-neutral opening</td></tr><tr><td>68</td><td>Pourriez-vous me transmettre le document en question ?</td><td>Conditionnel (P17) + vous + "transmettre" (formal for "send")</td></tr><tr><td>69</td><td>J'en aurais besoin avant vendredi, si possible.</td><td>Conditionnel (P17) + en (P20) + "si possible" (softener)</td></tr><tr><td>70</td><td>Je vous remercie par avance de votre diligence.</td><td>Formal thanks — "par avance" / "diligence"</td></tr><tr><td>71</td><td>Veuillez agréer, Madame, Monsieur, l'expression de mes salutations distinguées.</td><td>Ultra-formal closing — FORMULAIC (memorize, don't analyze)</td></tr></tbody></table>
+<table><thead><tr><th>#</th><th>Text Message to Friend (R1/R2)</th><th>Register Features</th></tr></thead><tbody><tr><td>72</td><td>Slt</td><td>"Salut" → abbreviated</td></tr><tr><td>73</td><td>Tu peux m'envoyer le doc ?</td><td>Tu + présent + "doc" (abbreviated)</td></tr><tr><td>74</td><td>J'en ai besoin avant vendredi</td><td>No question mark — flat statement</td></tr><tr><td>75</td><td>Merci ! / Mci</td><td>Abbreviated thanks</td></tr><tr><td>76</td><td>Biz / A+</td><td>"Bisous" → Biz / "À plus" → A+</td></tr></tbody></table>
+<p><strong>🧠 Dimension unlocked: WRITTEN register varies as much as spoken</strong></p>
+<table><thead><tr><th>Feature</th><th>Formal Email</th><th>Text Message</th></tr></thead><tbody><tr><td>Salutation</td><td>Madame, Monsieur</td><td>Slt / Salut / Hey</td></tr><tr><td>Request</td><td>Pourriez-vous me transmettre...</td><td>Tu peux m'envoyer...</td></tr><tr><td>Vocabulary</td><td>transmettre / document</td><td>envoyer / doc</td></tr><tr><td>Softeners</td><td>si possible / par avance</td><td>— (none)</td></tr><tr><td>Closing</td><td>Veuillez agréer...</td><td>Biz / A+ / @+</td></tr><tr><td>Punctuation</td><td>Perfect</td><td>Minimal or absent</td></tr><tr><td>Abbreviations</td><td>None</td><td>Everywhere</td></tr></tbody></table>
+<p>→ Sentence 71: The formal email closing is a <strong>FIXED FORMULA</strong> — French people memorize it, not construct it<br>
+→ Common alternatives: "Cordialement" (standard professional) / "Bien à vous" (warm professional) / "Cdlt" (abbreviated)<br>
+→ Sentence 76: "Biz" = bisous (kisses — standard casual closing) / "A+" = à plus (see you later)</p>
+<hr>
+<h2>🔹 BLOCK I — The Same Conversation in Four Registers</h2>
+<p><em>Scenario: Telling someone you can't come to dinner — from ultra-formal to ultra-casual</em></p>
+<h3>🎩 R4 — Formal Written Decline (Invitation from a dignitary)</h3>
+<table><thead><tr><th>#</th><th>French</th><th>English</th></tr></thead><tbody><tr><td>77</td><td>C'est avec le plus grand regret que je me vois contraint de décliner votre aimable invitation.</td><td>It is with the greatest regret that I find myself compelled to decline your kind invitation.</td></tr><tr><td>78</td><td>Un engagement professionnel préalable m'empêche malheureusement d'être des vôtres.</td><td>A prior professional commitment unfortunately prevents me from being among your guests.</td></tr><tr><td>79</td><td>Je vous prie de croire en l'expression de mes sentiments les plus respectueux.</td><td>Please accept the expression of my most respectful regards.</td></tr></tbody></table>
+<h3>👔 R3 — Standard Professional Decline (Email to a colleague)</h3>
+<table><thead><tr><th>#</th><th>French</th><th>English</th></tr></thead><tbody><tr><td>80</td><td>Je vous remercie pour votre invitation, mais malheureusement je ne pourrai pas être présent.</td><td>Thank you for your invitation, but unfortunately I won't be able to be present.</td></tr><tr><td>81</td><td>J'ai un autre engagement ce soir-là.</td><td>I have another commitment that evening.</td></tr><tr><td>82</td><td>J'espère que nous pourrons trouver une autre occasion. Cordialement.</td><td>I hope we can find another opportunity. Best regards.</td></tr></tbody></table>
+<h3>👕 R2 — Casual Decline (Phone call to a friend)</h3>
+<table><thead><tr><th>#</th><th>French</th><th>English</th></tr></thead><tbody><tr><td>83</td><td>Ah, c'est super gentil, mais je peux pas venir vendredi.</td><td>Ah, that's really nice, but I can't come Friday.</td></tr><tr><td>84</td><td>J'ai déjà un truc de prévu.</td><td>I already have something planned.</td></tr><tr><td>85</td><td>On se fait ça une autre fois ? Ça te dit la semaine prochaine ?</td><td>We'll do it another time? How about next week?</td></tr></tbody></table>
+<h3>🩳 R1 — Slang Decline (Text message to a close friend)</h3>
+<table><thead><tr><th>#</th><th>French</th><th>English</th></tr></thead><tbody><tr><td>86</td><td>Ah mince j'peux pas vendredi</td><td>Oh shoot I can't do Friday</td></tr><tr><td>87</td><td>Chuis déjà pris</td><td>I'm already taken/busy</td></tr><tr><td>88</td><td>On décale ? La sem pro ça l'fait ?</td><td>We postpone? Next week work?</td></tr></tbody></table>
+<p><strong>🧠 Full register comparison on one message:</strong></p>
+<table><thead><tr><th>Feature</th><th>R4</th><th>R3</th><th>R2</th><th>R1</th></tr></thead><tbody><tr><td>Apology length</td><td>3 lines</td><td>1 sentence</td><td>1 clause</td><td>0 — implied</td></tr><tr><td>Reason given</td><td>"engagement préalable"</td><td>"autre engagement"</td><td>"un truc de prévu"</td><td>"chuis pris"</td></tr><tr><td>Alternative offered</td><td>Not explicitly</td><td>"une autre occasion"</td><td>"une autre fois ?"</td><td>"on décale ?"</td></tr><tr><td>Closing</td><td>Formulaic 2 lines</td><td>"Cordialement"</td><td>Friendly question</td><td>Nothing / emoji</td></tr><tr><td>Negation</td><td>Full ne...pas</td><td>Full ne...pas</td><td>NE dropped</td><td>NE dropped + contractions</td></tr></tbody></table>
+<hr>
+<h2>🔹 BLOCK J — Full Day Comparison: Executive vs. Student</h2>
+<p><em>Scenario: The same daily situations — morning to night — in professional vs. casual register</em></p>
+<h3>Morning</h3>
+<table><thead><tr><th>#</th><th>Situation</th><th>👔 Executive (R3)</th><th>👕 Student (R2/R1)</th></tr></thead><tbody><tr><td>89</td><td>Greeting colleague/friend</td><td>Bonjour, comment allez-vous ce matin ?</td><td>Salut ! Ça va ? Bien dormi ?</td></tr><tr><td>90</td><td>Ordering coffee</td><td>Je prendrais un café allongé, s'il vous plaît.</td><td>Un café, s'il vous plaît. / Un p'tit café !</td></tr></tbody></table>
+<h3>Midday</h3>
+<table><thead><tr><th>#</th><th>Situation</th><th>👔 Executive (R3)</th><th>👕 Student (R2/R1)</th></tr></thead><tbody><tr><td>91</td><td>Suggesting lunch</td><td>Souhaiteriez-vous que nous déjeunions ensemble ?</td><td>On va manger ? / On se fait un resto ?</td></tr><tr><td>92</td><td>Complaining about food</td><td>Ce plat n'est pas tout à fait à mon goût.</td><td>C'est pas terrible. / C'est dégueulasse.</td></tr></tbody></table>
+<h3>Afternoon</h3>
+<table><thead><tr><th>#</th><th>Situation</th><th>👔 Executive (R3)</th><th>👕 Student (R2/R1)</th></tr></thead><tbody><tr><td>93</td><td>Disagreeing in meeting/conversation</td><td>Je comprends votre point de vue, néanmoins je ne partage pas cette analyse.</td><td>Ouais non, j'suis pas d'accord. / Nan mais attends, c'est pas comme ça.</td></tr><tr><td>94</td><td>Asking to leave early</td><td>Serait-il possible que je parte un peu plus tôt aujourd'hui ?</td><td>Je peux partir plus tôt ? / J'me casse un peu avant, ça va ?</td></tr></tbody></table>
+<h3>Evening</h3>
+<table><thead><tr><th>#</th><th>Situation</th><th>👔 Executive (R3)</th><th>👕 Student (R2/R1)</th></tr></thead><tbody><tr><td>95</td><td>Inviting someone</td><td>Cela vous dirait-il de vous joindre à nous pour un dîner ?</td><td>Tu viens ce soir ? On fait un truc chez moi.</td></tr><tr><td>96</td><td>Expressing tiredness</td><td>Je suis quelque peu épuisé après cette journée.</td><td>Chuis crevé. / J'en peux plus.</td></tr></tbody></table>
+<h3>End of Day</h3>
+<table><thead><tr><th>#</th><th>Situation</th><th>👔 Executive (R3)</th><th>👕 Student (R2/R1)</th></tr></thead><tbody><tr><td>97</td><td>Saying goodbye</td><td>Je vous souhaite une excellente soirée. À demain.</td><td>Allez, bonne soirée ! À demain ! / Ciao ! À plus !</td></tr><tr><td>98</td><td>Thanking someone</td><td>Je tenais à vous remercier pour votre aide précieuse.</td><td>Merci beaucoup, c'est vraiment sympa ! / T'es un chef, merci !</td></tr><tr><td>99</td><td>Apologizing for a mistake</td><td>Je vous présente mes plus sincères excuses pour cette erreur.</td><td>Ah pardon, j'ai merdé, désolé. / My bad, excuse-moi.</td></tr><tr><td>100</td><td>Promising to fix something</td><td>Je m'engage à rectifier cela dans les plus brefs délais.</td><td>T'inquiète, j'vais arranger ça. / Pas de souci, je gère.</td></tr></tbody></table>
+<hr>
+<h1>✅ WHAT SHOULD DO</h1>
+<p>→ <strong>Identify your DEFAULT register</strong> — most learners default to R3 (standard) because that's what textbooks teach<br>
+→ <strong>Actively practice R2</strong> — this is how 90% of daily French conversation happens<br>
+→ <strong>Learn to RECOGNIZE R4</strong> — you'll encounter it in formal letters, literature, official documents<br>
+→ <strong>Learn to RECOGNIZE R1</strong> — you'll hear it in movies, music, among young people, on social media<br>
+→ <strong>Match your register to your interlocutor:</strong></p>
+<table><thead><tr><th>Speaking To</th><th>Use Register</th></tr></thead><tbody><tr><td>Boss, client, stranger, elderly person</td><td>👔 R3 (vous, full sentences, conditionnel)</td></tr><tr><td>Friend, family, close colleague</td><td>👕 R2 (tu, shortened, on, NE dropped)</td></tr><tr><td>Very close friend, same-age peer</td><td>🩳 R1 (slang, ultra-short, fillers)</td></tr><tr><td>Official letter, academic paper</td><td>🎩 R4 (formulaic closings, passé simple recognition)</td></tr></tbody></table>
+<p>→ <strong>Practice the SAME sentence in multiple registers</strong> — this is the best exercise<br>
+→ <strong>Connect to ALL Previous Chapters</strong> — register is not a new structure, it's a FILTER applied to everything</p>
+<hr>
+<h1>❌ WHAT SHOULD NOT DO</h1>
+<p>→ ❌ <strong>NEVER use R1 slang with someone you don't know well:</strong></p>
+<ul>
+<li>❌ To a boss: "Wesh, j'peux pas venir demain" → sounds disrespectful</li>
+<li>✅ To a boss: "Je ne pourrai malheureusement pas être présent demain"</li>
+</ul>
+<p>→ ❌ <strong>NEVER use R4 formal French with close friends:</strong></p>
+<ul>
+<li>❌ To a friend: "Auriez-vous l'obligeance de me passer le sel ?" → sounds sarcastic</li>
+<li>✅ To a friend: "Tu me passes le sel ?"</li>
+</ul>
+<p>→ ❌ <strong>NEVER use passé simple in speech:</strong></p>
+<ul>
+<li>❌ Speaking: "Hier, j'allai au cinéma" → people will think you're quoting a novel</li>
+<li>✅ Speaking: "Hier, je suis allé au cinéma" (passé composé — always in speech)</li>
+</ul>
+<p>→ ❌ <strong>NEVER drop NE in formal writing:</strong></p>
+<ul>
+<li>❌ Email to client: "Je sais pas si c'est possible" → unprofessional</li>
+<li>✅ Email to client: "Je <strong>ne</strong> sais <strong>pas</strong> si cela est possible"</li>
+</ul>
+<p>→ ❌ <strong>NEVER use "tu" with someone you've just met (unless they're clearly your age in a casual context):</strong></p>
+<ul>
+<li>When in doubt → use VOUS → wait for them to say "On peut se tutoyer" (We can use tu)</li>
+<li>Switching from vous to tu is called "le tutoiement" — it's a social RITUAL in France</li>
+</ul>
+<p>→ ❌ <strong>NEVER mix registers randomly in the same sentence:</strong></p>
+<ul>
+<li>❌ "Pourriez-vous me passer le truc ?" (R3 structure + R1 vocabulary = jarring)</li>
+<li>✅ "Pourriez-vous me transmettre le document ?" (R3 + R3 = coherent)</li>
+<li>✅ "Tu me passes le truc ?" (R2 + R2 = coherent)</li>
+</ul>
+<p>→ ❌ <strong>NEVER assume one register is "correct" and others are "wrong":</strong></p>
+<ul>
+<li>ALL registers are valid French — used in different contexts</li>
+<li>"Bouffer" is not "bad French" — it's casual French</li>
+<li>"Se restaurer" is not "better French" — it's formal French</li>
+<li>The WRONG register in the WRONG context is the error — not the register itself</li>
+</ul>
+<hr>
+<h1>🔀 WHEN TO USE WHAT</h1>
+<table><thead><tr><th>Situation</th><th>Register</th><th>Key Features</th></tr></thead><tbody><tr><td>Job interview</td><td>👔 R3</td><td>Vous, conditionnel, full sentences, standard vocabulary</td></tr><tr><td>Email to client</td><td>👔 R3 → 🎩 R4 (closing)</td><td>Formal vocabulary, full negation, formulaic closing</td></tr><tr><td>Coffee with a friend</td><td>👕 R2</td><td>Tu, on, NE dropped, casual vocabulary, short sentences</td></tr><tr><td>Text message to close friend</td><td>🩳 R1</td><td>Abbreviations, slang, no NE, minimal punctuation</td></tr><tr><td>Academic essay</td><td>🎩 R4 → 👔 R3</td><td>Complex sentences, formal connectors (P28/P29), subjonctif</td></tr><tr><td>Meeting with boss</td><td>👔 R3</td><td>Vous (unless told otherwise), conditionnel for suggestions</td></tr><tr><td>Chatting with colleague you know well</td><td>👕 R2 → 👔 R3</td><td>Mix — tu if established, but professional vocabulary</td></tr><tr><td>Speaking to elderly stranger</td><td>👔 R3</td><td>Vous always, patient, clear, respectful</td></tr><tr><td>Party with peers</td><td>👕 R2 → 🩳 R1</td><td>Tu, slang, fillers, jokes, cultural references</td></tr><tr><td>Phone call with administration</td><td>👔 R3</td><td>Vous, formal vocabulary, patience, clear articulation</td></tr></tbody></table>
+<hr>
+<h1>🚫 WHEN NOT TO USE</h1>
+<p>→ <strong>R4 (Formal):</strong> Not in casual conversation, not with friends, not in spoken French (except speeches)<br>
+→ <strong>R3 (Standard):</strong> Not with very close friends (sounds distant), not in text messages (sounds stiff)<br>
+→ <strong>R2 (Casual):</strong> Not in job interviews, not in official letters, not with people you've just met formally<br>
+→ <strong>R1 (Slang):</strong> Not with anyone older/in authority, not in any professional context, not in writing (except texts to friends)</p>
+<hr>
+<h1>⚠️ COMMON PITFALLS AND FAILURE MODES</h1>
+<table><thead><tr><th>Pitfall</th><th>What Learners Do Wrong</th><th>Why It Fails</th><th>Correct Approach</th></tr></thead><tbody><tr><td><strong>Frozen in R3</strong></td><td>Only speaking textbook French</td><td>Sounds robotic with friends — they won't feel comfortable</td><td>Learn R2 actively — drop NE, use tu, use on</td></tr><tr><td><strong>Jumping to R1 too fast</strong></td><td>Using slang with strangers</td><td>Sounds disrespectful or trying too hard</td><td>Earn R1 access — let the other person set the tone</td></tr><tr><td><strong>Passé simple in speech</strong></td><td>"Hier, je vis un film"</td><td>Nobody speaks passé simple — ever</td><td>"Hier, j'ai vu un film" (passé composé)</td></tr><tr><td><strong>NE in casual speech</strong></td><td>Always saying "Je ne sais pas" with friends</td><td>Sounds overly formal — like a robot</td><td>"Je sais pas" / "Chais pas" with friends</td></tr><tr><td><strong>Tu/Vous confusion</strong></td><td>Using tu with a boss from day one</td><td>Disrespectful in French culture</td><td>Wait for permission — "On se tutoie ?"</td></tr><tr><td><strong>Register mixing</strong></td><td>"Pourriez-vous me filer le truc ?"</td><td>Formal structure + slang vocabulary = incoherent</td><td>Match structure AND vocabulary to the same register</td></tr><tr><td><strong>Thinking slang is bad French</strong></td><td>Avoiding all casual/slang forms</td><td>You won't understand 50% of real conversations</td><td>Learn to recognize R1/R2 even if you don't produce them</td></tr><tr><td><strong>Over-formal emails</strong></td><td>Using "Veuillez agréer..." in every email</td><td>Only needed for very formal contexts</td><td>"Cordialement" or "Bien à vous" is fine for most professional emails</td></tr><tr><td><strong>Under-formal emails</strong></td><td>Writing "Slt, tu peux m'envoyer le doc ?" to a client</td><td>Unprofessional</td><td>"Bonjour, pourriez-vous me transmettre le document ?"</td></tr><tr><td><strong>Not adapting mid-conversation</strong></td><td>Someone switches to tu — you stay on vous</td><td>Creates awkward distance</td><td>Mirror their register shift — switch to tu when invited</td></tr></tbody></table>
+<hr>
+<h1>🔑 KEY TAKEAWAY</h1>
+<blockquote>
+<p><strong>Projects 1–39 gave you the STRUCTURES of French — the grammar, the tenses, the logic.</strong><br>
+<strong>Project 40 gives you the SOCIAL INTELLIGENCE to deploy those structures appropriately.</strong></p>
+<p>French is not ONE language — it's FOUR registers layered on top of each other:</p>
+<ul>
+<li>🎩 R4 Formal: for writing, ceremonies, official contexts</li>
+<li>👔 R3 Standard: for professional life, strangers, respectful interaction</li>
+<li>👕 R2 Casual: for daily life, friends, family — WHERE MOST FRENCH HAPPENS</li>
+<li>🩳 R1 Slang: for close peers, youth culture, expressive informal contexts</li>
+</ul>
+<p>The eight dimensions of register (address, we-form, negation, questions, vocabulary, sentence length, tenses, fillers) ALL shift together — coherence within a register is essential.</p>
+<p><strong>The golden rule: Match your register to your audience, not to your textbook.</strong></p>
+<p>Phase 4 is now COMPLETE. You have:</p>
+<ul>
+<li>P31: Subjonctif — subjective reality</li>
+<li>P32: Plus-que-parfait — layered past</li>
+<li>P33: Unreal present si-clauses</li>
+<li>P34: Unreal past si-clauses</li>
+<li>P35: Conditionnel passé standalone — regret</li>
+<li>P36: Double pronouns — compression</li>
+<li>P37: Faire causatif — delegation</li>
+<li>P38: Gérondif — simultaneous actions</li>
+<li>P39: Advanced negation — full denial spectrum</li>
+<li>P40: Register switching — social intelligence</li>
+</ul>
+<p>You now have every STRUCTURAL tool and every SOCIAL tool.<br>
+What remains is the final transformation: thinking, feeling, and expressing yourself LIKE A NATIVE.</p>
+</blockquote>
+<hr>
+<h1>🌉 BRIDGE TO PHASE 5 — MASTERY</h1>
+<blockquote>
+<p>Phase 4 made you <strong>structurally complete</strong> — you can build any sentence in any tense with any nuance<br>
+Phase 5 makes you <strong>culturally and instinctively fluent</strong> — you stop translating and start THINKING in French</p>
+<p>What's coming:</p>
+<ul>
+<li>P41: Literary tenses + subjonctif passé — reading and understanding formal/literary French</li>
+<li>P42: Idiomatic expressions — the phrases natives use that no grammar rule explains</li>
+<li>P43: Discourse markers &amp; fillers — "euh, bon, ben, du coup, quoi, genre, bref, enfin"</li>
+<li>P44: Nuance, irony, understatement — "pas mal" = amazing; "c'est pas faux" = that's true</li>
+<li>P45: Argumentation structures — building formal arguments in debates and essays</li>
+<li>P46: Chained/mixed conditionals — complex hypothetical chains</li>
+<li>P47: Spoken French vs. written French — what natives ACTUALLY say vs. what's "correct"</li>
+<li>P48: Cultural calibration — politeness rituals, indirectness, reading the room</li>
+<li>P49: Proverbs and cultural sayings — wisdom embedded in conversation</li>
+<li>P50: Full integration — thinking in French, mixing everything, spontaneous fluency</li>
+</ul>
+<p><strong>You are about to cross from "speaking French correctly" to "speaking French naturally."</strong></p>
+</blockquote>
+<hr>
+<h1>✅ PROJECT 40 COMPLETE — PHASE 4 COMPLETE</h1>
+<blockquote>
+<p><strong>Are you ready for PROJECT 41: "That He May Have Done It"?</strong><br>
+→ ~100 sentences covering subjonctif passé + literary tense awareness (passé simple, passé antérieur)<br>
+→ Scenario: Reading a French novel and understanding formal/literary sentence structures<br>
+→ Builds on P31 (subjonctif présent), P32 (plus-que-parfait), and opens the door to literary French comprehension</p>
+</blockquote>
+</div>
+</div>
+
+<!-- ========== data-index="21" ========== -->
+
+        </div>
+
+        <div class="nav-bar">
+            <a href="project-39.html" class="nav-button prev">← Previous Chapter</a>
+            <div class="page-info">
+                <a href="index.html" class="nav-button home">📚 Table of Contents</a><br>
+                <span style="margin-top:8px;display:block">Chapter 40 of 50</span>
+            </div>
+            <a href="project-41.html" class="nav-button next">Next Chapter →</a>
+        </div>
+    </div>
+
+    
+    <div id="progress-track"><div id="progress-fill"></div></div>
+    <div id="progress-pct">0%</div>
+
+
+    <script>
+    const fill = document.getElementById('progress-fill');
+    const pct  = document.getElementById('progress-pct');
+    function updateProgress() {
+        const scrollTop = window.scrollY;
+        const docHeight = document.body.scrollHeight - window.innerHeight;
+        const scrolled  = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+        fill.style.height = scrolled + '%';
+        pct.textContent   = Math.round(scrolled) + '%';
+    }
+    window.addEventListener('scroll', updateProgress);
+    updateProgress();
+
+    document.addEventListener('keydown', function(e) {
+        if (['INPUT','TEXTAREA'].includes(document.activeElement.tagName)) return;
+        if (e.key === 'ArrowLeft') {
+            const b = document.querySelector('.nav-button.prev');
+            if (b && !b.classList.contains('disabled')) window.location.href = b.href;
+        }
+        if (e.key === 'ArrowRight') {
+            const b = document.querySelector('.nav-button.next');
+            if (b && !b.classList.contains('disabled')) window.location.href = b.href;
+        }
+    });
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="images/favicon.png">
+    <title>Project 36: "Stack the Pronouns" — French Daily Sentences</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.75;
+            color: #1a202c;
+            background-color: #f7fafc;
+        }
+        .container {
+            max-width: 1800px;
+            margin: 0 auto;
+            background: white;
+            min-height: 100vh;
+            box-shadow: 0 0 30px rgba(0,0,0,0.08);
+            padding: 48px 52px;
+        }
+        
+        .content { max-width: 1700px; margin: 0 auto; color: #1a202c; }
+        .content h1 {
+            color: #1a202c; margin: 32px 0 20px;
+            padding-bottom: 12px;
+            border-bottom: 4px solid #3b82f6;
+            font-size: 2.1em;
+            font-weight: 700;
+        }
+        .content h2 {
+            color: #1a202c; margin: 28px 0 16px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #60a5fa;
+            font-size: 1.6em;
+            font-weight: 600;
+        }
+        .content h3 { color: #1a202c; margin: 22px 0 12px; font-size: 1.3em; font-weight: 600; }
+        .content h4 { color: #2d3748; margin: 18px 0 10px; font-size: 1.1em; font-weight: 600; }
+        .content p  { margin-bottom: 16px; line-height: 1.8; color: #1a202c; }
+        .content ul, .content ol { margin: 12px 0 18px 30px; color: #1a202c; }
+        .content li { margin-bottom: 8px; line-height: 1.75; color: #1a202c; }
+        .content hr { border: none; border-top: 2px solid #e2e8f0; margin: 26px 0; }
+        .content pre {
+            background: #f7fafc !important;
+            border: 1px solid #cbd5e0 !important;
+            border-left: 4px solid #3b82f6 !important;
+            padding: 18px !important; overflow-x: auto; margin: 18px 0; border-radius: 6px;
+            font-family: 'Consolas','Monaco','Courier New',monospace !important;
+            font-size: 0.9em !important;
+        }
+        .content pre:not([style*="color"]) { color: #1a202c !important; }
+        .content code {
+            font-family: 'Consolas','Monaco','Courier New',monospace !important;
+            font-size: 0.88em !important;
+        }
+        .content code:not(pre code) {
+            background: #dbeafe !important;
+            color: #1a202c !important;
+            padding: 2px 6px;
+            border-radius: 3px;
+        }
+        .content pre code { background: transparent !important; padding: 0; }
+        .content table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+        .content th {
+            background: linear-gradient(135deg, #3b82f6 0%, #60a5fa 100%);
+            color: white; padding: 12px 16px; text-align: left;
+            font-weight: 600;
+        }
+        .content td { padding: 11px 16px; border: 1px solid #e2e8f0; color: #1a202c; }
+        .content tr:nth-child(even) td { background: #eff6ff; }
+        .content blockquote {
+            border-left: 4px solid #3b82f6; background: #eff6ff;
+            padding: 14px 20px; margin: 18px 0; border-radius: 0 6px 6px 0;
+            color: #1a202c;
+        }
+        .content strong { color: #1a202c; font-weight: 600; }
+        .px-2 { padding: 0; }
+        .chat-message { background: transparent; padding: 0; margin: 0; }
+
+        /* Bottom nav bar only */
+        .nav-bar {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 24px 0;
+            margin-top: 50px;
+            border-top: 3px solid #60a5fa;
+        }
+        .nav-button {
+            display: inline-flex; align-items: center; gap: 8px;
+            padding: 12px 26px;
+            background: linear-gradient(135deg, #3b82f6 0%, #60a5fa 100%);
+            color: white !important; text-decoration: none;
+            border-radius: 8px; font-weight: 600; font-size: 0.95em;
+            transition: all 0.2s;
+            box-shadow: 0 2px 8px rgba(59,130,246,0.35);
+        }
+        .nav-button:hover { transform: translateY(-2px); box-shadow: 0 4px 14px rgba(59,130,246,0.5); }
+        .nav-button.disabled { background: #cbd5e1; box-shadow: none; pointer-events: none; }
+        .nav-button.home {
+            background: linear-gradient(135deg, #ef4444 0%, #f87171 100%);
+            box-shadow: 0 2px 8px rgba(239,68,68,0.35);
+        }
+        .nav-button.home:hover { box-shadow: 0 4px 14px rgba(239,68,68,0.5); }
+        .page-info { color: #718096; font-size: 0.9em; text-align: center; }
+
+        /* Progress bar */
+        #progress-track {
+            position: fixed; top: 20px; right: 20px;
+            width: 10px; height: 150px;
+            background: rgba(59,130,246,0.2);
+            border: 2px solid #3b82f6;
+            border-radius: 6px; overflow: hidden; z-index: 1000;
+        }
+        #progress-fill {
+            width: 100%;
+            background: linear-gradient(180deg, #3b82f6, #2563eb);
+            height: 0%;
+            transition: height 0.15s ease;
+        }
+        #progress-pct {
+            position: fixed; top: 0px; right: 16px;
+            color: #2563eb; font-size: 14px; font-weight: bold;
+            z-index: 1001;
+            text-shadow: 0 1px 2px rgba(255,255,255,0.9);
+            line-height: 20px;
+        }
+
+    </style>
+<link rel="stylesheet" href="assets/chapters.css?v=20260421203847"><script src="assets/chapters.js?v=20260421203847" defer></script>
+</head>
+<body>
+    <div class="container">
+        <div class="content">
+            <div class="chat-message" data-index="11">
+<div class="px-2"><h1>🟠 PROJECT 36: "Stack the Pronouns"</h1>
+<h2><em>A busy office day where everything has already been mentioned — and you must stop repeating yourself</em></h2>
+<hr>
+<h1>🎯 THE HYPOTHETICAL PROBLEM</h1>
+<p>→ You work in a busy office in Lyon — phones ringing, emails flying, colleagues asking questions<br>
+→ Your boss asks: "Tu as envoyé le rapport à Marie ?"<br>
+→ You want to say: "Yes, I sent it to her" — but in French, that means replacing BOTH "le rapport" (COD) AND "à Marie" (COI) with pronouns<br>
+→ You try: "Oui, je l'ai envoyé à elle" — your boss frowns — it sounds clunky and unnatural<br>
+→ The correct answer: "Oui, je <strong>le lui</strong> ai envoyé."<br>
+→ Two pronouns. Before the verb. In a specific order. No hesitation.<br>
+→ A colleague asks: "Tu as parlé du problème au directeur ?"<br>
+→ You need to replace "du problème" (EN — P20) and "au directeur" (COI — P19) → "Je <strong>lui en</strong> ai parlé"<br>
+→ Another asks: "Tu m'as apporté les dossiers ?" → "Oui, je <strong>te les</strong> ai apportés."<br>
+→ You realize: <strong>every efficient French sentence in professional life stacks pronouns</strong><br>
+→ Natives do it instinctively — you must learn the <strong>precise stacking order</strong></p>
+<p><strong>The core realization:</strong><br>
+→ P19 taught you to replace ONE object with a pronoun (COD or COI)<br>
+→ P20 taught you Y and EN as standalone replacements<br>
+→ P36 teaches you to <strong>combine TWO pronouns in the same sentence</strong> — and the ORDER is non-negotiable</p>
+<hr>
+<h1>🔍 HOW TO APPROACH IT</h1>
+<p>→ Think of French double pronouns like a <strong>seating chart</strong> — each pronoun has an assigned seat before the verb<br>
+→ If you put them in the wrong order, the sentence is <strong>immediately ungrammatical</strong><br>
+→ Natives will understand you, but it will sound like putting the adjective before the noun in English — jarring</p>
+<h2>The Master Pronoun Order Chart</h2>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>POSITION 1  →  POSITION 2  →  POSITION 3  →  POSITION 4  →  POSITION 5  →  VERB
+</span>   me (m')        te (t')         le (l')        lui            y              
+   nous            vous            la (l')        leur           en             
+   se (s')                         les                                          </code></pre></div>
+<p><strong>Simplified rule — memorize these COLUMNS:</strong></p>
+<table><thead><tr><th>Column 1</th><th>Column 2</th><th>Column 3</th><th>Column 4</th></tr></thead><tbody><tr><td>me, te, se, nous, vous</td><td>le, la, les</td><td>lui, leur</td><td>y, en</td></tr></tbody></table>
+<p>→ <strong>Column 1 comes before Column 2</strong><br>
+→ <strong>Column 2 comes before Column 3</strong><br>
+→ <strong>Column 3 comes before Column 4</strong><br>
+→ <strong>Y always comes before EN</strong> (when both appear — rare but possible)</p>
+<h2>The Most Common Combinations You'll Actually Use</h2>
+<table><thead><tr><th>Combination</th><th>Order</th><th>Example</th><th>Meaning</th></tr></thead><tbody><tr><td>me/te/nous/vous + le/la/les</td><td>Col 1 + Col 2</td><td>Il <strong>me le</strong> donne</td><td>He gives it to me</td></tr><tr><td>le/la/les + lui/leur</td><td>Col 2 + Col 3</td><td>Je <strong>le lui</strong> envoie</td><td>I send it to him/her</td></tr><tr><td>me/te/nous/vous + en</td><td>Col 1 + Col 4</td><td>Il <strong>m'en</strong> parle</td><td>He talks to me about it</td></tr><tr><td>lui/leur + en</td><td>Col 3 + Col 4</td><td>Je <strong>lui en</strong> donne</td><td>I give him/her some</td></tr><tr><td>me/te/nous/vous + y</td><td>Col 1 + Col 4</td><td>Il <strong>m'y</strong> emmène</td><td>He takes me there</td></tr><tr><td>lui/leur + y</td><td>Col 3 + Col 4</td><td>⚠️ AVOIDED — explained below</td><td></td></tr></tbody></table>
+<hr>
+<h1>🔧 HOW CAN WE SOLVE IT</h1>
+<h2>Step 1 — Identify WHAT needs replacing</h2>
+<p>→ Find the <strong>COD</strong> (direct object — answers "what?" or "whom?")<br>
+→ Find the <strong>COI</strong> (indirect object — answers "to whom?" or "for whom?")<br>
+→ Find if <strong>EN</strong> (replaces "de + noun" / quantity) or <strong>Y</strong> (replaces "à + place" / "à + thing") applies<br>
+→ Replace each with its pronoun<br>
+→ Stack them in the correct column order</p>
+<h2>Step 2 — Place them correctly based on tense</h2>
+<table><thead><tr><th>Tense Type</th><th>Pronoun Placement</th><th>Example</th></tr></thead><tbody><tr><td>Simple tense (présent, imparfait, futur)</td><td>Before conjugated verb</td><td>Je <strong>le lui</strong> donne</td></tr><tr><td>Compound tense (passé composé, pqp, cond.passé)</td><td>Before auxiliary (avoir/être)</td><td>Je <strong>le lui</strong> ai donné</td></tr><tr><td>Near future (aller + inf)</td><td>Before infinitive</td><td>Je vais <strong>le lui</strong> donner</td></tr><tr><td>Modal + infinitive (pouvoir, devoir, vouloir + inf)</td><td>Before infinitive</td><td>Je peux <strong>le lui</strong> donner</td></tr><tr><td>Imperative affirmative</td><td>After verb with hyphens — ORDER CHANGES</td><td>Donne-<strong>le-lui</strong></td></tr><tr><td>Imperative negative</td><td>Before verb — normal order</td><td>Ne <strong>le lui</strong> donne pas</td></tr></tbody></table>
+<p>→ <strong>Critical:</strong> In affirmative imperative, the order <strong>reverses</strong> — this is the major exception<br>
+→ We'll cover this in Block H</p>
+<hr>
+<h1>✅ WHAT COULD BE DONE — THE 100 SENTENCES</h1>
+<h2>🔹 BLOCK A — ME/TE/NOUS/VOUS + LE/LA/LES (Column 1 + Column 2)</h2>
+<p><em>Scenario: Your colleague keeps asking about documents — "Did you give me the file? Show me the report!"</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English Meaning</th><th>What Was Replaced</th></tr></thead><tbody><tr><td>1</td><td>Tu me le donnes ?</td><td>Are you giving it to me?</td><td>le = le dossier / me = à moi</td></tr><tr><td>2</td><td>Oui, je te le donne tout de suite.</td><td>Yes, I'm giving it to you right now.</td><td>le = le dossier / te = à toi</td></tr><tr><td>3</td><td>Il me la montre chaque matin.</td><td>He shows it (f) to me every morning.</td><td>la = la liste / me = à moi</td></tr><tr><td>4</td><td>Elle te les envoie par mail.</td><td>She sends them to you by email.</td><td>les = les documents / te = à toi</td></tr><tr><td>5</td><td>Le patron nous le demande avant midi.</td><td>The boss asks us for it before noon.</td><td>le = le rapport / nous = à nous</td></tr><tr><td>6</td><td>Je vous la transmets immédiatement.</td><td>I'm forwarding it (f) to you right away.</td><td>la = la facture / vous = à vous</td></tr><tr><td>7</td><td>Il nous les a promis pour vendredi.</td><td>He promised them to us for Friday.</td><td>les = les résultats / nous = à nous — passé composé</td></tr><tr><td>8</td><td>Elle me l'a expliqué hier.</td><td>She explained it to me yesterday.</td><td>l' = le problème / me = à moi — passé composé</td></tr><tr><td>9</td><td>Tu me les as déjà envoyés ?</td><td>Did you already send them to me?</td><td>les = les fichiers / me = à moi — passé composé + agreement</td></tr><tr><td>10</td><td>Je vous le confirmerai demain.</td><td>I'll confirm it to you tomorrow.</td><td>le = le rendez-vous / vous = à vous — futur simple</td></tr></tbody></table>
+<p><strong>🧠 Structure unlocked:</strong> <code>Column 1 (me/te/nous/vous) + Column 2 (le/la/les) + VERB</code><br>
+→ The "to whom" pronoun comes FIRST, the "what" pronoun comes SECOND<br>
+→ This feels counterintuitive for English speakers — "I give it to you" → "Je <strong>te le</strong> donne" (you-it-give)<br>
+→ In compound tenses: pronouns go before the AUXILIARY → "Je **te l'**ai donné"</p>
+<hr>
+<h2>🔹 BLOCK B — LE/LA/LES + LUI/LEUR (Column 2 + Column 3)</h2>
+<p><em>Scenario: You're coordinating tasks — sending things TO specific people who aren't in the room</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English Meaning</th><th>What Was Replaced</th></tr></thead><tbody><tr><td>11</td><td>Je le lui envoie maintenant.</td><td>I'm sending it to him/her now.</td><td>le = le document / lui = à Marc/Marie</td></tr><tr><td>12</td><td>Tu la lui as donnée ?</td><td>Did you give it (f) to him/her?</td><td>la = la clé / lui = à lui/elle — agreement: donnée</td></tr><tr><td>13</td><td>Il le leur explique chaque fois.</td><td>He explains it to them every time.</td><td>le = le processus / leur = à eux</td></tr><tr><td>14</td><td>Elle la leur a présentée hier.</td><td>She presented it (f) to them yesterday.</td><td>la = la proposition / leur = à eux — agreement: présentée</td></tr><tr><td>15</td><td>Nous le lui avons déjà communiqué.</td><td>We've already communicated it to him/her.</td><td>le = le résultat / lui = au directeur</td></tr><tr><td>16</td><td>Vous les leur transmettrez demain.</td><td>You'll forward them to them tomorrow.</td><td>les = les informations / leur = aux clients</td></tr><tr><td>17</td><td>Je le lui avais promis.</td><td>I had promised it to him/her.</td><td>le = un poste / lui = à elle — plus-que-parfait (P32)</td></tr><tr><td>18</td><td>On la lui donnerait si c'était possible.</td><td>We'd give it (f) to him/her if it were possible.</td><td>la = la promotion / lui = à lui — conditionnel (P33)</td></tr><tr><td>19</td><td>Tu aurais dû le lui dire.</td><td>You should have told it to him/her.</td><td>le = la vérité treated as "le" for concept / lui = à lui — cond.passé (P35)</td></tr><tr><td>20</td><td>Je le leur aurais envoyé si j'avais eu leur adresse.</td><td>I would have sent it to them if I'd had their address.</td><td>le = le colis / leur = à eux — cond.passé + si-clause (P34)</td></tr></tbody></table>
+<p><strong>🧠 Structure unlocked:</strong> <code>Column 2 (le/la/les) + Column 3 (lui/leur) + VERB</code><br>
+→ Here the "what" pronoun comes FIRST, the "to whom" comes SECOND<br>
+→ <strong>NOTICE THE FLIP:</strong> In Block A, "to whom" (me/te) came first; in Block B, "what" (le/la) comes first<br>
+→ This is because <strong>me/te/nous/vous always win position 1</strong> — they outrank everything<br>
+→ But when "to whom" is <strong>lui/leur</strong> (third person), le/la/les takes priority</p>
+<hr>
+<h2>🔹 BLOCK C — ME/TE/NOUS/VOUS + EN (Column 1 + Column 4)</h2>
+<p><em>Scenario: Talking about quantities, portions, topics — "Give me some," "Talk to me about it"</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English Meaning</th><th>What Was Replaced</th></tr></thead><tbody><tr><td>21</td><td>Il m'en a parlé ce matin.</td><td>He talked to me about it this morning.</td><td>en = du problème / m' = à moi</td></tr><tr><td>22</td><td>Tu m'en donnes un peu ?</td><td>Will you give me some?</td><td>en = du café / m' = à moi</td></tr><tr><td>23</td><td>Elle t'en a offert ?</td><td>Did she offer you some?</td><td>en = des chocolats / t' = à toi</td></tr><tr><td>24</td><td>Je t'en prie.</td><td>You're welcome. / I beg of you.</td><td>⚠️ Fixed expression — en = de cela / t' = à toi</td></tr><tr><td>25</td><td>Il nous en a envoyé trois.</td><td>He sent us three (of them).</td><td>en = des échantillons / nous = à nous</td></tr><tr><td>26</td><td>Elle vous en a déjà informé ?</td><td>Did she already inform you about it?</td><td>en = de cette décision / vous = à vous</td></tr><tr><td>27</td><td>On m'en avait prévenu.</td><td>I had been warned about it. / Someone had warned me about it.</td><td>en = de ce risque / m' = à moi — pqp (P32)</td></tr><tr><td>28</td><td>Tu ne m'en as jamais parlé.</td><td>You never talked to me about it.</td><td>en = de ça / m' = à moi — ne...jamais (P39)</td></tr><tr><td>29</td><td>Je vous en serais reconnaissant.</td><td>I would be grateful to you for it.</td><td>en = de votre aide / vous = à vous — conditionnel (P17)</td></tr><tr><td>30</td><td>Il m'en aurait parlé si c'était vrai.</td><td>He would have told me about it if it were true.</td><td>en = de cette rumeur / m' = à moi — cond.passé (P34 mixed)</td></tr></tbody></table>
+<p><strong>🧠 Structure unlocked:</strong> <code>Column 1 (me/te/nous/vous) + EN + VERB</code><br>
+→ EN always comes LAST among pronouns (except when paired with Y)<br>
+→ Sentence 24: <strong>"Je t'en prie"</strong> — one of the most common French expressions — technically double pronoun!<br>
+→ Sentence 25: number can follow EN → "Il nous en a envoyé <strong>trois</strong>" — the number stays after the verb</p>
+<hr>
+<h2>🔹 BLOCK D — LUI/LEUR + EN (Column 3 + Column 4)</h2>
+<p><em>Scenario: Giving people portions, talking to them about topics — third person</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English Meaning</th><th>What Was Replaced</th></tr></thead><tbody><tr><td>31</td><td>Je lui en ai donné deux.</td><td>I gave him/her two (of them).</td><td>en = des billets / lui = à Marc</td></tr><tr><td>32</td><td>Tu lui en as parlé ?</td><td>Did you talk to him/her about it?</td><td>en = du projet / lui = à la directrice</td></tr><tr><td>33</td><td>Elle leur en a offert à chacun.</td><td>She offered some to each of them.</td><td>en = des cadeaux / leur = à eux</td></tr><tr><td>34</td><td>Il lui en avait déjà envoyé avant.</td><td>He had already sent him/her some before.</td><td>en = des échantillons / lui = à elle — pqp (P32)</td></tr><tr><td>35</td><td>On leur en donnera demain.</td><td>We'll give them some tomorrow.</td><td>en = des informations / leur = à eux — futur (P16)</td></tr><tr><td>36</td><td>Vous lui en avez commandé assez ?</td><td>Did you order enough (of them) for him/her?</td><td>en = des fournitures / lui = pour lui</td></tr><tr><td>37</td><td>Je lui en aurais apporté si j'avais su.</td><td>I would have brought him/her some if I'd known.</td><td>en = des fleurs / lui = à elle — cond.passé (P34)</td></tr><tr><td>38</td><td>Ne lui en parle pas, c'est un secret.</td><td>Don't talk to him/her about it, it's a secret.</td><td>en = de cette histoire / lui = à lui — imperative neg</td></tr><tr><td>39</td><td>Il faudrait leur en informer rapidement.</td><td>We should inform them about it quickly.</td><td>en = de ce changement / leur = à eux — conditionnel (P17)</td></tr><tr><td>40</td><td>Tu aurais dû lui en parler avant de décider.</td><td>You should have talked to him/her about it before deciding.</td><td>en = du problème / lui = au chef — cond.passé (P35)</td></tr></tbody></table>
+<p><strong>🧠 Structure unlocked:</strong> <code>Column 3 (lui/leur) + EN + VERB</code><br>
+→ Lui/leur come before EN — always<br>
+→ This is one of the most frequent combinations in daily professional French<br>
+→ "Tu lui en as parlé ?" — you will hear this sentence multiple times per day in any French office</p>
+<hr>
+<h2>🔹 BLOCK E — ME/TE/NOUS/VOUS + Y (Column 1 + Column 4)</h2>
+<p><em>Scenario: People taking you places, bringing you somewhere, accompanying you</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English Meaning</th><th>What Was Replaced</th></tr></thead><tbody><tr><td>41</td><td>Il m'y a emmené en voiture.</td><td>He took me there by car.</td><td>y = au restaurant / m' = moi</td></tr><tr><td>42</td><td>Tu m'y accompagnes ?</td><td>Will you come with me there?</td><td>y = à la gare / m' = moi</td></tr><tr><td>43</td><td>Elle nous y a conduits hier.</td><td>She drove us there yesterday.</td><td>y = à l'aéroport / nous = nous — agreement: conduits</td></tr><tr><td>44</td><td>Je t'y retrouve à midi.</td><td>I'll meet you there at noon.</td><td>y = au café / t' = toi</td></tr><tr><td>45</td><td>On vous y attend depuis une heure.</td><td>We've been waiting for you there for an hour.</td><td>y = au bureau / vous = vous</td></tr><tr><td>46</td><td>Il m'y avait invité la semaine dernière.</td><td>He had invited me there last week.</td><td>y = à cette fête / m' = moi — pqp (P32)</td></tr><tr><td>47</td><td>Elle ne nous y a pas autorisés.</td><td>She didn't authorize us (to go) there.</td><td>y = à cette zone / nous = nous — negative</td></tr><tr><td>48</td><td>Tu m'y emmèneras un jour ?</td><td>Will you take me there one day?</td><td>y = au Japon / m' = moi — futur (P16)</td></tr><tr><td>49</td><td>Je vous y prépare depuis des mois.</td><td>I've been preparing you for it for months.</td><td>y = à cet examen / vous = vous</td></tr><tr><td>50</td><td>Il ne m'y a jamais forcé.</td><td>He never forced me (to go) there / (into) it.</td><td>y = à cette situation / m' = moi — ne...jamais (P39)</td></tr></tbody></table>
+<p><strong>🧠 Structure unlocked:</strong> <code>Column 1 (me/te/nous/vous) + Y + VERB</code><br>
+→ Less common than EN combinations but important for place-related sentences<br>
+→ Sentence 49: Y can replace "à + concept" (not just physical places) — "préparer à quelque chose"<br>
+→ These combinations are <strong>heard more than read</strong> — very oral French</p>
+<hr>
+<h2>🔹 BLOCK F — LUI/LEUR + Y: The Forbidden Combination</h2>
+<p><em>Scenario: Why you'll almost NEVER see this — and what to do instead</em></p>
+<table><thead><tr><th>#</th><th>What You Want to Say</th><th>Why It's Problematic</th><th>What French Actually Says</th></tr></thead><tbody><tr><td>51</td><td>"I took him there" → <del>Je lui y ai emmené</del></td><td>Lui + Y sounds terrible — French avoids it</td><td>Je l'y ai emmené / Je l'ai emmené là-bas</td></tr><tr><td>52</td><td>"I brought her there" → <del>Je lui y ai apporté</del></td><td>Phonetically clumsy — "lui y" is rejected</td><td>Je l'ai apporté là-bas pour elle</td></tr><tr><td>53</td><td>"We sent them there" → <del>Nous leur y avons envoyés</del></td><td>Leur + Y is grammatically possible but universally avoided</td><td>Nous les y avons envoyés / Nous les avons envoyés là-bas</td></tr><tr><td>54</td><td>"She introduced him to it" → <del>Elle lui y a initié</del></td><td>Avoided in all registers</td><td>Elle l'y a initié / Elle l'a initié à ça</td></tr><tr><td>55</td><td>"Tell them to go there" → <del>Dis-leur-y</del></td><td>Completely impossible in imperative</td><td>Dis-leur d'y aller</td></tr></tbody></table>
+<p><strong>🧠 Critical rule unlocked:</strong> <code>LUI/LEUR + Y = AVOIDED in French</code><br>
+→ Grammatically it should work — but French speakers REFUSE to say it<br>
+→ Solutions:</p>
+<ol>
+<li>Replace Y with "là-bas" or "à cet endroit" → keep lui/leur</li>
+<li>Replace lui/leur with le/la/les → keep Y → "Je <strong>l'y</strong> ai emmené"</li>
+<li>Restructure the entire sentence<br>
+→ Only 5 entries here because this combination essentially <strong>doesn't exist in practice</strong></li>
+</ol>
+<hr>
+<h2>🔹 BLOCK G — Double Pronouns in Compound Tenses (All Tenses Combined)</h2>
+<p><em>Scenario: The full workday — past, future, conditional — pronouns stacking in every tense</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>Tense</th><th>Pronouns</th><th>English Meaning</th></tr></thead><tbody><tr><td>56</td><td>Je te le dis maintenant.</td><td>Présent</td><td>te + le</td><td>I'm telling you it now.</td></tr><tr><td>57</td><td>Je te le disais chaque jour.</td><td>Imparfait</td><td>te + le</td><td>I used to tell you it every day.</td></tr><tr><td>58</td><td>Je te l'ai dit hier.</td><td>Passé composé</td><td>te + l'</td><td>I told you it yesterday.</td></tr><tr><td>59</td><td>Je te l'avais dit !</td><td>Plus-que-parfait</td><td>te + l'</td><td>I had told you! / I told you so!</td></tr><tr><td>60</td><td>Je te le dirai demain.</td><td>Futur simple</td><td>te + le</td><td>I'll tell you it tomorrow.</td></tr><tr><td>61</td><td>Je te le dirais si je le savais.</td><td>Conditionnel présent</td><td>te + le</td><td>I'd tell you if I knew.</td></tr><tr><td>62</td><td>Je te l'aurais dit si j'avais su.</td><td>Conditionnel passé</td><td>te + l'</td><td>I would have told you if I'd known.</td></tr><tr><td>63</td><td>Je vais te le dire.</td><td>Futur proche</td><td>te + le</td><td>I'm going to tell you it.</td></tr><tr><td>64</td><td>Je peux te le confirmer.</td><td>Modal + inf</td><td>te + le</td><td>I can confirm it for you.</td></tr><tr><td>65</td><td>Je dois te le rappeler ?</td><td>Modal + inf</td><td>te + le</td><td>Do I need to remind you of it?</td></tr></tbody></table>
+<p><strong>🧠 Structure unlocked:</strong> The SAME pronoun pair (te + le) across ALL tenses<br>
+→ <strong>The pronouns NEVER change position relative to each other</strong> — te always before le<br>
+→ What changes is WHERE the pair sits:</p>
+<ul>
+<li>Simple tenses: before conjugated verb</li>
+<li>Compound tenses: before auxiliary</li>
+<li>Futur proche / Modal: before infinitive</li>
+</ul>
+<hr>
+<h3>The Tense Placement Map — Visual Summary</h3>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>SIMPLE TENSES:        [pronouns] + VERB
+</span>                      Je te le dis.
+
+COMPOUND TENSES:      [pronouns] + AUXILIARY + participe passé
+                      Je te l'ai dit.
+
+FUTUR PROCHE:         ALLER (conjugated) + [pronouns] + INFINITIVE
+                      Je vais te le dire.
+
+MODAL + INFINITIVE:   MODAL (conjugated) + [pronouns] + INFINITIVE
+                      Je peux te le dire.
+
+NEGATIVE:             ne + [pronouns] + VERB/AUX + pas
+                      Je ne te le dis pas.
+                      Je ne te l'ai pas dit.</code></pre></div>
+<hr>
+<h2>🔹 BLOCK H — Double Pronouns in IMPERATIVE: The Order Reversal</h2>
+<p><em>Scenario: Your boss gives rapid-fire instructions — "Give it to me! Send them to her! Don't show it to them!"</em></p>
+<h3>Affirmative Imperative — ORDER CHANGES</h3>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English Meaning</th><th>Pronoun Order</th><th>Structure</th></tr></thead><tbody><tr><td>66</td><td>Donne-le-moi.</td><td>Give it to me.</td><td>le + moi</td><td>VERB + COD + COI (hyphens)</td></tr><tr><td>67</td><td>Passe-la-moi.</td><td>Pass it (f) to me.</td><td>la + moi</td><td>VERB + COD + COI</td></tr><tr><td>68</td><td>Envoie-les-lui.</td><td>Send them to him/her.</td><td>les + lui</td><td>VERB + COD + COI</td></tr><tr><td>69</td><td>Montre-le-leur.</td><td>Show it to them.</td><td>le + leur</td><td>VERB + COD + COI</td></tr><tr><td>70</td><td>Apporte-les-nous.</td><td>Bring them to us.</td><td>les + nous</td><td>VERB + COD + COI</td></tr><tr><td>71</td><td>Donne-m'en.</td><td>Give me some.</td><td>m' + en</td><td>VERB + COI + en</td></tr><tr><td>72</td><td>Parle-lui-en.</td><td>Talk to him/her about it.</td><td>lui + en</td><td>VERB + COI + en</td></tr><tr><td>73</td><td>Donnez-le-lui immédiatement.</td><td>Give it to him/her immediately.</td><td>le + lui</td><td>Formal imperative</td></tr><tr><td>74</td><td>Expliquez-le-leur clairement.</td><td>Explain it to them clearly.</td><td>le + leur</td><td>Formal imperative</td></tr><tr><td>75</td><td>Occupez-vous-en.</td><td>Take care of it.</td><td>vous + en</td><td>Reflexive + en</td></tr></tbody></table>
+<h3>Negative Imperative — NORMAL ORDER RETURNS</h3>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English Meaning</th><th>Pronoun Order</th><th>Structure</th></tr></thead><tbody><tr><td>76</td><td>Ne me le donne pas.</td><td>Don't give it to me.</td><td>me + le</td><td>NORMAL order returns — ne + [pronouns] + verb + pas</td></tr><tr><td>77</td><td>Ne la lui envoie pas.</td><td>Don't send it (f) to him/her.</td><td>la + lui</td><td>Normal column order</td></tr><tr><td>78</td><td>Ne les leur montre pas.</td><td>Don't show them to them.</td><td>les + leur</td><td>Normal column order</td></tr><tr><td>79</td><td>Ne m'en parle pas.</td><td>Don't talk to me about it.</td><td>m' + en</td><td>Normal column order</td></tr><tr><td>80</td><td>Ne lui en donne pas.</td><td>Don't give him/her any.</td><td>lui + en</td><td>Normal column order</td></tr></tbody></table>
+<p><strong>🧠 Critical structure unlocked:</strong></p>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>AFFIRMATIVE IMPERATIVE:  VERB + COD (le/la/les) + COI (moi/toi/lui/nous/vous/leur)
+</span>                         Donne-le-moi.    (connected by hyphens)
+
+NEGATIVE IMPERATIVE:     Ne + COI + COD + VERB + pas
+                         Ne me le donne pas.    (normal pre-verb order)</code></pre></div>
+<p>→ <strong>In affirmative imperative:</strong></p>
+<ul>
+<li>"me" becomes <strong>"moi"</strong> → Donne-le-<strong>moi</strong> (not <del>Donne-le-me</del>)</li>
+<li>"te" becomes <strong>"toi"</strong> → Donne-le-<strong>toi</strong> (not <del>Donne-le-te</del>)</li>
+<li>EXCEPT before "en": "me" stays as <strong>"m'"</strong> → Donne-**m'**en (not <del>Donne-moi-en</del>)</li>
+</ul>
+<p>→ <strong>In negative imperative:</strong> everything goes back to normal pre-verb position — as if the imperative exception doesn't exist</p>
+<hr>
+<h2>🔹 BLOCK I — Tricky Real-Life Combinations with Agreement</h2>
+<p><em>Scenario: Sentences where past participle agreement (P9 rules) interacts with double pronouns</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English Meaning</th><th>Agreement Explanation</th></tr></thead><tbody><tr><td>81</td><td>La lettre ? Je te l'ai envoyée ce matin.</td><td>The letter? I sent it to you this morning.</td><td>l' = la lettre (fem) → envoyé<strong>e</strong> agrees with preceding COD</td></tr><tr><td>82</td><td>Les clés ? Il me les a rendues hier.</td><td>The keys? He returned them to me yesterday.</td><td>les = les clés (fem pl) → rendu<strong>es</strong></td></tr><tr><td>83</td><td>La facture ? Elle la lui a transmise.</td><td>The invoice? She forwarded it to him/her.</td><td>la = la facture (fem) → transmis<strong>e</strong></td></tr><tr><td>84</td><td>Les résultats ? On vous les a communiqués par mail.</td><td>The results? We communicated them to you by email.</td><td>les = les résultats (masc pl) → communiqué<strong>s</strong></td></tr><tr><td>85</td><td>Les photos ? Je les leur ai montrées.</td><td>The photos? I showed them to them.</td><td>les = les photos (fem pl) → montré<strong>es</strong></td></tr><tr><td>86</td><td>Ta proposition ? Nous te l'avons soumise la semaine dernière.</td><td>Your proposal? We submitted it to you last week.</td><td>l' = la proposition (fem) → soumis<strong>e</strong></td></tr><tr><td>87</td><td>Ces documents ? Tu me les avais promis pour lundi.</td><td>These documents? You had promised them to me by Monday.</td><td>les = les documents (masc pl) → promis (already ends in s)</td></tr><tr><td>88</td><td>La bonne nouvelle ? Je la lui aurais annoncée moi-même si j'avais pu.</td><td>The good news? I would have announced it to him/her myself if I'd been able to.</td><td>la = la nouvelle (fem) → annoncé<strong>e</strong> — cond.passé + si-clause (P34)</td></tr><tr><td>89</td><td>Ces informations ? On ne nous les a jamais transmises.</td><td>This information? It was never passed on to us.</td><td>les = les informations (fem pl) → transmis<strong>es</strong> — ne...jamais (P39)</td></tr><tr><td>90</td><td>La réponse ? Elle me l'a donnée avec un sourire.</td><td>The answer? She gave it to me with a smile.</td><td>l' = la réponse (fem) → donné<strong>e</strong></td></tr></tbody></table>
+<p><strong>🧠 Critical rule unlocked:</strong> Past participle agreement with DOUBLE pronouns<br>
+→ When the <strong>COD pronoun</strong> (le, la, les) comes <strong>before</strong> the auxiliary in compound tenses → the past participle <strong>agrees</strong> with it<br>
+→ This is the SAME rule from P9 — but now with TWO pronouns, the COD is even more clearly "preceding"<br>
+→ The COI pronoun (me, te, lui, nous, vous, leur) does NOT trigger agreement — only the COD does<br>
+→ <strong>If only EN is the COD → NO agreement</strong> (special EN rule): "Des erreurs ? J'en ai fait" (not <del>faites</del>)</p>
+<hr>
+<h2>🔹 BLOCK J — Full Conversational Flow: The Office Day</h2>
+<p><em>Scenario: An entire workday of rapid exchanges — pronouns flying in every direction</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English Meaning</th><th>Context &amp; Pronouns</th></tr></thead><tbody><tr><td>91</td><td>Le dossier Dupont ? Je te l'apporte dans cinq minutes.</td><td>The Dupont file? I'll bring it to you in five minutes.</td><td>te + l' — présent</td></tr><tr><td>92</td><td>Les chiffres de ventes ? Elle me les a envoyés hier soir.</td><td>The sales figures? She sent them to me last night.</td><td>me + les — passé composé + agreement</td></tr><tr><td>93</td><td>L'adresse du client ? Attends, je te la cherche.</td><td>The client's address? Wait, I'll look it up for you.</td><td>te + la — présent</td></tr><tr><td>94</td><td>Le mot de passe ? Ne me le demande pas, je ne m'en souviens jamais.</td><td>The password? Don't ask me for it, I never remember it.</td><td>me + le (imp.neg) / m' + en — double combo sentence</td></tr><tr><td>95</td><td>Les échantillons pour Tokyo ? On les leur a expédiés lundi.</td><td>The samples for Tokyo? We shipped them to them on Monday.</td><td>les + leur — passé composé</td></tr><tr><td>96</td><td>Du café ? Je t'en prépare un ?</td><td>Coffee? Shall I make you one?</td><td>t' + en — présent</td></tr><tr><td>97</td><td>Ce rapport, tu aurais dû me le donner avant la réunion.</td><td>This report, you should have given it to me before the meeting.</td><td>me + le — cond.passé (P35)</td></tr><tr><td>98</td><td>La présentation ? Montre-la-leur avant de l'envoyer au client.</td><td>The presentation? Show it to them before sending it to the client.</td><td>la + leur (imp.aff) / l' — single pronoun in second clause</td></tr><tr><td>99</td><td>Les modifications ? Je lui en ai parlé, il va nous les confirmer demain.</td><td>The modifications? I talked to him about them, he'll confirm them to us tomorrow.</td><td>lui + en (passé composé) → nous + les (futur proche) — two double-pronoun combos in one sentence</td></tr><tr><td>100</td><td>Bonne soirée à tous. Si quelqu'un a besoin de moi, qu'il ne m'en veuille pas — je ne suis plus joignable.</td><td>Good evening everyone. If anyone needs me, don't hold it against me — I'm no longer reachable.</td><td>m' + en — fixed expression "en vouloir à quelqu'un" — subjonctif "qu'il ne m'en veuille pas" (P31)</td></tr></tbody></table>
+<hr>
+<h1>✅ WHAT SHOULD DO</h1>
+<p>→ <strong>Memorize the column order FIRST — before any sentences:</strong></p>
+<code>me/te/se/nous/vous  →  le/la/les  →  lui/leur  →  y/en</code>
+<p>→ <strong>Start with the 4 most common combinations</strong> — these cover 90% of daily use:</p>
+<ol>
+<li><strong>me/te + le/la/les</strong> → "Il me le donne"</li>
+<li><strong>le/la/les + lui/leur</strong> → "Je le lui envoie"</li>
+<li><strong>me/te + en</strong> → "Il m'en parle"</li>
+<li><strong>lui/leur + en</strong> → "Je lui en donne"</li>
+</ol>
+<p>→ <strong>Practice the ONE verb across all tenses</strong> technique (Block G) — take "dire" with "te le" through every tense until automatic</p>
+<p>→ <strong>Master the imperative flip</strong> — this is the #1 source of errors:</p>
+<ul>
+<li>Affirmative: <strong>Donne-le-moi</strong> (after verb, hyphens, moi not me)</li>
+<li>Negative: <strong>Ne me le donne pas</strong> (before verb, normal order, me not moi)</li>
+</ul>
+<p>→ <strong>Always check agreement</strong> in compound tenses — the COD pronoun (le/la/les) triggers it</p>
+<p>→ <strong>Connect to P19</strong> — single pronoun placement → <strong>P36</strong> doubles it<br>
+→ <strong>Connect to P20</strong> — Y and EN placement → <strong>P36</strong> stacks them with other pronouns</p>
+<hr>
+<h1>❌ WHAT SHOULD NOT DO</h1>
+<p>→ ❌ <strong>NEVER reverse column order:</strong></p>
+<ul>
+<li>❌ <del>Je le te donne</del> → ✅ Je <strong>te le</strong> donne (Column 1 before Column 2)</li>
+<li>❌ <del>Je lui le donne</del> → ✅ Je <strong>le lui</strong> donne (Column 2 before Column 3)</li>
+<li>❌ <del>Je en lui parle</del> → ✅ Je <strong>lui en</strong> parle (Column 3 before Column 4)</li>
+</ul>
+<p>→ ❌ <strong>NEVER use "lui + y" in speech:</strong></p>
+<ul>
+<li>❌ <del>Je lui y emmène</del> → ✅ Je l'y emmène / Je l'emmène là-bas</li>
+</ul>
+<p>→ ❌ <strong>NEVER put double pronouns AFTER the verb in declarative sentences:</strong></p>
+<ul>
+<li>❌ <del>Je donne le lui</del> → ✅ Je <strong>le lui</strong> donne</li>
+</ul>
+<p>→ ❌ <strong>NEVER forget moi/toi in affirmative imperative:</strong></p>
+<ul>
+<li>❌ <del>Donne-le-me</del> → ✅ Donne-le-<strong>moi</strong></li>
+<li>❌ <del>Donne-le-te</del> → ✅ Donne-le-<strong>toi</strong></li>
+</ul>
+<p>→ ❌ <strong>NEVER use "me" or "te" before "en" in affirmative imperative</strong> — use <strong>m'/t':</strong></p>
+<ul>
+<li>❌ <del>Donne-moi-en</del> → ✅ Donne-<strong>m'en</strong></li>
+<li>❌ <del>Parle-toi-en</del> → ✅ (this combination rarely occurs — restructure)</li>
+</ul>
+<p>→ ❌ <strong>NEVER trigger agreement from a COI pronoun:</strong></p>
+<ul>
+<li>❌ <del>Je lui ai envoyée la lettre</del> → COI (lui) does NOT cause agreement</li>
+<li>✅ Je lui ai envoyé la lettre (no agreement — COD follows verb)</li>
+<li>BUT: La lettre, je la lui ai envoyé<strong>e</strong> (agreement because COD "la" precedes auxiliary)</li>
+</ul>
+<p>→ ❌ <strong>NEVER trigger agreement from EN:</strong></p>
+<ul>
+<li>❌ <del>Des erreurs, j'en ai faites</del> → EN does not trigger agreement (special rule)</li>
+<li>✅ Des erreurs, j'en ai <strong>fait</strong></li>
+</ul>
+<hr>
+<h1>🔀 WHEN TO USE WHAT</h1>
+<table><thead><tr><th>Situation</th><th>Pronoun Combo</th><th>Order</th><th>Example</th></tr></thead><tbody><tr><td>Giving something TO ME/YOU</td><td>me/te + le/la/les</td><td>Col 1 + Col 2</td><td>Il me le donne</td></tr><tr><td>Giving something TO HIM/HER/THEM</td><td>le/la/les + lui/leur</td><td>Col 2 + Col 3</td><td>Je le lui donne</td></tr><tr><td>Talking TO ME/YOU about something</td><td>me/te + en</td><td>Col 1 + Col 4</td><td>Il m'en parle</td></tr><tr><td>Talking TO HIM/HER about something</td><td>lui/leur + en</td><td>Col 3 + Col 4</td><td>Je lui en parle</td></tr><tr><td>Taking ME/YOU somewhere</td><td>me/te + y</td><td>Col 1 + Col 4</td><td>Il m'y emmène</td></tr><tr><td>Taking HIM/HER somewhere</td><td>⚠️ AVOID lui + y</td><td>Restructure</td><td>Je l'y emmène / Je l'emmène là-bas</td></tr><tr><td>Commanding: "Give it to me!"</td><td>VERB + le/la + moi/toi</td><td>Reversed + hyphens</td><td>Donne-le-moi</td></tr><tr><td>Commanding: "Don't give it to me"</td><td>ne + me/te + le/la + verb + pas</td><td>Normal order returns</td><td>Ne me le donne pas</td></tr><tr><td>Commanding: "Give me some"</td><td>VERB + m'/t' + en</td><td>After verb</td><td>Donne-m'en</td></tr></tbody></table>
+<hr>
+<h1>🚫 WHEN NOT TO USE</h1>
+<p>→ <strong>When the sentence has only ONE object</strong> → use single pronoun placement (P19/P20)</p>
+<ul>
+<li>"I see him" = Je <strong>le</strong> vois — no need for double pronouns</li>
+<li>Only use double when TWO objects are being replaced simultaneously</li>
+</ul>
+<p>→ <strong>When clarity is at risk</strong> → keep one full noun, replace the other</p>
+<ul>
+<li>"Je le lui ai donné" can be ambiguous — "lui" = him or her?</li>
+<li>If unclear → "J'ai donné <strong>le dossier</strong> à Marie" or "Je <strong>le</strong> lui ai donné, <strong>à Marie</strong>" (add clarifier)</li>
+</ul>
+<p>→ <strong>When writing formal/literary French</strong> → double pronouns can feel too compressed</p>
+<ul>
+<li>Formal writing sometimes prefers: "Je l'ai transmis <strong>à Monsieur le Directeur</strong>" over "Je le lui ai transmis"</li>
+<li>Spoken French loves compression — written French sometimes prefers clarity</li>
+</ul>
+<p>→ <strong>When three objects need replacing</strong> → NEVER stack three pronouns</p>
+<ul>
+<li>❌ <del>Je te le lui y en donne</del> → Impossible — maximum TWO pronouns before the verb</li>
+<li>Restructure: keep one as a full noun phrase</li>
+</ul>
+<hr>
+<h1>⚠️ COMMON PITFALLS AND FAILURE MODES</h1>
+<table><thead><tr><th>Pitfall</th><th>What Learners Do Wrong</th><th>Why It Fails</th><th>Correct Version</th></tr></thead><tbody><tr><td><strong>Column order reversal</strong></td><td>Je lui le donne</td><td>Lui (Col 3) cannot precede le (Col 2)</td><td>Je <strong>le lui</strong> donne</td></tr><tr><td><strong>Me/te vs. le/la confusion</strong></td><td>Not knowing which is COD vs. COI</td><td>Must identify verb structure — donner qqch À qqn</td><td>"donner" → qqch = COD, à qqn = COI</td></tr><tr><td><strong>Imperative panic</strong></td><td>Donne-moi-le</td><td>Wrong order in affirmative imperative</td><td>Donne-<strong>le-moi</strong> (COD before COI)</td></tr><tr><td><strong>Moi/me confusion in imperative</strong></td><td>Donne-le-me</td><td>"Me" becomes "moi" after verb</td><td>Donne-le-<strong>moi</strong></td></tr><tr><td><strong>M'en exception forgotten</strong></td><td>Donne-moi-en</td><td>Before "en" in imperative, "moi" becomes "m'"</td><td>Donne-<strong>m'en</strong></td></tr><tr><td><strong>Placement in futur proche</strong></td><td>Je te le vais dire</td><td>Pronouns go before INFINITIVE, not before aller</td><td>Je vais <strong>te le</strong> dire</td></tr><tr><td><strong>Agreement with COI</strong></td><td>Je lui ai donnée</td><td>COI doesn't trigger agreement</td><td>Je lui ai donné (no agreement)</td></tr><tr><td><strong>Agreement forgotten with COD</strong></td><td>La lettre, je te l'ai envoyé</td><td>COD "l'" (= la lettre, fem) precedes auxiliary → agreement</td><td>Je te l'ai envoyé<strong>e</strong></td></tr><tr><td><strong>Lui + Y attempted</strong></td><td>Je lui y ai emmené</td><td>French avoids this combination</td><td>Je l'y ai emmené / Je l'ai emmené là-bas</td></tr><tr><td><strong>Three pronouns attempted</strong></td><td>Je te le lui dis</td><td>Maximum two pronouns — cannot stack three</td><td>Restructure the sentence</td></tr></tbody></table>
+<hr>
+<h1>🔑 KEY TAKEAWAY</h1>
+<blockquote>
+<p><strong>P19 gave you the ability to replace ONE object with a pronoun.</strong><br>
+<strong>P20 gave you Y and EN as powerful replacements.</strong><br>
+<strong>P36 teaches you to COMBINE two pronouns — making your French compressed, fluid, and native-sounding.</strong></p>
+<p>The column order is absolute:</p>
+<code>me/te/se/nous/vous → le/la/les → lui/leur → y → en → VERB</code>
+<p>The imperative is the ONE exception where order flips — and where "me" becomes "moi."</p>
+<p>Double pronouns are what separate <strong>a learner who speaks correct French</strong> from <strong>a speaker who sounds fluent.</strong><br>
+Without them, you repeat nouns constantly.<br>
+With them, your sentences become tight, efficient, and natural.</p>
+<p>But what happens when YOU don't do the action — you make SOMEONE ELSE do it?<br>
+"I cut my hair" vs. "I <strong>had</strong> my hair cut" — two completely different structures.</p>
+</blockquote>
+<hr>
+<h1>🌉 BRIDGE TO PROJECT 37</h1>
+<blockquote>
+<p>You now stack pronouns inside any sentence — your objects are compressed<br>
+But there's a verb structure where the subject does NOT perform the action — they CAUSE it</p>
+<p>→ "I repaired my car" = I did it myself<br>
+→ "I <strong>had</strong> my car <strong>repaired</strong>" = someone else did it — I caused it to happen</p>
+<p>In French: <strong>Faire + infinitif</strong> — the causative construction<br>
+→ "Je <strong>fais réparer</strong> ma voiture" = I'm having my car repaired<br>
+→ "Elle <strong>fait manger</strong> les enfants" = She feeds the children (makes them eat)<br>
+→ "Il <strong>m'a fait attendre</strong>" = He made me wait</p>
+<p>Project 37 unlocks: <strong>Faire causatif</strong> — making, having, getting someone to do something<br>
+→ Combined with pronouns from P36 — "Je la <strong>lui fais</strong> envoyer" = I'm having her send it to him<br>
+→ The structure that controls delegation, authority, and causation in French</p>
+</blockquote>
+<hr>
+<h1>✅ PROJECT 36 COMPLETE</h1>
+<blockquote>
+<p><strong>Are you ready for PROJECT 37: "Make Someone Do Something"?</strong><br>
+→ ~100 sentences covering faire + infinitif (causative construction)<br>
+→ Scenario: Managing a team, raising children, getting services done — you don't do it yourself<br>
+→ Builds on P36 (double pronouns), P19/P20 (single pronouns), and integrates with all tenses</p>
+</blockquote>
+</div>
+</div>
+
+<!-- ========== data-index="13" ========== -->
+
+        </div>
+
+        <div class="nav-bar">
+            <a href="project-35.html" class="nav-button prev">← Previous Chapter</a>
+            <div class="page-info">
+                <a href="index.html" class="nav-button home">📚 Table of Contents</a><br>
+                <span style="margin-top:8px;display:block">Chapter 36 of 50</span>
+            </div>
+            <a href="project-37.html" class="nav-button next">Next Chapter →</a>
+        </div>
+    </div>
+
+    
+    <div id="progress-track"><div id="progress-fill"></div></div>
+    <div id="progress-pct">0%</div>
+
+
+    <script>
+    const fill = document.getElementById('progress-fill');
+    const pct  = document.getElementById('progress-pct');
+    function updateProgress() {
+        const scrollTop = window.scrollY;
+        const docHeight = document.body.scrollHeight - window.innerHeight;
+        const scrolled  = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+        fill.style.height = scrolled + '%';
+        pct.textContent   = Math.round(scrolled) + '%';
+    }
+    window.addEventListener('scroll', updateProgress);
+    updateProgress();
+
+    document.addEventListener('keydown', function(e) {
+        if (['INPUT','TEXTAREA'].includes(document.activeElement.tagName)) return;
+        if (e.key === 'ArrowLeft') {
+            const b = document.querySelector('.nav-button.prev');
+            if (b && !b.classList.contains('disabled')) window.location.href = b.href;
+        }
+        if (e.key === 'ArrowRight') {
+            const b = document.querySelector('.nav-button.next');
+            if (b && !b.classList.contains('disabled')) window.location.href = b.href;
+        }
+    });
+    </script>
+
+</body>
+</html>

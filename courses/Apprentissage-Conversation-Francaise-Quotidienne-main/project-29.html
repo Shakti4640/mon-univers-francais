@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="images/favicon.png">
+    <title>Project 29: "But, However, Even Though" — French Daily Sentences</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.75;
+            color: #1a202c;
+            background-color: #f7fafc;
+        }
+        .container {
+            max-width: 1800px;
+            margin: 0 auto;
+            background: white;
+            min-height: 100vh;
+            box-shadow: 0 0 30px rgba(0,0,0,0.08);
+            padding: 48px 52px;
+        }
+        
+        .content { max-width: 1700px; margin: 0 auto; color: #1a202c; }
+        .content h1 {
+            color: #1a202c; margin: 32px 0 20px;
+            padding-bottom: 12px;
+            border-bottom: 4px solid #3b82f6;
+            font-size: 2.1em;
+            font-weight: 700;
+        }
+        .content h2 {
+            color: #1a202c; margin: 28px 0 16px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #60a5fa;
+            font-size: 1.6em;
+            font-weight: 600;
+        }
+        .content h3 { color: #1a202c; margin: 22px 0 12px; font-size: 1.3em; font-weight: 600; }
+        .content h4 { color: #2d3748; margin: 18px 0 10px; font-size: 1.1em; font-weight: 600; }
+        .content p  { margin-bottom: 16px; line-height: 1.8; color: #1a202c; }
+        .content ul, .content ol { margin: 12px 0 18px 30px; color: #1a202c; }
+        .content li { margin-bottom: 8px; line-height: 1.75; color: #1a202c; }
+        .content hr { border: none; border-top: 2px solid #e2e8f0; margin: 26px 0; }
+        .content pre {
+            background: #f7fafc !important;
+            border: 1px solid #cbd5e0 !important;
+            border-left: 4px solid #3b82f6 !important;
+            padding: 18px !important; overflow-x: auto; margin: 18px 0; border-radius: 6px;
+            font-family: 'Consolas','Monaco','Courier New',monospace !important;
+            font-size: 0.9em !important;
+        }
+        .content pre:not([style*="color"]) { color: #1a202c !important; }
+        .content code {
+            font-family: 'Consolas','Monaco','Courier New',monospace !important;
+            font-size: 0.88em !important;
+        }
+        .content code:not(pre code) {
+            background: #dbeafe !important;
+            color: #1a202c !important;
+            padding: 2px 6px;
+            border-radius: 3px;
+        }
+        .content pre code { background: transparent !important; padding: 0; }
+        .content table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+        .content th {
+            background: linear-gradient(135deg, #3b82f6 0%, #60a5fa 100%);
+            color: white; padding: 12px 16px; text-align: left;
+            font-weight: 600;
+        }
+        .content td { padding: 11px 16px; border: 1px solid #e2e8f0; color: #1a202c; }
+        .content tr:nth-child(even) td { background: #eff6ff; }
+        .content blockquote {
+            border-left: 4px solid #3b82f6; background: #eff6ff;
+            padding: 14px 20px; margin: 18px 0; border-radius: 0 6px 6px 0;
+            color: #1a202c;
+        }
+        .content strong { color: #1a202c; font-weight: 600; }
+        .px-2 { padding: 0; }
+        .chat-message { background: transparent; padding: 0; margin: 0; }
+
+        /* Bottom nav bar only */
+        .nav-bar {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 24px 0;
+            margin-top: 50px;
+            border-top: 3px solid #60a5fa;
+        }
+        .nav-button {
+            display: inline-flex; align-items: center; gap: 8px;
+            padding: 12px 26px;
+            background: linear-gradient(135deg, #3b82f6 0%, #60a5fa 100%);
+            color: white !important; text-decoration: none;
+            border-radius: 8px; font-weight: 600; font-size: 0.95em;
+            transition: all 0.2s;
+            box-shadow: 0 2px 8px rgba(59,130,246,0.35);
+        }
+        .nav-button:hover { transform: translateY(-2px); box-shadow: 0 4px 14px rgba(59,130,246,0.5); }
+        .nav-button.disabled { background: #cbd5e1; box-shadow: none; pointer-events: none; }
+        .nav-button.home {
+            background: linear-gradient(135deg, #ef4444 0%, #f87171 100%);
+            box-shadow: 0 2px 8px rgba(239,68,68,0.35);
+        }
+        .nav-button.home:hover { box-shadow: 0 4px 14px rgba(239,68,68,0.5); }
+        .page-info { color: #718096; font-size: 0.9em; text-align: center; }
+
+        /* Progress bar */
+        #progress-track {
+            position: fixed; top: 20px; right: 20px;
+            width: 10px; height: 150px;
+            background: rgba(59,130,246,0.2);
+            border: 2px solid #3b82f6;
+            border-radius: 6px; overflow: hidden; z-index: 1000;
+        }
+        #progress-fill {
+            width: 100%;
+            background: linear-gradient(180deg, #3b82f6, #2563eb);
+            height: 0%;
+            transition: height 0.15s ease;
+        }
+        #progress-pct {
+            position: fixed; top: 0px; right: 16px;
+            color: #2563eb; font-size: 14px; font-weight: bold;
+            z-index: 1001;
+            text-shadow: 0 1px 2px rgba(255,255,255,0.9);
+            line-height: 20px;
+        }
+
+    </style>
+<link rel="stylesheet" href="assets/chapters.css?v=20260421203847"><script src="assets/chapters.js?v=20260421203847" defer></script>
+</head>
+<body>
+    <div class="container">
+        <div class="content">
+            <div class="chat-message" data-index="27">
+<div class="px-2"><h1>🟡 PROJECT 29: "But, However, Even Though"</h1>
+<h2><em>You agree partially but want to contrast, oppose, or concede — the other side of logic</em></h2>
+<hr>
+<h1>🎯 THE HYPOTHETICAL PROBLEM</h1>
+<p>→ You're in a debate at a French dinner party — the topic is education reform<br>
+→ Someone makes a strong argument — you partly agree but want to <strong>push back</strong><br>
+→ You try:</p>
+<code>❌ "Oui. Mais non. C'est compliqué."</code>
+<p>→ You sound like a confused child — no structure, no nuance<br>
+→ The French people around you are saying:</p>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>✅ "C'est vrai, MAIS il y a un autre aspect à considérer."
+</span>✅ "BIEN QUE le système actuel ait des problèmes, il fonctionne quand même."
+✅ "MALGRÉ les réformes, les résultats n'ont pas changé."
+✅ "Il a raison sur ce point. CEPENDANT, je ne suis pas d'accord sur la méthode."
+✅ "MÊME SI c'est difficile, on devrait essayer."
+✅ "POURTANT, personne n'en parle."</code></pre></div>
+<p>→ Each of these expresses a <strong>contrast</strong> — but with a different <strong>weight, register, and logic</strong><br>
+→ Some say "I AGREE, but..." (concession)<br>
+→ Some say "DESPITE X, Y is true" (opposition)<br>
+→ Some say "EVEN THOUGH X, Y happened anyway" (unexpected contrast)</p>
+<p>→ At work, your boss presents a new plan — you have reservations:</p>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>❌ "C'est bien. Mais il y a des problèmes." (flat, childish)
+</span>✅ "Le plan est ambitieux. NÉANMOINS, certains points méritent d'être revus." (professional)
+✅ "CERTES, l'idée est intéressante, MAIS la mise en œuvre sera complexe." (structured concession)</code></pre></div>
+<p><strong>The core realization:</strong><br>
+→ Project 28 taught you to say <strong>"BECAUSE X → Y"</strong> (cause → consequence)<br>
+→ Project 29 teaches you to say <strong>"DESPITE X → Y anyway"</strong> (opposition → unexpected result)<br>
+→ These are the <strong>two pillars of argumentation</strong> in French<br>
+→ Cause-consequence = things that make logical sense together<br>
+→ Concession-opposition = things that seem to CONTRADICT each other<br>
+→ Together, they give you the <strong>complete logic toolkit</strong> for adult French</p>
+<hr>
+<h1>🔍 HOW TO APPROACH IT</h1>
+<p>→ Concession and opposition express the same core idea: <strong>"X is true, but Y is ALSO true — and they seem to conflict"</strong><br>
+→ French has <strong>three families</strong> of contrast connectors:</p>
+<table><thead><tr><th>Family</th><th>Logic</th><th>Example Pattern</th></tr></thead><tbody><tr><td><strong>Simple Contrast</strong></td><td>X, but Y</td><td>"Il est riche, <strong>mais</strong> il n'est pas heureux."</td></tr><tr><td><strong>Concession</strong></td><td>Although X, Y</td><td>"<strong>Bien que</strong> ce soit difficile, je vais essayer."</td></tr><tr><td><strong>Unexpected Result</strong></td><td>X, yet/however Y</td><td>"Il n'a pas étudié. <strong>Pourtant</strong>, il a réussi."</td></tr></tbody></table>
+<p>→ Within each family, connectors range from <strong>casual to very formal</strong><br>
+→ Some use <strong>indicatif</strong> — some trigger <strong>subjonctif</strong> — some take <strong>nouns only</strong><br>
+→ Your job: Master every connector, know its register, and choose the right one for each context</p>
+<hr>
+<h1>🔧 HOW CAN WE SOLVE IT</h1>
+<h2>THE COMPLETE CONTRAST CONNECTOR MAP</h2>
+<h3>SIMPLE CONTRAST ("but"):</h3>
+<table><thead><tr><th>Connector</th><th>Register</th><th>Position</th><th>Grammar After</th></tr></thead><tbody><tr><td><strong>mais</strong></td><td>Universal</td><td>Between two clauses</td><td>INDICATIF</td></tr><tr><td><strong>or</strong></td><td>Formal/written</td><td>Beginning of new sentence</td><td>INDICATIF</td></tr><tr><td><strong>par contre</strong></td><td>Casual/neutral</td><td>Beginning of new clause</td><td>INDICATIF</td></tr><tr><td><strong>en revanche</strong></td><td>Formal</td><td>Beginning of new clause</td><td>INDICATIF</td></tr><tr><td><strong>au contraire</strong></td><td>Universal</td><td>Beginning or standalone</td><td>INDICATIF</td></tr><tr><td><strong>tandis que</strong></td><td>Neutral/formal</td><td>Between two clauses</td><td>INDICATIF</td></tr><tr><td><strong>alors que</strong></td><td>Universal</td><td>Between two clauses</td><td>INDICATIF</td></tr></tbody></table>
+<h3>CONCESSION ("although / even though / despite"):</h3>
+<table><thead><tr><th>Connector</th><th>Register</th><th>Position</th><th>Grammar After</th></tr></thead><tbody><tr><td><strong>bien que</strong></td><td>Formal/neutral</td><td>Beginning or middle</td><td><strong>SUBJONCTIF</strong></td></tr><tr><td><strong>quoique</strong></td><td>Formal/literary</td><td>Beginning or middle</td><td><strong>SUBJONCTIF</strong></td></tr><tr><td><strong>même si</strong></td><td>Universal</td><td>Beginning or middle</td><td><strong>INDICATIF</strong></td></tr><tr><td><strong>malgré</strong></td><td>Universal</td><td>Flexible</td><td>+ <strong>NOUN</strong> (no verb)</td></tr><tr><td><strong>malgré le fait que</strong></td><td>Formal</td><td>Beginning or middle</td><td><strong>SUBJONCTIF</strong></td></tr><tr><td><strong>en dépit de</strong></td><td>Very formal</td><td>Flexible</td><td>+ <strong>NOUN</strong> (no verb)</td></tr><tr><td><strong>avoir beau</strong> + infinitif</td><td>Universal (idiomatic)</td><td>Beginning</td><td>Special structure</td></tr><tr><td><strong>certes...mais</strong></td><td>Formal</td><td>Two-part structure</td><td>INDICATIF</td></tr></tbody></table>
+<h3>UNEXPECTED RESULT ("yet / however / nevertheless"):</h3>
+<table><thead><tr><th>Connector</th><th>Register</th><th>Position</th><th>Grammar After</th></tr></thead><tbody><tr><td><strong>pourtant</strong></td><td>Universal</td><td>After first clause / beginning of second</td><td>INDICATIF</td></tr><tr><td><strong>cependant</strong></td><td>Formal</td><td>Beginning of new clause</td><td>INDICATIF</td></tr><tr><td><strong>toutefois</strong></td><td>Very formal</td><td>Beginning of new clause</td><td>INDICATIF</td></tr><tr><td><strong>néanmoins</strong></td><td>Very formal</td><td>Beginning of new clause</td><td>INDICATIF</td></tr><tr><td><strong>quand même</strong></td><td>Casual</td><td>End of clause (usually)</td><td>INDICATIF</td></tr><tr><td><strong>tout de même</strong></td><td>Neutral</td><td>End or beginning of clause</td><td>INDICATIF</td></tr><tr><td><strong>n'empêche (que)</strong></td><td>Casual</td><td>Beginning</td><td>INDICATIF</td></tr><tr><td><strong>malgré tout</strong></td><td>Universal</td><td>Beginning or end</td><td>Standalone or + clause</td></tr></tbody></table>
+<hr>
+<h1>✅ WHAT COULD BE DONE — THE 100 SENTENCES</h1>
+<hr>
+<h2>🔹 BLOCK A — "Mais" — The Universal Contrast</h2>
+<p><em>Scenario: Daily conversations — the simplest and most common contrast word</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English</th><th>Context</th></tr></thead><tbody><tr><td>1</td><td>Il est intelligent, <strong>mais</strong> paresseux.</td><td>He's intelligent, but lazy.</td><td>Character description</td></tr><tr><td>2</td><td>J'aime la France, <strong>mais</strong> le climat est difficile.</td><td>I love France, but the climate is tough.</td><td>Balanced view</td></tr><tr><td>3</td><td>C'est cher, <strong>mais</strong> ça vaut le coup.</td><td>It's expensive, but it's worth it.</td><td>Recommendation</td></tr><tr><td>4</td><td>Je voudrais venir, <strong>mais</strong> je ne peux pas.</td><td>I'd like to come, but I can't.</td><td>Polite refusal</td></tr><tr><td>5</td><td>C'est vrai, <strong>mais</strong> ce n'est pas si simple.</td><td>That's true, but it's not that simple.</td><td>Nuanced response</td></tr><tr><td>6</td><td>Le film était long, <strong>mais</strong> intéressant.</td><td>The movie was long, but interesting.</td><td>Review</td></tr><tr><td>7</td><td>J'ai essayé, <strong>mais</strong> je n'ai pas réussi.</td><td>I tried, but I didn't succeed.</td><td>Effort acknowledged</td></tr><tr><td>8</td><td>Il fait froid, <strong>mais</strong> il fait beau.</td><td>It's cold, but it's sunny.</td><td>Weather contrast</td></tr><tr><td>9</td><td>Elle est jeune, <strong>mais</strong> très compétente.</td><td>She's young, but very competent.</td><td>Professional assessment</td></tr><tr><td>10</td><td>Je comprends ton point de vue, <strong>mais</strong> je ne suis pas d'accord.</td><td>I understand your point of view, but I disagree.</td><td>Polite disagreement (P22)</td></tr></tbody></table>
+<p><strong>🧠 "MAIS" — Core Rules:</strong></p>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>POSITION: Between two contrasting clauses — always in the MIDDLE
+</span>→ [Clause A], MAIS [Clause B]
+→ Comma before "mais" (usually)
+
+LOGIC: Simple opposition — X is true AND Y (which contradicts) is also true
+→ No judgment about which is more important
+→ The most NEUTRAL contrast connector
+
+CANNOT START A SENTENCE (traditionally):
+→ Strict grammar: "Mais" should not begin a sentence
+→ Reality: French speakers DO start sentences with "Mais..." constantly in speech
+→ "Mais tu es fou !" = "But you're crazy!"
+→ In formal writing → avoid starting with "mais"
+→ In speech → completely normal
+
+REGISTER: Universal — works everywhere, all the time</code></pre></div>
+<hr>
+<h2>🔹 BLOCK B — "Par contre / En revanche" — Contrasting Two Alternatives</h2>
+<p><em>Scenario: Comparing two things or situations — one positive, one negative (or different)</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English</th><th>Connector</th><th>Register</th></tr></thead><tbody><tr><td>11</td><td>Le restaurant est cher. <strong>Par contre</strong>, la nourriture est excellente.</td><td>The restaurant is expensive. On the other hand, the food is excellent.</td><td>par contre</td><td>Casual/neutral</td></tr><tr><td>12</td><td>Je n'aime pas la viande. <strong>Par contre</strong>, j'adore le poisson.</td><td>I don't like meat. On the other hand, I love fish.</td><td>par contre</td><td>Casual</td></tr><tr><td>13</td><td>L'hôtel était bien. <strong>Par contre</strong>, la chambre était petite.</td><td>The hotel was nice. On the other hand, the room was small.</td><td>par contre</td><td>Casual</td></tr><tr><td>14</td><td>Le matin, il fait froid. <strong>En revanche</strong>, l'après-midi est agréable.</td><td>In the morning, it's cold. On the other hand, the afternoon is pleasant.</td><td>en revanche</td><td>Formal</td></tr><tr><td>15</td><td>Le salaire est bas. <strong>En revanche</strong>, les avantages sont intéressants.</td><td>The salary is low. On the other hand, the benefits are interesting.</td><td>en revanche</td><td>Formal</td></tr><tr><td>16</td><td>Ce logiciel est gratuit. <strong>En revanche</strong>, il est limité en fonctionnalités.</td><td>This software is free. On the other hand, it's limited in features.</td><td>en revanche</td><td>Formal</td></tr><tr><td>17</td><td>Le projet a échoué. <strong>En revanche</strong>, nous avons beaucoup appris.</td><td>The project failed. On the other hand, we learned a lot.</td><td>en revanche</td><td>Formal</td></tr><tr><td>18</td><td>Je ne parle pas espagnol. <strong>Par contre</strong>, je parle italien.</td><td>I don't speak Spanish. On the other hand, I speak Italian.</td><td>par contre</td><td>Casual</td></tr><tr><td>19</td><td>Il n'est pas très sociable. <strong>En revanche</strong>, il est très fiable.</td><td>He's not very sociable. On the other hand, he's very reliable.</td><td>en revanche</td><td>Formal</td></tr><tr><td>20</td><td>L'examen était facile. <strong>Par contre</strong>, j'ai mal géré mon temps.</td><td>The exam was easy. On the other hand, I managed my time poorly.</td><td>par contre</td><td>Casual</td></tr></tbody></table>
+<p><strong>🧠 "PAR CONTRE" vs. "EN REVANCHE" — The Register Split:</strong></p>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>PAR CONTRE = On the other hand — CASUAL/NEUTRAL
+</span>→ Extremely common in spoken French
+→ "Le film était bien. Par contre, la fin était nulle."
+→ ⚠️ Some French purists consider "par contre" INCORRECT
+   → They argue it should only be "en revanche"
+   → In reality, EVERYONE uses "par contre" in speech
+   → In formal writing → prefer "en revanche"
+   → In speech → both are perfectly fine
+
+EN REVANCHE = On the other hand — FORMAL
+→ More elegant, more "correct" according to purists
+→ Preferred in professional, academic, and written contexts
+→ "Le salaire est modeste. En revanche, les conditions sont excellentes."
+
+BOTH share the same LOGIC:
+→ Presenting TWO SIDES of something — one positive, one negative (or just different)
+→ NOT the same as "mais" — "par contre / en revanche" introduce a SEPARATE contrasting fact
+→ "Mais" connects within ONE thought — "par contre / en revanche" contrasts TWO thoughts</code></pre></div>
+<hr>
+<h2>🔹 BLOCK C — "Alors que / Tandis que" — Simultaneous Contrast</h2>
+<p><em>Scenario: Two situations that exist at the same time but contradict each other</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English</th><th>Connector</th><th>Nuance</th></tr></thead><tbody><tr><td>21</td><td>Il dort <strong>alors que</strong> tout le monde travaille.</td><td>He sleeps while everyone is working.</td><td>alors que</td><td>Contrast + slight reproach</td></tr><tr><td>22</td><td>Elle a réussi **alors qu'**elle n'avait pas étudié.</td><td>She succeeded even though she hadn't studied.</td><td>alors que</td><td>Unexpected contrast</td></tr><tr><td>23</td><td>Tu te plains <strong>alors que</strong> tu as tout ce qu'il faut.</td><td>You complain while you have everything you need.</td><td>alors que</td><td>Reproach</td></tr><tr><td>24</td><td>Il est parti **alors qu'**on avait besoin de lui.</td><td>He left while we needed him.</td><td>alors que</td><td>Frustration</td></tr><tr><td>25</td><td><strong>Alors que</strong> je pensais avoir fini, on m'a donné du travail supplémentaire.</td><td>While I thought I was done, they gave me more work.</td><td>alors que</td><td>Unexpected turn</td></tr><tr><td>26</td><td>Elle est calme <strong>tandis que</strong> son frère est très agité.</td><td>She is calm while her brother is very restless.</td><td>tandis que</td><td>Neutral comparison</td></tr><tr><td>27</td><td>Le nord est froid <strong>tandis que</strong> le sud est chaud.</td><td>The north is cold while the south is warm.</td><td>tandis que</td><td>Factual contrast</td></tr><tr><td>28</td><td>Lui travaille à Paris **tandis qu'**elle travaille à Lyon.</td><td>He works in Paris while she works in Lyon.</td><td>tandis que</td><td>Factual parallel</td></tr><tr><td>29</td><td>Certains sont pour <strong>tandis que</strong> d'autres sont contre.</td><td>Some are for it while others are against it.</td><td>tandis que</td><td>Balanced presentation</td></tr><tr><td>30</td><td>Il gagne beaucoup **alors qu'**il travaille peu.</td><td>He earns a lot even though he works little.</td><td>alors que</td><td>Injustice/contrast</td></tr></tbody></table>
+<p><strong>🧠 "ALORS QUE" vs. "TANDIS QUE" — Key Distinction:</strong></p>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>ALORS QUE = While / Even though — CONTRAST with EMOTION
+</span>→ Often carries surprise, frustration, reproach, or irony
+→ "Il dort ALORS QUE tout le monde travaille." (reproach — he SHOULD be working)
+→ "Elle a réussi ALORS QU'elle n'avait pas étudié." (surprise — unexpected)
+→ Can go at BEGINNING or MIDDLE of sentence
+→ Register: Universal — very common in speech
+
+TANDIS QUE = While / Whereas — NEUTRAL factual contrast
+→ Simply presents two parallel but different facts
+→ No judgment, no emotion — just observation
+→ "Le nord est froid TANDIS QUE le sud est chaud." (just a fact)
+→ "Certains sont pour TANDIS QUE d'autres sont contre." (balanced)
+→ Register: Neutral to slightly formal
+
+⚠️ DO NOT CONFUSE:
+→ "Alors que" (contrast) ≠ "Alors" (consequence — Project 28)
+   → "Il pleut, ALORS je reste." = It's raining, SO I stay. (consequence)
+   → "Il sort ALORS QU'il pleut." = He goes out EVEN THOUGH it's raining. (contrast)
+→ Context + "que" after "alors" = contrast signal</code></pre></div>
+<hr>
+<h2>🔹 BLOCK D — "Même si" — "Even If / Even Though" (Indicatif)</h2>
+<p><em>Scenario: Acknowledging a difficulty or obstacle — but doing something ANYWAY</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English</th><th>Tense After Même Si</th></tr></thead><tbody><tr><td>31</td><td><strong>Même si</strong> c'est difficile, je vais essayer.</td><td>Even if it's hard, I'll try.</td><td>Présent</td></tr><tr><td>32</td><td><strong>Même si</strong> tu ne veux pas, tu dois y aller.</td><td>Even if you don't want to, you have to go.</td><td>Présent</td></tr><tr><td>33</td><td><strong>Même si</strong> il pleut, on sortira.</td><td>Even if it rains, we'll go out.</td><td>Présent → futur result</td></tr><tr><td>34</td><td><strong>Même si</strong> elle est fatiguée, elle continue à travailler.</td><td>Even though she's tired, she keeps working.</td><td>Présent</td></tr><tr><td>35</td><td><strong>Même si</strong> j'avais le temps, je ne viendrais pas.</td><td>Even if I had the time, I wouldn't come.</td><td>Imparfait → conditionnel (hypothetical)</td></tr><tr><td>36</td><td><strong>Même si</strong> on lui explique, il ne comprend pas.</td><td>Even if you explain to him, he doesn't understand.</td><td>Présent → présent (habitual)</td></tr><tr><td>37</td><td><strong>Même si</strong> c'était cher, ça valait le coup.</td><td>Even though it was expensive, it was worth it.</td><td>Imparfait (past)</td></tr><tr><td>38</td><td>Je l'aime <strong>même si</strong> il a des défauts.</td><td>I love him even though he has flaws.</td><td>Présent</td></tr><tr><td>39</td><td><strong>Même si</strong> tu as raison, ce n'est pas une raison pour crier.</td><td>Even if you're right, that's no reason to shout.</td><td>Présent</td></tr><tr><td>40</td><td>Il viendra <strong>même si</strong> on ne l'invite pas.</td><td>He'll come even if we don't invite him.</td><td>Présent → futur result</td></tr></tbody></table>
+<p><strong>🧠 "MÊME SI" — The Universal Concession Connector:</strong></p>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>MÊME SI = Even if / Even though — ALWAYS INDICATIF
+</span>
+→ This is the MOST COMMON concession connector in spoken French
+→ It NEVER takes subjonctif — always indicatif
+→ Works with ALL tenses:
+
+PRESENT REALITY:
+→ "Même si c'est difficile, je continue." (present + present)
+
+FUTURE POSSIBILITY:
+→ "Même si il pleut demain, on sortira." (present + futur)
+
+PAST REALITY:
+→ "Même si c'était cher, j'ai acheté." (imparfait + passé composé)
+
+HYPOTHETICAL:
+→ "Même si j'avais le temps, je ne viendrais pas." (imparfait + conditionnel)
+→ Connection to Project 33: Si + imparfait → conditionnel — same structure
+
+POSITION: Beginning or middle of sentence
+→ "Même si c'est dur, j'essaie." (beginning)
+→ "J'essaie même si c'est dur." (middle)</code></pre></div>
+<p><strong>🧠 "MÊME SI" vs. "BIEN QUE" — The Critical Distinction:</strong></p>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>MÊME SI + INDICATIF = Even if/Even though (universal — casual + formal)
+</span>BIEN QUE + SUBJONCTIF = Although (formal — triggers subjonctif)
+
+SAME MEANING — different register and grammar:
+→ "Même si c'EST difficile, j'essaie." (indicatif — casual/universal)
+→ "Bien que ce SOIT difficile, j'essaie." (subjonctif — formal)
+
+RULE OF THUMB:
+→ Speaking to friends → même si
+→ Writing an essay → bien que
+→ Both are correct — but register matters</code></pre></div>
+<hr>
+<h2>🔹 BLOCK E — "Bien que / Quoique" — Formal Concession (Subjonctif)</h2>
+<p><em>Scenario: Formal writing, professional speech, structured arguments</em><br>
+<em>Connection to Project 23: Subjonctif triggered by concession — new trigger category</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English</th><th>Connector</th><th>Subjonctif Form</th></tr></thead><tbody><tr><td>41</td><td><strong>Bien que</strong> ce <strong>soit</strong> difficile, je vais essayer.</td><td>Although it's difficult, I'll try.</td><td>bien que</td><td>soit (être)</td></tr><tr><td>42</td><td>**Bien qu'**il <strong>fasse</strong> froid, nous sommes sortis.</td><td>Although it was cold, we went out.</td><td>bien que</td><td>fasse (faire)</td></tr><tr><td>43</td><td>**Bien qu'**elle <strong>ait</strong> peu d'expérience, elle est très compétente.</td><td>Although she has little experience, she's very competent.</td><td>bien que</td><td>ait (avoir)</td></tr><tr><td>44</td><td><strong>Bien que</strong> nous <strong>soyons</strong> fatigués, nous avons continué.</td><td>Although we were tired, we continued.</td><td>bien que</td><td>soyons (être)</td></tr><tr><td>45</td><td>**Bien qu'**il <strong>puisse</strong> paraître étrange, ce choix est logique.</td><td>Although it may seem strange, this choice is logical.</td><td>bien que</td><td>puisse (pouvoir)</td></tr><tr><td>46</td><td><strong>Bien que</strong> le projet <strong>ait</strong> été annulé, nous avons beaucoup appris.</td><td>Although the project was cancelled, we learned a lot.</td><td>bien que</td><td>ait (avoir — subj passé)</td></tr><tr><td>47</td><td><strong>Bien que</strong> je ne <strong>sois</strong> pas d'accord, je respecte ta décision.</td><td>Although I don't agree, I respect your decision.</td><td>bien que</td><td>sois (être)</td></tr><tr><td>48</td><td>**Quoiqu'**il en <strong>soit</strong>, nous devons avancer.</td><td>Whatever the case, we must move forward.</td><td>quoique</td><td>soit (être) — fixed expression</td></tr><tr><td>49</td><td><strong>Quoique</strong> le résultat <strong>soit</strong> décevant, il reste encourageant.</td><td>Although the result is disappointing, it remains encouraging.</td><td>quoique</td><td>soit (être)</td></tr><tr><td>50</td><td><strong>Bien que</strong> vous <strong>ayez</strong> raison sur le fond, la forme pose problème.</td><td>Although you're right in substance, the form is problematic.</td><td>bien que</td><td>ayez (avoir)</td></tr></tbody></table>
+<p><strong>🧠 "BIEN QUE" — Core Rules:</strong></p>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>BIEN QUE = Although — ALWAYS followed by SUBJONCTIF
+</span>
+→ "Bien que ce SOIT difficile..." (NOT "c'est")
+→ "Bien qu'il FASSE froid..." (NOT "il fait")
+→ "Bien qu'elle AIT de l'expérience..." (NOT "elle a")
+
+POSITION: Beginning or middle of sentence
+→ "Bien que ce soit difficile, j'essaie." (beginning — most common)
+→ "J'essaie, bien que ce soit difficile." (middle — less common)
+
+REGISTER: Formal / written / professional
+→ In casual speech → use "même si" instead
+→ In essays, reports, presentations → "bien que" sounds elegant
+
+SUBJONCTIF PASSÉ after "bien que" (for past events):
+→ "Bien qu'il AIT ÉTÉ annulé..." (Although it was cancelled)
+→ Subjonctif passé = avoir/être (subjonctif) + participe passé
+→ Full mastery in Project 31 — for now, recognize the pattern</code></pre></div>
+<p><strong>🧠 "QUOIQUE" — The Literary Variant:</strong></p>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>QUOIQUE = Although — SAME meaning as "bien que" — SAME grammar (subjonctif)
+</span>→ Less common than "bien que" — more literary
+→ "Quoiqu'il en soit" = "Whatever the case may be" — FIXED EXPRESSION
+→ Very common as a standalone phrase in both speech and writing
+→ Used to move past a point: "Quoiqu'il en soit, passons au sujet suivant."</code></pre></div>
+<hr>
+<h2>🔹 BLOCK F — "Malgré / En dépit de" — Noun-Based Concession</h2>
+<p><em>Scenario: The obstacle is a NOUN — not a full clause</em><br>
+<em>Connection to Block F of Project 28: Grâce à / À cause de — same noun-based pattern, opposite logic</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English</th><th>Connector</th><th>Register</th></tr></thead><tbody><tr><td>51</td><td><strong>Malgré</strong> la pluie, on est sortis.</td><td>Despite the rain, we went out.</td><td>malgré + noun</td><td>Universal</td></tr><tr><td>52</td><td><strong>Malgré</strong> ses efforts, il n'a pas réussi.</td><td>Despite his efforts, he didn't succeed.</td><td>malgré + noun</td><td>Universal</td></tr><tr><td>53</td><td><strong>Malgré</strong> le froid, les gens étaient dans la rue.</td><td>Despite the cold, people were in the street.</td><td>malgré + noun</td><td>Universal</td></tr><tr><td>54</td><td><strong>Malgré</strong> son jeune âge, elle est très mature.</td><td>Despite her young age, she's very mature.</td><td>malgré + noun</td><td>Universal</td></tr><tr><td>55</td><td><strong>Malgré</strong> tout, je reste optimiste.</td><td>Despite everything, I remain optimistic.</td><td>malgré tout</td><td>Universal — very common</td></tr><tr><td>56</td><td>Il a réussi <strong>malgré</strong> les difficultés.</td><td>He succeeded despite the difficulties.</td><td>malgré + noun</td><td>Universal</td></tr><tr><td>57</td><td><strong>Malgré</strong> nos différences, on s'entend bien.</td><td>Despite our differences, we get along well.</td><td>malgré + noun</td><td>Universal</td></tr><tr><td>58</td><td><strong>En dépit de</strong> toutes les critiques, le film a eu du succès.</td><td>In spite of all the criticism, the film was successful.</td><td>en dépit de</td><td>Very formal</td></tr><tr><td>59</td><td><strong>En dépit des</strong> obstacles, nous avons atteint notre objectif.</td><td>In spite of the obstacles, we reached our goal.</td><td>en dépit de</td><td>Very formal</td></tr><tr><td>60</td><td>Il continue <strong>en dépit de</strong> son état de santé.</td><td>He continues in spite of his health condition.</td><td>en dépit de</td><td>Very formal</td></tr></tbody></table>
+<p><strong>🧠 "MALGRÉ" vs. "EN DÉPIT DE" — Noun-Only Concession:</strong></p>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>MALGRÉ + NOUN = Despite — UNIVERSAL
+</span>→ "Malgré la pluie..." / "Malgré ses efforts..."
+→ NEVER followed by a verb/clause directly:
+   ❌ "Malgré il pleut..." (WRONG)
+   ✅ "Malgré la pluie..." (CORRECT — noun only)
+   ✅ "Malgré le fait qu'il pleuve..." (workaround — adds "le fait que" + subj)
+
+EN DÉPIT DE + NOUN = In spite of — VERY FORMAL
+→ Same structure as malgré — noun only
+→ "En dépit des difficultés..."
+→ Used in formal writing, official speeches, literary texts
+→ In daily speech → use "malgré" instead
+
+CONTRACTION:
+→ malgré + le = malgré le (NO contraction)
+→ en dépit de + le = en dépit DU
+→ en dépit de + les = en dépit DES
+
+SPECIAL EXPRESSION:
+→ "MALGRÉ TOUT" = Despite everything / In spite of it all
+→ Extremely common — standalone or at beginning/end
+→ "La situation est difficile, mais malgré tout, on avance."
+→ "Malgré tout, je l'aime."</code></pre></div>
+<p><strong>🧠 HOW TO USE "MALGRÉ" WITH A VERB — The Workaround:</strong></p>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>MALGRÉ cannot directly take a verb clause
+</span>But you can work around it:
+
+METHOD 1: Malgré + LE FAIT QUE + subjonctif
+→ "Malgré le fait qu'il SOIT fatigué, il continue."
+
+METHOD 2: Just use "bien que" instead
+→ "Bien qu'il SOIT fatigué, il continue."
+
+METHOD 3: Malgré + NOUN form of the verb
+→ "Malgré SA fatigue, il continue." (noun = sa fatigue)
+→ This is the most elegant solution — convert the idea to a noun</code></pre></div>
+<hr>
+<h2>🔹 BLOCK G — "Pourtant / Cependant / Toutefois / Néanmoins" — Unexpected Result Connectors</h2>
+<p><em>Scenario: Something happened that you DIDN'T expect given the circumstances</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English</th><th>Connector</th><th>Register</th></tr></thead><tbody><tr><td>61</td><td>Il n'a pas étudié. <strong>Pourtant</strong>, il a réussi l'examen.</td><td>He didn't study. Yet, he passed the exam.</td><td>pourtant</td><td>Universal</td></tr><tr><td>62</td><td>Elle est riche. <strong>Pourtant</strong>, elle n'est pas heureuse.</td><td>She's rich. Yet, she's not happy.</td><td>pourtant</td><td>Universal</td></tr><tr><td>63</td><td>Je l'ai prévenu. <strong>Pourtant</strong>, il a fait la même erreur.</td><td>I warned him. Yet, he made the same mistake.</td><td>pourtant</td><td>Universal</td></tr><tr><td>64</td><td>C'était dangereux. <strong>Pourtant</strong>, personne n'a eu peur.</td><td>It was dangerous. Yet, nobody was afraid.</td><td>pourtant</td><td>Universal</td></tr><tr><td>65</td><td>On avait tout prévu. <strong>Pourtant</strong>, rien ne s'est passé comme prévu.</td><td>We had planned everything. Yet, nothing went as planned.</td><td>pourtant</td><td>Universal</td></tr><tr><td>66</td><td>Le problème est connu. <strong>Cependant</strong>, aucune solution n'a été trouvée.</td><td>The problem is known. However, no solution has been found.</td><td>cependant</td><td>Formal</td></tr><tr><td>67</td><td>Les résultats sont encourageants. <strong>Cependant</strong>, il reste du travail.</td><td>The results are encouraging. However, there's still work to do.</td><td>cependant</td><td>Formal</td></tr><tr><td>68</td><td>La situation est difficile. <strong>Toutefois</strong>, nous restons confiants.</td><td>The situation is difficult. Nevertheless, we remain confident.</td><td>toutefois</td><td>Very formal</td></tr><tr><td>69</td><td>Le projet a pris du retard. <strong>Toutefois</strong>, la qualité est au rendez-vous.</td><td>The project is delayed. Nevertheless, the quality is there.</td><td>toutefois</td><td>Very formal</td></tr><tr><td>70</td><td>Les critiques ont été sévères. <strong>Néanmoins</strong>, le film a été un succès.</td><td>The reviews were harsh. Nevertheless, the film was a success.</td><td>néanmoins</td><td>Very formal</td></tr></tbody></table>
+<p><strong>🧠 THE UNEXPECTED RESULT LADDER — From Casual to Very Formal:</strong></p>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>CASUAL:
+</span>→ POURTANT = Yet / Still / And yet
+   → Most common in speech
+   → Strong sense of SURPRISE or CONTRADICTION
+   → "Il est intelligent. Pourtant, il fait des erreurs stupides."
+   → Can also go MID-SENTENCE:
+     "Il est pourtant intelligent." = "He IS intelligent, though."
+
+FORMAL:
+→ CEPENDANT = However
+   → Professional, written, structured arguments
+   → "Les résultats sont bons. Cependant, des améliorations sont possibles."
+   → Always at BEGINNING of second clause
+
+VERY FORMAL:
+→ TOUTEFOIS = Nevertheless / However
+   → More formal than "cependant" — written French, speeches
+   → "La situation est grave. Toutefois, des solutions existent."
+
+→ NÉANMOINS = Nevertheless / Nonetheless
+   → Most formal of the four — literary, legal, academic
+   → "Les obstacles sont nombreux. Néanmoins, le projet avance."
+
+REGISTER EQUIVALENCE:
+💨 Pourtant        = casual / spoken    → "Yet"
+☀️ Cependant       = formal / written   → "However"
+🔥 Toutefois       = very formal        → "Nevertheless"
+⚡ Néanmoins       = most formal        → "Nonetheless"
+
+ALL USE INDICATIF — no subjonctif trigger
+ALL go at the BEGINNING of the contrasting clause</code></pre></div>
+<hr>
+<h2>🔹 BLOCK H — "Quand même / Tout de même / N'empêche" — Casual Emphasis</h2>
+<p><em>Scenario: Insisting that something is true DESPITE the obstacle — spoken French emphasis</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English</th><th>Connector</th><th>Register</th></tr></thead><tbody><tr><td>71</td><td>Il pleut, mais on y va <strong>quand même</strong>.</td><td>It's raining, but we're going anyway.</td><td>quand même</td><td>Casual — very common</td></tr><tr><td>72</td><td>C'est cher, mais je l'achète <strong>quand même</strong>.</td><td>It's expensive, but I'm buying it anyway.</td><td>quand même</td><td>Casual</td></tr><tr><td>73</td><td>Tu es fatigué ? Viens <strong>quand même</strong> !</td><td>You're tired? Come anyway!</td><td>quand même</td><td>Casual — encouraging</td></tr><tr><td>74</td><td>Il m'a menti. Je lui fais <strong>quand même</strong> confiance.</td><td>He lied to me. I still trust him.</td><td>quand même</td><td>Casual — surprising</td></tr><tr><td>75</td><td>C'est <strong>quand même</strong> bizarre, non ?</td><td>It's still weird, don't you think?</td><td>quand même</td><td>Casual — expressing surprise</td></tr><tr><td>76</td><td>Merci <strong>quand même</strong>.</td><td>Thanks anyway.</td><td>quand même</td><td>Polite — after refusal</td></tr><tr><td>77</td><td>C'est difficile, mais il faut <strong>tout de même</strong> essayer.</td><td>It's difficult, but we must still try.</td><td>tout de même</td><td>Neutral — slightly formal</td></tr><tr><td>78</td><td>Il a fait des erreurs. Il a <strong>tout de même</strong> fait du bon travail.</td><td>He made mistakes. He still did good work.</td><td>tout de même</td><td>Neutral</td></tr><tr><td>79</td><td><strong>N'empêche</strong>, il a du talent.</td><td>Still, he has talent.</td><td>n'empêche</td><td>Very casual</td></tr><tr><td>80</td><td><strong>N'empêche que</strong> c'est injuste.</td><td>Still, it's unfair.</td><td>n'empêche que</td><td>Very casual</td></tr></tbody></table>
+<p><strong>🧠 "QUAND MÊME" — The French Native's Favorite Emphasis Word:</strong></p>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>QUAND MÊME = anyway / still / all the same / even so
+</span>
+→ One of the MOST USED expressions in spoken French
+→ Multiple positions and functions:
+
+1. END OF SENTENCE — "despite that":
+   → "Je viens quand même." = I'm coming anyway.
+   → "Merci quand même." = Thanks anyway.
+
+2. MID-SENTENCE — emphasis:
+   → "C'est quand même bizarre." = It IS weird, though.
+   → "Il est quand même gentil." = He IS nice, after all.
+   → Adds emotional emphasis — surprise, insistence
+
+3. STANDALONE — reaction:
+   → "Quand même !" = Still! / Come on! / Even so!
+   → Used to express surprise, indignation, or admiration
+   → "Il a mangé trois gâteaux !" — "Quand même !" (= That's a lot!)
+
+CONNECTION TO PROJECT 43: "Quand même" as discourse marker
+→ One of the most important filler/emphasis words in natural French</code></pre></div>
+<p><strong>🧠 "TOUT DE MÊME" — The Slightly Formal Twin:</strong></p>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>TOUT DE MÊME = All the same / Still / Nevertheless
+</span>
+→ Same meaning as "quand même" — slightly more formal
+→ "Il a tout de même fait du bon travail." = He still did good work.
+→ Can also be used as a reaction: "Tout de même !" = "Even so!"
+→ Register: neutral — works in both speech and writing</code></pre></div>
+<p><strong>🧠 "N'EMPÊCHE (QUE)" — The Casual Insistence:</strong></p>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>N'EMPÊCHE = Still / Even so — VERY CASUAL
+</span>N'EMPÊCHE QUE = The fact remains that — VERY CASUAL
+
+→ "Il a tort. N'empêche, il est courageux."
+→ "N'empêche que c'est injuste."
+→ Short for "Il n'empêche que..." = "It doesn't prevent the fact that..."
+→ Very spoken — avoid in formal writing
+→ Used to INSIST on a point despite what was just said</code></pre></div>
+<hr>
+<h2>🔹 BLOCK I — "Avoir beau / Certes...mais" — Advanced Concession Structures</h2>
+<p><em>Scenario: Sophisticated argumentation — acknowledging then pivoting</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English</th><th>Structure</th></tr></thead><tbody><tr><td>81</td><td>J'<strong>ai beau</strong> essayer, je n'y arrive pas.</td><td>No matter how hard I try, I can't do it.</td><td>avoir beau + infinitif</td></tr><tr><td>82</td><td>Il <strong>a beau</strong> être riche, il n'est pas heureux.</td><td>Even though he's rich, he's not happy.</td><td>avoir beau + infinitif</td></tr><tr><td>83</td><td>Elle <strong>a eu beau</strong> chercher, elle n'a rien trouvé.</td><td>No matter how much she searched, she found nothing.</td><td>avoir beau (passé composé) + infinitif</td></tr><tr><td>84</td><td>On <strong>a beau</strong> lui expliquer, il ne comprend pas.</td><td>No matter how much we explain, he doesn't understand.</td><td>avoir beau + infinitif</td></tr><tr><td>85</td><td>Tu <strong>as beau</strong> dire, je ne te crois pas.</td><td>No matter what you say, I don't believe you.</td><td>avoir beau + infinitif</td></tr><tr><td>86</td><td><strong>Certes</strong>, le prix est élevé, <strong>mais</strong> la qualité est exceptionnelle.</td><td>Admittedly, the price is high, but the quality is exceptional.</td><td>certes...mais</td></tr><tr><td>87</td><td><strong>Certes</strong>, il a de l'expérience, <strong>mais</strong> il manque de créativité.</td><td>Admittedly, he has experience, but he lacks creativity.</td><td>certes...mais</td></tr><tr><td>88</td><td><strong>Certes</strong>, la situation est difficile, <strong>mais</strong> ce n'est pas impossible.</td><td>Admittedly, the situation is difficult, but it's not impossible.</td><td>certes...mais</td></tr><tr><td>89</td><td><strong>Certes</strong>, je comprends vos inquiétudes. <strong>Cependant</strong>, le projet doit avancer.</td><td>Admittedly, I understand your concerns. However, the project must move forward.</td><td>certes...cependant</td></tr><tr><td>90</td><td><strong>Certes</strong>, les résultats ne sont pas parfaits, <strong>mais</strong> ils sont encourageants.</td><td>Admittedly, the results aren't perfect, but they're encouraging.</td><td>certes...mais</td></tr></tbody></table>
+<p><strong>🧠 "AVOIR BEAU" — The Idiomatic Concession:</strong></p>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>AVOIR BEAU + INFINITIF = No matter how much / Even though [someone does X]
+</span>
+→ Structure: Subject + AVOIR (conjugated) + BEAU + infinitif
+→ Always followed by a NEGATIVE or CONTRASTING result
+
+PRESENT:
+→ "J'ai beau essayer, je n'y arrive pas."
+   = No matter how much I try, I can't do it.
+
+PAST:
+→ "Il a eu beau chercher, il n'a rien trouvé."
+   = No matter how much he searched, he found nothing.
+
+IMPARFAIT:
+→ "J'avais beau crier, personne ne m'entendait."
+   = No matter how much I shouted, nobody heard me.
+
+→ This is a VERY FRENCH structure — no direct English equivalent
+→ Sounds natural and native — impressive to use correctly
+→ "Avoir beau" literally means "to have beautiful/nice" → but idiomatically = "in vain"
+→ The effort is USELESS — the result contradicts the action</code></pre></div>
+<p><strong>🧠 "CERTES...MAIS" — The Structured Concession:</strong></p>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>CERTES = Admittedly / Certainly / Granted
+</span>
+→ Used to ACKNOWLEDGE the other person's point BEFORE contrasting
+→ Always followed by MAIS, CEPENDANT, TOUTEFOIS, or NÉANMOINS
+
+STRUCTURE:
+→ CERTES + [acknowledged point], MAIS + [your contrasting point]
+→ "Certes, c'est cher, mais ça vaut le coup."
+
+CONNECTION TO PROJECT 22 (Block G — Nuancing):
+→ Same logic as the "Acknowledgment + Bridge + Contrast" formula
+→ "Certes" IS the formal acknowledgment word
+→ Very common in essays, debates, professional presentations
+
+REGISTER: Formal — but increasingly used in educated casual speech too</code></pre></div>
+<hr>
+<h2>🔹 BLOCK J — Full Conversational Contrast Flow</h2>
+<p><em>Scenario: Real dialogues mixing different contrast connectors naturally</em></p>
+<table><thead><tr><th>#</th><th>Speaker</th><th>French</th><th>English</th><th>Connector</th></tr></thead><tbody><tr><td>91</td><td>A:</td><td>Ce restaurant est excellent, non ?</td><td>This restaurant is excellent, right?</td><td>—</td></tr><tr><td>92</td><td>B:</td><td>La cuisine est bonne, <strong>par contre</strong> le service est lent.</td><td>The food is good, on the other hand the service is slow.</td><td>par contre</td></tr><tr><td>93</td><td>A:</td><td>C'est vrai. <strong>Pourtant</strong>, c'est un restaurant cinq étoiles.</td><td>True. Yet, it's a five-star restaurant.</td><td>pourtant</td></tr><tr><td>94</td><td>B:</td><td><strong>Même si</strong> c'est cher, ça ne garantit pas un bon service.</td><td>Even if it's expensive, that doesn't guarantee good service.</td><td>même si</td></tr><tr><td>95</td><td>A:</td><td>Tu as raison. <strong>Malgré</strong> le prix, le service devrait être impeccable.</td><td>You're right. Despite the price, the service should be impeccable.</td><td>malgré</td></tr><tr><td>96</td><td>B:</td><td><strong>Certes</strong>, l'ambiance est agréable, <strong>mais</strong> attendre une heure pour un plat, c'est trop.</td><td>Admittedly, the atmosphere is nice, but waiting an hour for a dish is too much.</td><td>certes...mais</td></tr><tr><td>97</td><td>A:</td><td>J'<strong>ai beau</strong> leur faire signe, personne ne vient.</td><td>No matter how much I wave at them, nobody comes.</td><td>avoir beau</td></tr><tr><td>98</td><td>B:</td><td><strong>N'empêche</strong>, la nourriture est <strong>quand même</strong> excellente.</td><td>Still, the food is excellent all the same.</td><td>n'empêche + quand même</td></tr><tr><td>99</td><td>A:</td><td><strong>Bien que</strong> le service <strong>soit</strong> mauvais, je reviendrai pour la cuisine.</td><td>Although the service is bad, I'll come back for the food.</td><td>bien que + subj</td></tr><tr><td>100</td><td>B:</td><td>Moi aussi. <strong>Cependant</strong>, la prochaine fois, je réserverai plus tôt.</td><td>Me too. However, next time I'll book earlier.</td><td>cependant</td></tr></tbody></table>
+<hr>
+<h1>✅ WHAT SHOULD DO</h1>
+<p>→ <strong>Master the Big 5 contrast connectors first:</strong> mais, même si, pourtant, malgré, quand même<br>
+→ <strong>Know the subjonctif triggers:</strong> bien que + subjonctif / quoique + subjonctif — always<br>
+→ <strong>Know the indicatif connectors:</strong> même si, pourtant, cependant, toutefois — always indicatif<br>
+→ <strong>Match register to context:</strong><br>
+→ Friends: mais, par contre, même si, pourtant, quand même, du coup<br>
+→ Work: cependant, en revanche, toutefois, bien que, certes...mais<br>
+→ Writing: néanmoins, en dépit de, toutefois, bien que, quoique<br>
+→ <strong>Use "quand même" immediately</strong> — it's the most native-sounding emphasis word<br>
+→ <strong>Try "avoir beau"</strong> — it impresses French speakers when used correctly<br>
+→ <strong>Practice "certes...mais"</strong> — the perfect structure for essays and debates<br>
+→ <strong>Remember:</strong> malgré + NOUN only — never + verb clause directly</p>
+<hr>
+<h1>❌ WHAT SHOULD NOT DO</h1>
+<p>→ ❌ Do NOT use indicatif after "bien que"</p>
+<table><thead><tr><th>Wrong</th><th>Correct</th></tr></thead><tbody><tr><td><del>Bien que c'<strong>est</strong> difficile</del></td><td>Bien que ce <strong>soit</strong> difficile</td></tr><tr><td><del>Bien qu'il <strong>a</strong> de l'expérience</del></td><td>Bien qu'il <strong>ait</strong> de l'expérience</td></tr><tr><td><del>Bien qu'il <strong>fait</strong> froid</del></td><td>Bien qu'il <strong>fasse</strong> froid</td></tr></tbody></table>
+<p>→ ❌ Do NOT use subjonctif after "même si"</p>
+<table><thead><tr><th>Wrong</th><th>Correct</th></tr></thead><tbody><tr><td><del>Même si ce <strong>soit</strong> difficile</del></td><td>Même si c'<strong>est</strong> difficile</td></tr><tr><td><del>Même si il <strong>fasse</strong> froid</del></td><td>Même si il <strong>fait</strong> froid</td></tr></tbody></table>
+<p>→ ❌ Do NOT put a verb directly after "malgré"</p>
+<table><thead><tr><th>Wrong</th><th>Correct</th></tr></thead><tbody><tr><td><del>Malgré il pleut</del></td><td><strong>Malgré</strong> la pluie / **Bien qu'**il pleuve</td></tr><tr><td><del>Malgré je suis fatigué</del></td><td><strong>Malgré</strong> ma fatigue / <strong>Bien que</strong> je sois fatigué</td></tr></tbody></table>
+<p>→ ❌ Do NOT confuse "alors" (consequence — P28) with "alors que" (contrast — P29)</p>
+<table><thead><tr><th>Consequence</th><th>Contrast</th></tr></thead><tbody><tr><td>Il pleut, <strong>alors</strong> je reste. (SO I stay)</td><td>Il sort **alors qu'**il pleut. (EVEN THOUGH it's raining)</td></tr></tbody></table>
+<p>→ ❌ Do NOT use "néanmoins" or "toutefois" in casual speech</p>
+<table><thead><tr><th>Wrong Register</th><th>Better</th></tr></thead><tbody><tr><td><del>"C'est bon. <strong>Néanmoins</strong>, c'est cher."</del> (to a friend at lunch)</td><td>"C'est bon. <strong>Par contre</strong>, c'est cher."</td></tr></tbody></table>
+<p>→ ❌ Do NOT overuse "quand même" — it can become a verbal tic</p>
+<p>→ ❌ Do NOT forget that "pourtant" can go mid-sentence for emphasis</p>
+<table><thead><tr><th>Standard</th><th>Emphatic mid-sentence</th></tr></thead><tbody><tr><td>Il a échoué. <strong>Pourtant</strong>, il avait travaillé.</td><td>Il avait <strong>pourtant</strong> travaillé. (He HAD worked, though.)</td></tr></tbody></table>
+<p>→ ❌ Do NOT use "par contre" in strictly formal writing (purist rule)</p>
+<table><thead><tr><th>Debated</th><th>Safe formal alternative</th></tr></thead><tbody><tr><td><del>Par contre</del> (some purists reject it in writing)</td><td><strong>En revanche</strong> (universally accepted in formal writing)</td></tr></tbody></table>
+<hr>
+<h1>🔀 WHEN TO USE WHAT — THE COMPLETE CONTRAST MAP</h1>
+<table><thead><tr><th>Situation</th><th>Connector</th><th>Register</th><th>Grammar</th><th>Example</th></tr></thead><tbody><tr><td>Simple "but"</td><td><strong>mais</strong></td><td>Universal</td><td>Indicatif</td><td>C'est cher, mais c'est bon.</td></tr><tr><td>Two contrasting facts</td><td><strong>par contre</strong></td><td>Casual</td><td>Indicatif</td><td>Le film est bien. Par contre, le son est mauvais.</td></tr><tr><td>Two contrasting facts (formal)</td><td><strong>en revanche</strong></td><td>Formal</td><td>Indicatif</td><td>Le salaire est bas. En revanche, les avantages...</td></tr><tr><td>Simultaneous contrast + emotion</td><td><strong>alors que</strong></td><td>Universal</td><td>Indicatif</td><td>Il dort alors que tout le monde travaille.</td></tr><tr><td>Simultaneous contrast (neutral)</td><td><strong>tandis que</strong></td><td>Neutral-formal</td><td>Indicatif</td><td>Le nord est froid tandis que le sud est chaud.</td></tr><tr><td>"Even if" (universal)</td><td><strong>même si</strong></td><td>Universal</td><td><strong>Indicatif</strong></td><td>Même si c'est dur, j'essaie.</td></tr><tr><td>"Although" (formal)</td><td><strong>bien que</strong></td><td>Formal</td><td><strong>Subjonctif</strong></td><td>Bien que ce soit dur, j'essaie.</td></tr><tr><td>"Despite" + noun</td><td><strong>malgré</strong></td><td>Universal</td><td>+ Noun</td><td>Malgré la pluie, on est sortis.</td></tr><tr><td>"In spite of" + noun (very formal)</td><td><strong>en dépit de</strong></td><td>Very formal</td><td>+ Noun</td><td>En dépit des obstacles...</td></tr><tr><td>Unexpected result (casual)</td><td><strong>pourtant</strong></td><td>Universal</td><td>Indicatif</td><td>Il n'a pas étudié. Pourtant, il a réussi.</td></tr><tr><td>Unexpected result (formal)</td><td><strong>cependant</strong></td><td>Formal</td><td>Indicatif</td><td>Les résultats sont bons. Cependant...</td></tr><tr><td>Unexpected result (very formal)</td><td><strong>toutefois</strong></td><td>Very formal</td><td>Indicatif</td><td>La situation est grave. Toutefois...</td></tr><tr><td>Unexpected result (most formal)</td><td><strong>néanmoins</strong></td><td>Most formal</td><td>Indicatif</td><td>Néanmoins, le projet avance.</td></tr><tr><td>"Anyway" / "still" (casual)</td><td><strong>quand même</strong></td><td>Very casual</td><td>Indicatif</td><td>Je viens quand même.</td></tr><tr><td>"All the same" (neutral)</td><td><strong>tout de même</strong></td><td>Neutral</td><td>Indicatif</td><td>Il a tout de même fait du bon travail.</td></tr><tr><td>"Still" (casual insistence)</td><td><strong>n'empêche (que)</strong></td><td>Very casual</td><td>Indicatif</td><td>N'empêche, il a du talent.</td></tr><tr><td>"Despite everything"</td><td><strong>malgré tout</strong></td><td>Universal</td><td>Standalone</td><td>Malgré tout, je reste optimiste.</td></tr><tr><td>"No matter how much"</td><td><strong>avoir beau</strong></td><td>Universal (idiomatic)</td><td>+ Infinitif</td><td>J'ai beau essayer, je n'y arrive pas.</td></tr><tr><td>Acknowledge then contrast</td><td><strong>certes...mais</strong></td><td>Formal</td><td>Indicatif</td><td>Certes, c'est cher, mais ça vaut le coup.</td></tr></tbody></table>
+<hr>
+<h1>🚫 WHEN NOT TO USE</h1>
+<table><thead><tr><th>Situation</th><th>Do NOT Use</th><th>Use Instead</th><th>Why</th></tr></thead><tbody><tr><td>You want to explain a CAUSE</td><td>Contrast connectors</td><td>Cause connectors (P28)</td><td>Contrast = opposition / Cause = reason</td></tr><tr><td>Simple factual "and"</td><td>Mais / pourtant</td><td>Et</td><td>No contrast intended — just addition</td></tr><tr><td>Formal writing</td><td>Quand même / n'empêche / du coup</td><td>Cependant / toutefois / néanmoins</td><td>Register mismatch</td></tr><tr><td>Casual speech</td><td>Néanmoins / toutefois</td><td>Pourtant / quand même / par contre</td><td>Too formal for casual</td></tr><tr><td>Malgré + verb clause</td><td>Malgré + verb</td><td>Bien que + subj / Même si + indic</td><td>Malgré takes nouns only</td></tr><tr><td>Agreeing completely</td><td>Contrast connectors</td><td>Agreement words (P22)</td><td>No opposition needed</td></tr></tbody></table>
+<hr>
+<h1>⚠️ COMMON PITFALLS AND FAILURE MODES</h1>
+<table><thead><tr><th>Pitfall</th><th>What Learners Do</th><th>Why It's Wrong</th><th>Fix</th></tr></thead><tbody><tr><td><strong>Indicatif after bien que</strong></td><td>Bien que c'est difficile</td><td>Bien que ALWAYS takes subjonctif</td><td>Bien que ce <strong>soit</strong> difficile</td></tr><tr><td><strong>Subjonctif after même si</strong></td><td>Même si ce soit dur</td><td>Même si ALWAYS takes indicatif</td><td>Même si c'<strong>est</strong> dur</td></tr><tr><td><strong>Malgré + verb</strong></td><td>Malgré il pleut</td><td>Malgré takes NOUNS only</td><td>Malgré <strong>la pluie</strong> / Bien qu'il pleuve</td></tr><tr><td><strong>Alors vs. alors que</strong></td><td>Confusing consequence with contrast</td><td>Alors = so (result) / Alors que = while (contrast)</td><td>Check: cause-result → alors / opposition → alors que</td></tr><tr><td><strong>Par contre in formal writing</strong></td><td>Using par contre in an essay</td><td>Some purists reject it</td><td>Use <strong>en revanche</strong> in formal writing</td></tr><tr><td><strong>Pourtant = pour autant</strong></td><td>Confusing the two</td><td>Pourtant = yet / Pour autant = for all that (different nuance)</td><td>"Il n'est pas pour autant stupide" = He's not stupid for all that</td></tr><tr><td><strong>Missing comma</strong></td><td>"C'est cher mais c'est bon"</td><td>Comma usually needed before mais</td><td>"C'est cher**,** mais c'est bon"</td></tr><tr><td><strong>Wrong register</strong></td><td>Néanmoins with friends</td><td>Way too formal</td><td>Pourtant / quand même</td></tr><tr><td><strong>Quand même position</strong></td><td>Quand même at beginning for "anyway"</td><td>Usually goes at END or MID-sentence</td><td>"Je viens <strong>quand même</strong>" (end)</td></tr><tr><td><strong>Avoir beau + conjugated verb</strong></td><td>"J'ai beau suis fatigué"</td><td>Avoir beau takes INFINITIF</td><td>"J'ai beau <strong>être</strong> fatigué"</td></tr></tbody></table>
+<hr>
+<h1>🔑 KEY TAKEAWAY</h1>
+<blockquote>
+<p><strong>Contrast and concession are the counterweight to cause and consequence.</strong></p>
+<p>→ Project 28 taught you: <strong>"Because X → Y"</strong> (logical flow)<br>
+→ Project 29 teaches you: <strong>"Despite X → Y anyway"</strong> (logical opposition)<br>
+→ Together, they form the <strong>complete argumentation system</strong> of French:</p>
+<table><thead><tr><th>Logic Direction</th><th>Connectors</th><th>Example</th></tr></thead><tbody><tr><td><strong>Cause → Consequence</strong> (P28)</td><td>parce que, donc, du coup</td><td>Il pleut, donc je reste.</td></tr><tr><td><strong>Concession → Unexpected Result</strong> (P29)</td><td>malgré, pourtant, quand même</td><td>Malgré la pluie, on est sortis.</td></tr></tbody></table>
+<p>→ Three grammar rules to remember forever:</p>
+<table><thead><tr><th>Connector</th><th>Grammar</th></tr></thead><tbody><tr><td><strong>Même si</strong></td><td>INDICATIF — always</td></tr><tr><td><strong>Bien que</strong></td><td>SUBJONCTIF — always</td></tr><tr><td><strong>Malgré</strong></td><td>NOUN — always (no verb)</td></tr></tbody></table>
+<p>→ The register ladder:</p>
+<table><thead><tr><th>Casual</th><th>Formal</th><th>Very Formal</th></tr></thead><tbody><tr><td>mais, par contre, même si</td><td>en revanche, cependant, bien que</td><td>toutefois, néanmoins, en dépit de</td></tr><tr><td>pourtant, quand même</td><td>certes...mais</td><td>quoique</td></tr><tr><td>n'empêche</td><td>avoir beau</td><td>—</td></tr></tbody></table>
+<p>→ You now have the <strong>full logic toolkit</strong>: cause, consequence, concession, opposition<br>
+→ But there's one more logic connector family missing: <strong>TIME</strong><br>
+→ When things happen together, before, after, or at the same moment</p>
+</blockquote>
+<hr>
+<h1>🌉 BRIDGE TO PROJECT 30</h1>
+<blockquote>
+<p>You can now explain WHY (P28) and express DESPITE/BUT (P29)<br>
+But conversations also require <strong>linking events in TIME</strong>:</p>
+<p>→ "<strong>Quand</strong> je suis arrivé, il était déjà parti."<br>
+→ "<strong>Pendant que</strong> je travaillais, il regardait la télé."<br>
+→ "<strong>Dès que</strong> j'ai fini, je t'appelle."<br>
+→ "<strong>Avant de</strong> partir, vérifie tes affaires."<br>
+→ "<strong>Après avoir</strong> mangé, nous sommes sortis."</p>
+<p>→ French has <strong>15+ temporal connectors</strong> — each one places events precisely on a timeline<br>
+→ Some trigger <strong>subjonctif</strong> (avant que, jusqu'à ce que)<br>
+→ Some use <strong>special infinitif structures</strong> (avant de, après avoir)<br>
+→ Mastering them lets you <strong>narrate, sequence, and time your sentences</strong> like a native storyteller</p>
+<p>→ Project 30: <strong>"When, While, As Soon As"</strong><br>
+→ Temporal connectors — the final piece of the logic puzzle</p>
+</blockquote>
+<hr>
+<h1>✅ PROJECT 29 COMPLETE</h1>
+<blockquote>
+<p><strong>Are you ready for PROJECT 30: "When, While, As Soon As"?</strong><br>
+→ ~100 sentences covering temporal connectors (quand, lorsque, pendant que, dès que, avant de, après avoir, etc.)<br>
+→ Scenario: Linking events in time — things that happen together, before, after, or in sequence<br>
+→ Builds on cause (P28) + contrast (P29) — completing the three-pillar logic system</p>
+</blockquote>
+</div>
+</div>
+
+<!-- ========== data-index="29" ========== -->
+
+        </div>
+
+        <div class="nav-bar">
+            <a href="project-28.html" class="nav-button prev">← Previous Chapter</a>
+            <div class="page-info">
+                <a href="index.html" class="nav-button home">📚 Table of Contents</a><br>
+                <span style="margin-top:8px;display:block">Chapter 29 of 50</span>
+            </div>
+            <a href="project-30.html" class="nav-button next">Next Chapter →</a>
+        </div>
+    </div>
+
+    
+    <div id="progress-track"><div id="progress-fill"></div></div>
+    <div id="progress-pct">0%</div>
+
+
+    <script>
+    const fill = document.getElementById('progress-fill');
+    const pct  = document.getElementById('progress-pct');
+    function updateProgress() {
+        const scrollTop = window.scrollY;
+        const docHeight = document.body.scrollHeight - window.innerHeight;
+        const scrolled  = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+        fill.style.height = scrolled + '%';
+        pct.textContent   = Math.round(scrolled) + '%';
+    }
+    window.addEventListener('scroll', updateProgress);
+    updateProgress();
+
+    document.addEventListener('keydown', function(e) {
+        if (['INPUT','TEXTAREA'].includes(document.activeElement.tagName)) return;
+        if (e.key === 'ArrowLeft') {
+            const b = document.querySelector('.nav-button.prev');
+            if (b && !b.classList.contains('disabled')) window.location.href = b.href;
+        }
+        if (e.key === 'ArrowRight') {
+            const b = document.querySelector('.nav-button.next');
+            if (b && !b.classList.contains('disabled')) window.location.href = b.href;
+        }
+    });
+    </script>
+
+</body>
+</html>

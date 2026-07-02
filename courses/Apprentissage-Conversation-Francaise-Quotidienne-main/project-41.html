@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="images/favicon.png">
+    <title>Project 41: "That He May Have Done It" — French Daily Sentences</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.75;
+            color: #1a202c;
+            background-color: #f7fafc;
+        }
+        .container {
+            max-width: 1800px;
+            margin: 0 auto;
+            background: white;
+            min-height: 100vh;
+            box-shadow: 0 0 30px rgba(0,0,0,0.08);
+            padding: 48px 52px;
+        }
+        
+        .content { max-width: 1700px; margin: 0 auto; color: #1a202c; }
+        .content h1 {
+            color: #1a202c; margin: 32px 0 20px;
+            padding-bottom: 12px;
+            border-bottom: 4px solid #3b82f6;
+            font-size: 2.1em;
+            font-weight: 700;
+        }
+        .content h2 {
+            color: #1a202c; margin: 28px 0 16px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #60a5fa;
+            font-size: 1.6em;
+            font-weight: 600;
+        }
+        .content h3 { color: #1a202c; margin: 22px 0 12px; font-size: 1.3em; font-weight: 600; }
+        .content h4 { color: #2d3748; margin: 18px 0 10px; font-size: 1.1em; font-weight: 600; }
+        .content p  { margin-bottom: 16px; line-height: 1.8; color: #1a202c; }
+        .content ul, .content ol { margin: 12px 0 18px 30px; color: #1a202c; }
+        .content li { margin-bottom: 8px; line-height: 1.75; color: #1a202c; }
+        .content hr { border: none; border-top: 2px solid #e2e8f0; margin: 26px 0; }
+        .content pre {
+            background: #f7fafc !important;
+            border: 1px solid #cbd5e0 !important;
+            border-left: 4px solid #3b82f6 !important;
+            padding: 18px !important; overflow-x: auto; margin: 18px 0; border-radius: 6px;
+            font-family: 'Consolas','Monaco','Courier New',monospace !important;
+            font-size: 0.9em !important;
+        }
+        .content pre:not([style*="color"]) { color: #1a202c !important; }
+        .content code {
+            font-family: 'Consolas','Monaco','Courier New',monospace !important;
+            font-size: 0.88em !important;
+        }
+        .content code:not(pre code) {
+            background: #dbeafe !important;
+            color: #1a202c !important;
+            padding: 2px 6px;
+            border-radius: 3px;
+        }
+        .content pre code { background: transparent !important; padding: 0; }
+        .content table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+        .content th {
+            background: linear-gradient(135deg, #3b82f6 0%, #60a5fa 100%);
+            color: white; padding: 12px 16px; text-align: left;
+            font-weight: 600;
+        }
+        .content td { padding: 11px 16px; border: 1px solid #e2e8f0; color: #1a202c; }
+        .content tr:nth-child(even) td { background: #eff6ff; }
+        .content blockquote {
+            border-left: 4px solid #3b82f6; background: #eff6ff;
+            padding: 14px 20px; margin: 18px 0; border-radius: 0 6px 6px 0;
+            color: #1a202c;
+        }
+        .content strong { color: #1a202c; font-weight: 600; }
+        .px-2 { padding: 0; }
+        .chat-message { background: transparent; padding: 0; margin: 0; }
+
+        /* Bottom nav bar only */
+        .nav-bar {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 24px 0;
+            margin-top: 50px;
+            border-top: 3px solid #60a5fa;
+        }
+        .nav-button {
+            display: inline-flex; align-items: center; gap: 8px;
+            padding: 12px 26px;
+            background: linear-gradient(135deg, #3b82f6 0%, #60a5fa 100%);
+            color: white !important; text-decoration: none;
+            border-radius: 8px; font-weight: 600; font-size: 0.95em;
+            transition: all 0.2s;
+            box-shadow: 0 2px 8px rgba(59,130,246,0.35);
+        }
+        .nav-button:hover { transform: translateY(-2px); box-shadow: 0 4px 14px rgba(59,130,246,0.5); }
+        .nav-button.disabled { background: #cbd5e1; box-shadow: none; pointer-events: none; }
+        .nav-button.home {
+            background: linear-gradient(135deg, #ef4444 0%, #f87171 100%);
+            box-shadow: 0 2px 8px rgba(239,68,68,0.35);
+        }
+        .nav-button.home:hover { box-shadow: 0 4px 14px rgba(239,68,68,0.5); }
+        .page-info { color: #718096; font-size: 0.9em; text-align: center; }
+
+        /* Progress bar */
+        #progress-track {
+            position: fixed; top: 20px; right: 20px;
+            width: 10px; height: 150px;
+            background: rgba(59,130,246,0.2);
+            border: 2px solid #3b82f6;
+            border-radius: 6px; overflow: hidden; z-index: 1000;
+        }
+        #progress-fill {
+            width: 100%;
+            background: linear-gradient(180deg, #3b82f6, #2563eb);
+            height: 0%;
+            transition: height 0.15s ease;
+        }
+        #progress-pct {
+            position: fixed; top: 0px; right: 16px;
+            color: #2563eb; font-size: 14px; font-weight: bold;
+            z-index: 1001;
+            text-shadow: 0 1px 2px rgba(255,255,255,0.9);
+            line-height: 20px;
+        }
+
+    </style>
+<link rel="stylesheet" href="assets/chapters.css?v=20260421203847"><script src="assets/chapters.js?v=20260421203847" defer></script>
+</head>
+<body>
+    <div class="container">
+        <div class="content">
+            <div class="chat-message" data-index="21">
+<div class="px-2"><h1>🔴 PROJECT 41: "That He May Have Done It"</h1>
+<h2><em>Reading a French novel and understanding formal/literary sentence structures you've never seen before</em></h2>
+<hr>
+<h1>🎯 THE HYPOTHETICAL PROBLEM</h1>
+<p>→ You've reached a confident level in spoken French — conversations flow, you understand movies, you navigate professional life<br>
+→ You decide to read your first French novel: <strong>"L'Étranger"</strong> by Albert Camus<br>
+→ First page: "Aujourd'hui, maman est morte."<br>
+→ You understand that — passé composé, simple vocabulary<br>
+→ But then you pick up Victor Hugo, Gustave Flaubert, or a modern literary novel<br>
+→ You read: "Il <strong>eût</strong> voulu lui parler, mais elle <strong>s'en fût</strong> allée avant qu'il <strong>eût pu</strong> ouvrir la bouche."<br>
+→ You stare at the page — NOTHING makes sense<br>
+→ You recognize "voulu" and "parler" and "allée" — but the verb forms are completely alien<br>
+→ You read a news article: "Le président <strong>regrette</strong> que les négociations <strong>aient échoué</strong>."<br>
+→ You know "regrette" and "échoué" — but what is "<strong>aient échoué</strong>"?<br>
+→ Your French friend explains: "That's the <strong>subjonctif passé</strong> — you use it when the subjunctive action happened BEFORE the main verb."<br>
+→ And the Hugo sentence? "That's <strong>passé simple</strong>, <strong>plus-que-parfait du subjonctif</strong>, and <strong>passé antérieur</strong> — literary tenses that nobody speaks but every educated French person reads."</p>
+<p><strong>The core realization:</strong><br>
+→ Spoken French uses about <strong>8 tenses</strong> actively (présent, passé composé, imparfait, futur proche, futur simple, conditionnel présent, conditionnel passé, subjonctif présent)<br>
+→ Written/literary French adds <strong>4-5 more</strong> tenses that are NEVER spoken but appear in:</p>
+<ul>
+<li>Novels (classic and modern literary fiction)</li>
+<li>Formal journalism</li>
+<li>Historical texts</li>
+<li>Official/legal documents</li>
+<li>Some formal speeches<br>
+→ You don't need to PRODUCE these tenses — but you MUST RECOGNIZE them<br>
+→ <strong>Exception:</strong> The <strong>subjonctif passé</strong> IS used in modern spoken French — it's the one "literary" tense you must both recognize AND produce</li>
+</ul>
+<hr>
+<h1>🔍 HOW TO APPROACH IT</h1>
+<p>→ Think of French tenses as existing in <strong>two worlds:</strong></p>
+<table><thead><tr><th>World</th><th>Tenses</th><th>Where Used</th><th>Your Goal</th></tr></thead><tbody><tr><td>🌍 <strong>Living French</strong></td><td>All tenses from P1–P40</td><td>Speech, modern writing, emails, conversation</td><td><strong>Produce + Recognize</strong></td></tr><tr><td>📚 <strong>Literary French</strong></td><td>Passé simple, Passé antérieur, Imparfait du subjonctif, Plus-que-parfait du subjonctif</td><td>Novels, formal texts, historical writing</td><td><strong>Recognize only</strong></td></tr><tr><td>🌉 <strong>Bridge Tense</strong></td><td><strong>Subjonctif passé</strong></td><td>Both spoken AND written — modern French</td><td><strong>Produce + Recognize</strong></td></tr></tbody></table>
+<p>→ This project covers ALL of these — but with different depth:</p>
+<ul>
+<li><strong>Subjonctif passé:</strong> Full mastery — you'll use it</li>
+<li><strong>Passé simple:</strong> Recognition — you'll read it</li>
+<li><strong>Passé antérieur:</strong> Recognition — you'll encounter it</li>
+<li><strong>Imparfait du subjonctif / PQP du subjonctif:</strong> Awareness — you'll identify them in classic literature</li>
+</ul>
+<hr>
+<h1>🔧 HOW CAN WE SOLVE IT</h1>
+<h2>PART 1 — SUBJONCTIF PASSÉ (The Bridge Tense — PRODUCE + RECOGNIZE)</h2>
+<h3>What It Does</h3>
+<p>→ P31 gave you <strong>subjonctif présent</strong> — expressing subjective reactions to CURRENT or FUTURE actions<br>
+→ "Je suis content <strong>qu'il vienne</strong>" = I'm happy that he's coming (present/future — hasn't happened yet)<br>
+→ But what if the action you're reacting to <strong>ALREADY HAPPENED</strong>?<br>
+→ "Je suis content <strong>qu'il soit venu</strong>" = I'm happy that he came (past — already happened)<br>
+→ That's the <strong>subjonctif passé</strong> — subjunctive mood for COMPLETED actions</p>
+<h3>Formation</h3>
+<code>QUE + SUBJECT + AVOIR (subjonctif présent) or ÊTRE (subjonctif présent) + PARTICIPE PASSÉ</code>
+<table><thead><tr><th>Subject</th><th>With AVOIR</th><th>With ÊTRE</th></tr></thead><tbody><tr><td>que je / j'</td><td>que j'<strong>aie</strong> parlé</td><td>que je <strong>sois</strong> parti(e)</td></tr><tr><td>que tu</td><td>que tu <strong>aies</strong> parlé</td><td>que tu <strong>sois</strong> parti(e)</td></tr><tr><td>qu'il/elle/on</td><td>qu'il <strong>ait</strong> parlé</td><td>qu'elle <strong>soit</strong> partie</td></tr><tr><td>que nous</td><td>que nous <strong>ayons</strong> parlé</td><td>que nous <strong>soyons</strong> parti(e)s</td></tr><tr><td>que vous</td><td>que vous <strong>ayez</strong> parlé</td><td>que vous <strong>soyez</strong> parti(e)(s)</td></tr><tr><td>qu'ils/elles</td><td>qu'ils <strong>aient</strong> parlé</td><td>qu'elles <strong>soient</strong> parties</td></tr></tbody></table>
+<p>→ Same auxiliary rules as passé composé (P9) — same agreement rules<br>
+→ The ONLY new element: the auxiliary is in <strong>subjonctif présent</strong> instead of indicatif présent</p>
+<h3>Quick Recall — Subjonctif Présent of Avoir &amp; Être (from P31)</h3>
+<table><thead><tr><th>Subject</th><th>AVOIR (subj)</th><th>ÊTRE (subj)</th></tr></thead><tbody><tr><td>que je</td><td>aie</td><td>sois</td></tr><tr><td>que tu</td><td>aies</td><td>sois</td></tr><tr><td>qu'il/elle</td><td>ait</td><td>soit</td></tr><tr><td>que nous</td><td>ayons</td><td>soyons</td></tr><tr><td>que vous</td><td>ayez</td><td>soyez</td></tr><tr><td>qu'ils/elles</td><td>aient</td><td>soient</td></tr></tbody></table>
+<p>→ If you mastered P31 → subjonctif passé is simply: <strong>subjonctif of auxiliary + past participle</strong></p>
+<hr>
+<h3>When to Use Subjonctif Passé vs. Subjonctif Présent</h3>
+<table><thead><tr><th>Timeline</th><th>Structure</th><th>Example</th><th>Meaning</th></tr></thead><tbody><tr><td>Action NOT YET completed</td><td>que + subjonctif <strong>présent</strong></td><td>Je veux qu'il <strong>vienne</strong></td><td>I want him to come (future)</td></tr><tr><td>Action ALREADY completed</td><td>que + subjonctif <strong>passé</strong></td><td>Je suis content qu'il <strong>soit venu</strong></td><td>I'm happy he came (past)</td></tr></tbody></table>
+<p>→ <strong>The trigger</strong> (emotion, doubt, wish, necessity from P31) stays in ANY tense<br>
+→ <strong>The subordinate action</strong> goes into subjonctif passé when it happened BEFORE the trigger</p>
+<hr>
+<h2>PART 2 — PASSÉ SIMPLE (Literary Past — RECOGNIZE ONLY)</h2>
+<h3>What It Does</h3>
+<p>→ The passé simple is the <strong>literary equivalent of the passé composé</strong><br>
+→ "J'ai parlé" (passé composé — spoken) = "Je parlai" (passé simple — written)<br>
+→ Same meaning — completed past action — different register (P40)<br>
+→ You will NEVER say "je parlai" in conversation — but you'll read it in every French novel</p>
+<h3>Formation Patterns — Recognition Guide</h3>
+<h4>-ER Verbs (parler → parl-)</h4>
+<table><thead><tr><th>Subject</th><th>Ending</th><th>Form</th></tr></thead><tbody><tr><td>Je</td><td>-ai</td><td>je parl<strong>ai</strong></td></tr><tr><td>Tu</td><td>-as</td><td>tu parl<strong>as</strong></td></tr><tr><td>Il/Elle/On</td><td>-a</td><td>il parl<strong>a</strong></td></tr><tr><td>Nous</td><td>-âmes</td><td>nous parl<strong>âmes</strong></td></tr><tr><td>Vous</td><td>-âtes</td><td>vous parl<strong>âtes</strong></td></tr><tr><td>Ils/Elles</td><td>-èrent</td><td>ils parl<strong>èrent</strong></td></tr></tbody></table>
+<h4>-IR / -RE Verbs (finir → fin- / prendre → pr-)</h4>
+<table><thead><tr><th>Subject</th><th>Ending</th><th>Form (finir)</th><th>Form (prendre)</th></tr></thead><tbody><tr><td>Je</td><td>-is</td><td>je fin<strong>is</strong></td><td>je pr<strong>is</strong></td></tr><tr><td>Tu</td><td>-is</td><td>tu fin<strong>is</strong></td><td>tu pr<strong>is</strong></td></tr><tr><td>Il/Elle/On</td><td>-it</td><td>il fin<strong>it</strong></td><td>il pr<strong>it</strong></td></tr><tr><td>Nous</td><td>-îmes</td><td>nous fin<strong>îmes</strong></td><td>nous pr<strong>îmes</strong></td></tr><tr><td>Vous</td><td>-îtes</td><td>vous fin<strong>îtes</strong></td><td>vous pr<strong>îtes</strong></td></tr><tr><td>Ils/Elles</td><td>-irent</td><td>ils fin<strong>irent</strong></td><td>ils pr<strong>irent</strong></td></tr></tbody></table>
+<h4>Common Irregular Passé Simple Forms (Most Frequent in Literature)</h4>
+<table><thead><tr><th>Verb</th><th>Il/Elle Form</th><th>Ils/Elles Form</th><th>Passé Composé Equivalent</th></tr></thead><tbody><tr><td>être</td><td>il <strong>fut</strong></td><td>ils <strong>furent</strong></td><td>il a été</td></tr><tr><td>avoir</td><td>il <strong>eut</strong></td><td>ils <strong>eurent</strong></td><td>il a eu</td></tr><tr><td>faire</td><td>il <strong>fit</strong></td><td>ils <strong>firent</strong></td><td>il a fait</td></tr><tr><td>dire</td><td>il <strong>dit</strong></td><td>ils <strong>dirent</strong></td><td>il a dit</td></tr><tr><td>voir</td><td>il <strong>vit</strong></td><td>ils <strong>virent</strong></td><td>il a vu</td></tr><tr><td>venir</td><td>il <strong>vint</strong></td><td>ils <strong>vinrent</strong></td><td>il est venu</td></tr><tr><td>pouvoir</td><td>il <strong>put</strong></td><td>ils <strong>purent</strong></td><td>il a pu</td></tr><tr><td>savoir</td><td>il <strong>sut</strong></td><td>ils <strong>surent</strong></td><td>il a su</td></tr><tr><td>vouloir</td><td>il <strong>voulut</strong></td><td>ils <strong>voulurent</strong></td><td>il a voulu</td></tr><tr><td>devoir</td><td>il <strong>dut</strong></td><td>ils <strong>durent</strong></td><td>il a dû</td></tr><tr><td>mettre</td><td>il <strong>mit</strong></td><td>ils <strong>mirent</strong></td><td>il a mis</td></tr><tr><td>écrire</td><td>il <strong>écrivit</strong></td><td>ils <strong>écrivirent</strong></td><td>il a écrit</td></tr><tr><td>mourir</td><td>il <strong>mourut</strong></td><td>ils <strong>moururent</strong></td><td>il est mort</td></tr><tr><td>naître</td><td>il <strong>naquit</strong></td><td>ils <strong>naquirent</strong></td><td>il est né</td></tr></tbody></table>
+<p>→ <strong>Most important:</strong> il/elle and ils/elles forms — 90% of passé simple in novels is 3rd person<br>
+→ You'll rarely see je/tu forms except in first-person narration<br>
+→ <strong>Recognition tip:</strong> If you see a verb form you don't recognize in a novel → it's probably passé simple → mentally convert to passé composé</p>
+<hr>
+<h2>PART 3 — PASSÉ ANTÉRIEUR (Literary "Past Before Past" — RECOGNIZE ONLY)</h2>
+<h3>What It Does</h3>
+<p>→ The passé antérieur is the <strong>literary equivalent of the plus-que-parfait (P32)</strong><br>
+→ It marks an action that happened BEFORE another past action — but in literary register<br>
+→ Almost always appears after <strong>temporal conjunctions</strong>: quand, lorsque, dès que, après que, aussitôt que</p>
+<h3>Formation</h3>
+<code>SUBJECT + AVOIR (passé simple) or ÊTRE (passé simple) + PARTICIPE PASSÉ</code>
+<table><thead><tr><th>Subject</th><th>With AVOIR</th><th>With ÊTRE</th></tr></thead><tbody><tr><td>il/elle</td><td>il <strong>eut</strong> parlé</td><td>elle <strong>fut</strong> partie</td></tr><tr><td>ils/elles</td><td>ils <strong>eurent</strong> parlé</td><td>elles <strong>furent</strong> parties</td></tr></tbody></table>
+<p>→ You'll almost only see 3rd person forms<br>
+→ <strong>Recognition tip:</strong> "eut + pp" or "fut + pp" = passé antérieur = literary plus-que-parfait</p>
+<hr>
+<h2>PART 4 — IMPARFAIT DU SUBJONCTIF &amp; PQP DU SUBJONCTIF (Deep Literary — AWARENESS ONLY)</h2>
+<h3>Imparfait du Subjonctif</h3>
+<p>→ The literary equivalent of subjonctif présent — used in formal concordance des temps<br>
+→ "Il voulait qu'elle <strong>vînt</strong>" = He wanted her to come (literary)<br>
+→ Modern French: "Il voulait qu'elle <strong>vienne</strong>" (subjonctif présent — even though main verb is past)</p>
+<table><thead><tr><th>Verb</th><th>Il/Elle Form</th><th>Recognition Pattern</th></tr></thead><tbody><tr><td>parler</td><td>qu'il parl<strong>ât</strong></td><td>-ât ending (circumflex accent)</td></tr><tr><td>finir</td><td>qu'il fin<strong>ît</strong></td><td>-ît ending</td></tr><tr><td>être</td><td>qu'il <strong>fût</strong></td><td>Irregular — looks like passé simple + circumflex</td></tr><tr><td>avoir</td><td>qu'il <strong>eût</strong></td><td>Irregular</td></tr><tr><td>faire</td><td>qu'il <strong>fît</strong></td><td>Irregular</td></tr><tr><td>venir</td><td>qu'il <strong>vînt</strong></td><td>Irregular</td></tr><tr><td>pouvoir</td><td>qu'il <strong>pût</strong></td><td>Irregular</td></tr><tr><td>savoir</td><td>qu'il <strong>sût</strong></td><td>Irregular</td></tr></tbody></table>
+<p>→ <strong>Recognition tip:</strong> Circumflex accent on 3rd person (â, î, û) = imparfait du subjonctif<br>
+→ Modern French almost NEVER uses this — even in formal writing it's increasingly replaced by subjonctif présent</p>
+<h3>Plus-que-parfait du Subjonctif</h3>
+<p>→ The literary equivalent of subjonctif passé AND conditionnel passé in some literary contexts<br>
+→ "Il eût voulu qu'elle fût venue" = He would have wished she had come<br>
+→ Formation: <strong>avoir/être in imparfait du subjonctif + past participle</strong><br>
+→ "qu'il <strong>eût</strong> parlé" / "qu'elle <strong>fût</strong> partie"<br>
+→ <strong>You will encounter this in classic literature (Hugo, Flaubert, Proust) — almost nowhere else</strong></p>
+<hr>
+<h1>✅ WHAT COULD BE DONE — THE 100 SENTENCES</h1>
+<h2>🔹 BLOCK A — Subjonctif Passé: Emotional Reactions to PAST Events</h2>
+<p><em>Scenario: Reacting to things that have ALREADY happened — joy, sadness, surprise, anger</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English Meaning</th><th>Trigger → Subj.passé</th></tr></thead><tbody><tr><td>1</td><td>Je suis content qu'il soit venu.</td><td>I'm happy he came.</td><td>content que → venir(subj.passé/être)</td></tr><tr><td>2</td><td>Je suis triste qu'elle soit partie si tôt.</td><td>I'm sad she left so early.</td><td>triste que → partir(subj.passé/être)</td></tr><tr><td>3</td><td>Il est surpris que nous ayons réussi.</td><td>He's surprised we succeeded.</td><td>surpris que → réussir(subj.passé/avoir)</td></tr><tr><td>4</td><td>Elle est furieuse que tu aies menti.</td><td>She's furious that you lied.</td><td>furieuse que → mentir(subj.passé/avoir)</td></tr><tr><td>5</td><td>On est déçus qu'ils n'aient pas accepté.</td><td>We're disappointed they didn't accept.</td><td>déçus que → accepter(subj.passé/avoir/neg)</td></tr><tr><td>6</td><td>Nous sommes soulagés que tout se soit bien passé.</td><td>We're relieved everything went well.</td><td>soulagés que → se passer(subj.passé/être)</td></tr><tr><td>7</td><td>Je suis étonné qu'elle ait pu faire ça toute seule.</td><td>I'm amazed she was able to do that alone.</td><td>étonné que → pouvoir(subj.passé)</td></tr><tr><td>8</td><td>C'est dommage que vous n'ayez pas vu le spectacle.</td><td>It's a shame you didn't see the show.</td><td>dommage que → voir(subj.passé/avoir/neg)</td></tr><tr><td>9</td><td>Il est regrettable que cette décision ait été prise si vite.</td><td>It's regrettable this decision was made so quickly.</td><td>regrettable que → être pris(subj.passé/passive P24)</td></tr><tr><td>10</td><td>Je suis heureux que tu aies trouvé un travail.</td><td>I'm happy you found a job.</td><td>heureux que → trouver(subj.passé/avoir)</td></tr></tbody></table>
+<p><strong>🧠 Structure unlocked:</strong> <code>Emotion/Judgment + QUE + subjonctif passé = reacting to a COMPLETED event</code></p>
+<p>→ Compare with P31 (subjonctif présent):</p>
+<ul>
+<li>"Je suis content qu'il <strong>vienne</strong>" = I'm happy he's coming (future — not yet happened)</li>
+<li>"Je suis content qu'il <strong>soit venu</strong>" = I'm happy he came (past — already happened)</li>
+</ul>
+<p>→ <strong>The trigger verb can be in ANY tense</strong> — what matters is whether the subordinate action is complete:</p>
+<ul>
+<li>"Je <strong>suis</strong> content qu'il <strong>soit venu</strong>" (present trigger → past action)</li>
+<li>"J'<strong>étais</strong> content qu'il <strong>soit venu</strong>" (past trigger → past action)</li>
+<li>"Je <strong>serai</strong> content qu'il <strong>soit venu</strong>" (future trigger → action completed by then)</li>
+</ul>
+<hr>
+<h2>🔹 BLOCK B — Subjonctif Passé: Doubt &amp; Uncertainty About Past Events</h2>
+<p><em>Scenario: Questioning whether something actually happened — doubt, denial, disbelief</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English Meaning</th><th>Trigger → Subj.passé</th></tr></thead><tbody><tr><td>11</td><td>Je doute qu'il ait dit la vérité.</td><td>I doubt he told the truth.</td><td>douter que → dire(subj.passé)</td></tr><tr><td>12</td><td>Il est peu probable qu'elle ait compris.</td><td>It's unlikely she understood.</td><td>peu probable que → comprendre(subj.passé)</td></tr><tr><td>13</td><td>Je ne crois pas qu'il soit parti avant minuit.</td><td>I don't believe he left before midnight.</td><td>ne pas croire que → partir(subj.passé/être)</td></tr><tr><td>14</td><td>Il est impossible qu'ils aient terminé en une heure.</td><td>It's impossible they finished in an hour.</td><td>impossible que → terminer(subj.passé)</td></tr><tr><td>15</td><td>Penses-tu qu'elle ait reçu mon message ?</td><td>Do you think she received my message?</td><td>penser(interrogative) que → recevoir(subj.passé)</td></tr><tr><td>16</td><td>Il n'est pas certain qu'on ait pris la bonne décision.</td><td>It's not certain we made the right decision.</td><td>pas certain que → prendre(subj.passé)</td></tr><tr><td>17</td><td>Je ne suis pas sûr qu'il ait pu venir.</td><td>I'm not sure he was able to come.</td><td>pas sûr que → pouvoir(subj.passé)</td></tr><tr><td>18</td><td>Il se peut qu'elle se soit trompée.</td><td>It's possible she made a mistake.</td><td>il se peut que → se tromper(subj.passé/être)</td></tr><tr><td>19</td><td>Croyez-vous qu'il ait eu le temps de tout lire ?</td><td>Do you believe he had time to read everything?</td><td>croire(interrogative) que → avoir(subj.passé)</td></tr><tr><td>20</td><td>Rien ne prouve qu'il ait été présent ce soir-là.</td><td>Nothing proves he was present that evening.</td><td>rien ne prouve que → être(subj.passé)</td></tr></tbody></table>
+<p><strong>🧠 Structure unlocked:</strong> <code>Doubt/Uncertainty/Denial + QUE + subjonctif passé = doubting a PAST event</code></p>
+<p>→ All the doubt triggers from P31 apply — but now the subordinate action is in the PAST<br>
+→ Sentence 15: <strong>Interrogative form of penser/croire</strong> triggers subjonctif — "Penses-tu que..." (P31 rule)<br>
+→ Sentence 20: "Rien ne prouve que..." — a very useful legal/analytical structure</p>
+<hr>
+<h2>🔹 BLOCK C — Subjonctif Passé: Necessity, Wish, Regret About Past Events</h2>
+<p><em>Scenario: Wishing things had gone differently — formal regret structures</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English Meaning</th><th>Trigger → Subj.passé</th></tr></thead><tbody><tr><td>21</td><td>Il fallait qu'il ait terminé avant midi.</td><td>He had to have finished before noon.</td><td>falloir que → terminer(subj.passé)</td></tr><tr><td>22</td><td>J'aurais voulu qu'il soit resté plus longtemps.</td><td>I would have wanted him to stay longer.</td><td>vouloir(cond.passé P35) que → rester(subj.passé/être)</td></tr><tr><td>23</td><td>Il aurait fallu qu'on ait prévu ce problème.</td><td>We should have foreseen this problem.</td><td>falloir(cond.passé P35) que → prévoir(subj.passé)</td></tr><tr><td>24</td><td>Je regrette qu'elle n'ait pas pu venir.</td><td>I regret she couldn't come.</td><td>regretter que → pouvoir(subj.passé/neg)</td></tr><tr><td>25</td><td>Il est essentiel que tout ait été vérifié avant le lancement.</td><td>It's essential everything was checked before launch.</td><td>essentiel que → vérifier(subj.passé/passive)</td></tr><tr><td>26</td><td>J'aurais aimé que tu aies vu ça.</td><td>I would have loved for you to see that.</td><td>aimer(cond.passé P35) que → voir(subj.passé)</td></tr><tr><td>27</td><td>Il est nécessaire que les documents aient été signés avant vendredi.</td><td>It's necessary that the documents were signed before Friday.</td><td>nécessaire que → signer(subj.passé/passive)</td></tr><tr><td>28</td><td>Je souhaite qu'il ait bien reçu ma lettre.</td><td>I hope he received my letter well.</td><td>souhaiter que → recevoir(subj.passé)</td></tr><tr><td>29</td><td>Pourvu qu'ils aient pris les bonnes mesures.</td><td>Let's hope they took the right measures.</td><td>pourvu que → prendre(subj.passé)</td></tr><tr><td>30</td><td>C'est le meilleur film que j'aie jamais vu.</td><td>It's the best movie I've ever seen.</td><td>⚠️ superlative + que → voir(subj.passé)</td></tr></tbody></table>
+<p><strong>🧠 Structure unlocked:</strong> <code>Necessity/Wish/Regret + QUE + subjonctif passé = requiring/wishing a PAST event</code></p>
+<p>→ Sentence 22-23, 26: <strong>Conditionnel passé (P35) as trigger</strong> + subjonctif passé in subordinate = maximum complexity — regret about someone else's past action<br>
+→ Sentence 29: "<strong>Pourvu que</strong>" = let's hope that / if only — always triggers subjonctif (P31)<br>
+→ Sentence 30: <strong>Superlative + que triggers subjonctif</strong> — "le meilleur que j'<strong>aie</strong> vu" — this is a rule from P31 that becomes much more visible with subjonctif passé<br>
+→ "C'est le plus beau paysage que j'<strong>aie</strong> jamais vu" — you'll use this structure constantly</p>
+<hr>
+<h2>🔹 BLOCK D — Subjonctif Passé: Conjunctions &amp; Complex Sentences</h2>
+<p><em>Scenario: Professional and analytical contexts — linking clauses with conjunctions that require subjonctif</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English Meaning</th><th>Conjunction → Subj.passé</th></tr></thead><tbody><tr><td>31</td><td>Bien qu'il ait fait des erreurs, il reste compétent.</td><td>Although he made mistakes, he remains competent.</td><td>bien que → faire(subj.passé) — P29 concession</td></tr><tr><td>32</td><td>Quoiqu'elle ait été absente, elle a rattrapé son retard.</td><td>Although she was absent, she caught up.</td><td>quoique → être(subj.passé)</td></tr><tr><td>33</td><td>Avant qu'il ait pu répondre, elle était déjà partie.</td><td>Before he could answer, she had already left.</td><td>avant que → pouvoir(subj.passé)</td></tr><tr><td>34</td><td>Sans qu'il ait rien demandé, on lui a offert une promotion.</td><td>Without him having asked for anything, they offered him a promotion.</td><td>sans que → demander(subj.passé) + rien</td></tr><tr><td>35</td><td>Pour qu'il ait pu arriver à temps, il a dû partir à l'aube.</td><td>For him to have been able to arrive on time, he had to leave at dawn.</td><td>pour que → pouvoir(subj.passé)</td></tr><tr><td>36</td><td>À condition qu'il ait terminé son rapport, il pourra partir.</td><td>Provided he has finished his report, he can leave.</td><td>à condition que → terminer(subj.passé)</td></tr><tr><td>37</td><td>En admettant qu'il ait dit vrai, cela ne change rien.</td><td>Assuming he told the truth, it changes nothing.</td><td>en admettant que → dire(subj.passé)</td></tr><tr><td>38</td><td>Non que j'aie douté de lui, mais je voulais vérifier.</td><td>Not that I doubted him, but I wanted to verify.</td><td>non que → douter(subj.passé)</td></tr><tr><td>39</td><td>Jusqu'à ce qu'il ait compris son erreur, il a continué.</td><td>Until he understood his mistake, he continued.</td><td>jusqu'à ce que → comprendre(subj.passé)</td></tr><tr><td>40</td><td>Que tu aies réussi ou non, l'important est d'avoir essayé.</td><td>Whether you succeeded or not, the important thing is to have tried.</td><td>que...ou non → réussir(subj.passé)</td></tr></tbody></table>
+<p><strong>🧠 Structure unlocked:</strong> <code>Subjonctif conjunction (from P31) + subjonctif passé = past action in subordinate clause</code></p>
+<p>→ ALL conjunctions that trigger subjonctif présent (P31) can also trigger subjonctif passé<br>
+→ The choice depends on WHEN the subordinate action happened:</p>
+<ul>
+<li>"Bien qu'il <strong>fasse</strong> des erreurs" = although he makes mistakes (ongoing)</li>
+<li>"Bien qu'il <strong>ait fait</strong> des erreurs" = although he made mistakes (completed)</li>
+</ul>
+<p>→ Sentence 34: "Sans qu'il <strong>ait rien</strong> demandé" — negation (P39) inside subjonctif passé — rien before pp<br>
+→ Sentence 40: "Que tu <strong>aies réussi</strong> ou non" — "whether...or not" structure — very useful in formal French</p>
+<hr>
+<h2>🔹 BLOCK E — Passé Simple: Reading Narrative Literature</h2>
+<p><em>Scenario: Reading a French novel — recognizing passé simple as "the written passé composé"</em></p>
+<table><thead><tr><th>#</th><th>Literary French (Passé Simple)</th><th>Modern French Equivalent (Passé Composé)</th><th>English Meaning</th></tr></thead><tbody><tr><td>41</td><td>Il entra dans la pièce sans faire de bruit.</td><td>Il est entré dans la pièce sans faire de bruit.</td><td>He entered the room without making a sound.</td></tr><tr><td>42</td><td>Elle le regarda longuement avant de parler.</td><td>Elle l'a regardé longuement avant de parler.</td><td>She looked at him for a long time before speaking.</td></tr><tr><td>43</td><td>Ils partirent à l'aube.</td><td>Ils sont partis à l'aube.</td><td>They left at dawn.</td></tr><tr><td>44</td><td>Il ne dit rien et sortit.</td><td>Il n'a rien dit et il est sorti.</td><td>He said nothing and left.</td></tr><tr><td>45</td><td>Elle prit sa main et sourit.</td><td>Elle a pris sa main et a souri.</td><td>She took his hand and smiled.</td></tr><tr><td>46</td><td>Ils vécurent heureux et eurent beaucoup d'enfants.</td><td>Ils ont vécu heureux et ont eu beaucoup d'enfants.</td><td>They lived happily and had many children. (Fairy tale ending)</td></tr><tr><td>47</td><td>Il comprit alors qu'il était trop tard.</td><td>Il a compris alors qu'il était trop tard.</td><td>He understood then that it was too late.</td></tr><tr><td>48</td><td>Soudain, un cri retentit dans la nuit.</td><td>Soudain, un cri a retenti dans la nuit.</td><td>Suddenly, a cry rang out in the night.</td></tr><tr><td>49</td><td>La porte s'ouvrit et un inconnu apparut.</td><td>La porte s'est ouverte et un inconnu est apparu.</td><td>The door opened and a stranger appeared.</td></tr><tr><td>50</td><td>Ce fut la dernière fois qu'il la vit.</td><td>C'a été la dernière fois qu'il l'a vue.</td><td>It was the last time he saw her.</td></tr></tbody></table>
+<p><strong>🧠 Recognition unlocked:</strong> Passé simple = literary passé composé</p>
+<p><strong>The Quick Recognition Guide:</strong></p>
+<table><thead><tr><th>If You See...</th><th>It's Probably...</th><th>Passé Composé Equivalent</th></tr></thead><tbody><tr><td>il parl<strong>a</strong> / ils parlèrent</td><td>-ER verb passé simple</td><td>il a parlé</td></tr><tr><td>il fin<strong>it</strong> / ils finirent</td><td>-IR verb passé simple</td><td>il a fini</td></tr><tr><td>il pr<strong>it</strong> / ils prirent</td><td>irregular passé simple</td><td>il a pris</td></tr><tr><td>il <strong>fut</strong> / ils furent</td><td>être passé simple</td><td>il a été</td></tr><tr><td>il <strong>eut</strong> / ils eurent</td><td>avoir passé simple</td><td>il a eu</td></tr><tr><td>il <strong>fit</strong> / ils firent</td><td>faire passé simple</td><td>il a fait</td></tr><tr><td>il <strong>vit</strong> / ils virent</td><td>voir passé simple</td><td>il a vu</td></tr><tr><td>il <strong>vint</strong> / ils vinrent</td><td>venir passé simple</td><td>il est venu</td></tr><tr><td>il <strong>put</strong> / ils purent</td><td>pouvoir passé simple</td><td>il a pu</td></tr><tr><td>il <strong>sut</strong> / ils surent</td><td>savoir passé simple</td><td>il a su</td></tr><tr><td>il mour<strong>ut</strong> / ils moururent</td><td>mourir passé simple</td><td>il est mort</td></tr></tbody></table>
+<p>→ Sentence 46: "Ils vécurent heureux..." — the classic French fairy tale ending — equivalent to "happily ever after"<br>
+→ Sentence 50: "Ce <strong>fut</strong>" = C'a été / Ça a été — "fut" is passé simple of être — extremely common in literature</p>
+<hr>
+<h2>🔹 BLOCK F — Passé Simple + Imparfait: The Literary Narrative Pair</h2>
+<p><em>Scenario: Reading a complete passage — passé simple drives events, imparfait sets the scene (same logic as P11)</em></p>
+<table><thead><tr><th>#</th><th>Literary French</th><th>English Meaning</th><th>Tense Function</th></tr></thead><tbody><tr><td>51</td><td>La nuit <strong>était</strong> froide. (imparfait)</td><td>The night was cold.</td><td>Scene-setting — background</td></tr><tr><td>52</td><td>Un vent glacial <strong>soufflait</strong> dans les rues désertes. (imparfait)</td><td>An icy wind was blowing through the deserted streets.</td><td>Scene-setting — atmosphere</td></tr><tr><td>53</td><td>Soudain, il <strong>entendit</strong> un bruit. (passé simple)</td><td>Suddenly, he heard a noise.</td><td>EVENT — interruption</td></tr><tr><td>54</td><td>Il <strong>s'arrêta</strong> et <strong>tendit</strong> l'oreille. (passé simple × 2)</td><td>He stopped and listened carefully.</td><td>EVENTS — sequential actions</td></tr><tr><td>55</td><td>Quelqu'un <strong>marchait</strong> derrière lui. (imparfait)</td><td>Someone was walking behind him.</td><td>Background — ongoing action</td></tr><tr><td>56</td><td>Il <strong>se retourna</strong> brusquement. (passé simple)</td><td>He turned around abruptly.</td><td>EVENT — decisive action</td></tr><tr><td>57</td><td>Mais il n'y <strong>avait</strong> personne. (imparfait)</td><td>But there was nobody.</td><td>Description — state</td></tr><tr><td>58</td><td>Son cœur <strong>battait</strong> à tout rompre. (imparfait)</td><td>His heart was pounding.</td><td>Internal state — background</td></tr><tr><td>59</td><td>Il <strong>reprit</strong> sa marche, plus vite cette fois. (passé simple)</td><td>He resumed walking, faster this time.</td><td>EVENT — reaction</td></tr><tr><td>60</td><td>Jamais il ne <strong>sut</strong> ce qui s'<strong>était</strong> passé cette nuit-là. (passé simple + PQP)</td><td>He never knew what had happened that night.</td><td>EVENT + past-before-past (P32 logic)</td></tr></tbody></table>
+<p><strong>🧠 Structure unlocked:</strong> Passé simple + Imparfait = literary version of P11 (Passé composé + Imparfait)</p>
+<table><thead><tr><th>Function</th><th>Spoken French (P11)</th><th>Literary French (P41)</th></tr></thead><tbody><tr><td>Events / completed actions</td><td>Passé composé</td><td><strong>Passé simple</strong></td></tr><tr><td>Background / descriptions / states</td><td>Imparfait</td><td><strong>Imparfait</strong> (same!)</td></tr></tbody></table>
+<p>→ <strong>The imparfait is the SAME in both worlds</strong> — it doesn't change between spoken and literary<br>
+→ Only the EVENT tense changes: passé composé → passé simple<br>
+→ This means: if you understood P11 → you understand literary narrative logic — you just need to recognize the verb forms</p>
+<hr>
+<h2>🔹 BLOCK G — Passé Antérieur: The Literary "Before That"</h2>
+<p><em>Scenario: Reading literary sentences where one past event happened before another</em></p>
+<table><thead><tr><th>#</th><th>Literary French (Passé Antérieur)</th><th>Modern Equivalent (Plus-que-parfait)</th><th>English Meaning</th></tr></thead><tbody><tr><td>61</td><td>Quand il <strong>eut terminé</strong> son discours, il s'assit.</td><td>Quand il <strong>avait terminé</strong> son discours, il s'est assis.</td><td>When he had finished his speech, he sat down.</td></tr><tr><td>62</td><td>Dès qu'elle <strong>fut arrivée</strong>, la réunion commença.</td><td>Dès qu'elle <strong>était arrivée</strong>, la réunion a commencé.</td><td>As soon as she had arrived, the meeting began.</td></tr><tr><td>63</td><td>Lorsqu'ils <strong>eurent compris</strong> la situation, ils partirent.</td><td>Lorsqu'ils <strong>avaient compris</strong> la situation, ils sont partis.</td><td>When they had understood the situation, they left.</td></tr><tr><td>64</td><td>Après qu'il <strong>eut lu</strong> la lettre, il la jeta au feu.</td><td>Après qu'il <strong>avait lu</strong> la lettre, il l'a jetée au feu.</td><td>After he had read the letter, he threw it into the fire.</td></tr><tr><td>65</td><td>Aussitôt qu'il <strong>eut franchi</strong> la porte, tout bascula.</td><td>Aussitôt qu'il <strong>avait franchi</strong> la porte, tout a basculé.</td><td>As soon as he had crossed the door, everything changed.</td></tr></tbody></table>
+<p><strong>🧠 Recognition unlocked:</strong> Passé antérieur = literary plus-que-parfait</p>
+<table><thead><tr><th>If You See...</th><th>It's...</th><th>Equivalent</th></tr></thead><tbody><tr><td>il <strong>eut</strong> + pp</td><td>Passé antérieur (avoir)</td><td>il avait + pp (PQP)</td></tr><tr><td>il <strong>fut</strong> + pp</td><td>Passé antérieur (être)</td><td>il était + pp (PQP)</td></tr></tbody></table>
+<p>→ Almost always follows <strong>temporal conjunctions:</strong> quand, lorsque, dès que, après que, aussitôt que (P30)<br>
+→ The main clause that follows is in <strong>passé simple</strong><br>
+→ <strong>Recognition formula:</strong> [temporal conjunction] + [eut/fut + pp] → [passé simple] = literary sequence of past events</p>
+<hr>
+<h2>🔹 BLOCK H — Imparfait du Subjonctif: Deep Literary Recognition</h2>
+<p><em>Scenario: Reading classic French literature — Hugo, Flaubert, Proust — encountering alien-looking verb forms</em></p>
+<table><thead><tr><th>#</th><th>Literary French (Imp. du Subjonctif)</th><th>Modern Equivalent (Subj. Présent)</th><th>English Meaning</th></tr></thead><tbody><tr><td>66</td><td>Il voulait qu'elle <strong>vînt</strong> avec lui.</td><td>Il voulait qu'elle <strong>vienne</strong> avec lui.</td><td>He wanted her to come with him.</td></tr><tr><td>67</td><td>Il fallait qu'il <strong>fît</strong> quelque chose.</td><td>Il fallait qu'il <strong>fasse</strong> quelque chose.</td><td>He had to do something.</td></tr><tr><td>68</td><td>Elle craignait qu'il ne <strong>partît</strong> sans elle.</td><td>Elle craignait qu'il ne <strong>parte</strong> sans elle.</td><td>She feared he would leave without her.</td></tr><tr><td>69</td><td>Il exigeait qu'on <strong>eût</strong> du respect pour lui.</td><td>Il exigeait qu'on <strong>ait</strong> du respect pour lui.</td><td>He demanded that people have respect for him.</td></tr><tr><td>70</td><td>Bien qu'il <strong>fût</strong> malade, il continua de travailler.</td><td>Bien qu'il <strong>soit</strong> malade, il a continué de travailler.</td><td>Although he was sick, he continued to work.</td></tr><tr><td>71</td><td>Il ne pensait pas qu'elle <strong>pût</strong> le comprendre.</td><td>Il ne pensait pas qu'elle <strong>puisse</strong> le comprendre.</td><td>He didn't think she could understand him.</td></tr><tr><td>72</td><td>Pourvu qu'il <strong>arrivât</strong> à temps !</td><td>Pourvu qu'il <strong>arrive</strong> à temps !</td><td>If only he would arrive on time!</td></tr><tr><td>73</td><td>Elle attendait qu'il <strong>dît</strong> quelque chose.</td><td>Elle attendait qu'il <strong>dise</strong> quelque chose.</td><td>She was waiting for him to say something.</td></tr><tr><td>74</td><td>Avant qu'il <strong>eût pu</strong> répondre, elle disparut.</td><td>Avant qu'il <strong>ait pu</strong> répondre, elle a disparu.</td><td>Before he could answer, she disappeared.</td></tr><tr><td>75</td><td>Sans qu'il <strong>sût</strong> pourquoi, il se sentait inquiet.</td><td>Sans qu'il <strong>sache</strong> pourquoi, il se sentait inquiet.</td><td>Without knowing why, he felt uneasy.</td></tr></tbody></table>
+<p><strong>🧠 Recognition unlocked:</strong> Imparfait du subjonctif = literary subjonctif</p>
+<p><strong>The Quick Recognition Guide:</strong></p>
+<table><thead><tr><th>Ending Pattern</th><th>Verb Type</th><th>Example</th></tr></thead><tbody><tr><td>-ât (with circumflex)</td><td>-ER verbs, 3rd person</td><td>qu'il parl<strong>ât</strong>, qu'il arriv<strong>ât</strong></td></tr><tr><td>-ît (with circumflex)</td><td>-IR/-RE verbs, 3rd person</td><td>qu'il fin<strong>ît</strong>, qu'il f<strong>ît</strong>, qu'il d<strong>ît</strong></td></tr><tr><td>-ût (with circumflex)</td><td>Irregular, 3rd person</td><td>qu'il f<strong>ût</strong>, qu'il e<strong>ût</strong>, qu'il p<strong>ût</strong>, qu'il s<strong>ût</strong></td></tr></tbody></table>
+<p>→ <strong>The circumflex accent (^) on the vowel is your biggest clue</strong> — if you see â, î, û in a que-clause → imparfait du subjonctif<br>
+→ Sentence 74: "qu'il <strong>eût pu</strong>" = plus-que-parfait du subjonctif (eût + pp) — the deepest literary form<br>
+→ <strong>Modern French solution:</strong> Simply use subjonctif présent or subjonctif passé regardless of the main verb's tense — concordance des temps in subjonctif is almost dead in modern French</p>
+<h3>The Literary vs. Modern Concordance</h3>
+<table><thead><tr><th>Main Verb Tense</th><th>Literary Subordinate</th><th>Modern Subordinate</th></tr></thead><tbody><tr><td>Present → future subordinate</td><td>Subjonctif présent</td><td>Subjonctif présent ✅ Same</td></tr><tr><td>Present → past subordinate</td><td>Subjonctif passé</td><td>Subjonctif passé ✅ Same</td></tr><tr><td>Past → future subordinate</td><td><strong>Imparfait du subjonctif</strong> 📚</td><td>Subjonctif présent ✅ Modern</td></tr><tr><td>Past → past subordinate</td><td><strong>PQP du subjonctif</strong> 📚</td><td>Subjonctif passé ✅ Modern</td></tr></tbody></table>
+<p>→ <strong>Modern French uses only subjonctif présent and subjonctif passé — for ALL situations</strong><br>
+→ Literary French follows strict concordance — past trigger → past subjonctif form<br>
+→ You will ONLY encounter imparfait/PQP du subjonctif in literature — never need to produce them</p>
+<hr>
+<h2>🔹 BLOCK I — Mixed: Reading a Full Literary Passage</h2>
+<p><em>Scenario: A complete paragraph from a novel — all literary tenses working together</em></p>
+<table><thead><tr><th>#</th><th>Literary French</th><th>Tense</th><th>Modern Equivalent</th></tr></thead><tbody><tr><td>76</td><td>La pluie tombait depuis le matin.</td><td>Imparfait</td><td>Same — La pluie tombait depuis le matin.</td></tr><tr><td>77</td><td>Jean se tenait debout près de la fenêtre.</td><td>Imparfait</td><td>Same — Jean se tenait debout...</td></tr><tr><td>78</td><td>Il contemplait la rue grise et silencieuse.</td><td>Imparfait</td><td>Same — Il contemplait...</td></tr><tr><td>79</td><td>Soudain, une voiture noire s'arrêta devant l'immeuble.</td><td><strong>Passé simple</strong></td><td>...une voiture noire <strong>s'est arrêtée</strong>...</td></tr><tr><td>80</td><td>Un homme en descendit lentement.</td><td><strong>Passé simple</strong></td><td>Un homme <strong>en est descendu</strong>...</td></tr><tr><td>81</td><td>Il portait un long manteau sombre.</td><td>Imparfait</td><td>Same — Il portait...</td></tr><tr><td>82</td><td>Jean reconnut aussitôt cette silhouette.</td><td><strong>Passé simple</strong></td><td>Jean <strong>a reconnu</strong> aussitôt...</td></tr><tr><td>83</td><td>C'était l'homme qu'il avait vu la veille.</td><td>Imparfait + PQP</td><td>Same — C'était l'homme qu'il avait vu...</td></tr><tr><td>84</td><td>Dès qu'il eut franchi le seuil, l'inconnu se dirigea vers l'escalier.</td><td><strong>Passé antérieur</strong> + <strong>Passé simple</strong></td><td>Dès qu'il <strong>avait franchi</strong> le seuil, l'inconnu <strong>s'est dirigé</strong>...</td></tr><tr><td>85</td><td>Jean sentit son cœur battre plus fort, bien qu'il ne sût pas pourquoi.</td><td><strong>Passé simple</strong> + <strong>Imp. du subj.</strong></td><td>Jean <strong>a senti</strong> son cœur battre plus fort, bien qu'il ne <strong>sache</strong> pas pourquoi.</td></tr></tbody></table>
+<p><strong>🧠 Full literary tense map in one passage:</strong></p>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>SCENE-SETTING:     Imparfait (same as modern) — La pluie tombait...
+</span>EVENTS:            Passé simple (replaces passé composé) — Une voiture s'arrêta...
+DESCRIPTIONS:      Imparfait (same) — Il portait un long manteau...
+PAST BEFORE PAST:  Plus-que-parfait (same) — qu'il avait vu...
+PAST BEFORE EVENT: Passé antérieur (replaces PQP after conjunctions) — Dès qu'il eut franchi...
+LITERARY SUBJUNCTIVE: Imp. du subjonctif (replaces subj. présent) — qu'il ne sût pas...</code></pre></div>
+<p>→ When reading, your mental conversion should be:</p>
+<ul>
+<li>See passé simple → think passé composé</li>
+<li>See passé antérieur → think plus-que-parfait</li>
+<li>See imp. du subjonctif → think subjonctif présent</li>
+<li>See imparfait → it's the SAME — no conversion needed</li>
+</ul>
+<hr>
+<h2>🔹 BLOCK J — Full Conversational Flow: Discussing Literature + Using Subjonctif Passé Naturally</h2>
+<p><em>Scenario: You're at a book club in Paris — discussing a novel AND using subjonctif passé in your own reactions</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English Meaning</th><th>What's Happening</th></tr></thead><tbody><tr><td>86</td><td>J'ai adoré ce roman, bien que la fin m'ait un peu déçu.</td><td>I loved this novel, although the ending disappointed me a bit.</td><td>Your opinion — bien que + subj.passé</td></tr><tr><td>87</td><td>C'est le meilleur livre que j'aie lu cette année.</td><td>It's the best book I've read this year.</td><td>Superlative + subj.passé — natural modern usage</td></tr><tr><td>88</td><td>Je suis surpris que l'auteur ait choisi cette perspective narrative.</td><td>I'm surprised the author chose this narrative perspective.</td><td>Reaction to past creative decision</td></tr><tr><td>89</td><td>Il est possible que le personnage principal ait menti au lecteur.</td><td>It's possible the main character lied to the reader.</td><td>Literary analysis — doubt about past event</td></tr><tr><td>90</td><td>Je doute qu'il ait vraiment voulu tuer ce personnage.</td><td>I doubt he really wanted to kill that character.</td><td>Doubt about authorial intent</td></tr><tr><td>91</td><td>Vous avez remarqué les passés simples ? "Il entra, il vit, il comprit" — c'est très classique.</td><td>Did you notice the passé simples? "He entered, he saw, he understood" — very classical.</td><td>META-discussion about literary tenses</td></tr><tr><td>92</td><td>Moi, ce qui m'a frappé, c'est qu'il ait utilisé le subjonctif imparfait — "qu'il fût" — on ne voit plus ça.</td><td>What struck me is that he used the imparfait du subjonctif — "qu'il fût" — you don't see that anymore.</td><td>Commenting on archaic literary forms</td></tr><tr><td>93</td><td>C'est dommage que ce roman n'ait pas été traduit plus tôt.</td><td>It's a shame this novel wasn't translated earlier.</td><td>Regret — subj.passé + passive (P24)</td></tr><tr><td>94</td><td>Avant que j'aie pu finir le dernier chapitre, quelqu'un m'a spoilé la fin !</td><td>Before I could finish the last chapter, someone spoiled the ending for me!</td><td>Avant que + subj.passé — real conversational use</td></tr><tr><td>95</td><td>Je ne pense pas qu'aucun autre auteur ait réussi à créer une atmosphère aussi dense.</td><td>I don't think any other author has managed to create such a dense atmosphere.</td><td>Negative opinion + aucun + subj.passé</td></tr><tr><td>96</td><td>Pour ceux qui n'auraient pas encore lu le livre, je recommande de ne pas lire les critiques avant.</td><td>For those who may not have read the book yet, I recommend not reading reviews first.</td><td>⚠️ Conditionnel passé for polite hypothesis — not subjonctif</td></tr><tr><td>97</td><td>Bien que certains passages aient été un peu longs, l'ensemble reste captivant.</td><td>Although some passages were a bit long, the whole remains captivating.</td><td>Concession — bien que + subj.passé (P29)</td></tr><tr><td>98</td><td>C'est le seul roman qui m'ait fait pleurer cette année.</td><td>It's the only novel that made me cry this year.</td><td>"Le seul...qui" + subjonctif — uniqueness trigger</td></tr><tr><td>99</td><td>Je suis ravi que notre club ait choisi ce livre.</td><td>I'm delighted our club chose this book.</td><td>Emotion + subj.passé — natural closure</td></tr><tr><td>100</td><td>La prochaine fois, je propose qu'on lise quelque chose de plus léger — pourvu qu'on se soit remis de celui-ci d'ici là !</td><td>Next time, I suggest we read something lighter — provided we've recovered from this one by then!</td><td>Subj.présent (propose que) + pourvu que + subj.passé — mixing both</td></tr></tbody></table>
+<hr>
+<h1>✅ WHAT SHOULD DO</h1>
+<p>→ <strong>PRODUCE subjonctif passé</strong> — it's modern, alive, and necessary:</p>
+<ul>
+<li>After emotions: "Je suis content qu'il <strong>ait réussi</strong>"</li>
+<li>After doubt: "Je doute qu'elle <strong>soit venue</strong>"</li>
+<li>After conjunctions: "Bien qu'il <strong>ait fait</strong> des erreurs"</li>
+<li>After superlatives: "Le meilleur que j'<strong>aie</strong> vu"</li>
+</ul>
+<p>→ <strong>RECOGNIZE passé simple</strong> — mentally convert to passé composé:</p>
+<ul>
+<li>See "il parla" → think "il a parlé"</li>
+<li>See "il fut" → think "il a été"</li>
+<li>See "il vit" → think "il a vu"</li>
+</ul>
+<p>→ <strong>RECOGNIZE passé antérieur</strong> — mentally convert to plus-que-parfait:</p>
+<ul>
+<li>See "il eut parlé" → think "il avait parlé"</li>
+<li>See "elle fut partie" → think "elle était partie"</li>
+</ul>
+<p>→ <strong>IDENTIFY imparfait du subjonctif by the circumflex</strong> — â, î, û in que-clauses:</p>
+<ul>
+<li>See "qu'il fût" → think "qu'il soit"</li>
+<li>See "qu'il pût" → think "qu'il puisse"</li>
+<li>See "qu'il parlât" → think "qu'il parle"</li>
+</ul>
+<p>→ <strong>Connect to P31</strong> — all subjonctif triggers work with subjonctif passé<br>
+→ <strong>Connect to P11</strong> — passé simple + imparfait = literary version of passé composé + imparfait<br>
+→ <strong>Connect to P32</strong> — passé antérieur = literary version of plus-que-parfait</p>
+<hr>
+<h1>❌ WHAT SHOULD NOT DO</h1>
+<p>→ ❌ <strong>NEVER use passé simple in speech:</strong></p>
+<ul>
+<li>❌ Speaking: "Hier, je <strong>parlai</strong> à mon ami" → people will laugh or stare</li>
+<li>✅ Speaking: "Hier, j'<strong>ai parlé</strong> à mon ami"</li>
+<li>Passé simple is for READING — never for speaking</li>
+</ul>
+<p>→ ❌ <strong>NEVER use imparfait du subjonctif in speech or modern writing:</strong></p>
+<ul>
+<li>❌ "Il faut qu'il <strong>fît</strong> attention" → sounds like you're from the 19th century</li>
+<li>✅ "Il faut qu'il <strong>fasse</strong> attention" — modern subjonctif présent</li>
+<li>Exception: some very formal speakers might use "fût" in speeches — but this is rare and deliberate</li>
+</ul>
+<p>→ ❌ <strong>NEVER confuse subjonctif passé with plus-que-parfait:</strong></p>
+<ul>
+<li>Subjonctif passé: qu'il <strong>ait</strong> parlé (auxiliary in SUBJONCTIF)</li>
+<li>Plus-que-parfait: il <strong>avait</strong> parlé (auxiliary in IMPARFAIT)</li>
+<li>The auxiliary form is different — "ait" vs. "avait" / "soit" vs. "était"</li>
+</ul>
+<p>→ ❌ <strong>NEVER forget subjonctif passé when the subordinate action is COMPLETED:</strong></p>
+<ul>
+<li>❌ "Je suis content qu'il <strong>vienne</strong> hier" → temporal mismatch — "hier" + subj.présent</li>
+<li>✅ "Je suis content qu'il <strong>soit venu</strong> hier" → subj.passé matches the past time reference</li>
+</ul>
+<p>→ ❌ <strong>NEVER panic when reading literary French:</strong></p>
+<ul>
+<li>The forms look alien but the LOGIC is identical to spoken French</li>
+<li>Passé simple = passé composé / Passé antérieur = plus-que-parfait</li>
+<li>The tense system is the SAME — only the forms change</li>
+</ul>
+<p>→ ❌ <strong>NEVER try to memorize ALL passé simple forms:</strong></p>
+<ul>
+<li>Focus on 3rd person (il/elle, ils/elles) — that's 90% of what you'll read</li>
+<li>Focus on the 15 most common irregular verbs (Block E table)</li>
+<li>Context + recognition patterns will handle the rest</li>
+</ul>
+<hr>
+<h1>🔀 WHEN TO USE WHAT</h1>
+<table><thead><tr><th>Situation</th><th>What to Use</th><th>Example</th></tr></thead><tbody><tr><td>Reacting to a past event (emotion/doubt)</td><td><strong>Subjonctif passé</strong> ✅ PRODUCE</td><td>Je suis content qu'il <strong>ait réussi</strong></td></tr><tr><td>Reacting to a future/ongoing event</td><td>Subjonctif présent (P31)</td><td>Je veux qu'il <strong>vienne</strong></td></tr><tr><td>Reading a novel — completed events</td><td><strong>Passé simple</strong> 👁️ RECOGNIZE</td><td>Il <strong>entra</strong> dans la pièce</td></tr><tr><td>Reading a novel — background/description</td><td>Imparfait (P10) — same form</td><td>La nuit <strong>était</strong> froide</td></tr><tr><td>Reading — event before another event</td><td><strong>Passé antérieur</strong> 👁️ RECOGNIZE</td><td>Dès qu'il <strong>eut fini</strong>...</td></tr><tr><td>Reading — subordinate after past trigger</td><td><strong>Imp. du subjonctif</strong> 👁️ IDENTIFY</td><td>qu'il <strong>fût</strong>, qu'il <strong>pût</strong></td></tr><tr><td>Writing formal French</td><td>Subjonctif passé ✅</td><td>Bien qu'il <strong>ait fait</strong>...</td></tr><tr><td>Writing literary fiction</td><td>Passé simple (if you choose literary register)</td><td>Elle <strong>regarda</strong> la mer</td></tr><tr><td>Superlative + relative clause</td><td><strong>Subjonctif passé</strong> ✅</td><td>Le meilleur que j'<strong>aie</strong> vu</td></tr><tr><td>Spoken French — past narrative</td><td>Passé composé (P9) — ALWAYS</td><td>Il <strong>est entré</strong> dans la pièce</td></tr></tbody></table>
+<hr>
+<h1>🚫 WHEN NOT TO USE</h1>
+<p>→ <strong>Passé simple:</strong> Never in speech, never in emails, never in casual writing — ONLY in literature and very formal texts<br>
+→ <strong>Passé antérieur:</strong> Same restrictions as passé simple — literary only<br>
+→ <strong>Imparfait du subjonctif:</strong> Almost never — even in formal modern writing, it's considered archaic by most<br>
+→ <strong>PQP du subjonctif:</strong> Virtually extinct — only in classic literature (pre-1950)<br>
+→ <strong>Subjonctif passé in place of indicatif:</strong> Don't use it after triggers that take indicatif</p>
+<ul>
+<li>❌ "Je sais qu'il <strong>ait</strong> réussi" → savoir doesn't trigger subjonctif</li>
+<li>✅ "Je sais qu'il <strong>a</strong> réussi" (indicatif — certainty)</li>
+<li>✅ "Je doute qu'il <strong>ait</strong> réussi" (subjonctif — doubt)</li>
+</ul>
+<hr>
+<h1>⚠️ COMMON PITFALLS AND FAILURE MODES</h1>
+<table><thead><tr><th>Pitfall</th><th>What Learners Do Wrong</th><th>Why It Fails</th><th>Correct Approach</th></tr></thead><tbody><tr><td><strong>Subj.passé vs. PQP confusion</strong></td><td>"qu'il avait parlé" in a que-clause requiring subjonctif</td><td>"Avait" = indicatif; need "ait" = subjonctif</td><td>qu'il <strong>ait</strong> parlé (subjonctif passé)</td></tr><tr><td><strong>Forgetting subj.passé exists</strong></td><td>"Je suis content qu'il vienne hier"</td><td>Subj.présent for a past action = temporal clash</td><td>Je suis content qu'il <strong>soit venu</strong> hier</td></tr><tr><td><strong>Using passé simple in speech</strong></td><td>"Hier, je parlai à mon collègue"</td><td>Nobody speaks passé simple</td><td>Hier, j'<strong>ai parlé</strong> à mon collègue</td></tr><tr><td><strong>Not recognizing passé simple</strong></td><td>Seeing "il vit" and thinking it's présent of "vivre"</td><td>"Il vit" = passé simple of VOIR (he saw) OR présent of VIVRE (he lives) — context decides</td><td>Check context — in a narrative past sequence = passé simple of voir</td></tr><tr><td><strong>Confusing "fut" and "fût"</strong></td><td>Treating them as identical</td><td>"fut" = passé simple of être / "fût" = imp. du subjonctif of être — circumflex matters</td><td>The circumflex ^ signals subjonctif</td></tr><tr><td><strong>Confusing "eut" and "eût"</strong></td><td>Same problem</td><td>"eut" = passé simple of avoir / "eût" = imp. du subjonctif of avoir</td><td>Circumflex = subjonctif</td></tr><tr><td><strong>Over-using subjonctif passé</strong></td><td>Using it after every "que"</td><td>Only after SUBJONCTIF triggers (emotion, doubt, will, necessity, conjunctions)</td><td>Check: does the trigger require subjonctif? (P31 rules)</td></tr><tr><td><strong>Agreement forgotten</strong></td><td>"Je suis content qu'elle ait venu"</td><td>Venir uses ÊTRE → qu'elle <strong>soit</strong> venue</td><td>qu'elle <strong>soit</strong> venu<strong>e</strong></td></tr><tr><td><strong>Thinking literary tenses are "better"</strong></td><td>Trying to write passé simple to sound sophisticated</td><td>Unless writing a novel, it sounds pretentious</td><td>Use passé composé in all non-literary writing</td></tr></tbody></table>
+<hr>
+<h1>🔑 KEY TAKEAWAY</h1>
+<blockquote>
+<p><strong>P31 gave you the subjonctif présent — reacting to present/future subjective events.</strong><br>
+<strong>P41 completes the subjonctif with the subjonctif passé — reacting to PAST subjective events.</strong><br>
+<strong>P41 also opens the door to LITERARY French — the tenses that live only in books.</strong></p>
+<p>The subjonctif passé is your ONE new productive tool:<br>
+→ "C'est le meilleur film que j'<strong>aie</strong> jamais <strong>vu</strong>" — you'll say this weekly<br>
+→ "Bien qu'il <strong>ait fait</strong> des erreurs..." — you'll write this in every formal email<br>
+→ "Je doute qu'elle <strong>soit venue</strong>" — you'll think this often</p>
+<p>The literary tenses are your READING keys:<br>
+→ Passé simple = passé composé in costume<br>
+→ Passé antérieur = plus-que-parfait in costume<br>
+→ Imparfait du subjonctif = subjonctif présent in costume<br>
+→ The LOGIC never changes — only the FORMS do</p>
+<p>You can now READ any French text from any century — and REACT to any past event with proper subjonctif passé.</p>
+<p>But French isn't just grammar — it's also <strong>idioms, expressions, and phrases that no grammar rule can explain.</strong></p>
+</blockquote>
+<hr>
+<h1>🌉 BRIDGE TO PROJECT 42</h1>
+<blockquote>
+<p>You now have EVERY grammatical tense in French — present, past, future, conditional, subjunctive, literary<br>
+But native speakers don't just use grammar — they use <strong>idiomatic expressions</strong> constantly</p>
+<p>→ "Il pleut des cordes" — It's raining ropes? No — it's <strong>pouring rain</strong><br>
+→ "Avoir le cafard" — To have the cockroach? No — to <strong>feel depressed</strong><br>
+→ "Poser un lapin à quelqu'un" — To put a rabbit on someone? No — to <strong>stand someone up</strong><br>
+→ "Ce n'est pas la mer à boire" — It's not the sea to drink? No — <strong>it's not that hard</strong></p>
+<p>These expressions CANNOT be understood through grammar alone<br>
+They must be learned AS UNITS — in full sentence contexts</p>
+<p>Project 42 unlocks: <strong>Idiomatic expressions in real conversation</strong><br>
+→ ~100 sentences embedding the most common French idioms in natural contexts<br>
+→ The phrases that make you sound like you BELONG in French — not just visiting</p>
+</blockquote>
+<hr>
+<h1>✅ PROJECT 41 COMPLETE</h1>
+<blockquote>
+<p><strong>Are you ready for PROJECT 42: "It's Raining Cats — French Style"?</strong><br>
+→ ~100 sentences covering essential French idiomatic expressions in conversational context<br>
+→ Scenario: A full week of French life where idioms pop up in every situation<br>
+→ Builds on all grammatical structures (P1–P41) and wraps them in native expression patterns</p>
+</blockquote>
+</div>
+</div>
+
+<!-- ========== data-index="23" ========== -->
+
+        </div>
+
+        <div class="nav-bar">
+            <a href="project-40.html" class="nav-button prev">← Previous Chapter</a>
+            <div class="page-info">
+                <a href="index.html" class="nav-button home">📚 Table of Contents</a><br>
+                <span style="margin-top:8px;display:block">Chapter 41 of 50</span>
+            </div>
+            <a href="project-42.html" class="nav-button next">Next Chapter →</a>
+        </div>
+    </div>
+
+    
+    <div id="progress-track"><div id="progress-fill"></div></div>
+    <div id="progress-pct">0%</div>
+
+
+    <script>
+    const fill = document.getElementById('progress-fill');
+    const pct  = document.getElementById('progress-pct');
+    function updateProgress() {
+        const scrollTop = window.scrollY;
+        const docHeight = document.body.scrollHeight - window.innerHeight;
+        const scrolled  = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+        fill.style.height = scrolled + '%';
+        pct.textContent   = Math.round(scrolled) + '%';
+    }
+    window.addEventListener('scroll', updateProgress);
+    updateProgress();
+
+    document.addEventListener('keydown', function(e) {
+        if (['INPUT','TEXTAREA'].includes(document.activeElement.tagName)) return;
+        if (e.key === 'ArrowLeft') {
+            const b = document.querySelector('.nav-button.prev');
+            if (b && !b.classList.contains('disabled')) window.location.href = b.href;
+        }
+        if (e.key === 'ArrowRight') {
+            const b = document.querySelector('.nav-button.next');
+            if (b && !b.classList.contains('disabled')) window.location.href = b.href;
+        }
+    });
+    </script>
+
+</body>
+</html>

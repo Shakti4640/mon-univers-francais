@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="images/favicon.png">
+    <title>Project 9: "What Happened Yesterday" — French Daily Sentences</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.75;
+            color: #1a202c;
+            background-color: #f7fafc;
+        }
+        .container {
+            max-width: 1800px;
+            margin: 0 auto;
+            background: white;
+            min-height: 100vh;
+            box-shadow: 0 0 30px rgba(0,0,0,0.08);
+            padding: 48px 52px;
+        }
+        
+        .content { max-width: 1700px; margin: 0 auto; color: #1a202c; }
+        .content h1 {
+            color: #1a202c; margin: 32px 0 20px;
+            padding-bottom: 12px;
+            border-bottom: 4px solid #3b82f6;
+            font-size: 2.1em;
+            font-weight: 700;
+        }
+        .content h2 {
+            color: #1a202c; margin: 28px 0 16px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #60a5fa;
+            font-size: 1.6em;
+            font-weight: 600;
+        }
+        .content h3 { color: #1a202c; margin: 22px 0 12px; font-size: 1.3em; font-weight: 600; }
+        .content h4 { color: #2d3748; margin: 18px 0 10px; font-size: 1.1em; font-weight: 600; }
+        .content p  { margin-bottom: 16px; line-height: 1.8; color: #1a202c; }
+        .content ul, .content ol { margin: 12px 0 18px 30px; color: #1a202c; }
+        .content li { margin-bottom: 8px; line-height: 1.75; color: #1a202c; }
+        .content hr { border: none; border-top: 2px solid #e2e8f0; margin: 26px 0; }
+        .content pre {
+            background: #f7fafc !important;
+            border: 1px solid #cbd5e0 !important;
+            border-left: 4px solid #3b82f6 !important;
+            padding: 18px !important; overflow-x: auto; margin: 18px 0; border-radius: 6px;
+            font-family: 'Consolas','Monaco','Courier New',monospace !important;
+            font-size: 0.9em !important;
+        }
+        .content pre:not([style*="color"]) { color: #1a202c !important; }
+        .content code {
+            font-family: 'Consolas','Monaco','Courier New',monospace !important;
+            font-size: 0.88em !important;
+        }
+        .content code:not(pre code) {
+            background: #dbeafe !important;
+            color: #1a202c !important;
+            padding: 2px 6px;
+            border-radius: 3px;
+        }
+        .content pre code { background: transparent !important; padding: 0; }
+        .content table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+        .content th {
+            background: linear-gradient(135deg, #3b82f6 0%, #60a5fa 100%);
+            color: white; padding: 12px 16px; text-align: left;
+            font-weight: 600;
+        }
+        .content td { padding: 11px 16px; border: 1px solid #e2e8f0; color: #1a202c; }
+        .content tr:nth-child(even) td { background: #eff6ff; }
+        .content blockquote {
+            border-left: 4px solid #3b82f6; background: #eff6ff;
+            padding: 14px 20px; margin: 18px 0; border-radius: 0 6px 6px 0;
+            color: #1a202c;
+        }
+        .content strong { color: #1a202c; font-weight: 600; }
+        .px-2 { padding: 0; }
+        .chat-message { background: transparent; padding: 0; margin: 0; }
+
+        /* Bottom nav bar only */
+        .nav-bar {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 24px 0;
+            margin-top: 50px;
+            border-top: 3px solid #60a5fa;
+        }
+        .nav-button {
+            display: inline-flex; align-items: center; gap: 8px;
+            padding: 12px 26px;
+            background: linear-gradient(135deg, #3b82f6 0%, #60a5fa 100%);
+            color: white !important; text-decoration: none;
+            border-radius: 8px; font-weight: 600; font-size: 0.95em;
+            transition: all 0.2s;
+            box-shadow: 0 2px 8px rgba(59,130,246,0.35);
+        }
+        .nav-button:hover { transform: translateY(-2px); box-shadow: 0 4px 14px rgba(59,130,246,0.5); }
+        .nav-button.disabled { background: #cbd5e1; box-shadow: none; pointer-events: none; }
+        .nav-button.home {
+            background: linear-gradient(135deg, #ef4444 0%, #f87171 100%);
+            box-shadow: 0 2px 8px rgba(239,68,68,0.35);
+        }
+        .nav-button.home:hover { box-shadow: 0 4px 14px rgba(239,68,68,0.5); }
+        .page-info { color: #718096; font-size: 0.9em; text-align: center; }
+
+        /* Progress bar */
+        #progress-track {
+            position: fixed; top: 20px; right: 20px;
+            width: 10px; height: 150px;
+            background: rgba(59,130,246,0.2);
+            border: 2px solid #3b82f6;
+            border-radius: 6px; overflow: hidden; z-index: 1000;
+        }
+        #progress-fill {
+            width: 100%;
+            background: linear-gradient(180deg, #3b82f6, #2563eb);
+            height: 0%;
+            transition: height 0.15s ease;
+        }
+        #progress-pct {
+            position: fixed; top: 0px; right: 16px;
+            color: #2563eb; font-size: 14px; font-weight: bold;
+            z-index: 1001;
+            text-shadow: 0 1px 2px rgba(255,255,255,0.9);
+            line-height: 20px;
+        }
+
+    </style>
+<link rel="stylesheet" href="assets/chapters.css?v=20260421203847"><script src="assets/chapters.js?v=20260421203847" defer></script>
+</head>
+<body>
+    <div class="container">
+        <div class="content">
+            <div class="chat-message" data-index="19">
+<div class="px-2"><h1>🔵 PROJECT 9: "What Happened Yesterday"</h1>
+<h2><em>You need to tell a friend what you did last weekend</em></h2>
+<hr>
+<h1>🎯 THE HYPOTHETICAL PROBLEM</h1>
+<p>→ It's <strong>Monday morning</strong> at your French language school in Paris<br>
+→ Your classmate Léa asks: <strong>"Alors, t'as fait quoi ce week-end ?"</strong> (So, what did you do this weekend?)<br>
+→ You had an amazing weekend — you visited Montmartre, ate at a great restaurant, watched a movie, met new people, walked along the Seine<br>
+→ You open your mouth and... you can only speak in present tense<br>
+→ "Je visite Montmartre. Je mange au restaurant. Je regarde un film."<br>
+→ Léa looks confused — <strong>are you describing your weekend or your plans for today?</strong><br>
+→ You sound like a robot narrating in real time<br>
+→ You NEED to say:<br>
+→ → "I <strong>visited</strong> Montmartre."<br>
+→ → "I <strong>ate</strong> at a restaurant."<br>
+→ → "I <strong>watched</strong> a movie."<br>
+→ → "I <strong>met</strong> new people."<br>
+→ → "We <strong>walked</strong> along the Seine."<br>
+→ → "She <strong>left</strong> early."<br>
+→ → "We <strong>arrived</strong> late."<br>
+→ Every single one of these requires a <strong>new sentence structure</strong> — the <strong>passé composé</strong></p>
+<p><strong>The core realization:</strong><br>
+→ All of Phase 1 gave you the <strong>present tense</strong> — a flat, timeless world<br>
+→ The passé composé gives you a <strong>completed past</strong> — things that HAPPENED, that are DONE, that are FINISHED<br>
+→ It's the #1 past tense in spoken French — used far more than any other past form<br>
+→ It uses a <strong>completely new architecture</strong>: instead of one verb, you now build with <strong>TWO pieces</strong><br>
+→ → <strong>Piece 1:</strong> An auxiliary verb (avoir OR être) — conjugated in present tense<br>
+→ → <strong>Piece 2:</strong> A past participle — the "done" form of the action verb<br>
+→ Which auxiliary you use (avoir or être) depends on the verb — and getting it wrong is one of the most common mistakes in French</p>
+<hr>
+<h1>🔍 HOW TO APPROACH IT</h1>
+<p>→ The passé composé sentence skeleton:</p>
+<code>SUBJECT + AUXILIARY (avoir/être in present) + PAST PARTICIPLE + rest</code>
+<p>→ Compare with present tense:</p>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>Present:         Je mange au restaurant.        (I eat at the restaurant.)
+</span>Passé composé:   J'ai mangé au restaurant.      (I ate at the restaurant.)</code></pre></div>
+<p>→ You already know avoir and être in present tense (Project 1)<br>
+→ You already know action verbs (Project 2)<br>
+→ Now you combine them in a new way</p>
+<p>→ <strong>Two big questions to solve:</strong></p>
+<ol>
+<li>How do you form the <strong>past participle</strong> of each verb?</li>
+<li>How do you know whether to use <strong>avoir</strong> or <strong>être</strong> as the auxiliary?</li>
+</ol>
+<hr>
+<h1>🔧 HOW CAN WE SOLVE IT</h1>
+<h2>Step 1 — Forming Past Participles</h2>
+<h3>Regular verbs follow predictable patterns:</h3>
+<table><thead><tr><th>Verb Family</th><th>Infinitif Ending</th><th>Past Participle Ending</th><th>Example</th></tr></thead><tbody><tr><td><strong>-ER verbs</strong></td><td>-er</td><td><strong>-é</strong></td><td>manger → mang<strong>é</strong></td></tr><tr><td><strong>-IR verbs</strong></td><td>-ir</td><td><strong>-i</strong></td><td>finir → fin<strong>i</strong></td></tr><tr><td><strong>-RE verbs</strong></td><td>-re</td><td><strong>-u</strong></td><td>attendre → attend<strong>u</strong></td></tr></tbody></table>
+<p>→ -ER verbs (90% of all verbs — Project 2): just replace <strong>-er</strong> with <strong>-é</strong><br>
+→ → parler → parlé / manger → mangé / travailler → travaillé / regarder → regardé<br>
+→ -IR verbs: replace <strong>-ir</strong> with <strong>-i</strong><br>
+→ → finir → fini / choisir → choisi / dormir → dormi / partir → parti / sortir → sorti<br>
+→ -RE verbs: replace <strong>-re</strong> with <strong>-u</strong><br>
+→ → attendre → attendu / perdre → perdu / répondre → répondu</p>
+<h3>Irregular past participles (MUST memorize):</h3>
+<table><thead><tr><th>Infinitif</th><th>Past Participle</th><th>English</th></tr></thead><tbody><tr><td><strong>être</strong></td><td><strong>été</strong></td><td>been</td></tr><tr><td><strong>avoir</strong></td><td><strong>eu</strong></td><td>had</td></tr><tr><td><strong>faire</strong></td><td><strong>fait</strong></td><td>done / made</td></tr><tr><td><strong>prendre</strong></td><td><strong>pris</strong></td><td>taken</td></tr><tr><td><strong>mettre</strong></td><td><strong>mis</strong></td><td>put</td></tr><tr><td><strong>dire</strong></td><td><strong>dit</strong></td><td>said</td></tr><tr><td><strong>écrire</strong></td><td><strong>écrit</strong></td><td>written</td></tr><tr><td><strong>voir</strong></td><td><strong>vu</strong></td><td>seen</td></tr><tr><td><strong>lire</strong></td><td><strong>lu</strong></td><td>read</td></tr><tr><td><strong>boire</strong></td><td><strong>bu</strong></td><td>drunk</td></tr><tr><td><strong>connaître</strong></td><td><strong>connu</strong></td><td>known</td></tr><tr><td><strong>pouvoir</strong></td><td><strong>pu</strong></td><td>been able to</td></tr><tr><td><strong>vouloir</strong></td><td><strong>voulu</strong></td><td>wanted</td></tr><tr><td><strong>devoir</strong></td><td><strong>dû</strong></td><td>had to</td></tr><tr><td><strong>savoir</strong></td><td><strong>su</strong></td><td>known (a fact)</td></tr><tr><td><strong>ouvrir</strong></td><td><strong>ouvert</strong></td><td>opened</td></tr><tr><td><strong>offrir</strong></td><td><strong>offert</strong></td><td>offered</td></tr><tr><td><strong>venir</strong></td><td><strong>venu</strong></td><td>come</td></tr><tr><td><strong>mourir</strong></td><td><strong>mort</strong></td><td>died</td></tr><tr><td><strong>naître</strong></td><td><strong>né</strong></td><td>born</td></tr></tbody></table>
+<p>→ These are the <strong>20 most important irregular past participles</strong><br>
+→ No shortcut — pure memorization required<br>
+→ You will see them so often that they become automatic</p>
+<hr>
+<h2>Step 2 — Choosing the Auxiliary: AVOIR or ÊTRE?</h2>
+<h3>The Majority Rule: MOST verbs use AVOIR</h3>
+<code>J'AI mangé.   Tu AS parlé.   Il A travaillé.   Nous AVONS regardé.   Vous AVEZ écouté.   Ils ONT fini.</code>
+<p>→ <strong>~95% of all French verbs</strong> use avoir in passé composé<br>
+→ If in doubt → try avoir → you'll be right most of the time</p>
+<h3>The Special Club: SOME verbs use ÊTRE</h3>
+<p>→ A small group of verbs — mostly describing <strong>movement or state change</strong> — use être instead<br>
+→ The classic mnemonic: <strong>DR &amp; MRS VANDERTRAMP</strong></p>
+<table><thead><tr><th>Letter</th><th>Verb</th><th>Past Participle</th><th>English</th></tr></thead><tbody><tr><td><strong>D</strong></td><td>Devenir</td><td>devenu</td><td>became</td></tr><tr><td><strong>R</strong></td><td>Revenir</td><td>revenu</td><td>came back</td></tr><tr><td><strong>M</strong></td><td>Monter</td><td>monté</td><td>went up</td></tr><tr><td><strong>R</strong></td><td>Rester</td><td>resté</td><td>stayed</td></tr><tr><td><strong>S</strong></td><td>Sortir</td><td>sorti</td><td>went out</td></tr><tr><td><strong>V</strong></td><td>Venir</td><td>venu</td><td>came</td></tr><tr><td><strong>A</strong></td><td>Aller</td><td>allé</td><td>went</td></tr><tr><td><strong>N</strong></td><td>Naître</td><td>né</td><td>was born</td></tr><tr><td><strong>D</strong></td><td>Descendre</td><td>descendu</td><td>went down</td></tr><tr><td><strong>E</strong></td><td>Entrer</td><td>entré</td><td>entered</td></tr><tr><td><strong>R</strong></td><td>Rentrer</td><td>rentré</td><td>went home / came back in</td></tr><tr><td><strong>T</strong></td><td>Tomber</td><td>tombé</td><td>fell</td></tr><tr><td><strong>R</strong></td><td>Retourner</td><td>retourné</td><td>returned</td></tr><tr><td><strong>A</strong></td><td>Arriver</td><td>arrivé</td><td>arrived</td></tr><tr><td><strong>M</strong></td><td>Mourir</td><td>mort</td><td>died</td></tr><tr><td><strong>P</strong></td><td>Partir</td><td>parti</td><td>left</td></tr><tr><td><strong>+</strong></td><td>Passer (by)*</td><td>passé</td><td>passed by</td></tr></tbody></table>
+<p>→ *Passer uses être when it means "to pass by / to stop by" (no direct object)<br>
+→ Passer uses avoir when it means "to pass / to spend (time)" → J'ai passé une bonne journée</p>
+<p>→ Also: <strong>ALL reflexive verbs</strong> (se lever, se laver — Project 14) use être<br>
+→ You'll learn this in Project 14 — for now, focus on the DR MRS VANDERTRAMP list</p>
+<h3>The CRITICAL difference when using être:</h3>
+<p><strong>With AVOIR → past participle does NOT change</strong></p>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>Il a mangé.    Elle a mangé.    Ils ont mangé.    Elles ont mangé.
+</span>(mangé stays the same — always)</code></pre></div>
+<p><strong>With ÊTRE → past participle AGREES with the subject (like an adjective!)</strong></p>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>Il est allé.        (he went)         — masculine singular
+</span>Elle est allée.     (she went)        — feminine singular → add -e
+Ils sont allés.     (they went)       — masculine plural → add -s
+Elles sont allées.  (they went, f)    — feminine plural → add -es
+On est allés.       (we went)         — plural → add -s (common in spoken)</code></pre></div>
+<p>→ This agreement rule ONLY applies with <strong>être</strong> — never with avoir (at this level)<br>
+→ Think of it like this: with être, the past participle behaves like an <strong>adjective describing the subject</strong><br>
+→ Recall from Project 1: "Elle est fatigué<strong>e</strong>" — same logic → "Elle est allé<strong>e</strong>"</p>
+<hr>
+<h1>✅ WHAT COULD BE DONE — THE 100 SENTENCES</h1>
+<h2>🔹 BLOCK A — Passé Composé with AVOIR: -ER Verbs</h2>
+<p><em>Scenario: You tell Léa what you did this weekend — basic activities</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English Meaning</th><th>Structure</th></tr></thead><tbody><tr><td>1</td><td>J'ai mangé au restaurant.</td><td>I ate at the restaurant.</td><td>avoir + mangé</td></tr><tr><td>2</td><td>J'ai regardé un film.</td><td>I watched a movie.</td><td>avoir + regardé</td></tr><tr><td>3</td><td>Tu as aimé le film ?</td><td>Did you like the movie?</td><td>avoir + aimé + ?</td></tr><tr><td>4</td><td>Il a travaillé samedi.</td><td>He worked Saturday.</td><td>avoir + travaillé</td></tr><tr><td>5</td><td>Elle a acheté une robe.</td><td>She bought a dress.</td><td>avoir + acheté</td></tr><tr><td>6</td><td>On a visité Montmartre.</td><td>We visited Montmartre.</td><td>avoir + visité</td></tr><tr><td>7</td><td>Nous avons dansé toute la nuit.</td><td>We danced all night.</td><td>avoir + dansé</td></tr><tr><td>8</td><td>Vous avez trouvé le restaurant ?</td><td>Did you find the restaurant?</td><td>avoir + trouvé + ?</td></tr><tr><td>9</td><td>Ils ont joué au football.</td><td>They played football.</td><td>avoir + joué</td></tr><tr><td>10</td><td>Elles ont préparé le dîner.</td><td>They (f) prepared dinner.</td><td>avoir + préparé</td></tr></tbody></table>
+<p><strong>🧠 Structure confirmed:</strong> <code>Subject + AVOIR (present) + PAST PARTICIPLE (-é) + rest</code></p>
+<p>→ Notice: this looks almost like present tense avoir + something<br>
+→ "J'<strong>ai</strong> un chat" (Project 1 — I have a cat) vs. "J'<strong>ai</strong> mang<strong>é</strong>" (I ate)<br>
+→ The past participle after avoir tells you it's <strong>passé composé</strong>, not possession</p>
+<hr>
+<h2>🔹 BLOCK B — Passé Composé with AVOIR: -IR and -RE Verbs</h2>
+<p><em>Scenario: More weekend activities — finishing things, waiting, choosing</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English Meaning</th><th>Participle Pattern</th></tr></thead><tbody><tr><td>11</td><td>J'ai fini le livre.</td><td>I finished the book.</td><td>finir → fin<strong>i</strong></td></tr><tr><td>12</td><td>Tu as choisi quel restaurant ?</td><td>Which restaurant did you choose?</td><td>choisir → chois<strong>i</strong></td></tr><tr><td>13</td><td>Il a dormi jusqu'à midi.</td><td>He slept until noon.</td><td>dormir → dorm<strong>i</strong></td></tr><tr><td>14</td><td>Elle a réussi son examen.</td><td>She passed her exam.</td><td>réussir → réuss<strong>i</strong></td></tr><tr><td>15</td><td>On a attendu le bus pendant une heure.</td><td>We waited for the bus for an hour.</td><td>attendre → attend<strong>u</strong></td></tr><tr><td>16</td><td>J'ai perdu mes clés.</td><td>I lost my keys.</td><td>perdre → perd<strong>u</strong></td></tr><tr><td>17</td><td>Tu as répondu à son message ?</td><td>Did you reply to his message?</td><td>répondre → répond<strong>u</strong></td></tr><tr><td>18</td><td>Il a vendu sa voiture.</td><td>He sold his car.</td><td>vendre → vend<strong>u</strong></td></tr><tr><td>19</td><td>On a entendu de la musique.</td><td>We heard music.</td><td>entendre → entend<strong>u</strong></td></tr><tr><td>20</td><td>Vous avez rendu les livres ?</td><td>Did you return the books?</td><td>rendre → rend<strong>u</strong></td></tr></tbody></table>
+<p><strong>🧠 Patterns confirmed:</strong><br>
+→ -IR → <strong>-i</strong> (fini, choisi, dormi, réussi)<br>
+→ -RE → <strong>-u</strong> (attendu, perdu, répondu, vendu, entendu, rendu)<br>
+→ ALL with avoir — none of these are in the DR MRS VANDERTRAMP list</p>
+<hr>
+<h2>🔹 BLOCK C — Passé Composé with AVOIR: Irregular Past Participles</h2>
+<p><em>Scenario: Weekend activities with common irregular verbs</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English Meaning</th><th>Irregular Participle</th></tr></thead><tbody><tr><td>21</td><td>J'ai fait du shopping.</td><td>I went shopping.</td><td>faire → <strong>fait</strong></td></tr><tr><td>22</td><td>Tu as fait quoi ce week-end ?</td><td>What did you do this weekend?</td><td>faire → <strong>fait</strong></td></tr><tr><td>23</td><td>Il a pris le métro.</td><td>He took the metro.</td><td>prendre → <strong>pris</strong></td></tr><tr><td>24</td><td>Elle a pris un café.</td><td>She had a coffee.</td><td>prendre → <strong>pris</strong></td></tr><tr><td>25</td><td>On a bu du vin.</td><td>We drank wine.</td><td>boire → <strong>bu</strong></td></tr><tr><td>26</td><td>J'ai vu un bon film.</td><td>I saw a good movie.</td><td>voir → <strong>vu</strong></td></tr><tr><td>27</td><td>Tu as lu ce livre ?</td><td>Did you read this book?</td><td>lire → <strong>lu</strong></td></tr><tr><td>28</td><td>Il a dit bonjour.</td><td>He said hello.</td><td>dire → <strong>dit</strong></td></tr><tr><td>29</td><td>Elle a mis une belle robe.</td><td>She put on a beautiful dress.</td><td>mettre → <strong>mis</strong></td></tr><tr><td>30</td><td>On a eu de la chance.</td><td>We were lucky. (We had luck.)</td><td>avoir → <strong>eu</strong></td></tr><tr><td>31</td><td>J'ai écrit un message.</td><td>I wrote a message.</td><td>écrire → <strong>écrit</strong></td></tr><tr><td>32</td><td>Tu as ouvert le cadeau ?</td><td>Did you open the gift?</td><td>ouvrir → <strong>ouvert</strong></td></tr><tr><td>33</td><td>Il a connu beaucoup de gens.</td><td>He met a lot of people.</td><td>connaître → <strong>connu</strong></td></tr><tr><td>34</td><td>On a voulu partir tôt.</td><td>We wanted to leave early.</td><td>vouloir → <strong>voulu</strong></td></tr><tr><td>35</td><td>J'ai dû travailler dimanche.</td><td>I had to work Sunday.</td><td>devoir → <strong>dû</strong></td></tr></tbody></table>
+<p><strong>🧠 These irregular participles are the TOP 15 most used in daily French</strong><br>
+→ They don't follow the -é / -i / -u patterns — pure memorization<br>
+→ Group them by ending pattern to help memory:</p>
+<table><thead><tr><th>Ending</th><th>Participles</th></tr></thead><tbody><tr><td><strong>-it</strong></td><td>fait, dit, écrit</td></tr><tr><td><strong>-is</strong></td><td>pris, mis</td></tr><tr><td><strong>-u</strong></td><td>vu, lu, bu, eu, connu, voulu, dû, pu, su</td></tr><tr><td><strong>-ert</strong></td><td>ouvert, offert</td></tr><tr><td><strong>-é</strong></td><td>été (from être)</td></tr></tbody></table>
+<p>→ The <strong>-u group</strong> is the largest irregular group — notice they're mostly short, common verbs</p>
+<hr>
+<h2>🔹 BLOCK D — Passé Composé with ÊTRE: Movement Verbs</h2>
+<p><em>Scenario: Describing where you went, when you arrived, how you moved around</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English Meaning</th><th>Agreement</th></tr></thead><tbody><tr><td>36</td><td>Je suis allé au musée.</td><td>I went to the museum. (male speaking)</td><td>allé — masc sing</td></tr><tr><td>37</td><td>Je suis allée au musée.</td><td>I went to the museum. (female speaking)</td><td>allé<strong>e</strong> — fem sing</td></tr><tr><td>38</td><td>Tu es allé où ?</td><td>Where did you go? (to a male)</td><td>allé — masc sing</td></tr><tr><td>39</td><td>Tu es allée où ?</td><td>Where did you go? (to a female)</td><td>allé<strong>e</strong> — fem sing</td></tr><tr><td>40</td><td>Il est allé à la plage.</td><td>He went to the beach.</td><td>allé — masc sing</td></tr><tr><td>41</td><td>Elle est allée à la plage.</td><td>She went to the beach.</td><td>allé<strong>e</strong> — fem sing</td></tr><tr><td>42</td><td>On est allés au cinéma.</td><td>We went to the cinema.</td><td>allé<strong>s</strong> — plural</td></tr><tr><td>43</td><td>Nous sommes allés au parc.</td><td>We went to the park. (mixed/masc)</td><td>allé<strong>s</strong> — masc plural</td></tr><tr><td>44</td><td>Nous sommes allées au marché.</td><td>We (all female) went to the market.</td><td>allé<strong>es</strong> — fem plural</td></tr><tr><td>45</td><td>Ils sont allés en ville.</td><td>They went downtown.</td><td>allé<strong>s</strong> — masc plural</td></tr><tr><td>46</td><td>Elles sont allées au café.</td><td>They (f) went to the café.</td><td>allé<strong>es</strong> — fem plural</td></tr></tbody></table>
+<p><strong>🧠 AGREEMENT RULE WITH ÊTRE — THE FOUR FORMS:</strong></p>
+<table><thead><tr><th>Subject</th><th>Participle Form</th><th>Added</th></tr></thead><tbody><tr><td>Masculine singular</td><td>allé</td><td>nothing</td></tr><tr><td>Feminine singular</td><td>allé<strong>e</strong></td><td>+ e</td></tr><tr><td>Masculine/mixed plural</td><td>allé<strong>s</strong></td><td>+ s</td></tr><tr><td>Feminine plural</td><td>allé<strong>es</strong></td><td>+ es</td></tr></tbody></table>
+<p>→ This works EXACTLY like adjective agreement (Project 1: fatigué/fatiguée/fatigués/fatiguées)<br>
+→ With être, the past participle IS essentially an adjective describing the subject<br>
+→ <strong>In spoken French, you usually CAN'T hear the difference</strong> (allé, allée, allés, allées all sound the same)<br>
+→ But in writing, the agreement is <strong>mandatory</strong></p>
+<hr>
+<h2>🔹 BLOCK E — More ÊTRE Verbs: Arrivals, Departures, State Changes</h2>
+<p><em>Scenario: The story of your weekend — comings and goings</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English Meaning</th><th>Être Verb</th></tr></thead><tbody><tr><td>47</td><td>Je suis arrivé à dix heures.</td><td>I arrived at ten o'clock. (male)</td><td>arriver</td></tr><tr><td>48</td><td>Elle est arrivée en retard.</td><td>She arrived late.</td><td>arriver</td></tr><tr><td>49</td><td>Je suis parti tôt le matin.</td><td>I left early in the morning. (male)</td><td>partir</td></tr><tr><td>50</td><td>Elle est partie à midi.</td><td>She left at noon.</td><td>partir</td></tr><tr><td>51</td><td>Il est venu chez moi.</td><td>He came to my place.</td><td>venir</td></tr><tr><td>52</td><td>Elles sont venues aussi.</td><td>They (f) came too.</td><td>venir</td></tr><tr><td>53</td><td>On est sortis samedi soir.</td><td>We went out Saturday night.</td><td>sortir</td></tr><tr><td>54</td><td>Elle est sortie avec ses amis.</td><td>She went out with her friends.</td><td>sortir</td></tr><tr><td>55</td><td>Il est entré dans le magasin.</td><td>He entered the store.</td><td>entrer</td></tr><tr><td>56</td><td>Je suis rentré tard.</td><td>I got home late. (male)</td><td>rentrer</td></tr><tr><td>57</td><td>Elle est rentrée chez elle.</td><td>She went home.</td><td>rentrer</td></tr><tr><td>58</td><td>Ils sont montés au cinquième étage.</td><td>They went up to the fifth floor.</td><td>monter</td></tr><tr><td>59</td><td>Elle est descendue au sous-sol.</td><td>She went down to the basement.</td><td>descendre</td></tr><tr><td>60</td><td>Il est resté à la maison.</td><td>He stayed home.</td><td>rester</td></tr><tr><td>61</td><td>Elle est tombée dans la rue.</td><td>She fell in the street.</td><td>tomber</td></tr><tr><td>62</td><td>Il est né en France.</td><td>He was born in France.</td><td>naître</td></tr><tr><td>63</td><td>Elle est née en Italie.</td><td>She was born in Italy.</td><td>naître</td></tr><tr><td>64</td><td>Ils sont retournés au restaurant.</td><td>They went back to the restaurant.</td><td>retourner</td></tr><tr><td>65</td><td>Elle est devenue professeur.</td><td>She became a teacher.</td><td>devenir</td></tr></tbody></table>
+<p><strong>🧠 ÊTRE verbs in groups by meaning:</strong></p>
+<table><thead><tr><th>Movement Category</th><th>Verbs</th><th>Logic</th></tr></thead><tbody><tr><td><strong>Going / Coming</strong></td><td>aller, venir, revenir, retourner, rentrer</td><td>Traveling somewhere</td></tr><tr><td><strong>Arriving / Leaving</strong></td><td>arriver, partir, sortir, entrer</td><td>Starting/ending at a place</td></tr><tr><td><strong>Up / Down</strong></td><td>monter, descendre</td><td>Vertical movement</td></tr><tr><td><strong>Staying / Falling</strong></td><td>rester, tomber</td><td>State at a location</td></tr><tr><td><strong>Life events</strong></td><td>naître, mourir, devenir</td><td>Birth, death, transformation</td></tr></tbody></table>
+<p>→ Notice the <strong>common thread</strong>: these are about the SUBJECT changing state or location<br>
+→ They describe what happens TO the subject — not what the subject does TO something else</p>
+<hr>
+<h2>🔹 BLOCK F — Negation in Passé Composé</h2>
+<p><em>Scenario: Things you DIDN'T do this weekend</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English Meaning</th><th>Negation Placement</th></tr></thead><tbody><tr><td>66</td><td>Je n'ai pas travaillé.</td><td>I didn't work.</td><td>ne + <strong>ai</strong> + pas + participle</td></tr><tr><td>67</td><td>Je n'ai pas dormi.</td><td>I didn't sleep.</td><td>ne + <strong>ai</strong> + pas + participle</td></tr><tr><td>68</td><td>Tu n'as pas aimé le film ?</td><td>Didn't you like the movie?</td><td>ne + <strong>as</strong> + pas + participle</td></tr><tr><td>69</td><td>Il n'a rien fait.</td><td>He didn't do anything.</td><td>ne + <strong>a</strong> + rien + participle</td></tr><tr><td>70</td><td>Elle n'a jamais visité Paris.</td><td>She has never visited Paris.</td><td>ne + <strong>a</strong> + jamais + participle</td></tr><tr><td>71</td><td>On n'a pas pu entrer.</td><td>We couldn't get in.</td><td>ne + <strong>a</strong> + pas + participle (modal in PC)</td></tr><tr><td>72</td><td>Je ne suis pas allé au cinéma.</td><td>I didn't go to the cinema.</td><td>ne + <strong>suis</strong> + pas + participle</td></tr><tr><td>73</td><td>Elle n'est pas venue.</td><td>She didn't come.</td><td>ne + <strong>est</strong> + pas + participle</td></tr><tr><td>74</td><td>Ils ne sont pas restés longtemps.</td><td>They didn't stay long.</td><td>ne + <strong>sont</strong> + pas + participle</td></tr><tr><td>75</td><td>On n'a plus parlé après ça.</td><td>We didn't talk anymore after that.</td><td>ne + <strong>a</strong> + plus + participle</td></tr></tbody></table>
+<p><strong>🧠 NEGATION PLACEMENT IN PASSÉ COMPOSÉ — THE RULE:</strong></p>
+<code>Subject + NE + AUXILIARY + PAS/PLUS/JAMAIS/RIEN + PAST PARTICIPLE + rest</code>
+<p>→ The negation sandwich wraps around the <strong>AUXILIARY</strong> (avoir or être)<br>
+→ NOT around the past participle<br>
+→ The past participle comes AFTER the sandwich</p>
+<table><thead><tr><th>Part</th><th>Position</th></tr></thead><tbody><tr><td>NE</td><td>Before auxiliary</td></tr><tr><td>PAS/PLUS/JAMAIS/RIEN</td><td>After auxiliary, BEFORE participle</td></tr><tr><td>PAST PARTICIPLE</td><td>After the negation word</td></tr></tbody></table>
+<p>→ ✅ Je **n'**ai <strong>pas</strong> mangé.<br>
+→ ❌ <del>Je n'ai mangé pas.</del><br>
+→ ✅ Il **n'**a <strong>rien</strong> fait.<br>
+→ ❌ <del>Il n'a fait rien.</del></p>
+<p><strong>🧠 Exception — PERSONNE:</strong><br>
+→ Personne goes AFTER the past participle (it's "heavier"):<br>
+→ ✅ Je **n'**ai vu <strong>personne</strong>. (I didn't see anyone.)<br>
+→ Same behavior as with modals (Project 6, Block I)</p>
+<p><strong>🧠 Spoken French reminder (Project 5):</strong><br>
+→ The "ne" drops in speech:<br>
+→ Written: Je **n'**ai <strong>pas</strong> mangé. → Spoken: J'ai <strong>pas</strong> mangé.<br>
+→ Written: Il **n'**a <strong>rien</strong> fait. → Spoken: Il a <strong>rien</strong> fait.</p>
+<hr>
+<h2>🔹 BLOCK G — Questions in Passé Composé</h2>
+<p><em>Scenario: Your friend asks you about your weekend — and you ask back</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English Meaning</th><th>Question Form (Project 4)</th></tr></thead><tbody><tr><td>76</td><td>Tu as fait quoi ce week-end ?</td><td>What did you do this weekend?</td><td>Casual — quoi at end</td></tr><tr><td>77</td><td>Qu'est-ce que tu as fait ?</td><td>What did you do?</td><td>Standard — est-ce que</td></tr><tr><td>78</td><td>Tu as aimé ?</td><td>Did you like it?</td><td>Casual — intonation</td></tr><tr><td>79</td><td>Est-ce que tu as bien dormi ?</td><td>Did you sleep well?</td><td>Standard — est-ce que</td></tr><tr><td>80</td><td>Tu es allé où ?</td><td>Where did you go?</td><td>Casual — où at end</td></tr><tr><td>81</td><td>Où est-ce que tu es allé ?</td><td>Where did you go?</td><td>Standard — est-ce que</td></tr><tr><td>82</td><td>Tu as mangé quoi ?</td><td>What did you eat?</td><td>Casual — quoi at end</td></tr><tr><td>83</td><td>Qui est-ce que tu as vu ?</td><td>Who did you see?</td><td>Standard — qui object</td></tr><tr><td>84</td><td>Tu as vu qui ?</td><td>Who did you see?</td><td>Casual — qui at end</td></tr><tr><td>85</td><td>Pourquoi tu n'es pas venu ?</td><td>Why didn't you come?</td><td>Casual — pourquoi + negation</td></tr></tbody></table>
+<p><strong>🧠 Questions in passé composé use the SAME 3 forms from Project 4:</strong><br>
+→ The question structure wraps around the <strong>entire passé composé unit</strong> (auxiliary + participle)</p>
+<table><thead><tr><th>Form</th><th>Example</th></tr></thead><tbody><tr><td><strong>Intonation</strong> (casual)</td><td>Tu <strong>as mangé</strong> ? ↗</td></tr><tr><td><strong>Est-ce que</strong> (standard)</td><td>Est-ce que tu <strong>as mangé</strong> ?</td></tr><tr><td><strong>Inversion</strong> (formal)</td><td><strong>As-tu mangé</strong> ?</td></tr></tbody></table>
+<p>→ The auxiliary and participle <strong>stay together</strong> — they are a unit<br>
+→ Question words still follow Project 4 rules: quoi at end (casual), qu'est-ce que at start (standard), etc.</p>
+<hr>
+<h2>🔹 BLOCK H — AVOIR vs. ÊTRE: The Tricky Cases</h2>
+<p><em>Scenario: Same weekend story — but some verbs could go either way</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English Meaning</th><th>Why This Auxiliary</th></tr></thead><tbody><tr><td>86</td><td>J'ai monté les valises.</td><td>I carried the suitcases up.</td><td>AVOIR — direct object (les valises)</td></tr><tr><td>87</td><td>Je suis monté au troisième étage.</td><td>I went up to the third floor.</td><td>ÊTRE — no direct object (movement)</td></tr><tr><td>88</td><td>J'ai sorti le chien.</td><td>I took the dog out.</td><td>AVOIR — direct object (le chien)</td></tr><tr><td>89</td><td>Je suis sorti avec des amis.</td><td>I went out with friends.</td><td>ÊTRE — no direct object (movement)</td></tr><tr><td>90</td><td>J'ai passé une bonne journée.</td><td>I spent a good day.</td><td>AVOIR — direct object (une journée)</td></tr><tr><td>91</td><td>Je suis passé chez toi.</td><td>I stopped by your place.</td><td>ÊTRE — no direct object (movement)</td></tr><tr><td>92</td><td>J'ai descendu les poubelles.</td><td>I took the trash down.</td><td>AVOIR — direct object (les poubelles)</td></tr><tr><td>93</td><td>Je suis descendu à la cave.</td><td>I went down to the cellar.</td><td>ÊTRE — no direct object (movement)</td></tr></tbody></table>
+<p><strong>🧠 THE DUAL-AUXILIARY RULE:</strong></p>
+<p>→ Some verbs (monter, descendre, sortir, passer, rentrer, retourner) can use <strong>EITHER</strong> avoir or être<br>
+→ The rule:</p>
+<table><thead><tr><th>Has a DIRECT OBJECT (doing something TO something)</th><th>No direct object (just moving)</th></tr></thead><tbody><tr><td>Use <strong>AVOIR</strong></td><td>Use <strong>ÊTRE</strong></td></tr><tr><td>J'<strong>ai</strong> monté <strong>les valises</strong>.</td><td>Je <strong>suis</strong> monté <strong>au 3e étage</strong>.</td></tr><tr><td>J'<strong>ai</strong> sorti <strong>le chien</strong>.</td><td>Je <strong>suis</strong> sorti <strong>avec des amis</strong>.</td></tr></tbody></table>
+<p>→ When you DO something to an object → avoir (you're acting on something)<br>
+→ When you just MOVE → être (you're changing location)<br>
+→ At this level: <strong>don't panic</strong> — the être-only meaning (movement) is far more common in daily speech<br>
+→ Just be aware that the dual system exists</p>
+<hr>
+<h2>🔹 BLOCK I — Time Markers with Passé Composé</h2>
+<p><em>Scenario: Anchoring past events in time — connecting Project 8 time markers to past tense</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English Meaning</th><th>Time Marker (Project 8)</th></tr></thead><tbody><tr><td>94</td><td>Hier, j'ai mangé chez Pierre.</td><td>Yesterday, I ate at Pierre's.</td><td>hier</td></tr><tr><td>95</td><td>Hier soir, on a regardé un film.</td><td>Last night, we watched a movie.</td><td>hier soir</td></tr><tr><td>96</td><td>Ce matin, j'ai pris le métro.</td><td>This morning, I took the metro.</td><td>ce matin</td></tr><tr><td>97</td><td>La semaine dernière, j'ai visité Lyon.</td><td>Last week, I visited Lyon.</td><td>la semaine dernière</td></tr><tr><td>98</td><td>Le mois dernier, elle est partie en Espagne.</td><td>Last month, she left for Spain.</td><td>le mois dernier</td></tr><tr><td>99</td><td>Samedi, on est allés au marché.</td><td>Saturday, we went to the market.</td><td>samedi (one-time — no "le")</td></tr><tr><td>100</td><td>L'année dernière, j'ai voyagé au Japon.</td><td>Last year, I traveled to Japan.</td><td>l'année dernière</td></tr><tr><td>101</td><td>Il y a deux jours, j'ai perdu mon téléphone.</td><td>Two days ago, I lost my phone.</td><td>il y a + duration</td></tr><tr><td>102</td><td>Il y a une heure, elle est arrivée.</td><td>An hour ago, she arrived.</td><td>il y a + duration</td></tr><tr><td>103</td><td>En 2023, on a déménagé à Paris.</td><td>In 2023, we moved to Paris.</td><td>en + year</td></tr></tbody></table>
+<p><strong>🧠 NEW TIME MARKER DISCOVERED: IL Y A + duration = AGO</strong></p>
+<table><thead><tr><th>French</th><th>English</th><th>Structure</th></tr></thead><tbody><tr><td><strong>Il y a</strong> deux jours</td><td><strong>Two days ago</strong></td><td>il y a + duration</td></tr><tr><td><strong>Il y a</strong> une semaine</td><td><strong>A week ago</strong></td><td>il y a + duration</td></tr><tr><td><strong>Il y a</strong> trois ans</td><td><strong>Three years ago</strong></td><td>il y a + duration</td></tr></tbody></table>
+<p>→ You already know "il y a" = "there is/there are" (Project 3)<br>
+→ Same words, <strong>different meaning</strong> when followed by a duration → "ago"<br>
+→ Context makes it clear:<br>
+→ → "Il y a <strong>un chat</strong>" = There is a cat (Project 3 — existence)<br>
+→ → "Il y a <strong>deux jours</strong>" = Two days ago (time marker)</p>
+<p><strong>🧠 Connecting to Project 8:</strong><br>
+→ <strong>Hier</strong> (yesterday) / <strong>la semaine dernière</strong> (last week) / <strong>le mois dernier</strong> (last month) → these are the past-time equivalents of aujourd'hui / cette semaine / ce mois<br>
+→ When you use these past time markers → you MUST use passé composé (or imparfait — Project 10)<br>
+→ Present tense + "hier" = error → <del>"Hier, je mange au restaurant"</del> ❌</p>
+<hr>
+<h2>🔹 BLOCK J — Full Weekend Story: Everything Combined</h2>
+<p><em>Scenario: Your complete weekend narration — all elements from this project flowing naturally</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>Auxiliary</th><th>Key Element</th></tr></thead><tbody><tr><td>104</td><td>Samedi matin, j'ai dormi jusqu'à dix heures.</td><td>avoir</td><td>-IR participle + time</td></tr><tr><td>105</td><td>J'ai pris un bon petit-déjeuner.</td><td>avoir</td><td>Irregular participle (pris)</td></tr><tr><td>106</td><td>Après, je suis allé à Montmartre.</td><td>être</td><td>Movement verb + agreement</td></tr><tr><td>107</td><td>J'ai visité le Sacré-Cœur.</td><td>avoir</td><td>-ER participle + place</td></tr><tr><td>108</td><td>J'ai vu des artistes dans la rue.</td><td>avoir</td><td>Irregular participle (vu)</td></tr><tr><td>109</td><td>J'ai acheté un petit tableau.</td><td>avoir</td><td>-ER participle + object</td></tr><tr><td>110</td><td>À midi, j'ai mangé dans un bistrot.</td><td>avoir</td><td>-ER participle + place + time</td></tr><tr><td>111</td><td>L'après-midi, je suis descendu à la Seine.</td><td>être</td><td>Movement verb + place</td></tr><tr><td>112</td><td>On a marché le long de la rivière.</td><td>avoir</td><td>-ER participle + location</td></tr><tr><td>113</td><td>Le soir, on est allés au restaurant.</td><td>être</td><td>Movement + plural agreement</td></tr><tr><td>114</td><td>On a bu du vin rouge.</td><td>avoir</td><td>Irregular participle (bu)</td></tr><tr><td>115</td><td>On a bien mangé.</td><td>avoir</td><td>-ER participle + adverb</td></tr><tr><td>116</td><td>Après le dîner, je suis rentré chez moi.</td><td>être</td><td>Movement verb + chez (P7)</td></tr><tr><td>117</td><td>J'ai regardé un film et je me suis couché tard.</td><td>avoir + être (reflexive preview)</td><td>Mixed auxiliaries</td></tr><tr><td>118</td><td>Dimanche, je n'ai rien fait.</td><td>avoir + negation</td><td>Rien + passé composé</td></tr><tr><td>119</td><td>Je suis resté à la maison toute la journée.</td><td>être</td><td>Rester + duration</td></tr><tr><td>120</td><td>C'était un bon week-end.</td><td>(imparfait preview)</td><td>Description — Project 10</td></tr></tbody></table>
+<p><strong>🧠 Notice sentence 120:</strong><br>
+→ "C'<strong>était</strong>" = "It <strong>was</strong>" — this is NOT passé composé<br>
+→ This is <strong>imparfait</strong> — the OTHER past tense<br>
+→ You used passé composé for <strong>events</strong> (what happened) but need imparfait for <strong>descriptions</strong> (what it was like)<br>
+→ This distinction is the ENTIRE focus of Projects 10 and 11</p>
+<hr>
+<h1>✅ WHAT SHOULD DO</h1>
+<p>→ <strong>Master the -ER participle pattern first</strong> (-er → -é) — it covers 90% of verbs<br>
+→ <strong>Memorize the top 15 irregular past participles</strong> (fait, pris, vu, bu, lu, dit, mis, écrit, eu, été, ouvert, connu, voulu, dû, pu)<br>
+→ <strong>Memorize the DR MRS VANDERTRAMP list</strong> — these are your ÊTRE verbs<br>
+→ <strong>Practice agreement with être</strong> — add -e for feminine, -s for plural, -es for feminine plural<br>
+→ <strong>Place negation around the AUXILIARY</strong> — ne + auxiliary + pas + participle<br>
+→ <strong>Connect to Project 1</strong> — you already know avoir and être in present tense → same forms become your auxiliaries<br>
+→ <strong>Connect to Project 2</strong> — the action verbs you learned become past participles: manger→mangé, finir→fini<br>
+→ <strong>Connect to Project 8</strong> — past time markers (hier, la semaine dernière, il y a...) trigger passé composé</p>
+<hr>
+<h1>❌ WHAT SHOULD NOT DO</h1>
+<p>→ ❌ Do NOT use avoir with DR MRS VANDERTRAMP verbs → <del>"J'ai allé"</del> → "Je <strong>suis</strong> allé"<br>
+→ ❌ Do NOT use être with regular action verbs → <del>"Je suis mangé"</del> → "J'<strong>ai</strong> mangé"<br>
+→ ❌ Do NOT forget agreement with être → <del>"Elle est allé"</del> → "Elle est allé<strong>e</strong>"<br>
+→ ❌ Do NOT add agreement with avoir (at this level) → "Elle a mangé" (NOT <del>"mangée"</del> in standard cases)<br>
+→ ❌ Do NOT put negation after the participle → <del>"J'ai mangé pas"</del> → "Je <strong>n'ai pas</strong> mangé"<br>
+→ ❌ Do NOT use present tense with past time markers → <del>"Hier, je mange"</del> → "Hier, j'<strong>ai mangé</strong>"<br>
+→ ❌ Do NOT conjugate the past participle like a verb → <del>"J'ai mangés"</del> → the participle doesn't conjugate for person, only for agreement with être<br>
+→ ❌ Do NOT confuse "il y a" (existence) with "il y a" (ago) → context tells you which</p>
+<hr>
+<h1>🔀 WHEN TO USE WHAT</h1>
+<table><thead><tr><th>Situation</th><th>Auxiliary</th><th>Example</th></tr></thead><tbody><tr><td>Any regular action verb (eating, working, watching...)</td><td><strong>AVOIR</strong></td><td>J'ai mangé.</td></tr><tr><td>Movement TO/FROM a place (going, coming, arriving, leaving...)</td><td><strong>ÊTRE</strong></td><td>Je suis allé.</td></tr><tr><td>State change (born, died, became, stayed, fell)</td><td><strong>ÊTRE</strong></td><td>Il est né.</td></tr><tr><td>Reflexive verbs (preview — Project 14)</td><td><strong>ÊTRE</strong></td><td>Je me suis levé.</td></tr><tr><td>Dual verbs WITH a direct object</td><td><strong>AVOIR</strong></td><td>J'ai monté les valises.</td></tr><tr><td>Dual verbs WITHOUT a direct object (just movement)</td><td><strong>ÊTRE</strong></td><td>Je suis monté au 3e.</td></tr><tr><td>Negation</td><td>Sandwich around <strong>AUXILIARY</strong></td><td>Je n'ai pas mangé. / Je ne suis pas allé.</td></tr></tbody></table>
+<h2>When to use PASSÉ COMPOSÉ (vs. other tenses):</h2>
+<table><thead><tr><th>Use Passé Composé When...</th><th>Example</th></tr></thead><tbody><tr><td>A specific action <strong>happened and is finished</strong></td><td>J'ai mangé à midi. (I ate at noon — done.)</td></tr><tr><td>An event occurred at a <strong>specific time</strong></td><td>Hier, je suis allé au cinéma.</td></tr><tr><td>Something happened a <strong>specific number of times</strong></td><td>J'ai visité Paris trois fois. (I visited Paris three times.)</td></tr><tr><td>A <strong>sequence of events</strong> occurred</td><td>J'ai mangé, j'ai payé, je suis parti. (I ate, paid, left.)</td></tr><tr><td>You want to express <strong>"ago"</strong></td><td>Il y a deux jours, j'ai perdu mon téléphone.</td></tr></tbody></table>
+<hr>
+<h1>🚫 WHEN NOT TO USE</h1>
+<p>→ Do NOT use passé composé for <strong>descriptions of how things WERE</strong> → that's imparfait (Project 10)<br>
+→ → "The weather <strong>was</strong> nice" ≠ passé composé → imparfait<br>
+→ → "I <strong>was</strong> tired" ≠ passé composé → imparfait<br>
+→ Do NOT use passé composé for <strong>habitual past actions</strong> → that's imparfait (Project 10)<br>
+→ → "I <strong>used to</strong> eat there every day" ≠ passé composé → imparfait<br>
+→ Do NOT use passé composé for <strong>ongoing background actions</strong> → that's imparfait (Project 10)<br>
+→ → "While I <strong>was walking</strong>..." ≠ passé composé → imparfait<br>
+→ Do NOT use passé composé for things happening RIGHT NOW → that's present tense<br>
+→ Do NOT use passé composé for future plans → that's futur proche (Project 12) or futur simple (Project 16)</p>
+<hr>
+<h1>⚠️ COMMON PITFALLS AND FAILURE MODES</h1>
+<table><thead><tr><th>Pitfall</th><th>What Learners Do Wrong</th><th>Correct Version</th><th>Why</th></tr></thead><tbody><tr><td><strong>Avoir with être verbs</strong></td><td>J'ai allé au cinéma.</td><td>Je <strong>suis</strong> allé au cinéma.</td><td>Aller = DR MRS VANDERTRAMP → être</td></tr><tr><td><strong>Être with avoir verbs</strong></td><td>Je suis mangé.</td><td>J'<strong>ai</strong> mangé.</td><td>Manger = regular → avoir</td></tr><tr><td><strong>No agreement with être</strong></td><td>Elle est parti.</td><td>Elle est parti<strong>e</strong>.</td><td>Être verbs require gender agreement</td></tr><tr><td><strong>Agreement with avoir</strong></td><td>Elle a mangée.</td><td>Elle a mangé.</td><td>No agreement with avoir (at this level)</td></tr><tr><td><strong>Negation after participle</strong></td><td>J'ai mangé pas.</td><td>Je <strong>n'ai pas</strong> mangé.</td><td>Negation wraps auxiliary, not participle</td></tr><tr><td><strong>Wrong irregular participle</strong></td><td>J'ai faisé. / J'ai prendu.</td><td>J'ai <strong>fait</strong>. / J'ai <strong>pris</strong>.</td><td>Irregular — must memorize</td></tr><tr><td><strong>Present + past time</strong></td><td>Hier, je mange au restaurant.</td><td>Hier, j'<strong>ai mangé</strong> au restaurant.</td><td>Past time → past tense required</td></tr><tr><td><strong>Confusing "il y a"</strong></td><td>"Il y a deux jours" meaning "there are two days"</td><td>= "<strong>Two days ago</strong>" (time context)</td><td>Same words, different function</td></tr><tr><td><strong>Dual verb confusion</strong></td><td>J'ai sorti avec des amis.</td><td>Je <strong>suis</strong> sorti avec des amis.</td><td>No direct object → être</td></tr><tr><td><strong>Participle as conjugated verb</strong></td><td>J'ai mangés / Tu ai parlé</td><td>J'ai mang<strong>é</strong> / Tu <strong>as</strong> parlé</td><td>Participle doesn't conjugate for person</td></tr></tbody></table>
+<hr>
+<h1>🔑 KEY TAKEAWAY</h1>
+<blockquote>
+<p><strong>Phase 1 (Projects 1-8) → You mastered the PRESENT — existence, action, space, time.</strong><br>
+<strong>Project 9 → You unlocked the COMPLETED PAST — things that happened and are done.</strong></p>
+<p>The passé composé architecture:</p>
+<code>Subject + AUXILIARY (avoir/être) + PAST PARTICIPLE + rest</code>
+<p>Three critical rules:</p>
+<ol>
+<li><strong>~95% of verbs</strong> use AVOIR → the rest (DR MRS VANDERTRAMP) use ÊTRE</li>
+<li><strong>With être</strong> → past participle agrees with subject (like an adjective)</li>
+<li><strong>Negation</strong> wraps around the auxiliary → ne + auxiliary + pas + participle</li>
+</ol>
+<p><strong>You can now tell stories about what HAPPENED.</strong><br>
+But your stories are flat — they're just lists of events:<br>
+→ "I went. I ate. I saw. I left."<br>
+→ There's no atmosphere, no background, no "how things were"</p>
+<p><strong>Real stories need TWO layers:</strong><br>
+→ <strong>Layer 1:</strong> What HAPPENED (events) → Passé composé ✅ (this project)<br>
+→ <strong>Layer 2:</strong> How things WERE (background, descriptions, feelings, habits) → <strong>Imparfait</strong> (Next Chapter)</p>
+<p>Without the imparfait, your French stories sound like police reports.<br>
+With it, they sound like real human narratives.</p>
+</blockquote>
+<hr>
+<h1>🌉 BRIDGE TO PROJECT 10</h1>
+<blockquote>
+<p>You can now say <strong>"I went to Montmartre"</strong> and <strong>"We ate at a restaurant"</strong><br>
+But you can't say <strong>"The weather was beautiful"</strong> or <strong>"I was tired"</strong> or <strong>"There were many people"</strong><br>
+→ These describe the <strong>background, state, atmosphere</strong> of the past — not specific events<br>
+→ They require the <strong>imparfait</strong> — the descriptive past tense<br>
+→ Project 10: <strong>"How Things Used to Be"</strong> unlocks descriptions of the past, old habits, and emotional states<br>
+→ Together with the passé composé, it gives you the ability to tell <strong>complete, layered stories</strong></p>
+</blockquote>
+<hr>
+<h1>✅ PROJECT 9 COMPLETE</h1>
+<blockquote>
+<p><strong>Are you ready for PROJECT 10: "How Things Used to Be"?</strong><br>
+→ ~100 sentences covering the <strong>imparfait</strong><br>
+→ Scenario: You're describing your childhood, old habits, and past scenes<br>
+→ Builds directly on passé composé (Project 9) — the two tenses work as a PAIR</p>
+</blockquote>
+</div>
+</div>
+
+<!-- ========== data-index="21" ========== -->
+
+        </div>
+
+        <div class="nav-bar">
+            <a href="project-8.html" class="nav-button prev">← Previous Chapter</a>
+            <div class="page-info">
+                <a href="index.html" class="nav-button home">📚 Table of Contents</a><br>
+                <span style="margin-top:8px;display:block">Chapter 9 of 50</span>
+            </div>
+            <a href="project-10.html" class="nav-button next">Next Chapter →</a>
+        </div>
+    </div>
+
+    
+    <div id="progress-track"><div id="progress-fill"></div></div>
+    <div id="progress-pct">0%</div>
+
+
+    <script>
+    const fill = document.getElementById('progress-fill');
+    const pct  = document.getElementById('progress-pct');
+    function updateProgress() {
+        const scrollTop = window.scrollY;
+        const docHeight = document.body.scrollHeight - window.innerHeight;
+        const scrolled  = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+        fill.style.height = scrolled + '%';
+        pct.textContent   = Math.round(scrolled) + '%';
+    }
+    window.addEventListener('scroll', updateProgress);
+    updateProgress();
+
+    document.addEventListener('keydown', function(e) {
+        if (['INPUT','TEXTAREA'].includes(document.activeElement.tagName)) return;
+        if (e.key === 'ArrowLeft') {
+            const b = document.querySelector('.nav-button.prev');
+            if (b && !b.classList.contains('disabled')) window.location.href = b.href;
+        }
+        if (e.key === 'ArrowRight') {
+            const b = document.querySelector('.nav-button.next');
+            if (b && !b.classList.contains('disabled')) window.location.href = b.href;
+        }
+    });
+    </script>
+
+</body>
+</html>

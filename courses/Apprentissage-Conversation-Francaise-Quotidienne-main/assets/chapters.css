@@ -1,0 +1,378 @@
+/* ============================================================
+   Chapters UX Layer — non-destructive enhancements
+   Preserves all original content; adds interactivity on top.
+   ============================================================ */
+
+/* Give body room for the sticky chapter bar */
+body.chapters-enhanced { padding-top: 56px; }
+
+/* --- Top sticky chapter bar --- */
+.ch-topbar {
+  position: fixed; top: 0; left: 0; right: 0; height: 56px;
+  background: linear-gradient(135deg,#2563eb,#3b82f6);
+  color: #fff; display: flex; align-items: center; gap: 14px;
+  padding: 0 18px; z-index: 900;
+  box-shadow: 0 2px 10px rgba(15,23,42,0.18);
+  font-family: -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
+}
+.ch-hamburger {
+  background: rgba(255,255,255,0.15); border: 0; color: #fff;
+  width: 40px; height: 40px; border-radius: 8px; cursor: pointer;
+  display: inline-flex; align-items: center; justify-content: center;
+  transition: background .18s;
+}
+.ch-hamburger:hover { background: rgba(255,255,255,0.28); }
+.ch-hamburger span {
+  display: block; width: 20px; height: 2px; background: #fff;
+  position: relative;
+}
+.ch-hamburger span::before,
+.ch-hamburger span::after{
+  content:""; position:absolute; left:0; width:20px; height:2px; background:#fff;
+}
+.ch-hamburger span::before { top: -6px; }
+.ch-hamburger span::after  { top:  6px; }
+
+.ch-title-wrap { flex: 1; min-width: 0; line-height: 1.15; }
+.ch-kicker { font-size: .72em; font-weight: 600; opacity: .85; letter-spacing: .5px; text-transform: uppercase; }
+.ch-title  { font-size: 1.02em; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+.ch-topbar-actions { display: flex; gap: 8px; align-items: center; }
+.ch-btn {
+  background: rgba(255,255,255,0.15); border: 0; color: #fff;
+  padding: 8px 12px; border-radius: 8px; font-size: .82em; font-weight: 600;
+  cursor: pointer; transition: background .18s, transform .18s;
+  font-family: inherit;
+}
+.ch-btn:hover { background: rgba(255,255,255,0.28); transform: translateY(-1px); }
+.ch-btn.active { background: #fff; color: #1e40af; }
+.ch-btn-icon { padding: 8px 10px; }
+
+/* --- Block progress strip under bar --- */
+.ch-blockbar {
+  position: fixed; top: 56px; left: 0; right: 0; height: 4px;
+  background: #e2e8f0; z-index: 899;
+}
+.ch-blockbar-fill {
+  height: 100%; width: 0%;
+  background: linear-gradient(90deg,#22c55e,#3b82f6);
+  transition: width .25s ease;
+}
+
+/* --- Hamburger drawer --- */
+.ch-drawer-backdrop {
+  position: fixed; inset: 0; background: rgba(15,23,42,0.5);
+  opacity: 0; pointer-events: none; transition: opacity .25s; z-index: 950;
+}
+.ch-drawer-backdrop.open { opacity: 1; pointer-events: auto; }
+.ch-drawer {
+  position: fixed; top: 0; left: -360px; width: 340px; max-width: 85vw; height: 100vh;
+  background: #fff; z-index: 960; box-shadow: 4px 0 24px rgba(15,23,42,0.25);
+  transition: left .28s ease; display: flex; flex-direction: column;
+  font-family: -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
+}
+.ch-drawer.open { left: 0; }
+.ch-drawer-head {
+  padding: 14px 18px; border-bottom: 1px solid #e2e8f0;
+  display: flex; align-items: center; justify-content: space-between;
+  background: linear-gradient(135deg,#2563eb,#3b82f6); color: #fff;
+}
+.ch-drawer-head h3 { margin: 0; font-size: 1.05em; font-weight: 700; }
+.ch-drawer-close {
+  background: rgba(255,255,255,0.2); border: 0; color: #fff;
+  width: 32px; height: 32px; border-radius: 6px; cursor: pointer; font-size: 1.1em;
+}
+.ch-drawer-body { flex: 1; overflow-y: auto; padding: 8px 0 24px; }
+.ch-phase {
+  font-size: .78em; font-weight: 700; color: #1e40af;
+  padding: 14px 18px 6px; letter-spacing: .3px; text-transform: uppercase;
+  background: linear-gradient(135deg,#eff6ff,#dbeafe); margin-top: 4px;
+}
+.ch-link {
+  display: flex; gap: 10px; align-items: center;
+  padding: 9px 18px; text-decoration: none; color: #1a202c;
+  border-left: 3px solid transparent; font-size: .92em;
+  transition: background .15s, border-color .15s;
+}
+.ch-link:hover { background: #f1f5f9; border-left-color: #60a5fa; }
+.ch-link.current { background: #dbeafe; border-left-color: #2563eb; font-weight: 600; }
+.ch-num {
+  flex: 0 0 28px; height: 22px; background: #2563eb; color: #fff;
+  border-radius: 5px; font-size: .75em; font-weight: 700;
+  display: inline-flex; align-items: center; justify-content: center;
+}
+.ch-num.toc { background: #64748b; }
+.ch-link-title { flex: 1; line-height: 1.3; }
+
+/* --- Block accordion (wraps each Block X section) --- */
+.ch-block {
+  border: 1px solid #e2e8f0; border-radius: 12px;
+  margin: 20px 0; background: #fff; overflow: hidden;
+  transition: box-shadow .2s, border-color .2s;
+}
+.ch-block.open { box-shadow: 0 4px 14px rgba(37,99,235,0.10); border-color: #bfdbfe; }
+.ch-block-head {
+  display: flex; align-items: center; gap: 12px; cursor: pointer;
+  padding: 14px 18px; user-select: none;
+  background: linear-gradient(135deg,#f8fafc,#eff6ff);
+  transition: background .18s;
+}
+.ch-block-head:hover { background: linear-gradient(135deg,#eff6ff,#dbeafe); }
+.ch-block-tag {
+  background: linear-gradient(135deg,#2563eb,#3b82f6); color: #fff;
+  font-size: .75em; font-weight: 700; padding: 4px 10px; border-radius: 6px;
+  letter-spacing: .5px;
+}
+.ch-block-title { flex: 1; font-size: 1.08em; font-weight: 600; color: #1a202c; line-height: 1.4; }
+.ch-block-done {
+  width: 22px; height: 22px; border-radius: 50%; background: #e2e8f0;
+  display: inline-flex; align-items: center; justify-content: center;
+  font-size: .78em; color: #fff; flex-shrink: 0;
+}
+.ch-block.done .ch-block-done { background: #22c55e; }
+.ch-block-chev {
+  width: 24px; height: 24px; display: inline-flex; align-items: center; justify-content: center;
+  color: #2563eb; transition: transform .25s;
+}
+.ch-block.open .ch-block-chev { transform: rotate(180deg); }
+.ch-block-body {
+  max-height: 0; overflow: hidden;
+  transition: max-height .3s ease;
+  padding: 0 18px;
+}
+.ch-block.open .ch-block-body { max-height: 99999px; padding: 4px 18px 18px; }
+
+/* Next-block button */
+.ch-next-wrap { display:flex; justify-content: flex-end; margin: 14px 0 4px; }
+.ch-next-btn {
+  background: linear-gradient(135deg,#22c55e,#16a34a); color: #fff; border: 0;
+  padding: 10px 20px; border-radius: 8px; cursor: pointer; font-weight: 600;
+  font-size: .9em; box-shadow: 0 2px 8px rgba(34,197,94,0.3);
+  transition: transform .18s, box-shadow .18s;
+}
+.ch-next-btn:hover { transform: translateY(-1px); box-shadow: 0 4px 14px rgba(34,197,94,0.45); }
+
+/* --- Flashcard mode on sentence tables --- */
+.ch-flash-toggle {
+  display: inline-flex; gap: 6px; margin: 10px 0;
+  background: #f1f5f9; padding: 4px; border-radius: 8px;
+}
+.ch-flash-toggle button {
+  border: 0; background: transparent; padding: 6px 14px; border-radius: 6px;
+  font-size: .82em; font-weight: 600; cursor: pointer; color: #475569;
+  font-family: inherit;
+}
+.ch-flash-toggle button.active { background: #fff; color: #1e40af; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+
+.ch-flashgrid {
+  display: grid; grid-template-columns: repeat(auto-fill,minmax(220px,1fr));
+  gap: 12px; margin: 14px 0;
+}
+.ch-card {
+  perspective: 1000px; min-height: 130px; cursor: pointer;
+}
+.ch-card-inner {
+  position: relative; width: 100%; min-height: 130px;
+  transition: transform .5s;
+  transform-style: preserve-3d;
+}
+.ch-card.flipped .ch-card-inner { transform: rotateY(180deg); }
+.ch-card-face {
+  position: absolute; inset: 0; backface-visibility: hidden;
+  border-radius: 10px; padding: 14px; display: flex; flex-direction: column;
+  justify-content: center; align-items: center; text-align: center;
+  border: 1px solid #cbd5e1;
+}
+.ch-card-front {
+  background: linear-gradient(135deg,#eff6ff,#dbeafe);
+  color: #1e3a8a;
+}
+.ch-card-front .ch-card-num {
+  font-size: .7em; font-weight: 700; color: #2563eb; margin-bottom: 6px;
+}
+.ch-card-front .ch-card-text {
+  font-size: 1.02em; font-weight: 600; line-height: 1.35;
+}
+.ch-card-back {
+  background: linear-gradient(135deg,#2563eb,#1e40af);
+  color: #fff; transform: rotateY(180deg);
+}
+.ch-card-back .ch-card-text { font-size: .95em; line-height: 1.4; margin-bottom: 8px; }
+.ch-card-back .ch-card-pattern {
+  font-size: .72em; font-family: 'Consolas','Monaco',monospace;
+  opacity: .9; background: rgba(255,255,255,0.14); padding: 4px 8px; border-radius: 4px;
+}
+.ch-card-hint {
+  position: absolute; bottom: 4px; right: 8px; font-size: .62em; opacity: .55;
+}
+
+/* --- Structure Unlocked highlight (existing strong+code pairs) --- */
+.ch-struct {
+  background: linear-gradient(135deg,#fef9c3,#fef08a);
+  border-left: 4px solid #ca8a04;
+  padding: 12px 16px; border-radius: 0 8px 8px 0;
+  margin: 14px 0;
+}
+
+/* --- Mini-quiz panel --- */
+.ch-quiz {
+  background: linear-gradient(135deg,#faf5ff,#f3e8ff);
+  border: 1px solid #d8b4fe; border-radius: 10px;
+  padding: 14px 18px; margin: 16px 0;
+}
+.ch-quiz-head {
+  display: flex; align-items: center; gap: 8px; margin-bottom: 10px;
+  font-weight: 700; color: #6b21a8; font-size: .95em;
+}
+.ch-quiz-q { margin: 12px 0 6px; font-weight: 600; color: #1a202c; }
+.ch-quiz-opts { display: grid; gap: 6px; }
+.ch-quiz-opt {
+  background: #fff; border: 1.5px solid #e9d5ff; border-radius: 8px;
+  padding: 9px 14px; text-align: left; cursor: pointer; font-size: .92em;
+  font-family: inherit; transition: all .15s;
+}
+.ch-quiz-opt:hover { border-color: #a855f7; background: #faf5ff; }
+.ch-quiz-opt.correct { border-color: #22c55e; background: #dcfce7; color: #14532d; font-weight: 600; }
+.ch-quiz-opt.wrong { border-color: #ef4444; background: #fee2e2; color: #7f1d1d; }
+.ch-quiz-opt:disabled { cursor: default; }
+.ch-quiz-feedback {
+  margin-top: 10px; padding: 8px 12px; border-radius: 6px; font-size: .88em;
+  display: none;
+}
+.ch-quiz-feedback.show { display: block; }
+.ch-quiz-feedback.ok { background: #dcfce7; color: #14532d; }
+.ch-quiz-feedback.bad { background: #fee2e2; color: #7f1d1d; }
+
+/* --- Mobile tweaks --- */
+@media (max-width: 720px) {
+  .ch-title { font-size: .9em; }
+  .ch-kicker { font-size: .62em; }
+  .ch-btn { padding: 6px 10px; font-size: .75em; }
+  .ch-flashgrid { grid-template-columns: repeat(auto-fill,minmax(160px,1fr)); }
+  #progress-track, #progress-pct { display: none !important; }
+}
+
+/* Make sure original fixed progress bar doesn't overlap topbar */
+#progress-track { top: 72px !important; }
+#progress-pct  { top: 58px !important; }
+
+/* ============================================================
+   Humanized tone additions
+   ============================================================ */
+
+/* Hide duplicate chapter title (shown in sticky topbar already) */
+.ch-hide { display: none !important; }
+
+/* Humanized headings: keep ORIGINAL left-aligned + underline style.
+   We only swap the TEXT and add a soft blue accent color.          */
+.content h1.ch-human-head,
+.content h2.ch-human-head {
+  color: #1e40af;
+  font-family: -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Georgia',serif;
+  letter-spacing: .15px;
+}
+
+/* Tagline under the (now-hidden) chapter title — shown once at top */
+.content h2.ch-tagline {
+  text-align: center !important;
+  border-bottom: none !important;
+  font-weight: 400 !important;
+  color: #475569 !important;
+  font-size: 1.15em !important;
+  margin: 6px auto 20px !important;
+  max-width: 780px;
+  line-height: 1.55;
+}
+.content h2.ch-tagline em { font-style: italic; }
+
+/* <hr> stays as the original subtle horizontal line (no diamond).
+   We only reset any previously-added diamond rules if present.    */
+.content hr {
+  border: none;
+  border-top: 2px solid #e2e8f0;
+  margin: 26px 0;
+  height: auto;
+  background: none;
+}
+.content hr::before,
+.content hr::after { content: none; }
+
+/* Flashcard toggle centered under the sentence-table section       */
+.ch-flash-toggle { justify-content: center; }
+
+/* Key-takeaway blockquote styled like a book pull-quote            */
+.content blockquote {
+  font-style: italic;
+  background: linear-gradient(135deg,#eff6ff,#f8fafc);
+  border-left: 4px solid #3b82f6 !important;
+  padding: 16px 22px !important;
+  border-radius: 0 8px 8px 0 !important;
+}
+.content blockquote strong { font-style: normal; }
+
+/* Scene card head stays left-aligned (cards feel clickable this way) */
+.ch-block-head { justify-content: flex-start; text-align: left; }
+.ch-block-title { text-align: left; }
+
+/* ============================================================
+   Collapsible sections (non-exclusive)
+   ============================================================ */
+.ch-sec {
+  margin: 18px 0;
+  border: 1px solid #e2e8f0;
+  border-radius: 14px;
+  background: #fff;
+  overflow: hidden;
+  transition: box-shadow .2s, border-color .2s;
+}
+.ch-sec.open {
+  border-color: #bfdbfe;
+  box-shadow: 0 4px 18px rgba(37,99,235,0.10);
+}
+.ch-sec-head {
+  width: 100%;
+  display: flex; align-items: center; justify-content: flex-start;
+  gap: 14px;
+  padding: 16px 48px 16px 22px;
+  background: linear-gradient(135deg, #f8fafc, #eff6ff);
+  border: 0; cursor: pointer;
+  font-family: inherit; text-align: left;
+  color: inherit;
+  -webkit-appearance: none; appearance: none;
+  position: relative;
+  transition: background .18s;
+}
+.ch-sec-head:hover { background: linear-gradient(135deg, #eff6ff, #dbeafe); }
+.ch-sec.open .ch-sec-head {
+  background: linear-gradient(135deg, #dbeafe, #bfdbfe);
+}
+.ch-sec-title {
+  font-size: 1.25em; font-weight: 700; color: #1e40af;
+  letter-spacing: .2px; line-height: 1.35;
+}
+.ch-sec-chev {
+  position: absolute; right: 20px; top: 50%;
+  transform: translateY(-50%);
+  width: 28px; height: 28px;
+  display: inline-flex; align-items: center; justify-content: center;
+  color: #2563eb; font-size: .9em;
+  background: rgba(255,255,255,0.7); border-radius: 50%;
+  transition: transform .25s;
+}
+.ch-sec.open .ch-sec-chev { transform: translateY(-50%) rotate(180deg); }
+.ch-sec-body {
+  max-height: 0; overflow: hidden;
+  transition: max-height .35s ease, padding .25s ease;
+  padding: 0 22px;
+}
+.ch-sec.open .ch-sec-body {
+  max-height: 200000px;
+  padding: 10px 22px 22px;
+}
+.ch-sec-body > h1 { display: none; }
+@media (max-width: 600px) {
+  .ch-sec-head { padding: 14px 44px 14px 16px; }
+  .ch-sec-title { font-size: 1.05em; }
+  .ch-sec-body { padding: 0 14px; }
+  .ch-sec.open .ch-sec-body { padding: 8px 14px 18px; }
+}

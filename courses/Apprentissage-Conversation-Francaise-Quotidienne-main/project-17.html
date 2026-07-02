@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="images/favicon.png">
+    <title>Project 17: "Could You, Would You" — French Daily Sentences</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.75;
+            color: #1a202c;
+            background-color: #f7fafc;
+        }
+        .container {
+            max-width: 1800px;
+            margin: 0 auto;
+            background: white;
+            min-height: 100vh;
+            box-shadow: 0 0 30px rgba(0,0,0,0.08);
+            padding: 48px 52px;
+        }
+        
+        .content { max-width: 1700px; margin: 0 auto; color: #1a202c; }
+        .content h1 {
+            color: #1a202c; margin: 32px 0 20px;
+            padding-bottom: 12px;
+            border-bottom: 4px solid #3b82f6;
+            font-size: 2.1em;
+            font-weight: 700;
+        }
+        .content h2 {
+            color: #1a202c; margin: 28px 0 16px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #60a5fa;
+            font-size: 1.6em;
+            font-weight: 600;
+        }
+        .content h3 { color: #1a202c; margin: 22px 0 12px; font-size: 1.3em; font-weight: 600; }
+        .content h4 { color: #2d3748; margin: 18px 0 10px; font-size: 1.1em; font-weight: 600; }
+        .content p  { margin-bottom: 16px; line-height: 1.8; color: #1a202c; }
+        .content ul, .content ol { margin: 12px 0 18px 30px; color: #1a202c; }
+        .content li { margin-bottom: 8px; line-height: 1.75; color: #1a202c; }
+        .content hr { border: none; border-top: 2px solid #e2e8f0; margin: 26px 0; }
+        .content pre {
+            background: #f7fafc !important;
+            border: 1px solid #cbd5e0 !important;
+            border-left: 4px solid #3b82f6 !important;
+            padding: 18px !important; overflow-x: auto; margin: 18px 0; border-radius: 6px;
+            font-family: 'Consolas','Monaco','Courier New',monospace !important;
+            font-size: 0.9em !important;
+        }
+        .content pre:not([style*="color"]) { color: #1a202c !important; }
+        .content code {
+            font-family: 'Consolas','Monaco','Courier New',monospace !important;
+            font-size: 0.88em !important;
+        }
+        .content code:not(pre code) {
+            background: #dbeafe !important;
+            color: #1a202c !important;
+            padding: 2px 6px;
+            border-radius: 3px;
+        }
+        .content pre code { background: transparent !important; padding: 0; }
+        .content table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+        .content th {
+            background: linear-gradient(135deg, #3b82f6 0%, #60a5fa 100%);
+            color: white; padding: 12px 16px; text-align: left;
+            font-weight: 600;
+        }
+        .content td { padding: 11px 16px; border: 1px solid #e2e8f0; color: #1a202c; }
+        .content tr:nth-child(even) td { background: #eff6ff; }
+        .content blockquote {
+            border-left: 4px solid #3b82f6; background: #eff6ff;
+            padding: 14px 20px; margin: 18px 0; border-radius: 0 6px 6px 0;
+            color: #1a202c;
+        }
+        .content strong { color: #1a202c; font-weight: 600; }
+        .px-2 { padding: 0; }
+        .chat-message { background: transparent; padding: 0; margin: 0; }
+
+        /* Bottom nav bar only */
+        .nav-bar {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 24px 0;
+            margin-top: 50px;
+            border-top: 3px solid #60a5fa;
+        }
+        .nav-button {
+            display: inline-flex; align-items: center; gap: 8px;
+            padding: 12px 26px;
+            background: linear-gradient(135deg, #3b82f6 0%, #60a5fa 100%);
+            color: white !important; text-decoration: none;
+            border-radius: 8px; font-weight: 600; font-size: 0.95em;
+            transition: all 0.2s;
+            box-shadow: 0 2px 8px rgba(59,130,246,0.35);
+        }
+        .nav-button:hover { transform: translateY(-2px); box-shadow: 0 4px 14px rgba(59,130,246,0.5); }
+        .nav-button.disabled { background: #cbd5e1; box-shadow: none; pointer-events: none; }
+        .nav-button.home {
+            background: linear-gradient(135deg, #ef4444 0%, #f87171 100%);
+            box-shadow: 0 2px 8px rgba(239,68,68,0.35);
+        }
+        .nav-button.home:hover { box-shadow: 0 4px 14px rgba(239,68,68,0.5); }
+        .page-info { color: #718096; font-size: 0.9em; text-align: center; }
+
+        /* Progress bar */
+        #progress-track {
+            position: fixed; top: 20px; right: 20px;
+            width: 10px; height: 150px;
+            background: rgba(59,130,246,0.2);
+            border: 2px solid #3b82f6;
+            border-radius: 6px; overflow: hidden; z-index: 1000;
+        }
+        #progress-fill {
+            width: 100%;
+            background: linear-gradient(180deg, #3b82f6, #2563eb);
+            height: 0%;
+            transition: height 0.15s ease;
+        }
+        #progress-pct {
+            position: fixed; top: 0px; right: 16px;
+            color: #2563eb; font-size: 14px; font-weight: bold;
+            z-index: 1001;
+            text-shadow: 0 1px 2px rgba(255,255,255,0.9);
+            line-height: 20px;
+        }
+
+    </style>
+<link rel="stylesheet" href="assets/chapters.css?v=20260421203847"><script src="assets/chapters.js?v=20260421203847" defer></script>
+</head>
+<body>
+    <div class="container">
+        <div class="content">
+            <div class="chat-message" data-index="35">
+<div class="px-2"><h1>🟡 PROJECT 17: "Could You, Would You"</h1>
+<h2><em>You're at a formal dinner — polite requests, imagined situations, gentle suggestions</em></h2>
+<hr>
+<h1>🎯 THE HYPOTHETICAL PROBLEM</h1>
+<p>→ You've been invited to a <strong>formal dinner</strong> at the home of your host family's friends — the Duponts — in the prestigious 6th arrondissement of Paris<br>
+→ This is a different world from casual conversations with classmates<br>
+→ The host greets you: <strong>"Que souhaiteriez-vous boire ?"</strong> (What would you wish to drink?)<br>
+→ A guest asks: <strong>"Pourriez-vous me passer le sel ?"</strong> (Could you pass me the salt?)<br>
+→ Someone shares a dream: <strong>"Si j'avais le temps, je voyagerais plus."</strong> (If I had time, I would travel more.)<br>
+→ Another guest softly suggests: <strong>"Tu devrais essayer ce fromage, il est excellent."</strong> (You should try this cheese, it's excellent.)<br>
+→ You understand the MEANING of everything — but you notice a pattern:<br>
+→ → Every verb has <strong>"-ais, -ais, -ait, -ions, -iez, -aient"</strong> endings<br>
+→ → These look EXACTLY like <strong>imparfait</strong> endings (Project 10)<br>
+→ → But the STEMS look like <strong>futur simple</strong> stems (Project 16)<br>
+→ → This is neither past nor future — it's something else entirely<br>
+→ You try to be polite but you only have:<br>
+→ → "Je veux du vin" (I want wine) — sounds demanding (Project 6)<br>
+→ → "Je voudrais du vin" — you memorized this one phrase from Project 6, but you can't build anything beyond it<br>
+→ → You can't say "Could you...?" / "Would it be possible...?" / "I would prefer..." / "You should..."<br>
+→ You sound like a child at a table of adults</p>
+<p><strong>The core realization:</strong><br>
+→ The <strong>conditionnel présent</strong> is the tense of:<br>
+→ → <strong>Politeness</strong> — softening requests and desires<br>
+→ → <strong>Imagination</strong> — what would happen IF<br>
+→ → <strong>Advice</strong> — what someone should/could do<br>
+→ → <strong>Uncertainty</strong> — reporting unconfirmed information<br>
+→ → <strong>Wishes</strong> — what you would like, dream of, hope for<br>
+→ It's the tense that makes you sound <strong>civilized, educated, and socially aware</strong><br>
+→ Without it, you can communicate — but you can't communicate with <strong>grace</strong></p>
+<p>→ And the BEST news: <strong>you already know EVERYTHING you need to build it</strong>:<br>
+→ → <strong>Futur simple STEMS</strong> (Project 16) — same stems, including all irregulars<br>
+→ → <strong>Imparfait ENDINGS</strong> (Project 10) — same endings: -ais, -ais, -ait, -ions, -iez, -aient<br>
+→ → Conditionnel = <strong>futur stems + imparfait endings</strong> — a perfect fusion</p>
+<hr>
+<h1>🔍 HOW TO APPROACH IT</h1>
+<p>→ The conditionnel formula:</p>
+<code>FUTUR SIMPLE STEM + IMPARFAIT ENDINGS</code>
+<p>→ Compare the three tenses side by side:</p>
+<table><thead><tr><th>Tense</th><th>STEM</th><th>ENDINGS</th><th>Example (parler, je)</th></tr></thead><tbody><tr><td><strong>Imparfait</strong> (P10)</td><td>Nous present stem (parl-)</td><td>-ais, -ais, -ait, -ions, -iez, -aient</td><td>je parl<strong>ais</strong></td></tr><tr><td><strong>Futur simple</strong> (P16)</td><td>Infinitif (parler-)</td><td>-ai, -as, -a, -ons, -ez, -ont</td><td>je parler<strong>ai</strong></td></tr><tr><td><strong>Conditionnel</strong> (P17)</td><td>Infinitif (parler-)</td><td>-ais, -ais, -ait, -ions, -iez, -aient</td><td>je parler<strong>ais</strong></td></tr></tbody></table>
+<p>→ <strong>Futur simple</strong> = future stems + future endings (avoir-like)<br>
+→ <strong>Conditionnel</strong> = future stems + imparfait endings<br>
+→ The ONLY difference between futur simple and conditionnel in writing: the <strong>endings</strong><br>
+→ → Je parler<strong>ai</strong> (futur) vs. Je parler<strong>ais</strong> (conditionnel)<br>
+→ → In the <strong>je</strong> form: ONE letter difference → <strong>-ai</strong> vs. <strong>-ais</strong><br>
+→ → In speech: these sound IDENTICAL for "je" — context tells you which</p>
+<hr>
+<h1>🔧 HOW CAN WE SOLVE IT</h1>
+<h2>Step 1 — The Conditionnel Endings (Same as Imparfait — ALWAYS)</h2>
+<table><thead><tr><th>Subject</th><th>Ending</th><th>Sound</th></tr></thead><tbody><tr><td>Je</td><td><strong>-ais</strong></td><td>"ay"</td></tr><tr><td>Tu</td><td><strong>-ais</strong></td><td>"ay"</td></tr><tr><td>Il / Elle / On</td><td><strong>-ait</strong></td><td>"ay"</td></tr><tr><td>Nous</td><td><strong>-ions</strong></td><td>"ee-on"</td></tr><tr><td>Vous</td><td><strong>-iez</strong></td><td>"ee-ay"</td></tr><tr><td>Ils / Elles</td><td><strong>-aient</strong></td><td>"ay"</td></tr></tbody></table>
+<p>→ These are EXACTLY the imparfait endings from Project 10<br>
+→ No new endings to memorize!</p>
+<hr>
+<h2>Step 2 — Regular Verbs: Infinitif + Conditionnel Endings</h2>
+<h3>-ER Verbs: PARLER</h3>
+<table><thead><tr><th>Subject</th><th>Form</th></tr></thead><tbody><tr><td>Je</td><td><strong>parlerais</strong></td></tr><tr><td>Tu</td><td><strong>parlerais</strong></td></tr><tr><td>Il / Elle / On</td><td><strong>parlerait</strong></td></tr><tr><td>Nous</td><td><strong>parlerions</strong></td></tr><tr><td>Vous</td><td><strong>parleriez</strong></td></tr><tr><td>Ils / Elles</td><td><strong>parleraient</strong></td></tr></tbody></table>
+<h3>-IR Verbs: FINIR</h3>
+<table><thead><tr><th>Subject</th><th>Form</th></tr></thead><tbody><tr><td>Je</td><td><strong>finirais</strong></td></tr><tr><td>Tu</td><td><strong>finirais</strong></td></tr><tr><td>Il / Elle / On</td><td><strong>finirait</strong></td></tr><tr><td>Nous</td><td><strong>finirions</strong></td></tr><tr><td>Vous</td><td><strong>finiriez</strong></td></tr><tr><td>Ils / Elles</td><td><strong>finiraient</strong></td></tr></tbody></table>
+<h3>-RE Verbs: ATTENDRE (drop final -e, then add endings)</h3>
+<table><thead><tr><th>Subject</th><th>Form</th></tr></thead><tbody><tr><td>Je</td><td><strong>attendrais</strong></td></tr><tr><td>Tu</td><td><strong>attendrais</strong></td></tr><tr><td>Il / Elle / On</td><td><strong>attendrait</strong></td></tr><tr><td>Nous</td><td><strong>attendrions</strong></td></tr><tr><td>Vous</td><td><strong>attendriez</strong></td></tr><tr><td>Ils / Elles</td><td><strong>attendraient</strong></td></tr></tbody></table>
+<hr>
+<h2>Step 3 — Irregular Stems: SAME as Futur Simple (Project 16)</h2>
+<p><strong>CRITICAL: If you memorized the futur simple irregular stems → you already know conditionnel stems</strong></p>
+<table><thead><tr><th>Infinitif</th><th>Irregular Stem</th><th>Futur (je)</th><th>Conditionnel (je)</th></tr></thead><tbody><tr><td><strong>être</strong></td><td><strong>ser-</strong></td><td>je ser<strong>ai</strong></td><td>je ser<strong>ais</strong></td></tr><tr><td><strong>avoir</strong></td><td><strong>aur-</strong></td><td>j'aur<strong>ai</strong></td><td>j'aur<strong>ais</strong></td></tr><tr><td><strong>aller</strong></td><td><strong>ir-</strong></td><td>j'ir<strong>ai</strong></td><td>j'ir<strong>ais</strong></td></tr><tr><td><strong>faire</strong></td><td><strong>fer-</strong></td><td>je fer<strong>ai</strong></td><td>je fer<strong>ais</strong></td></tr><tr><td><strong>venir</strong></td><td><strong>viendr-</strong></td><td>je viendr<strong>ai</strong></td><td>je viendr<strong>ais</strong></td></tr><tr><td><strong>voir</strong></td><td><strong>verr-</strong></td><td>je verr<strong>ai</strong></td><td>je verr<strong>ais</strong></td></tr><tr><td><strong>pouvoir</strong></td><td><strong>pourr-</strong></td><td>je pourr<strong>ai</strong></td><td>je pourr<strong>ais</strong></td></tr><tr><td><strong>vouloir</strong></td><td><strong>voudr-</strong></td><td>je voudr<strong>ai</strong></td><td>je voudr<strong>ais</strong></td></tr><tr><td><strong>devoir</strong></td><td><strong>devr-</strong></td><td>je devr<strong>ai</strong></td><td>je devr<strong>ais</strong></td></tr><tr><td><strong>savoir</strong></td><td><strong>saur-</strong></td><td>je saur<strong>ai</strong></td><td>je saur<strong>ais</strong></td></tr><tr><td><strong>envoyer</strong></td><td><strong>enverr-</strong></td><td>j'enverr<strong>ai</strong></td><td>j'enverr<strong>ais</strong></td></tr><tr><td><strong>falloir</strong></td><td><strong>faudr-</strong></td><td>il faudr<strong>a</strong></td><td>il faudr<strong>ait</strong></td></tr><tr><td><strong>pleuvoir</strong></td><td><strong>pleuvr-</strong></td><td>il pleuvr<strong>a</strong></td><td>il pleuvr<strong>ait</strong></td></tr></tbody></table>
+<p>→ <strong>Every single irregular stem from Project 16 works here</strong><br>
+→ Just swap the future endings for imparfait endings<br>
+→ This is why mastering Project 16 first was essential</p>
+<hr>
+<h2>Step 4 — The 5 Key Conditionnel Conjugations You'll Use Most</h2>
+<h3>VOULOIR → VOUDR- (Would like / Would want)</h3>
+<table><thead><tr><th>Subject</th><th>Form</th><th>Use</th></tr></thead><tbody><tr><td>Je</td><td><strong>voudrais</strong></td><td>I would like (polite request)</td></tr><tr><td>Tu</td><td><strong>voudrais</strong></td><td>You would like</td></tr><tr><td>Il / Elle / On</td><td><strong>voudrait</strong></td><td>He/She/One would like</td></tr><tr><td>Nous</td><td><strong>voudrions</strong></td><td>We would like</td></tr><tr><td>Vous</td><td><strong>voudriez</strong></td><td>You would like (formal)</td></tr><tr><td>Ils / Elles</td><td><strong>voudraient</strong></td><td>They would like</td></tr></tbody></table>
+<h3>POUVOIR → POURR- (Could / Would be able to)</h3>
+<table><thead><tr><th>Subject</th><th>Form</th><th>Use</th></tr></thead><tbody><tr><td>Je</td><td><strong>pourrais</strong></td><td>I could</td></tr><tr><td>Tu</td><td><strong>pourrais</strong></td><td>You could</td></tr><tr><td>Il / Elle / On</td><td><strong>pourrait</strong></td><td>He/She/It could</td></tr><tr><td>Nous</td><td><strong>pourrions</strong></td><td>We could</td></tr><tr><td>Vous</td><td><strong>pourriez</strong></td><td>You could (formal)</td></tr><tr><td>Ils / Elles</td><td><strong>pourraient</strong></td><td>They could</td></tr></tbody></table>
+<h3>DEVOIR → DEVR- (Should / Ought to)</h3>
+<table><thead><tr><th>Subject</th><th>Form</th><th>Use</th></tr></thead><tbody><tr><td>Je</td><td><strong>devrais</strong></td><td>I should</td></tr><tr><td>Tu</td><td><strong>devrais</strong></td><td>You should</td></tr><tr><td>Il / Elle / On</td><td><strong>devrait</strong></td><td>He/She/One should</td></tr><tr><td>Nous</td><td><strong>devrions</strong></td><td>We should</td></tr><tr><td>Vous</td><td><strong>devriez</strong></td><td>You should (formal)</td></tr><tr><td>Ils / Elles</td><td><strong>devraient</strong></td><td>They should</td></tr></tbody></table>
+<h3>ÊTRE → SER- (Would be)</h3>
+<table><thead><tr><th>Subject</th><th>Form</th></tr></thead><tbody><tr><td>Je</td><td><strong>serais</strong></td></tr><tr><td>Tu</td><td><strong>serais</strong></td></tr><tr><td>Il / Elle / On</td><td><strong>serait</strong></td></tr><tr><td>Nous</td><td><strong>serions</strong></td></tr><tr><td>Vous</td><td><strong>seriez</strong></td></tr><tr><td>Ils / Elles</td><td><strong>seraient</strong></td></tr></tbody></table>
+<h3>AVOIR → AUR- (Would have)</h3>
+<table><thead><tr><th>Subject</th><th>Form</th></tr></thead><tbody><tr><td>J'</td><td><strong>aurais</strong></td></tr><tr><td>Tu</td><td><strong>aurais</strong></td></tr><tr><td>Il / Elle / On</td><td><strong>aurait</strong></td></tr><tr><td>Nous</td><td><strong>aurions</strong></td></tr><tr><td>Vous</td><td><strong>auriez</strong></td></tr><tr><td>Ils / Elles</td><td><strong>auraient</strong></td></tr></tbody></table>
+<hr>
+<h2>Step 5 — The 5 Functions of the Conditionnel</h2>
+<table><thead><tr><th>Function</th><th>What It Does</th><th>English Equivalent</th><th>Example</th></tr></thead><tbody><tr><td><strong>1. Politeness</strong></td><td>Softens requests and desires</td><td>Would like / Could you</td><td>Je voudrais un café.</td></tr><tr><td><strong>2. Imagination</strong></td><td>Describes unreal/hypothetical situations</td><td>Would / If I were... I would</td><td>Si j'étais riche, je voyagerais.</td></tr><tr><td><strong>3. Advice</strong></td><td>Suggests what someone should do</td><td>Should / Ought to</td><td>Tu devrais dormir plus.</td></tr><tr><td><strong>4. Wish</strong></td><td>Expresses desires and dreams</td><td>Would love to / Would like to</td><td>J'aimerais vivre en France.</td></tr><tr><td><strong>5. Uncertainty</strong></td><td>Reports unconfirmed information</td><td>Allegedly / Supposedly</td><td>Il y aurait un problème.</td></tr></tbody></table>
+<p>→ Each function will be explored in a separate block below</p>
+<hr>
+<h1>✅ WHAT COULD BE DONE — THE 100 SENTENCES</h1>
+<h2>🔹 BLOCK A — Function 1: Politeness (Softening Requests)</h2>
+<p><em>Scenario: At the formal dinner — ordering, requesting, asking politely</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English Meaning</th><th>Verb Used</th></tr></thead><tbody><tr><td>1</td><td>Je voudrais un verre de vin, s'il vous plaît.</td><td>I would like a glass of wine, please.</td><td>vouloir → voudrais</td></tr><tr><td>2</td><td>Je voudrais le menu, s'il vous plaît.</td><td>I would like the menu, please.</td><td>vouloir → voudrais</td></tr><tr><td>3</td><td>Tu voudrais du fromage ?</td><td>Would you like some cheese?</td><td>vouloir → voudrais</td></tr><tr><td>4</td><td>Vous voudriez autre chose ?</td><td>Would you like anything else?</td><td>vouloir → voudriez</td></tr><tr><td>5</td><td>Pourriez-vous me passer le sel ?</td><td>Could you pass me the salt?</td><td>pouvoir → pourriez</td></tr><tr><td>6</td><td>Pourrais-tu fermer la fenêtre ?</td><td>Could you close the window?</td><td>pouvoir → pourrais</td></tr><tr><td>7</td><td>Est-ce que je pourrais avoir de l'eau ?</td><td>Could I have some water?</td><td>pouvoir → pourrais</td></tr><tr><td>8</td><td>Pourrait-on changer de table ?</td><td>Could we change tables?</td><td>pouvoir → pourrait</td></tr><tr><td>9</td><td>J'aimerais poser une question.</td><td>I would like to ask a question.</td><td>aimer → aimerais</td></tr><tr><td>10</td><td>J'aimerais en savoir plus.</td><td>I would like to know more.</td><td>aimer → aimerais</td></tr></tbody></table>
+<p><strong>🧠 THE POLITENESS SCALE — from direct to ultra-polite:</strong></p>
+<table><thead><tr><th>Level</th><th>Structure</th><th>Example</th><th>Register</th></tr></thead><tbody><tr><td>1 — Direct</td><td><strong>Présent</strong></td><td>Je veux un café.</td><td>Can sound rude to strangers</td></tr><tr><td>2 — Polite</td><td><strong>Conditionnel</strong> (voudrais)</td><td>Je voudrais un café.</td><td>Standard polite — safe everywhere</td></tr><tr><td>3 — More polite</td><td><strong>Conditionnel</strong> (pourrais) + question</td><td>Pourriez-vous me donner un café ?</td><td>Formal polite</td></tr><tr><td>4 — Very polite</td><td><strong>Conditionnel</strong> (serait-il possible)</td><td>Serait-il possible d'avoir un café ?</td><td>Very formal</td></tr><tr><td>5 — Ultra-polite</td><td><strong>Conditionnel</strong> (auriez-vous l'amabilité)</td><td>Auriez-vous l'amabilité de me servir un café ?</td><td>Extremely formal / literary</td></tr></tbody></table>
+<p>→ Level 2 (<strong>je voudrais</strong>) is your <strong>default</strong> for all daily polite interactions<br>
+→ Level 3 (<strong>pourriez-vous</strong>) is perfect for formal situations<br>
+→ Levels 4-5 are for very formal letters, high-end restaurants, diplomatic contexts</p>
+<p><strong>🧠 VOUDRAIS vs. AIMERAIS — both mean "I would like":</strong></p>
+<table><thead><tr><th>Expression</th><th>Nuance</th><th>Example</th></tr></thead><tbody><tr><td><strong>Je voudrais</strong></td><td>Direct polite wish — "I would like/want"</td><td>Je voudrais un café.</td></tr><tr><td><strong>J'aimerais</strong></td><td>Softer, dreamier — "I would love to" / "I'd like"</td><td>J'aimerais visiter le Japon.</td></tr></tbody></table>
+<p>→ <strong>Je voudrais</strong> = for concrete requests (ordering, asking for things)<br>
+→ <strong>J'aimerais</strong> = for desires, dreams, preferences (softer, more emotional)<br>
+→ Both are conditionnel of their base verbs — both are polite<br>
+→ In practice, they're often interchangeable — j'aimerais is slightly softer</p>
+<hr>
+<h2>🔹 BLOCK B — Function 1 continued: Polite Questions and Offers</h2>
+<p><em>Scenario: Offering help, asking permission, making polite inquiries</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English Meaning</th><th>Structure</th></tr></thead><tbody><tr><td>11</td><td>Ça vous dirait d'aller au cinéma ?</td><td>Would you like to go to the cinema?</td><td>ça + dirait (dire)</td></tr><tr><td>12</td><td>Ça te plairait de venir ?</td><td>Would you like to come?</td><td>ça + plairait (plaire)</td></tr><tr><td>13</td><td>Ce serait possible de reporter le rendez-vous ?</td><td>Would it be possible to reschedule the appointment?</td><td>ce serait + possible + de</td></tr><tr><td>14</td><td>Auriez-vous l'heure, s'il vous plaît ?</td><td>Would you have the time, please?</td><td>avoir → auriez</td></tr><tr><td>15</td><td>Sauriez-vous où se trouve la gare ?</td><td>Would you happen to know where the station is?</td><td>savoir → sauriez</td></tr><tr><td>16</td><td>Pourriez-vous parler plus lentement ?</td><td>Could you speak more slowly?</td><td>pouvoir → pourriez</td></tr><tr><td>17</td><td>Ça ne vous dérangerait pas de répéter ?</td><td>Would you mind repeating?</td><td>déranger → dérangerait</td></tr><tr><td>18</td><td>Voudriez-vous vous asseoir ?</td><td>Would you like to sit down?</td><td>vouloir → voudriez</td></tr><tr><td>19</td><td>Je souhaiterais parler au directeur.</td><td>I would wish to speak to the director.</td><td>souhaiter → souhaiterais</td></tr><tr><td>20</td><td>Il me faudrait une chambre pour deux nuits.</td><td>I would need a room for two nights.</td><td>falloir → faudrait</td></tr></tbody></table>
+<p><strong>🧠 Key polite structures unlocked:</strong></p>
+<table><thead><tr><th>Structure</th><th>Meaning</th><th>Register</th></tr></thead><tbody><tr><td><strong>Ça vous/te dirait de + inf ?</strong></td><td>Would you like to...? (suggestion)</td><td>Casual polite</td></tr><tr><td><strong>Ça vous/te plairait de + inf ?</strong></td><td>Would it please you to...?</td><td>Slightly more formal</td></tr><tr><td><strong>Ce serait possible de + inf ?</strong></td><td>Would it be possible to...?</td><td>Formal</td></tr><tr><td><strong>Ça ne vous dérangerait pas de + inf ?</strong></td><td>Would you mind...?</td><td>Very polite</td></tr><tr><td><strong>Il me faudrait + noun</strong></td><td>I would need...</td><td>Formal (conditionnel of il faut)</td></tr></tbody></table>
+<p><strong>🧠 Sentence 20 — "IL FAUDRAIT":</strong><br>
+→ Conditionnel of "il faut" (Project 6) → "il faudrait" = it would be necessary / one should / I would need<br>
+→ "Il faut partir" (we must leave) → "Il faudrait partir" (we should leave / it would be good to leave)<br>
+→ <strong>"Il faudrait"</strong> is one of the most common conditionnel forms — used constantly for soft obligations and suggestions</p>
+<hr>
+<h2>🔹 BLOCK C — Function 2: Imagination (Hypothetical Situations)</h2>
+<p><em>Scenario: Dinner conversation turns to dreams — "If I could... I would..."</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English Meaning</th><th>Structure</th></tr></thead><tbody><tr><td>21</td><td>Si j'étais riche, je voyagerais partout.</td><td>If I were rich, I would travel everywhere.</td><td>si + IMP, conditionnel</td></tr><tr><td>22</td><td>Si j'avais le temps, j'apprendrais le piano.</td><td>If I had time, I would learn piano.</td><td>si + IMP, conditionnel</td></tr><tr><td>23</td><td>Si tu pouvais vivre n'importe où, où habiterais-tu ?</td><td>If you could live anywhere, where would you live?</td><td>si + IMP, conditionnel</td></tr><tr><td>24</td><td>Si on gagnait au loto, on achèterait une maison.</td><td>If we won the lottery, we would buy a house.</td><td>si + IMP, conditionnel</td></tr><tr><td>25</td><td>Si elle était ici, elle serait contente.</td><td>If she were here, she would be happy.</td><td>si + IMP, conditionnel</td></tr><tr><td>26</td><td>Si je ne travaillais pas demain, je dormirais jusqu'à midi.</td><td>If I weren't working tomorrow, I would sleep until noon.</td><td>si + IMP, conditionnel</td></tr><tr><td>27</td><td>Si nous avions plus d'argent, nous déménagerions.</td><td>If we had more money, we would move.</td><td>si + IMP, conditionnel</td></tr><tr><td>28</td><td>Que ferais-tu si tu avais un million d'euros ?</td><td>What would you do if you had a million euros?</td><td>conditionnel + si + IMP</td></tr><tr><td>29</td><td>À ta place, je partirais.</td><td>In your place, I would leave.</td><td>à ta place + conditionnel</td></tr><tr><td>30</td><td>Ce serait bien de vivre au bord de la mer.</td><td>It would be nice to live by the sea.</td><td>ce serait + adj + de + inf</td></tr></tbody></table>
+<p><strong>🧠 THE SI + IMPARFAIT → CONDITIONNEL STRUCTURE:</strong></p>
+<code>SI + IMPARFAIT (condition), CONDITIONNEL (result)</code>
+<p>→ This is the <strong>hypothetical present</strong> — imagining something that ISN'T true right now<br>
+→ "Si j'<strong>étais</strong> riche" = If I <strong>were</strong> rich (but I'm NOT rich)<br>
+→ "je <strong>voyagerais</strong>" = I <strong>would</strong> travel (but I DON'T travel because I'm not rich)</p>
+<p><strong>🧠 Compare the three SI structures (preview — full mastery in Projects 18, 33, 34):</strong></p>
+<table><thead><tr><th>Si Structure</th><th>Condition Tense</th><th>Result Tense</th><th>Reality Level</th></tr></thead><tbody><tr><td><strong>Si + présent → futur</strong> (P18)</td><td>Present</td><td>Futur simple/proche</td><td>POSSIBLE — might happen</td></tr><tr><td><strong>Si + imparfait → conditionnel</strong> (P17/33)</td><td>Imparfait</td><td>Conditionnel</td><td>UNREAL NOW — imaginary present</td></tr><tr><td><strong>Si + plus-que-parfait → cond. passé</strong> (P34)</td><td>Plus-que-parfait</td><td>Cond. passé</td><td>UNREAL PAST — regret</td></tr></tbody></table>
+<p>→ Project 17 introduces the SECOND type (si + imparfait → conditionnel)<br>
+→ You already saw the first type previewed in Project 12 (si + present → futur)<br>
+→ Full deep dive into all three types in Projects 18, 33, and 34</p>
+<p><strong>🧠 CRITICAL: NEVER put conditionnel after SI:</strong><br>
+→ ✅ <strong>Si</strong> j'<strong>étais</strong> riche... (imparfait after si)<br>
+→ ❌ <del><strong>Si</strong> je <strong>serais</strong> riche...</del> (conditionnel after si — WRONG)<br>
+→ This is the <strong>#1 grammar error</strong> even some native French speakers make<br>
+→ It's considered a major grammatical fault — avoid it completely</p>
+<p><strong>🧠 Sentence 29 — "À TA PLACE" (In your place):</strong><br>
+→ "<strong>À ta place</strong>, je partirais." = In your place, I would leave.<br>
+→ "<strong>À votre place</strong>, je ne ferais pas ça." = In your place, I wouldn't do that.<br>
+→ This is a common way to give advice using the conditionnel<br>
+→ No "si" clause needed — "à ta/votre place" implies the hypothetical condition</p>
+<hr>
+<h2>🔹 BLOCK D — Function 3: Advice (Should / Ought To)</h2>
+<p><em>Scenario: Friends share advice at dinner — health, career, life choices</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English Meaning</th><th>Advice Verb</th></tr></thead><tbody><tr><td>31</td><td>Tu devrais dormir plus.</td><td>You should sleep more.</td><td>devoir → devrais</td></tr><tr><td>32</td><td>Tu devrais essayer ce fromage.</td><td>You should try this cheese.</td><td>devoir → devrais</td></tr><tr><td>33</td><td>Il devrait faire plus attention.</td><td>He should be more careful.</td><td>devoir → devrait</td></tr><tr><td>34</td><td>Vous devriez prendre des vacances.</td><td>You should take a vacation.</td><td>devoir → devriez</td></tr><tr><td>35</td><td>On devrait se voir plus souvent.</td><td>We should see each other more often.</td><td>devoir → devrait</td></tr><tr><td>36</td><td>Tu ne devrais pas travailler autant.</td><td>You shouldn't work so much.</td><td>ne + devrais + pas</td></tr><tr><td>37</td><td>Nous devrions partir avant la pluie.</td><td>We should leave before the rain.</td><td>devoir → devrions</td></tr><tr><td>38</td><td>Tu pourrais essayer un autre restaurant.</td><td>You could try another restaurant.</td><td>pouvoir → pourrais</td></tr><tr><td>39</td><td>Vous pourriez demander à Pierre.</td><td>You could ask Pierre.</td><td>pouvoir → pourriez</td></tr><tr><td>40</td><td>Il vaudrait mieux partir maintenant.</td><td>It would be better to leave now.</td><td>valoir → vaudrait</td></tr></tbody></table>
+<p><strong>🧠 ADVICE STRUCTURES — DEVRAIS vs. POURRAIS vs. IL FAUDRAIT:</strong></p>
+<table><thead><tr><th>Structure</th><th>Strength</th><th>English</th><th>Example</th></tr></thead><tbody><tr><td><strong>Tu devrais + inf</strong></td><td>Strong advice</td><td>You should</td><td>Tu <strong>devrais</strong> dormir plus.</td></tr><tr><td><strong>Tu pourrais + inf</strong></td><td>Gentle suggestion</td><td>You could</td><td>Tu <strong>pourrais</strong> essayer ça.</td></tr><tr><td><strong>Il faudrait + inf</strong></td><td>Impersonal recommendation</td><td>One should / It would be good to</td><td>Il <strong>faudrait</strong> réserver.</td></tr><tr><td><strong>Il vaudrait mieux + inf</strong></td><td>"It would be better to"</td><td>It would be better to</td><td>Il <strong>vaudrait mieux</strong> partir.</td></tr><tr><td><strong>À ta place, je + cond</strong></td><td>Personal perspective</td><td>In your place, I would</td><td><strong>À ta place</strong>, je <strong>partirais</strong>.</td></tr></tbody></table>
+<p>→ <strong>Devrais</strong> = strongest advice (you SHOULD — moral/practical obligation)<br>
+→ <strong>Pourrais</strong> = softest suggestion (you COULD — just an option)<br>
+→ <strong>Il faudrait</strong> = impersonal — not pointing at anyone specifically<br>
+→ <strong>Il vaudrait mieux</strong> = comparing options — this one is BETTER</p>
+<p><strong>🧠 Sentence 40 — "IL VAUDRAIT MIEUX":</strong><br>
+→ Conditionnel of "il vaut mieux" (it's better to)<br>
+→ "Il vaut mieux partir" (present — it's better to leave)<br>
+→ "Il <strong>vaudrait</strong> mieux partir" (conditionnel — it would be better to leave — softer)<br>
+→ Very common in spoken French for giving soft recommendations</p>
+<hr>
+<h2>🔹 BLOCK E — Function 4: Wishes and Dreams</h2>
+<p><em>Scenario: Sharing dreams and desires about life, travel, and the future</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English Meaning</th><th>Verb</th></tr></thead><tbody><tr><td>41</td><td>J'aimerais vivre en Italie.</td><td>I would love to live in Italy.</td><td>aimer → aimerais</td></tr><tr><td>42</td><td>J'aimerais apprendre le japonais.</td><td>I would love to learn Japanese.</td><td>aimer → aimerais</td></tr><tr><td>43</td><td>J'adorerais voyager en Asie.</td><td>I would love to travel to Asia.</td><td>adorer → adorerais</td></tr><tr><td>44</td><td>Je voudrais avoir plus de temps libre.</td><td>I would like to have more free time.</td><td>vouloir → voudrais</td></tr><tr><td>45</td><td>Ce serait génial de vivre au bord de la mer.</td><td>It would be great to live by the sea.</td><td>être → serait</td></tr><tr><td>46</td><td>Ça me plairait de travailler à l'étranger.</td><td>I would enjoy working abroad.</td><td>plaire → plairait</td></tr><tr><td>47</td><td>J'aimerais bien te revoir.</td><td>I would really like to see you again.</td><td>aimer → aimerais + bien</td></tr><tr><td>48</td><td>On aimerait visiter le Japon un jour.</td><td>We would like to visit Japan one day.</td><td>aimer → aimerait</td></tr><tr><td>49</td><td>Je rêverais de faire le tour du monde.</td><td>I would dream of going around the world.</td><td>rêver → rêverais</td></tr><tr><td>50</td><td>Ça serait tellement bien !</td><td>That would be so great!</td><td>être → serait</td></tr></tbody></table>
+<p><strong>🧠 WISH STRUCTURES:</strong></p>
+<table><thead><tr><th>Structure</th><th>Meaning</th><th>Warmth Level</th></tr></thead><tbody><tr><td><strong>Je voudrais + inf/noun</strong></td><td>I would like to... / I would like...</td><td>Neutral polite</td></tr><tr><td><strong>J'aimerais + inf</strong></td><td>I would love to...</td><td>Warm, dreamy</td></tr><tr><td><strong>J'aimerais bien + inf</strong></td><td>I would really like to...</td><td>Casual warm</td></tr><tr><td><strong>J'adorerais + inf</strong></td><td>I would absolutely love to...</td><td>Very enthusiastic</td></tr><tr><td><strong>Je rêverais de + inf</strong></td><td>I would dream of...</td><td>Strongest desire</td></tr><tr><td><strong>Ce serait + adj + de + inf</strong></td><td>It would be [adj] to...</td><td>Imagining the result</td></tr><tr><td><strong>Ça serait + adj</strong></td><td>That would be [adj]</td><td>Casual reaction</td></tr></tbody></table>
+<p><strong>🧠 "J'AIMERAIS BIEN" — the casual wish:</strong><br>
+→ Adding <strong>"bien"</strong> after "aimerais" makes it more casual and friendly<br>
+→ → "J'aimerais visiter le Japon" = I would like to visit Japan (neutral)<br>
+→ → "J'aimerais <strong>bien</strong> visiter le Japon" = I'd really like to visit Japan (warmer, more casual)<br>
+→ "Bien" here doesn't mean "well" — it acts as an intensifier meaning "really" or "quite"</p>
+<hr>
+<h2>🔹 BLOCK F — Function 5: Uncertainty (Reporting Unconfirmed Information)</h2>
+<p><em>Scenario: Discussing news, rumors, unverified information</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English Meaning</th><th>Uncertainty Marker</th></tr></thead><tbody><tr><td>51</td><td>Il y aurait un problème avec le train.</td><td>There is apparently a problem with the train.</td><td>il y aurait</td></tr><tr><td>52</td><td>Le président serait malade.</td><td>The president is reportedly sick.</td><td>serait</td></tr><tr><td>53</td><td>L'entreprise fermerait l'année prochaine.</td><td>The company would supposedly close next year.</td><td>fermerait</td></tr><tr><td>54</td><td>Il y aurait eu un accident sur l'autoroute.</td><td>There was apparently an accident on the highway.</td><td>aurait eu (cond. passé preview)</td></tr><tr><td>55</td><td>Selon les experts, les prix augmenteraient.</td><td>According to experts, prices would increase.</td><td>augmenteraient</td></tr><tr><td>56</td><td>D'après la météo, il pleuvrait demain.</td><td>According to the weather, it would rain tomorrow.</td><td>pleuvrait</td></tr><tr><td>57</td><td>Le nouveau restaurant serait excellent.</td><td>The new restaurant is apparently excellent.</td><td>serait</td></tr><tr><td>58</td><td>Il paraîtrait qu'ils déménagent.</td><td>It would appear that they're moving.</td><td>paraîtrait</td></tr><tr><td>59</td><td>Ce serait la meilleure solution.</td><td>That would be the best solution.</td><td>serait (tentative assessment)</td></tr><tr><td>60</td><td>On dirait qu'il va pleuvoir.</td><td>It looks like it's going to rain.</td><td>dirait (on dirait = it looks like)</td></tr></tbody></table>
+<p><strong>🧠 THE "JOURNALISTIC CONDITIONNEL":</strong><br>
+→ French journalists use the conditionnel to report <strong>unverified information</strong><br>
+→ "Le président <strong>est</strong> malade" = The president <strong>is</strong> sick (confirmed fact)<br>
+→ "Le président <strong>serait</strong> malade" = The president is <strong>reportedly/apparently</strong> sick (unconfirmed)<br>
+→ This use is VERY common in French news — you'll see it every day in newspapers<br>
+→ It signals: "This is what we've heard, but we haven't confirmed it"</p>
+<p><strong>🧠 Key expressions for uncertainty:</strong></p>
+<table><thead><tr><th>Expression</th><th>Meaning</th><th>Usage</th></tr></thead><tbody><tr><td><strong>Il y aurait</strong></td><td>There would be / Apparently there is</td><td>Reporting unconfirmed</td></tr><tr><td><strong>Il paraîtrait que</strong></td><td>It would appear that</td><td>Rumor/hearsay</td></tr><tr><td><strong>On dirait que</strong></td><td>It looks like / You'd say that</td><td>Visual impression</td></tr><tr><td><strong>Selon + source, conditionnel</strong></td><td>According to [source], [allegedly]</td><td>News reporting</td></tr><tr><td><strong>D'après + source, conditionnel</strong></td><td>According to [source], [reportedly]</td><td>News reporting</td></tr><tr><td><strong>Ce serait</strong></td><td>It would be / That's apparently</td><td>Tentative statement</td></tr></tbody></table>
+<p><strong>🧠 Sentence 60 — "ON DIRAIT QUE":</strong><br>
+→ = "It looks like" / "You'd say that" / "It seems like"<br>
+→ Literally: "One would say that"<br>
+→ Extremely common in daily French:<br>
+→ → "On dirait qu'il va pleuvoir." (Looks like it's going to rain.)<br>
+→ → "On dirait du chocolat." (It looks like chocolate. / You'd think it was chocolate.)<br>
+→ → "On dirait que tu es fatigué." (You look tired. / It seems like you're tired.)</p>
+<hr>
+<h2>🔹 BLOCK G — Negation, Questions, and Common Expressions</h2>
+<p><em>Scenario: Negative conditionnels and polite questions using conditionnel</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English Meaning</th><th>Structure</th></tr></thead><tbody><tr><td>61</td><td>Je ne voudrais pas vous déranger.</td><td>I wouldn't want to bother you.</td><td>ne + voudrais + pas</td></tr><tr><td>62</td><td>Ce ne serait pas possible.</td><td>That wouldn't be possible.</td><td>ne + serait + pas</td></tr><tr><td>63</td><td>Ça ne marcherait pas.</td><td>That wouldn't work.</td><td>ne + marcherait + pas</td></tr><tr><td>64</td><td>Tu ne devrais pas faire ça.</td><td>You shouldn't do that.</td><td>ne + devrais + pas</td></tr><tr><td>65</td><td>On ne pourrait pas rester plus longtemps ?</td><td>Couldn't we stay longer?</td><td>ne + pourrait + pas + ?</td></tr><tr><td>66</td><td>Je n'aurais jamais cru ça.</td><td>I would never have believed that.</td><td>ne + aurais + jamais (cond. passé preview)</td></tr><tr><td>67</td><td>Ça ne te dirait pas de venir ?</td><td>Wouldn't you like to come?</td><td>Negative polite suggestion</td></tr><tr><td>68</td><td>Je ne saurais pas quoi dire.</td><td>I wouldn't know what to say.</td><td>ne + saurais + pas</td></tr><tr><td>69</td><td>Il ne faudrait pas oublier.</td><td>One shouldn't forget.</td><td>ne + faudrait + pas</td></tr><tr><td>70</td><td>Ça ne vous ennuierait pas de m'aider ?</td><td>Would you mind helping me?</td><td>Negative polite request</td></tr></tbody></table>
+<p><strong>🧠 NEGATION IN CONDITIONNEL — same as always (Project 5):</strong></p>
+<code>Subject + NE + VERB (conditionnel) + PAS/PLUS/JAMAIS + rest</code>
+<p>→ Single-verb tense → negation wraps the conditionnel verb directly<br>
+→ Same pattern as present, imparfait, and futur simple</p>
+<p><strong>🧠 NEGATIVE QUESTIONS AS POLITE REQUESTS:</strong><br>
+→ In French, making a question NEGATIVE often makes it MORE polite:<br>
+→ → "Tu voudrais venir ?" = Would you like to come? (polite)<br>
+→ → "Tu <strong>ne</strong> voudrais <strong>pas</strong> venir ?" = <strong>Wouldn't</strong> you like to come? (even more polite — inviting)<br>
+→ → "Ça <strong>ne</strong> vous dérangerait <strong>pas</strong> de m'aider ?" = Would you mind helping me? (very polite)<br>
+→ The negative softens the request — it gives the person more room to refuse<br>
+→ This is a key French politeness strategy</p>
+<hr>
+<h2>🔹 BLOCK H — Conditionnel with SI + Imparfait: Full Hypothetical Scenarios</h2>
+<p><em>Scenario: Dinner conversation about imaginary life choices</em></p>
+<table><thead><tr><th>#</th><th>SI + Imparfait (Condition)</th><th>Conditionnel (Result)</th><th>English</th></tr></thead><tbody><tr><td>71</td><td>Si j'avais plus de temps,</td><td>je lirais plus.</td><td>If I had more time, I would read more.</td></tr><tr><td>72</td><td>Si tu parlais japonais,</td><td>tu pourrais travailler au Japon.</td><td>If you spoke Japanese, you could work in Japan.</td></tr><tr><td>73</td><td>Si on vivait à la campagne,</td><td>on aurait un jardin.</td><td>If we lived in the countryside, we would have a garden.</td></tr><tr><td>74</td><td>Si elle ne travaillait pas samedi,</td><td>elle viendrait avec nous.</td><td>If she weren't working Saturday, she would come with us.</td></tr><tr><td>75</td><td>Si nous avions une voiture,</td><td>ce serait plus facile.</td><td>If we had a car, it would be easier.</td></tr><tr><td>76</td><td>Si vous étiez à ma place,</td><td>que feriez-vous ?</td><td>If you were in my place, what would you do?</td></tr><tr><td>77</td><td>Si je pouvais recommencer,</td><td>je ferais les choses différemment.</td><td>If I could start over, I would do things differently.</td></tr><tr><td>78</td><td>Si le monde était parfait,</td><td>il n'y aurait pas de guerre.</td><td>If the world were perfect, there would be no war.</td></tr><tr><td>79</td><td>Si j'avais su,</td><td>je ne serais pas venu.</td><td>If I had known, I wouldn't have come. (preview — P34)</td></tr><tr><td>80</td><td>Même si c'était difficile,</td><td>je continuerais.</td><td>Even if it were difficult, I would continue.</td></tr></tbody></table>
+<p><strong>🧠 SENTENCE ORDER — SI clause can go first OR second:</strong></p>
+<table><thead><tr><th>Order</th><th>Example</th></tr></thead><tbody><tr><td><strong>Si first</strong> (more common)</td><td><strong>Si</strong> j'étais riche, je voyagerais.</td></tr><tr><td><strong>Si second</strong></td><td>Je voyagerais <strong>si</strong> j'étais riche.</td></tr></tbody></table>
+<p>→ Both are correct — the si clause can go at the beginning or end<br>
+→ When si comes first → comma separates the two clauses<br>
+→ When si comes second → usually no comma needed</p>
+<p><strong>🧠 Sentence 79 — PREVIEW of Conditionnel Passé (Project 34):</strong><br>
+→ "Si j'avais <strong>su</strong>, je ne serais pas <strong>venu</strong>."<br>
+→ This uses <strong>plus-que-parfait</strong> (si j'avais su) + <strong>conditionnel passé</strong> (je ne serais pas venu)<br>
+→ = Past regret — "If I <strong>had known</strong>, I <strong>wouldn't have</strong> come"<br>
+→ Full exploration in Projects 32-34 — just recognize the pattern exists</p>
+<hr>
+<h2>🔹 BLOCK I — Conditionnel in Everyday Conversation</h2>
+<p><em>Scenario: Real daily situations where conditionnel appears naturally</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English Meaning</th><th>Daily Context</th></tr></thead><tbody><tr><td>81</td><td>Ça te dirait un café ?</td><td>Would you like a coffee? (casual)</td><td>Inviting a friend</td></tr><tr><td>82</td><td>Tu aurais du feu ?</td><td>Would you have a light? (for cigarette)</td><td>Asking a stranger</td></tr><tr><td>83</td><td>Tu connaîtrais un bon dentiste ?</td><td>Would you happen to know a good dentist?</td><td>Asking for recommendation</td></tr><tr><td>84</td><td>Je prendrais bien un dessert.</td><td>I would happily have a dessert.</td><td>At a restaurant</td></tr><tr><td>85</td><td>Ça m'arrangerait de partir plus tôt.</td><td>It would suit me to leave earlier.</td><td>Work request</td></tr><tr><td>86</td><td>On pourrait se retrouver à midi ?</td><td>Could we meet at noon?</td><td>Making plans</td></tr><tr><td>87</td><td>Je dirais que c'est à peu près correct.</td><td>I would say it's roughly correct.</td><td>Giving a cautious opinion</td></tr><tr><td>88</td><td>Ce serait bien de se voir ce week-end.</td><td>It would be nice to see each other this weekend.</td><td>Suggesting a meetup</td></tr><tr><td>89</td><td>Tu n'aurais pas vu mes clés ?</td><td>You wouldn't have seen my keys?</td><td>Asking about lost item</td></tr><tr><td>90</td><td>Il serait temps de partir.</td><td>It would be time to leave.</td><td>Soft announcement</td></tr></tbody></table>
+<p><strong>🧠 CONDITIONNEL AS "SOFTENER" IN DAILY FRENCH:</strong><br>
+→ French uses the conditionnel to <strong>soften</strong> statements that might otherwise sound too direct<br>
+→ → "Je <strong>prends</strong> un dessert." = I'm having a dessert. (decisive, direct)<br>
+→ → "Je <strong>prendrais</strong> bien un dessert." = I would happily have a dessert. (softer, more tentative)<br>
+→ → "C'est correct." = It's correct. (flat statement)<br>
+→ → "Je <strong>dirais</strong> que c'est correct." = I would say it's correct. (cautious, modest)</p>
+<p>→ Adding <strong>"bien"</strong> after the conditionnel verb = "happily / gladly / quite":<br>
+→ → "Je prendrais <strong>bien</strong> un café." = I'd quite like a coffee.<br>
+→ → "J'aimerais <strong>bien</strong> venir." = I'd really like to come.<br>
+→ → "Je verrais <strong>bien</strong> un film ce soir." = I could see myself watching a movie tonight.</p>
+<p><strong>🧠 Sentence 89 — NEGATIVE QUESTION + CONDITIONNEL:</strong><br>
+→ "Tu <strong>n'aurais pas</strong> vu mes clés ?" = You wouldn't have seen my keys, would you?<br>
+→ This combines:<br>
+→ → Negative question (polite — Block G)<br>
+→ → Conditionnel (softening)<br>
+→ → Past participle (conditionnel passé preview — P35)<br>
+→ Very common in daily French for asking tentative questions</p>
+<hr>
+<h2>🔹 BLOCK J — Full Dinner Conversation: All Functions Combined</h2>
+<p><em>Scenario: A complete evening using conditionnel in every natural context</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>Function</th><th>Context</th></tr></thead><tbody><tr><td>91</td><td>Bonsoir, je voudrais un verre de champagne.</td><td>Politeness</td><td>Arriving — ordering</td></tr><tr><td>92</td><td>Pourriez-vous nous montrer la carte ?</td><td>Politeness</td><td>Requesting menu</td></tr><tr><td>93</td><td>Qu'est-ce que vous nous conseilleriez ?</td><td>Politeness</td><td>Asking for recommendation</td></tr><tr><td>94</td><td>Je prendrais le poisson, s'il vous plaît.</td><td>Politeness (soft order)</td><td>Ordering food</td></tr><tr><td>95</td><td>Ce serait possible d'avoir un peu plus de pain ?</td><td>Politeness</td><td>Requesting bread</td></tr><tr><td>96</td><td>Tu devrais goûter ce vin, il est excellent.</td><td>Advice</td><td>Recommending to friend</td></tr><tr><td>97</td><td>J'aimerais voyager en Amérique du Sud un jour.</td><td>Wish</td><td>Sharing a dream</td></tr><tr><td>98</td><td>Si j'avais plus de vacances, je visiterais l'Argentine.</td><td>Imagination</td><td>Hypothetical plan</td></tr><tr><td>99</td><td>On dirait qu'il va pleuvoir ce soir.</td><td>Uncertainty</td><td>Looking at the sky</td></tr><tr><td>100</td><td>Il paraîtrait que ce restaurant a une étoile Michelin.</td><td>Uncertainty</td><td>Sharing a rumor</td></tr><tr><td>101</td><td>Ça ne vous dérangerait pas de baisser la musique ?</td><td>Politeness (neg question)</td><td>Polite request</td></tr><tr><td>102</td><td>Ce serait bien de revenir ici un jour.</td><td>Wish</td><td>End-of-evening sentiment</td></tr><tr><td>103</td><td>On devrait faire ça plus souvent.</td><td>Advice</td><td>Suggestion for the future</td></tr><tr><td>104</td><td>Pourriez-vous appeler un taxi, s'il vous plaît ?</td><td>Politeness</td><td>End of evening</td></tr><tr><td>105</td><td>Ce serait gentil, merci.</td><td>Politeness</td><td>Gratitude</td></tr></tbody></table>
+<hr>
+<h1>✅ WHAT SHOULD DO</h1>
+<p>→ <strong>Remember the formula:</strong> Futur simple STEM + Imparfait ENDINGS = Conditionnel<br>
+→ <strong>Memorize "je voudrais, je pourrais, je devrais"</strong> — the three most used conditionnel forms<br>
+→ <strong>Use "je voudrais" as your default polite request</strong> — works everywhere (restaurants, hotels, shops)<br>
+→ <strong>Use "tu devrais" for advice</strong> and <strong>"tu pourrais" for gentle suggestions</strong><br>
+→ <strong>Never put conditionnel after SI</strong> → si + imparfait → conditionnel (in the OTHER clause)<br>
+→ <strong>Recognize the journalistic conditionnel</strong> — "Il y aurait..." = reportedly/apparently<br>
+→ <strong>Learn "on dirait que"</strong> — you'll hear it dozens of times daily<br>
+→ <strong>Practice "ce serait + adj + de + inf"</strong> for wishes — "Ce serait bien de..."<br>
+→ <strong>Connect to Project 16</strong> — ALL irregular stems are identical (ser-, aur-, ir-, fer-, pourr-, voudr-, devr-...)<br>
+→ <strong>Connect to Project 10</strong> — ALL endings are identical (-ais, -ais, -ait, -ions, -iez, -aient)<br>
+→ <strong>Connect to Project 6</strong> — "je voudrais" that you memorized there is NOW fully understood as conditionnel</p>
+<hr>
+<h1>❌ WHAT SHOULD NOT DO</h1>
+<p>→ ❌ Do NOT put conditionnel after SI → <del>"Si je serais riche..."</del> → "Si j'<strong>étais</strong> riche..." (imparfait after si)<br>
+→ ❌ Do NOT confuse futur and conditionnel (je) → je parler<strong>ai</strong> (future) ≠ je parler<strong>ais</strong> (conditional)<br>
+→ ❌ Do NOT use conditionnel where futur simple is needed → <del>"Quand je serais grand..."</del> → "Quand je <strong>serai</strong> grand..." (futur after quand — P16)<br>
+→ ❌ Do NOT use present for polite requests to strangers → <del>"Je veux un café"</del> → "Je <strong>voudrais</strong> un café"<br>
+→ ❌ Do NOT overuse conditionnel — it can sound overly tentative if used in every sentence<br>
+→ ❌ Do NOT confuse "je devrais" (I should — advice) with "je devrai" (I will have to — future obligation)<br>
+→ ❌ Do NOT use conditionnel for confirmed facts → "Le restaurant <strong>est</strong> excellent" (confirmed) NOT <del>"serait excellent"</del> (that means unconfirmed)<br>
+→ ❌ Do NOT forget that "si + conditionnel" is the #1 grammar error in French — even natives sometimes make it<br>
+→ ❌ Do NOT mix up "si + present → futur" (possible condition — P18) with "si + imparfait → conditionnel" (unreal condition — P17)</p>
+<hr>
+<h1>🔀 WHEN TO USE WHAT</h1>
+<h2>The 5 Functions — Quick Decision Guide</h2>
+<table><thead><tr><th>You Want To...</th><th>Structure</th><th>Example</th></tr></thead><tbody><tr><td><strong>Make a polite request</strong></td><td>Je voudrais / Pourriez-vous</td><td>Je voudrais un café.</td></tr><tr><td><strong>Give advice</strong></td><td>Tu devrais / Il faudrait</td><td>Tu devrais dormir plus.</td></tr><tr><td><strong>Make a gentle suggestion</strong></td><td>Tu pourrais / On pourrait</td><td>Tu pourrais essayer.</td></tr><tr><td><strong>Express a wish/dream</strong></td><td>J'aimerais / Ce serait</td><td>J'aimerais voyager.</td></tr><tr><td><strong>Imagine a hypothetical</strong></td><td>Si + imparfait → conditionnel</td><td>Si j'étais riche, je voyagerais.</td></tr><tr><td><strong>Report uncertain info</strong></td><td>Conditionnel alone</td><td>Le président serait malade.</td></tr><tr><td><strong>Soften a statement</strong></td><td>Conditionnel of any verb</td><td>Je dirais que c'est correct.</td></tr></tbody></table>
+<h2>Conditionnel vs. Other Tenses</h2>
+<table><thead><tr><th>Situation</th><th>Correct Tense</th><th>Example</th></tr></thead><tbody><tr><td>Confirmed fact</td><td><strong>Present / Passé composé</strong></td><td>Le restaurant <strong>est</strong> excellent.</td></tr><tr><td>Unconfirmed report</td><td><strong>Conditionnel</strong></td><td>Le restaurant <strong>serait</strong> excellent.</td></tr><tr><td>Future plan (casual)</td><td><strong>Futur proche</strong></td><td>Je <strong>vais</strong> partir.</td></tr><tr><td>Future plan (formal)</td><td><strong>Futur simple</strong></td><td>Je <strong>partirai</strong>.</td></tr><tr><td>Imagined situation</td><td><strong>Conditionnel</strong></td><td>Je <strong>partirais</strong> si...</td></tr><tr><td>After quand (future)</td><td><strong>Futur simple</strong></td><td>Quand je <strong>serai</strong> grand...</td></tr><tr><td>After si (possible)</td><td><strong>Present</strong></td><td>Si je <strong>suis</strong> libre...</td></tr><tr><td>After si (unreal)</td><td><strong>Imparfait</strong></td><td>Si j'<strong>étais</strong> riche...</td></tr></tbody></table>
+<h2>SI Structures — Complete Map</h2>
+<table><thead><tr><th>SI + ...</th><th>→ Result Clause</th><th>Reality</th><th>Example</th></tr></thead><tbody><tr><td>SI + <strong>présent</strong></td><td>→ <strong>futur</strong> (simple/proche)</td><td>Possible</td><td>Si je <strong>suis</strong> libre, j'<strong>irai</strong>.</td></tr><tr><td>SI + <strong>imparfait</strong></td><td>→ <strong>conditionnel</strong></td><td>Unreal now</td><td>Si j'<strong>étais</strong> libre, j'<strong>irais</strong>.</td></tr><tr><td>SI + <strong>plus-que-parfait</strong></td><td>→ <strong>conditionnel passé</strong></td><td>Unreal past (P34)</td><td>Si j'<strong>avais su</strong>, je <strong>serais</strong> venu.</td></tr></tbody></table>
+<hr>
+<h1>🚫 WHEN NOT TO USE</h1>
+<p>→ Do NOT use conditionnel after <strong>quand</strong> for future events → <del>"Quand je serais grand"</del> → futur simple<br>
+→ Do NOT use conditionnel after <strong>si</strong> → <del>"Si je serais"</del> → imparfait<br>
+→ Do NOT use conditionnel for confirmed facts → <del>"Paris serait la capitale"</del> → "Paris <strong>est</strong> la capitale"<br>
+→ Do NOT use conditionnel for things happening RIGHT NOW → use present<br>
+→ Do NOT use conditionnel for completed past events → use passé composé or imparfait<br>
+→ Do NOT use conditionnel in imperative commands → use impératif (P13)</p>
+<hr>
+<h1>⚠️ COMMON PITFALLS AND FAILURE MODES</h1>
+<table><thead><tr><th>Pitfall</th><th>What Learners Do Wrong</th><th>Correct Version</th><th>Why</th></tr></thead><tbody><tr><td><strong>Si + conditionnel</strong></td><td>Si je serais riche...</td><td>Si j'<strong>étais</strong> riche...</td><td>NEVER conditionnel after si</td></tr><tr><td><strong>Futur/Cond. confusion (je)</strong></td><td>Je parlerai (meaning "would")</td><td>Je parler<strong>ais</strong></td><td>-ai = future / -ais = conditional</td></tr><tr><td><strong>Quand + conditionnel</strong></td><td>Quand je serais grand...</td><td>Quand je <strong>serai</strong> grand...</td><td>Quand + future = futur simple</td></tr><tr><td><strong>Wrong stem</strong></td><td>Je voulerais / Je pourrirais</td><td>Je <strong>voudrais</strong> / Je <strong>pourrais</strong></td><td>Same stems as futur simple</td></tr><tr><td><strong>Using present for politeness</strong></td><td>Je veux un café. (to waiter)</td><td>Je <strong>voudrais</strong> un café.</td><td>Conditionnel = polite</td></tr><tr><td><strong>Devrais vs. Devrai</strong></td><td>Je devrai dormir plus. (meaning "should")</td><td>Je <strong>devrais</strong> dormir plus.</td><td>Devrai = will have to / Devrais = should</td></tr><tr><td><strong>Forgetting conditionnel in si result</strong></td><td>Si j'avais le temps, je vais voyager.</td><td>Si j'avais le temps, je <strong>voyagerais</strong>.</td><td>Si + IMP → conditionnel (not futur proche)</td></tr><tr><td><strong>Confirmed vs. unconfirmed</strong></td><td>Le restaurant serait bon. (meaning confirmed)</td><td>Le restaurant <strong>est</strong> bon.</td><td>Conditionnel = unconfirmed</td></tr><tr><td><strong>Missing "bien" for casual wish</strong></td><td>J'aimerais venir. (wanting casual tone)</td><td>J'aimerais <strong>bien</strong> venir.</td><td>"Bien" adds casual warmth</td></tr><tr><td><strong>Il faudrait confusion</strong></td><td>Je faudrais partir.</td><td><strong>Il</strong> faudrait partir.</td><td>Falloir = impersonal → always "il"</td></tr></tbody></table>
+<hr>
+<h1>🔑 KEY TAKEAWAY</h1>
+<blockquote>
+<p><strong>Project 16 → Futur simple = what WILL happen (formal/certain future)</strong><br>
+<strong>Project 17 → Conditionnel = what WOULD happen (polite/imagined/uncertain)</strong></p>
+<p>The conditionnel formula:</p>
+<code>FUTUR SIMPLE STEM + IMPARFAIT ENDINGS = CONDITIONNEL</code>
+<p>Five functions:</p>
+<ol>
+<li><strong>Politeness</strong> → Je voudrais, pourriez-vous, j'aimerais</li>
+<li><strong>Imagination</strong> → Si j'étais riche, je voyagerais</li>
+<li><strong>Advice</strong> → Tu devrais, il faudrait, tu pourrais</li>
+<li><strong>Wishes</strong> → J'aimerais, ce serait bien de</li>
+<li><strong>Uncertainty</strong> → Il y aurait, le président serait, on dirait que</li>
+</ol>
+<p>The #1 rule: <strong>NEVER put conditionnel after SI</strong><br>
+→ Si + <strong>imparfait</strong> → conditionnel (in the result clause)</p>
+<p><strong>The conditionnel is what separates functional French from ELEGANT French.</strong><br>
+→ Without it, you communicate.<br>
+→ With it, you communicate with <strong>grace, nuance, and social intelligence.</strong></p>
+<p><strong>You've now unlocked the three pillars of French tense:</strong><br>
+→ PAST (PC + IMP) / PRESENT / FUTURE (FP + FS) / CONDITIONAL</p>
+<p><strong>But the conditional structures are only half-explored.</strong><br>
+→ "If it rains, we'll stay home" (possible condition) → needs its own deep dive<br>
+→ "If I were rich..." (unreal condition) → needs practice beyond introduction here<br>
+→ Project 18 completes the conditional chain system.</p>
+</blockquote>
+<hr>
+<h1>🌉 BRIDGE TO PROJECT 18</h1>
+<blockquote>
+<p>You can now say <strong>"I would like a coffee"</strong> and <strong>"If I were rich, I would travel"</strong><br>
+But someone says: <strong>"Si il pleut demain, on restera à la maison."</strong> (If it rains tomorrow, we'll stay home.)<br>
+→ This is a DIFFERENT "si" structure — the condition is <strong>possible</strong>, not imaginary<br>
+→ <strong>Si + present → futur</strong> = real possibility (it MIGHT rain)<br>
+→ <strong>Si + imparfait → conditionnel</strong> = unreal present (but I'm NOT rich)<br>
+→ You need to master BOTH and know WHEN to use which<br>
+→ Project 18: <strong>"If This, Then That — Part 1"</strong> formalizes the <strong>si + present → futur/present</strong> structure<br>
+→ The simplest and most common conditional chain in daily French conversation</p>
+</blockquote>
+<hr>
+<h1>✅ PROJECT 17 COMPLETE</h1>
+<blockquote>
+<p><strong>Are you ready for PROJECT 18: "If This, Then That — Part 1"?</strong><br>
+→ ~100 sentences covering <strong>si + present → futur/present</strong> conditional chains<br>
+→ Scenario: Making plans that depend on conditions — weather, availability, outcomes<br>
+→ Builds on futur simple (P16) and conditionnel (P17) — formalizes the "si" system</p>
+</blockquote>
+</div>
+</div>
+
+
+
+<!-- ========== data-index="5" ========== -->
+
+        </div>
+
+        <div class="nav-bar">
+            <a href="project-16.html" class="nav-button prev">← Previous Chapter</a>
+            <div class="page-info">
+                <a href="index.html" class="nav-button home">📚 Table of Contents</a><br>
+                <span style="margin-top:8px;display:block">Chapter 17 of 50</span>
+            </div>
+            <a href="project-18.html" class="nav-button next">Next Chapter →</a>
+        </div>
+    </div>
+
+    
+    <div id="progress-track"><div id="progress-fill"></div></div>
+    <div id="progress-pct">0%</div>
+
+
+    <script>
+    const fill = document.getElementById('progress-fill');
+    const pct  = document.getElementById('progress-pct');
+    function updateProgress() {
+        const scrollTop = window.scrollY;
+        const docHeight = document.body.scrollHeight - window.innerHeight;
+        const scrolled  = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+        fill.style.height = scrolled + '%';
+        pct.textContent   = Math.round(scrolled) + '%';
+    }
+    window.addEventListener('scroll', updateProgress);
+    updateProgress();
+
+    document.addEventListener('keydown', function(e) {
+        if (['INPUT','TEXTAREA'].includes(document.activeElement.tagName)) return;
+        if (e.key === 'ArrowLeft') {
+            const b = document.querySelector('.nav-button.prev');
+            if (b && !b.classList.contains('disabled')) window.location.href = b.href;
+        }
+        if (e.key === 'ArrowRight') {
+            const b = document.querySelector('.nav-button.next');
+            if (b && !b.classList.contains('disabled')) window.location.href = b.href;
+        }
+    });
+    </script>
+
+</body>
+</html>

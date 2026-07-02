@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="images/favicon.png">
+    <title>Project 14: "I Wake Up, I Get Ready" — French Daily Sentences</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.75;
+            color: #1a202c;
+            background-color: #f7fafc;
+        }
+        .container {
+            max-width: 1800px;
+            margin: 0 auto;
+            background: white;
+            min-height: 100vh;
+            box-shadow: 0 0 30px rgba(0,0,0,0.08);
+            padding: 48px 52px;
+        }
+        
+        .content { max-width: 1700px; margin: 0 auto; color: #1a202c; }
+        .content h1 {
+            color: #1a202c; margin: 32px 0 20px;
+            padding-bottom: 12px;
+            border-bottom: 4px solid #3b82f6;
+            font-size: 2.1em;
+            font-weight: 700;
+        }
+        .content h2 {
+            color: #1a202c; margin: 28px 0 16px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #60a5fa;
+            font-size: 1.6em;
+            font-weight: 600;
+        }
+        .content h3 { color: #1a202c; margin: 22px 0 12px; font-size: 1.3em; font-weight: 600; }
+        .content h4 { color: #2d3748; margin: 18px 0 10px; font-size: 1.1em; font-weight: 600; }
+        .content p  { margin-bottom: 16px; line-height: 1.8; color: #1a202c; }
+        .content ul, .content ol { margin: 12px 0 18px 30px; color: #1a202c; }
+        .content li { margin-bottom: 8px; line-height: 1.75; color: #1a202c; }
+        .content hr { border: none; border-top: 2px solid #e2e8f0; margin: 26px 0; }
+        .content pre {
+            background: #f7fafc !important;
+            border: 1px solid #cbd5e0 !important;
+            border-left: 4px solid #3b82f6 !important;
+            padding: 18px !important; overflow-x: auto; margin: 18px 0; border-radius: 6px;
+            font-family: 'Consolas','Monaco','Courier New',monospace !important;
+            font-size: 0.9em !important;
+        }
+        .content pre:not([style*="color"]) { color: #1a202c !important; }
+        .content code {
+            font-family: 'Consolas','Monaco','Courier New',monospace !important;
+            font-size: 0.88em !important;
+        }
+        .content code:not(pre code) {
+            background: #dbeafe !important;
+            color: #1a202c !important;
+            padding: 2px 6px;
+            border-radius: 3px;
+        }
+        .content pre code { background: transparent !important; padding: 0; }
+        .content table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+        .content th {
+            background: linear-gradient(135deg, #3b82f6 0%, #60a5fa 100%);
+            color: white; padding: 12px 16px; text-align: left;
+            font-weight: 600;
+        }
+        .content td { padding: 11px 16px; border: 1px solid #e2e8f0; color: #1a202c; }
+        .content tr:nth-child(even) td { background: #eff6ff; }
+        .content blockquote {
+            border-left: 4px solid #3b82f6; background: #eff6ff;
+            padding: 14px 20px; margin: 18px 0; border-radius: 0 6px 6px 0;
+            color: #1a202c;
+        }
+        .content strong { color: #1a202c; font-weight: 600; }
+        .px-2 { padding: 0; }
+        .chat-message { background: transparent; padding: 0; margin: 0; }
+
+        /* Bottom nav bar only */
+        .nav-bar {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 24px 0;
+            margin-top: 50px;
+            border-top: 3px solid #60a5fa;
+        }
+        .nav-button {
+            display: inline-flex; align-items: center; gap: 8px;
+            padding: 12px 26px;
+            background: linear-gradient(135deg, #3b82f6 0%, #60a5fa 100%);
+            color: white !important; text-decoration: none;
+            border-radius: 8px; font-weight: 600; font-size: 0.95em;
+            transition: all 0.2s;
+            box-shadow: 0 2px 8px rgba(59,130,246,0.35);
+        }
+        .nav-button:hover { transform: translateY(-2px); box-shadow: 0 4px 14px rgba(59,130,246,0.5); }
+        .nav-button.disabled { background: #cbd5e1; box-shadow: none; pointer-events: none; }
+        .nav-button.home {
+            background: linear-gradient(135deg, #ef4444 0%, #f87171 100%);
+            box-shadow: 0 2px 8px rgba(239,68,68,0.35);
+        }
+        .nav-button.home:hover { box-shadow: 0 4px 14px rgba(239,68,68,0.5); }
+        .page-info { color: #718096; font-size: 0.9em; text-align: center; }
+
+        /* Progress bar */
+        #progress-track {
+            position: fixed; top: 20px; right: 20px;
+            width: 10px; height: 150px;
+            background: rgba(59,130,246,0.2);
+            border: 2px solid #3b82f6;
+            border-radius: 6px; overflow: hidden; z-index: 1000;
+        }
+        #progress-fill {
+            width: 100%;
+            background: linear-gradient(180deg, #3b82f6, #2563eb);
+            height: 0%;
+            transition: height 0.15s ease;
+        }
+        #progress-pct {
+            position: fixed; top: 0px; right: 16px;
+            color: #2563eb; font-size: 14px; font-weight: bold;
+            z-index: 1001;
+            text-shadow: 0 1px 2px rgba(255,255,255,0.9);
+            line-height: 20px;
+        }
+
+    </style>
+<link rel="stylesheet" href="assets/chapters.css?v=20260421203847"><script src="assets/chapters.js?v=20260421203847" defer></script>
+</head>
+<body>
+    <div class="container">
+        <div class="content">
+            <div class="chat-message" data-index="29">
+<div class="px-2"><h1>🔵 PROJECT 14: "I Wake Up, I Get Ready"</h1>
+<h2><em>You're describing your complete morning routine — actions that reflect back onto yourself</em></h2>
+<hr>
+<h1>🎯 THE HYPOTHETICAL PROBLEM</h1>
+<p>→ It's <strong>Monday morning</strong> at your host family's home in Lyon<br>
+→ Catherine asks: <strong>"Tu peux me décrire ta routine du matin ?"</strong> (Can you describe your morning routine to me?)<br>
+→ You try to answer using verbs from Project 2:<br>
+→ → <del>"Je lève à sept heures."</del> (I lift at seven o'clock.) — WRONG: this means you lift something<br>
+→ → <del>"Je lave."</del> (I wash.) — WRONG: this means you wash something (dishes? clothes?)<br>
+→ → <del>"Je habille."</del> (I dress.) — WRONG: this means you dress someone else<br>
+→ Catherine corrects you:<br>
+→ → "Je <strong>ME</strong> lève à sept heures." (I get <strong>MYSELF</strong> up.)<br>
+→ → "Je <strong>ME</strong> lave." (I wash <strong>MYSELF</strong>.)<br>
+→ → "Je **M'**habille." (I dress <strong>MYSELF</strong>.)<br>
+→ Every single morning action has a little word — <strong>me, te, se, nous, vous</strong> — inserted between the subject and the verb<br>
+→ This word reflects the action back onto the subject: <strong>I do it TO MYSELF</strong><br>
+→ Without this word, the sentence means something completely different<br>
+→ And these verbs behave differently in:<br>
+→ → <strong>Passé composé</strong> — they ALWAYS use être (not avoir)<br>
+→ → <strong>Impératif</strong> — the reflexive pronoun moves position<br>
+→ → <strong>Negation</strong> — the pronoun stays inside the negation sandwich<br>
+→ → <strong>Futur proche</strong> — the pronoun goes before the infinitif (not before aller)</p>
+<p><strong>The core realization:</strong><br>
+→ French uses <strong>reflexive verbs</strong> for dozens of daily actions that English doesn't mark as reflexive<br>
+→ In English: "I wake up" / "I get dressed" / "I sit down" — no visible "myself"<br>
+→ In French: "Je <strong>me</strong> réveille" / "Je **m'**habille" / "Je **m'**assieds" — the reflexive pronoun is MANDATORY<br>
+→ If you drop it → the meaning changes completely or the sentence breaks<br>
+→ Reflexive verbs are NOT optional extras — they're <strong>core daily vocabulary</strong></p>
+<hr>
+<h1>🔍 HOW TO APPROACH IT</h1>
+<p>→ A reflexive verb has TWO parts:</p>
+<code>REFLEXIVE PRONOUN + VERB</code>
+<p>→ The reflexive pronoun <strong>matches</strong> the subject — it changes for each person:</p>
+<table><thead><tr><th>Subject</th><th>Reflexive Pronoun</th><th>Example: SE LEVER (to get up)</th></tr></thead><tbody><tr><td>Je</td><td><strong>me</strong> (m' before vowel)</td><td>Je <strong>me</strong> lève</td></tr><tr><td>Tu</td><td><strong>te</strong> (t' before vowel)</td><td>Tu <strong>te</strong> lèves</td></tr><tr><td>Il / Elle / On</td><td><strong>se</strong> (s' before vowel)</td><td>Il <strong>se</strong> lève</td></tr><tr><td>Nous</td><td><strong>nous</strong></td><td>Nous <strong>nous</strong> levons</td></tr><tr><td>Vous</td><td><strong>vous</strong></td><td>Vous <strong>vous</strong> levez</td></tr><tr><td>Ils / Elles</td><td><strong>se</strong> (s' before vowel)</td><td>Ils <strong>se</strong> lèvent</td></tr></tbody></table>
+<p>→ The verb itself conjugates normally (same as Project 2)<br>
+→ The reflexive pronoun is an EXTRA piece that goes <strong>between subject and verb</strong></p>
+<hr>
+<h1>🔧 HOW CAN WE SOLVE IT</h1>
+<h2>Step 1 — The 20 Essential Reflexive Verbs for Daily Life</h2>
+<table><thead><tr><th>#</th><th>French</th><th>English</th><th>Daily Use</th></tr></thead><tbody><tr><td>1</td><td><strong>se réveiller</strong></td><td>to wake up</td><td>Morning</td></tr><tr><td>2</td><td><strong>se lever</strong></td><td>to get up</td><td>Morning</td></tr><tr><td>3</td><td><strong>se laver</strong></td><td>to wash (oneself)</td><td>Hygiene</td></tr><tr><td>4</td><td><strong>se doucher</strong></td><td>to shower</td><td>Hygiene</td></tr><tr><td>5</td><td><strong>se brosser</strong> (les dents/les cheveux)</td><td>to brush (teeth/hair)</td><td>Hygiene</td></tr><tr><td>6</td><td><strong>se raser</strong></td><td>to shave</td><td>Hygiene</td></tr><tr><td>7</td><td><strong>se maquiller</strong></td><td>to put on makeup</td><td>Getting ready</td></tr><tr><td>8</td><td><strong>s'habiller</strong></td><td>to get dressed</td><td>Getting ready</td></tr><tr><td>9</td><td><strong>se déshabiller</strong></td><td>to get undressed</td><td>Evening</td></tr><tr><td>10</td><td><strong>se préparer</strong></td><td>to get ready</td><td>General preparation</td></tr><tr><td>11</td><td><strong>se dépêcher</strong></td><td>to hurry</td><td>Rushing</td></tr><tr><td>12</td><td><strong>se coucher</strong></td><td>to go to bed</td><td>Evening</td></tr><tr><td>13</td><td><strong>s'endormir</strong></td><td>to fall asleep</td><td>Evening</td></tr><tr><td>14</td><td><strong>se reposer</strong></td><td>to rest</td><td>Relaxation</td></tr><tr><td>15</td><td><strong>s'asseoir</strong></td><td>to sit down</td><td>Daily movement</td></tr><tr><td>16</td><td><strong>se promener</strong></td><td>to go for a walk</td><td>Leisure</td></tr><tr><td>17</td><td><strong>s'arrêter</strong></td><td>to stop</td><td>Movement</td></tr><tr><td>18</td><td><strong>se sentir</strong></td><td>to feel</td><td>Emotions/health</td></tr><tr><td>19</td><td><strong>s'appeler</strong></td><td>to be called (name)</td><td>Identity</td></tr><tr><td>20</td><td><strong>s'amuser</strong></td><td>to have fun</td><td>Social</td></tr></tbody></table>
+<p>→ Notice: in the dictionary/infinitif form, reflexive verbs always start with <strong>"se"</strong> (or <strong>"s'"</strong> before vowel)<br>
+→ "Se" is the generic reflexive pronoun — it changes based on the subject when conjugated</p>
+<hr>
+<h2>Step 2 — Why Reflexive? Understanding the Logic</h2>
+<p>→ Some verbs are reflexive because the action literally goes <strong>back to the subject:</strong></p>
+<table><thead><tr><th>Non-Reflexive</th><th>Reflexive</th><th>Logic</th></tr></thead><tbody><tr><td>Je <strong>lave</strong> la voiture. (I wash the car.)</td><td>Je <strong>me</strong> lave. (I wash myself.)</td><td>Washing → directed at self</td></tr><tr><td>Elle <strong>habille</strong> l'enfant. (She dresses the child.)</td><td>Elle **s'**habille. (She dresses herself.)</td><td>Dressing → directed at self</td></tr><tr><td>Tu <strong>réveilles</strong> le bébé. (You wake the baby.)</td><td>Tu <strong>te</strong> réveilles. (You wake yourself up.)</td><td>Waking → directed at self</td></tr><tr><td>Il <strong>prépare</strong> le dîner. (He prepares dinner.)</td><td>Il <strong>se</strong> prépare. (He gets himself ready.)</td><td>Preparing → directed at self</td></tr></tbody></table>
+<p>→ Some verbs are <strong>always reflexive</strong> — they don't exist without "se":<br>
+→ → <strong>se souvenir</strong> (to remember) — <del>"je souviens"</del> doesn't exist<br>
+→ → <strong>s'enfuir</strong> (to flee) — <del>"j'enfuis"</del> doesn't exist<br>
+→ → <strong>se méfier</strong> (to distrust) — <del>"je méfie"</del> doesn't exist</p>
+<p>→ Some verbs <strong>change meaning</strong> when they become reflexive:</p>
+<table><thead><tr><th>Non-Reflexive</th><th>Meaning</th><th>Reflexive</th><th>Meaning</th></tr></thead><tbody><tr><td><strong>appeler</strong></td><td>to call (someone)</td><td><strong>s'appeler</strong></td><td>to be called / named</td></tr><tr><td><strong>mettre</strong></td><td>to put</td><td><strong>se mettre à</strong></td><td>to start / begin</td></tr><tr><td><strong>rendre</strong></td><td>to return / give back</td><td><strong>se rendre</strong></td><td>to go to / to realize</td></tr><tr><td><strong>trouver</strong></td><td>to find</td><td><strong>se trouver</strong></td><td>to be located</td></tr><tr><td><strong>sentir</strong></td><td>to smell / feel</td><td><strong>se sentir</strong></td><td>to feel (emotion/health)</td></tr><tr><td><strong>entendre</strong></td><td>to hear</td><td><strong>s'entendre</strong></td><td>to get along (with someone)</td></tr><tr><td><strong>occuper</strong></td><td>to occupy</td><td><strong>s'occuper de</strong></td><td>to take care of</td></tr><tr><td><strong>demander</strong></td><td>to ask</td><td><strong>se demander</strong></td><td>to wonder</td></tr></tbody></table>
+<hr>
+<h2>Step 3 — Reflexive Verbs in Present Tense: Full Conjugation</h2>
+<h3>SE LEVER (to get up) — Complete Pattern</h3>
+<table><thead><tr><th>Subject</th><th>Reflexive Pronoun</th><th>Verb</th><th>Full Form</th></tr></thead><tbody><tr><td>Je</td><td><strong>me</strong></td><td>lève</td><td>Je <strong>me lève</strong></td></tr><tr><td>Tu</td><td><strong>te</strong></td><td>lèves</td><td>Tu <strong>te lèves</strong></td></tr><tr><td>Il / Elle / On</td><td><strong>se</strong></td><td>lève</td><td>Il <strong>se lève</strong></td></tr><tr><td>Nous</td><td><strong>nous</strong></td><td>levons</td><td>Nous <strong>nous levons</strong></td></tr><tr><td>Vous</td><td><strong>vous</strong></td><td>levez</td><td>Vous <strong>vous levez</strong></td></tr><tr><td>Ils / Elles</td><td><strong>se</strong></td><td>lèvent</td><td>Ils <strong>se lèvent</strong></td></tr></tbody></table>
+<h3>S'HABILLER (to get dressed) — Vowel Start</h3>
+<table><thead><tr><th>Subject</th><th>Reflexive Pronoun</th><th>Verb</th><th>Full Form</th></tr></thead><tbody><tr><td>Je</td><td><strong>m'</strong></td><td>habille</td><td>Je <strong>m'habille</strong></td></tr><tr><td>Tu</td><td><strong>t'</strong></td><td>habilles</td><td>Tu <strong>t'habilles</strong></td></tr><tr><td>Il / Elle / On</td><td><strong>s'</strong></td><td>habille</td><td>Il <strong>s'habille</strong></td></tr><tr><td>Nous</td><td><strong>nous</strong></td><td>habillons</td><td>Nous <strong>nous habillons</strong></td></tr><tr><td>Vous</td><td><strong>vous</strong></td><td>habillez</td><td>Vous <strong>vous habillez</strong></td></tr><tr><td>Ils / Elles</td><td><strong>s'</strong></td><td>habillent</td><td>Ils <strong>s'habillent</strong></td></tr></tbody></table>
+<p>→ Before a <strong>vowel or silent h</strong>: me→m', te→t', se→s'<br>
+→ Nous and vous <strong>don't contract</strong> (nous nous, vous vous — yes, the pronoun appears twice!)</p>
+<hr>
+<h2>Step 4 — Reflexive Verbs in Passé Composé: ALWAYS ÊTRE</h2>
+<p><strong>CRITICAL RULE: ALL reflexive verbs use ÊTRE in passé composé</strong></p>
+<code>Subject + REFLEXIVE PRONOUN + ÊTRE (present) + PAST PARTICIPLE</code>
+<table><thead><tr><th>Subject</th><th>Full Passé Composé of SE LEVER</th></tr></thead><tbody><tr><td>Je</td><td>Je <strong>me suis</strong> levé(e)</td></tr><tr><td>Tu</td><td>Tu <strong>t'es</strong> levé(e)</td></tr><tr><td>Il</td><td>Il <strong>s'est</strong> levé</td></tr><tr><td>Elle</td><td>Elle <strong>s'est</strong> levée</td></tr><tr><td>On</td><td>On <strong>s'est</strong> levés</td></tr><tr><td>Nous</td><td>Nous <strong>nous sommes</strong> levé(e)s</td></tr><tr><td>Vous</td><td>Vous <strong>vous êtes</strong> levé(e)(s)</td></tr><tr><td>Ils</td><td>Ils <strong>se sont</strong> levés</td></tr><tr><td>Elles</td><td>Elles <strong>se sont</strong> levées</td></tr></tbody></table>
+<p>→ Reflexive pronoun goes <strong>BEFORE</strong> être (not after)<br>
+→ Order: Subject + reflexive pronoun + être + past participle<br>
+→ <strong>Agreement rule:</strong> past participle agrees with the subject (same as all être verbs — Project 9)<br>
+→ → Il s'est levé (masc) / Elle s'est levé<strong>e</strong> (fem) / Ils se sont levé<strong>s</strong> (masc pl) / Elles se sont levé<strong>es</strong> (fem pl)</p>
+<hr>
+<h2>Step 5 — Reflexive Verbs in Negation</h2>
+<h3>Present Tense Negation:</h3>
+<code>Subject + NE + REFLEXIVE PRONOUN + VERB + PAS + rest</code>
+<p>→ ✅ Je <strong>ne me</strong> lève <strong>pas</strong> tôt.<br>
+→ The reflexive pronoun stays <strong>between ne and the verb</strong><br>
+→ It's INSIDE the negation sandwich</p>
+<h3>Passé Composé Negation:</h3>
+<code>Subject + NE + REFLEXIVE PRONOUN + ÊTRE + PAS + PAST PARTICIPLE</code>
+<p>→ ✅ Je <strong>ne me suis pas</strong> levé(e) tôt.<br>
+→ Everything stays between ne and pas: reflexive pronoun + être</p>
+<hr>
+<h2>Step 6 — Reflexive Verbs in Futur Proche</h2>
+<code>Subject + REFLEXIVE PRONOUN + ALLER + INFINITIF (with se removed)</code>
+<p>→ ✅ Je <strong>vais me</strong> lever tôt. (I'm going to get up early.)<br>
+→ The reflexive pronoun goes <strong>BEFORE the infinitif</strong> — not before aller!<br>
+→ → <del>Je me vais lever.</del> ❌ (pronoun wrongly placed before aller)<br>
+→ → ✅ Je <strong>vais me</strong> lever. (pronoun correctly before infinitif)<br>
+→ The pronoun still <strong>matches the subject</strong>: je → me, tu → te, il → se...</p>
+<table><thead><tr><th>Subject</th><th>Futur Proche of SE LEVER</th></tr></thead><tbody><tr><td>Je</td><td>Je <strong>vais me</strong> lever</td></tr><tr><td>Tu</td><td>Tu <strong>vas te</strong> lever</td></tr><tr><td>Il</td><td>Il <strong>va se</strong> lever</td></tr><tr><td>Nous</td><td>Nous <strong>allons nous</strong> lever</td></tr><tr><td>Vous</td><td>Vous <strong>allez vous</strong> lever</td></tr><tr><td>Ils</td><td>Ils <strong>vont se</strong> lever</td></tr></tbody></table>
+<hr>
+<h2>Step 7 — Reflexive Verbs in Impératif (Recall Project 13)</h2>
+<h3>Affirmative Impératif:</h3>
+<code>VERB + HYPHEN + STRESS PRONOUN (toi/nous/vous)</code>
+<table><thead><tr><th>Form</th><th>Example</th><th>Notes</th></tr></thead><tbody><tr><td>Tu</td><td><strong>Lève-toi !</strong> (Get up!)</td><td>te → <strong>toi</strong> after verb</td></tr><tr><td>Nous</td><td><strong>Levons-nous !</strong> (Let's get up!)</td><td>nous stays nous</td></tr><tr><td>Vous</td><td><strong>Levez-vous !</strong> (Get up!)</td><td>vous stays vous</td></tr></tbody></table>
+<p>→ In affirmative: pronoun goes AFTER verb with hyphen<br>
+→ <strong>te</strong> becomes <strong>toi</strong> (stress pronoun — Project 7/13)</p>
+<h3>Negative Impératif:</h3>
+<code>NE + REFLEXIVE PRONOUN + VERB + PAS</code>
+<table><thead><tr><th>Form</th><th>Example</th><th>Notes</th></tr></thead><tbody><tr><td>Tu</td><td><strong>Ne te lève pas !</strong> (Don't get up!)</td><td>toi → <strong>te</strong> (back to normal)</td></tr><tr><td>Nous</td><td><strong>Ne nous levons pas !</strong></td><td>nous stays nous</td></tr><tr><td>Vous</td><td><strong>Ne vous levez pas !</strong></td><td>vous stays vous</td></tr></tbody></table>
+<p>→ In negative: pronoun goes BEFORE verb (back to normal position — Project 13)<br>
+→ <strong>toi</strong> reverts to <strong>te</strong></p>
+<hr>
+<h1>✅ WHAT COULD BE DONE — THE 100 SENTENCES</h1>
+<h2>🔹 BLOCK A — Morning Routine: Present Tense Reflexive Verbs</h2>
+<p><em>Scenario: You describe your typical morning to Catherine</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English Meaning</th><th>Reflexive Verb</th></tr></thead><tbody><tr><td>1</td><td>Je me réveille à sept heures.</td><td>I wake up at seven o'clock.</td><td>se réveiller</td></tr><tr><td>2</td><td>Je me lève tout de suite.</td><td>I get up right away.</td><td>se lever</td></tr><tr><td>3</td><td>Je me douche.</td><td>I shower.</td><td>se doucher</td></tr><tr><td>4</td><td>Je me lave les mains.</td><td>I wash my hands.</td><td>se laver</td></tr><tr><td>5</td><td>Je me brosse les dents.</td><td>I brush my teeth.</td><td>se brosser</td></tr><tr><td>6</td><td>Je me rase.</td><td>I shave.</td><td>se raser</td></tr><tr><td>7</td><td>Je m'habille.</td><td>I get dressed.</td><td>s'habiller</td></tr><tr><td>8</td><td>Je me prépare vite.</td><td>I get ready quickly.</td><td>se préparer</td></tr><tr><td>9</td><td>Je me dépêche le matin.</td><td>I hurry in the morning.</td><td>se dépêcher</td></tr><tr><td>10</td><td>Je me regarde dans le miroir.</td><td>I look at myself in the mirror.</td><td>se regarder</td></tr></tbody></table>
+<p><strong>🧠 Structure confirmed:</strong> <code>Subject + REFLEXIVE PRONOUN + VERB + rest</code></p>
+<p><strong>🧠 CRITICAL DISCOVERY — Sentences 4 and 5:</strong><br>
+→ "Je me lave <strong>les mains</strong>." = I wash my hands.<br>
+→ "Je me brosse <strong>les dents</strong>." = I brush my teeth.<br>
+→ In English: "I wash <strong>MY</strong> hands" — possessive adjective<br>
+→ In French: "Je me lave <strong>LES</strong> mains" — <strong>definite article</strong> (not possessive!)<br>
+→ WHY? Because the reflexive pronoun "me" already tells you WHOSE hands<br>
+→ → "me" = myself → the hands are obviously mine → no need for "mes"<br>
+→ → ✅ Je me lave <strong>les</strong> mains. (correct)<br>
+→ → ❌ <del>Je me lave <strong>mes</strong> mains.</del> (redundant — wrong in French)<br>
+→ This rule applies to ALL body parts with reflexive verbs:<br>
+→ → Je me brosse <strong>les</strong> cheveux. (I brush my hair.)<br>
+→ → Il se casse <strong>la</strong> jambe. (He breaks his leg.)<br>
+→ → Elle se lave <strong>le</strong> visage. (She washes her face.)</p>
+<hr>
+<h2>🔹 BLOCK B — Evening Routine: The Other Half of the Day</h2>
+<p><em>Scenario: Describing what you do in the evening — winding down</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English Meaning</th><th>Reflexive Verb</th></tr></thead><tbody><tr><td>11</td><td>Le soir, je me détends.</td><td>In the evening, I relax.</td><td>se détendre</td></tr><tr><td>12</td><td>Je me déshabille.</td><td>I get undressed.</td><td>se déshabiller</td></tr><tr><td>13</td><td>Je me lave les dents.</td><td>I brush my teeth.</td><td>se laver</td></tr><tr><td>14</td><td>Je me mets en pyjama.</td><td>I put on my pajamas.</td><td>se mettre</td></tr><tr><td>15</td><td>Je me couche à onze heures.</td><td>I go to bed at eleven.</td><td>se coucher</td></tr><tr><td>16</td><td>Je m'endors vite.</td><td>I fall asleep quickly.</td><td>s'endormir</td></tr><tr><td>17</td><td>Tu te couches tard ?</td><td>Do you go to bed late?</td><td>se coucher</td></tr><tr><td>18</td><td>Il se repose le dimanche.</td><td>He rests on Sundays.</td><td>se reposer</td></tr><tr><td>19</td><td>Elle se couche tôt le soir.</td><td>She goes to bed early in the evening.</td><td>se coucher</td></tr><tr><td>20</td><td>On se détend devant la télé.</td><td>We relax in front of the TV.</td><td>se détendre</td></tr></tbody></table>
+<p><strong>🧠 MORNING vs. EVENING reflexive pairs:</strong></p>
+<table><thead><tr><th>Morning</th><th>Evening</th></tr></thead><tbody><tr><td>se réveiller (wake up)</td><td>s'endormir (fall asleep)</td></tr><tr><td>se lever (get up)</td><td>se coucher (go to bed)</td></tr><tr><td>s'habiller (get dressed)</td><td>se déshabiller (get undressed)</td></tr><tr><td>se préparer (get ready)</td><td>se détendre (relax)</td></tr><tr><td>se dépêcher (hurry)</td><td>se reposer (rest)</td></tr></tbody></table>
+<p>→ Daily routine = reflexive verbs from start to finish<br>
+→ These pairs are useful for describing any person's day</p>
+<hr>
+<h2>🔹 BLOCK C — All Subjects: Reflexive Verbs Across Persons</h2>
+<p><em>Scenario: Describing everyone's morning routine in the host family</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English Meaning</th><th>Subject</th></tr></thead><tbody><tr><td>21</td><td>Je me réveille tôt.</td><td>I wake up early.</td><td>je</td></tr><tr><td>22</td><td>Tu te lèves à quelle heure ?</td><td>What time do you get up?</td><td>tu</td></tr><tr><td>23</td><td>Il se douche en cinq minutes.</td><td>He showers in five minutes.</td><td>il</td></tr><tr><td>24</td><td>Elle se maquille dans la salle de bain.</td><td>She puts on makeup in the bathroom.</td><td>elle</td></tr><tr><td>25</td><td>On se prépare ensemble.</td><td>We get ready together.</td><td>on</td></tr><tr><td>26</td><td>Nous nous habillons vite.</td><td>We get dressed quickly.</td><td>nous</td></tr><tr><td>27</td><td>Vous vous levez tôt le lundi ?</td><td>Do you get up early on Mondays?</td><td>vous</td></tr><tr><td>28</td><td>Ils se rasent tous les matins.</td><td>They shave every morning.</td><td>ils</td></tr><tr><td>29</td><td>Elles se brossent les cheveux.</td><td>They (f) brush their hair.</td><td>elles</td></tr><tr><td>30</td><td>Les enfants se couchent à neuf heures.</td><td>The children go to bed at nine.</td><td>noun subject</td></tr></tbody></table>
+<p><strong>🧠 Sentence 26 — "NOUS NOUS habillons":</strong><br>
+→ Yes — "nous" appears TWICE<br>
+→ First "nous" = subject pronoun (we)<br>
+→ Second "nous" = reflexive pronoun (ourselves)<br>
+→ Same with "vous": "Vous <strong>vous</strong> levez" — subject vous + reflexive vous<br>
+→ This looks strange but is perfectly normal and correct<br>
+→ In spoken French, "on" often replaces "nous" → avoids the double: "On **s'**habille vite"</p>
+<hr>
+<h2>🔹 BLOCK D — Negation: Things You DON'T Do (Reflexive)</h2>
+<p><em>Scenario: Habits you don't have, things you don't do in the morning</em></p>
+<table><thead><tr><th>#</th><th>French Sentence (Written)</th><th>Spoken Version</th><th>English</th></tr></thead><tbody><tr><td>31</td><td>Je ne me lève pas tôt le dimanche.</td><td>Je me lève pas tôt le dimanche.</td><td>I don't get up early on Sundays.</td></tr><tr><td>32</td><td>Tu ne te douches pas le matin ?</td><td>Tu te douches pas le matin ?</td><td>You don't shower in the morning?</td></tr><tr><td>33</td><td>Il ne se rase pas tous les jours.</td><td>Il se rase pas tous les jours.</td><td>He doesn't shave every day.</td></tr><tr><td>34</td><td>Elle ne se maquille jamais.</td><td>Elle se maquille jamais.</td><td>She never wears makeup.</td></tr><tr><td>35</td><td>On ne se dépêche plus.</td><td>On se dépêche plus.</td><td>We don't rush anymore.</td></tr><tr><td>36</td><td>Je ne m'endors pas facilement.</td><td>Je m'endors pas facilement.</td><td>I don't fall asleep easily.</td></tr><tr><td>37</td><td>Ils ne se couchent pas avant minuit.</td><td>Ils se couchent pas avant minuit.</td><td>They don't go to bed before midnight.</td></tr><tr><td>38</td><td>Je ne me sens pas bien.</td><td>Je me sens pas bien.</td><td>I don't feel well.</td></tr><tr><td>39</td><td>On ne s'ennuie jamais ici.</td><td>On s'ennuie jamais ici.</td><td>We never get bored here.</td></tr><tr><td>40</td><td>Elle ne se souvient pas.</td><td>Elle se souvient pas.</td><td>She doesn't remember.</td></tr></tbody></table>
+<p><strong>🧠 NEGATION STRUCTURE WITH REFLEXIVE VERBS — CONFIRMED:</strong></p>
+<code>Subject + NE + REFLEXIVE PRONOUN + VERB + PAS/PLUS/JAMAIS + rest</code>
+<p>→ NE goes before the reflexive pronoun<br>
+→ PAS goes after the verb<br>
+→ The reflexive pronoun stays <strong>glued to the verb</strong> — between ne and the verb</p>
+<table><thead><tr><th>Without Negation</th><th>With Negation</th></tr></thead><tbody><tr><td>Je <strong>me</strong> lève tôt.</td><td>Je <strong>ne me</strong> lève <strong>pas</strong> tôt.</td></tr><tr><td>Il <strong>se</strong> rase.</td><td>Il <strong>ne se</strong> rase <strong>pas</strong>.</td></tr><tr><td>On **s'**amuse.</td><td>On **ne s'**amuse <strong>pas</strong>.</td></tr></tbody></table>
+<p>→ Spoken French: drop "ne" as usual → "Je me lève pas tôt"</p>
+<hr>
+<h2>🔹 BLOCK E — Passé Composé: What You Did This Morning (Reflexive)</h2>
+<p><em>Scenario: Telling Léa what you did this morning — past tense reflexive</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English Meaning</th><th>Agreement</th></tr></thead><tbody><tr><td>41</td><td>Je me suis réveillé à sept heures.</td><td>I woke up at seven. (male)</td><td>réveillé — masc</td></tr><tr><td>42</td><td>Je me suis réveillée à sept heures.</td><td>I woke up at seven. (female)</td><td>réveillé<strong>e</strong> — fem</td></tr><tr><td>43</td><td>Tu t'es levé tôt ?</td><td>Did you get up early? (male)</td><td>levé — masc</td></tr><tr><td>44</td><td>Tu t'es levée tôt ?</td><td>Did you get up early? (female)</td><td>levé<strong>e</strong> — fem</td></tr><tr><td>45</td><td>Il s'est douché rapidement.</td><td>He showered quickly.</td><td>douché — masc</td></tr><tr><td>46</td><td>Elle s'est habillée vite.</td><td>She got dressed quickly.</td><td>habillé<strong>e</strong> — fem</td></tr><tr><td>47</td><td>On s'est préparés ensemble.</td><td>We got ready together.</td><td>préparé<strong>s</strong> — plural</td></tr><tr><td>48</td><td>Nous nous sommes couchés tard hier.</td><td>We went to bed late yesterday.</td><td>couché<strong>s</strong> — plural</td></tr><tr><td>49</td><td>Ils se sont levés en retard.</td><td>They got up late.</td><td>levé<strong>s</strong> — masc plural</td></tr><tr><td>50</td><td>Elles se sont amusées hier soir.</td><td>They (f) had fun last night.</td><td>amusé<strong>es</strong> — fem plural</td></tr></tbody></table>
+<p><strong>🧠 REFLEXIVE PASSÉ COMPOSÉ — THE FULL STRUCTURE:</strong></p>
+<code>Subject + REFLEXIVE PRONOUN + ÊTRE (present) + PAST PARTICIPLE (agreed)</code>
+<p>→ ALWAYS uses <strong>être</strong> — never avoir<br>
+→ Past participle agrees with the <strong>subject</strong> (like all être verbs — Project 9)<br>
+→ → Masculine singular: levé<br>
+→ → Feminine singular: levé<strong>e</strong><br>
+→ → Masculine plural: levé<strong>s</strong><br>
+→ → Feminine plural: levé<strong>es</strong></p>
+<p><strong>🧠 Word order comparison:</strong></p>
+<table><thead><tr><th>Tense</th><th>Structure</th></tr></thead><tbody><tr><td><strong>Present</strong></td><td>Je <strong>me</strong> lève.</td></tr><tr><td><strong>Passé composé</strong></td><td>Je <strong>me suis</strong> levé(e).</td></tr><tr><td><strong>Negation present</strong></td><td>Je <strong>ne me</strong> lève <strong>pas</strong>.</td></tr><tr><td><strong>Negation PC</strong></td><td>Je <strong>ne me suis pas</strong> levé(e).</td></tr></tbody></table>
+<p>→ The reflexive pronoun ALWAYS stays right before the verb (or auxiliary in PC)<br>
+→ In PC: reflexive pronoun + être + past participle = the core unit</p>
+<hr>
+<h2>🔹 BLOCK F — Passé Composé Negation and Questions (Reflexive)</h2>
+<p><em>Scenario: Talking about what you didn't do and asking about others' mornings</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English Meaning</th><th>Structure</th></tr></thead><tbody><tr><td>51</td><td>Je ne me suis pas levé tôt.</td><td>I didn't get up early.</td><td>Negation PC reflexive</td></tr><tr><td>52</td><td>Tu ne t'es pas douché ce matin ?</td><td>Didn't you shower this morning?</td><td>Neg PC reflexive + question</td></tr><tr><td>53</td><td>Il ne s'est pas rasé aujourd'hui.</td><td>He didn't shave today.</td><td>Neg PC reflexive</td></tr><tr><td>54</td><td>Elle ne s'est pas maquillée.</td><td>She didn't put on makeup.</td><td>Neg PC reflexive</td></tr><tr><td>55</td><td>On ne s'est pas dépêchés.</td><td>We didn't hurry.</td><td>Neg PC reflexive</td></tr><tr><td>56</td><td>Tu t'es amusé hier soir ?</td><td>Did you have fun last night?</td><td>Question PC reflexive</td></tr><tr><td>57</td><td>Vous vous êtes bien reposés ?</td><td>Did you rest well?</td><td>Question PC reflexive (vous)</td></tr><tr><td>58</td><td>À quelle heure tu t'es couché ?</td><td>What time did you go to bed?</td><td>Question word + PC reflexive</td></tr><tr><td>59</td><td>Comment tu t'es senti après ?</td><td>How did you feel after?</td><td>Question word + PC reflexive</td></tr><tr><td>60</td><td>Ils ne se sont jamais disputés.</td><td>They never argued.</td><td>Neg (jamais) PC reflexive</td></tr></tbody></table>
+<p><strong>🧠 NEGATION IN REFLEXIVE PASSÉ COMPOSÉ:</strong></p>
+<code>Subject + NE + REFLEXIVE PRONOUN + ÊTRE + PAS + PAST PARTICIPLE</code>
+<p>→ ✅ Je <strong>ne me suis pas</strong> levé.<br>
+→ Everything between ne and pas: reflexive pronoun + être<br>
+→ Past participle comes AFTER pas</p>
+<p><strong>🧠 Sentence 60 — "SE DISPUTER" (to argue):</strong><br>
+→ Some reflexive verbs are <strong>reciprocal</strong> — the action goes between people, not back to self<br>
+→ "Ils se disputent" = They argue (with each other)<br>
+→ "Ils se parlent" = They talk (to each other)<br>
+→ "On se voit demain" = We'll see each other tomorrow<br>
+→ Same structure — the "se" means "each other" instead of "oneself"<br>
+→ Context tells you which meaning</p>
+<hr>
+<h2>🔹 BLOCK G — Futur Proche and Impératif (Reflexive)</h2>
+<p><em>Scenario: Plans for tomorrow morning + giving commands with reflexive verbs</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English Meaning</th><th>Structure</th></tr></thead><tbody><tr><td>61</td><td>Je vais me lever tôt demain.</td><td>I'm going to get up early tomorrow.</td><td>Futur proche reflexive</td></tr><tr><td>62</td><td>Tu vas te coucher tard ?</td><td>Are you going to go to bed late?</td><td>Futur proche reflexive + ?</td></tr><tr><td>63</td><td>Il va se préparer vite.</td><td>He's going to get ready quickly.</td><td>Futur proche reflexive</td></tr><tr><td>64</td><td>On va se retrouver à huit heures.</td><td>We're going to meet at eight.</td><td>Futur proche reflexive</td></tr><tr><td>65</td><td>Vous allez vous amuser !</td><td>You're going to have fun!</td><td>Futur proche reflexive</td></tr><tr><td>66</td><td>Je ne vais pas me dépêcher.</td><td>I'm not going to hurry.</td><td>Neg futur proche reflexive</td></tr><tr><td>67</td><td>On ne va pas se coucher tard.</td><td>We're not going to go to bed late.</td><td>Neg futur proche reflexive</td></tr><tr><td>68</td><td>Lève-toi !</td><td>Get up!</td><td>Impératif reflexive (tu)</td></tr><tr><td>69</td><td>Dépêchons-nous !</td><td>Let's hurry!</td><td>Impératif reflexive (nous)</td></tr><tr><td>70</td><td>Asseyez-vous.</td><td>Sit down.</td><td>Impératif reflexive (vous)</td></tr></tbody></table>
+<p><strong>🧠 FUTUR PROCHE REFLEXIVE — pronoun placement:</strong></p>
+<code>Subject + ALLER (conjugated) + REFLEXIVE PRONOUN + INFINITIF (without se)</code>
+<p>→ ✅ Je <strong>vais me</strong> lever. (pronoun before infinitif)<br>
+→ ❌ <del>Je <strong>me</strong> vais lever.</del> (pronoun wrongly before aller)<br>
+→ The pronoun matches the SUBJECT, not aller:<br>
+→ → Je vais <strong>me</strong> lever / Tu vas <strong>te</strong> lever / Il va <strong>se</strong> lever</p>
+<p><strong>🧠 FUTUR PROCHE REFLEXIVE + NEGATION:</strong></p>
+<code>Subject + NE + ALLER + PAS + REFLEXIVE PRONOUN + INFINITIF</code>
+<p>→ ✅ Je <strong>ne vais pas me</strong> lever tôt.<br>
+→ Ne...pas wraps aller → reflexive pronoun + infinitif stay outside</p>
+<p><strong>🧠 IMPÉRATIF REFLEXIVE — recall from Project 13:</strong></p>
+<table><thead><tr><th>Affirmative</th><th>Negative</th></tr></thead><tbody><tr><td><strong>Lève-toi !</strong> (te → toi)</td><td><strong>Ne te lève pas !</strong> (toi → te)</td></tr><tr><td><strong>Levons-nous !</strong></td><td><strong>Ne nous levons pas !</strong></td></tr><tr><td><strong>Levez-vous !</strong></td><td><strong>Ne vous levez pas !</strong></td></tr></tbody></table>
+<p>→ Affirmative: pronoun AFTER verb with hyphen + te becomes toi<br>
+→ Negative: pronoun BEFORE verb (normal position) + toi reverts to te</p>
+<hr>
+<h2>🔹 BLOCK H — Reflexive Verbs Beyond Routine: Emotions, Social, Movement</h2>
+<p><em>Scenario: Using reflexive verbs in broader daily life — not just hygiene</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English Meaning</th><th>Category</th></tr></thead><tbody><tr><td>71</td><td>Je m'appelle Marc.</td><td>My name is Marc. (I call myself Marc.)</td><td>Identity</td></tr><tr><td>72</td><td>Comment tu t'appelles ?</td><td>What's your name?</td><td>Identity question</td></tr><tr><td>73</td><td>Je m'intéresse à l'art.</td><td>I'm interested in art.</td><td>Interest</td></tr><tr><td>74</td><td>Il s'ennuie en classe.</td><td>He gets bored in class.</td><td>Emotion</td></tr><tr><td>75</td><td>Elle se sent fatiguée.</td><td>She feels tired.</td><td>Health/emotion</td></tr><tr><td>76</td><td>On s'entend bien.</td><td>We get along well.</td><td>Social — reciprocal</td></tr><tr><td>77</td><td>Ils se disputent souvent.</td><td>They argue often.</td><td>Social — reciprocal</td></tr><tr><td>78</td><td>Nous nous retrouvons au café.</td><td>We meet (up) at the café.</td><td>Social — reciprocal</td></tr><tr><td>79</td><td>Je me demande pourquoi.</td><td>I wonder why.</td><td>Mental</td></tr><tr><td>80</td><td>Elle se souvient de tout.</td><td>She remembers everything.</td><td>Memory</td></tr><tr><td>81</td><td>Tu t'inquiètes trop.</td><td>You worry too much.</td><td>Emotion</td></tr><tr><td>82</td><td>Il se met en colère facilement.</td><td>He gets angry easily.</td><td>Emotion</td></tr><tr><td>83</td><td>On se promène le long de la Seine.</td><td>We walk along the Seine.</td><td>Movement</td></tr><tr><td>84</td><td>Je m'arrête ici.</td><td>I stop here.</td><td>Movement</td></tr><tr><td>85</td><td>Vous vous trompez.</td><td>You're mistaken.</td><td>Error/judgment</td></tr></tbody></table>
+<p><strong>🧠 CATEGORIES OF REFLEXIVE VERBS:</strong></p>
+<table><thead><tr><th>Category</th><th>Examples</th><th>Logic</th></tr></thead><tbody><tr><td><strong>Self-care / Routine</strong></td><td>se laver, se lever, se coucher</td><td>Action on yourself</td></tr><tr><td><strong>Emotion / State</strong></td><td>se sentir, s'ennuyer, s'inquiéter, se fâcher</td><td>Emotional self-experience</td></tr><tr><td><strong>Mental / Cognitive</strong></td><td>se demander, se souvenir, se tromper</td><td>Internal mental action</td></tr><tr><td><strong>Social / Reciprocal</strong></td><td>se parler, se disputer, se retrouver, s'entendre</td><td>Action between people</td></tr><tr><td><strong>Movement</strong></td><td>se promener, s'arrêter, s'asseoir, se lever</td><td>Body movement</td></tr><tr><td><strong>Identity</strong></td><td>s'appeler</td><td>Being called/named</td></tr><tr><td><strong>Change of state</strong></td><td>se mettre à, s'endormir, se réveiller</td><td>Becoming/starting</td></tr></tbody></table>
+<p>→ Reflexive verbs are NOT just about washing and dressing<br>
+→ They cover <strong>emotions, social interactions, mental processes, and movement</strong><br>
+→ You CANNOT speak natural French without them</p>
+<p><strong>🧠 Sentence 71 — "JE M'APPELLE":</strong><br>
+→ You've been using this since the beginning<br>
+→ Now you understand WHY: it's reflexive → "I call <strong>myself</strong> Marc"<br>
+→ → "Comment tu **t'**appelles ?" = How do you call yourself? = What's your name?<br>
+→ → "Il **s'**appelle Pierre." = He calls himself Pierre. = His name is Pierre.<br>
+→ This was always a reflexive verb — now you see the full picture</p>
+<hr>
+<h2>🔹 BLOCK I — Agreement Exceptions in Passé Composé</h2>
+<p><em>Scenario: Understanding when the past participle does NOT agree</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English Meaning</th><th>Agreement?</th></tr></thead><tbody><tr><td>86</td><td>Elle s'est lavée.</td><td>She washed (herself).</td><td>✅ YES — agrees with "elle"</td></tr><tr><td>87</td><td>Elle s'est lavé les mains.</td><td>She washed her hands.</td><td>❌ NO — "les mains" is the direct object</td></tr><tr><td>88</td><td>Ils se sont regardés.</td><td>They looked at each other.</td><td>✅ YES — "se" is direct object</td></tr><tr><td>89</td><td>Ils se sont parlé.</td><td>They talked to each other.</td><td>❌ NO — "se" is indirect object (parler À)</td></tr><tr><td>90</td><td>Elles se sont téléphoné.</td><td>They (f) called each other.</td><td>❌ NO — "se" is indirect object (téléphoner À)</td></tr></tbody></table>
+<p><strong>🧠 THE ADVANCED AGREEMENT RULE (simplified for this level):</strong></p>
+<p>→ In reflexive passé composé, the participle agrees with the <strong>reflexive pronoun</strong> only if that pronoun is a <strong>direct object</strong><br>
+→ If there's ANOTHER direct object in the sentence → the reflexive pronoun is indirect → <strong>NO agreement</strong></p>
+<table><thead><tr><th>Situation</th><th>Agreement?</th><th>Example</th></tr></thead><tbody><tr><td>Reflexive pronoun = direct object</td><td>✅ YES</td><td>Elle <strong>s'<strong>est lavé</strong>e</strong>. (She washed herself — "se" = direct object)</td></tr><tr><td>Another direct object exists</td><td>❌ NO</td><td>Elle **s'**est lavé les mains. (She washed her hands — "les mains" = direct object, "se" = indirect)</td></tr><tr><td>Verb normally takes "à"</td><td>❌ NO</td><td>Ils <strong>se</strong> sont parlé. (parler <strong>à</strong> → "se" = indirect)</td></tr></tbody></table>
+<p>→ <strong>At this level:</strong> don't stress about this rule too much<br>
+→ The simple version: <strong>agree with the subject</strong> in most cases<br>
+→ The exception with body parts (sentence 87) is the most common one you'll encounter<br>
+→ → ✅ Elle s'est lavé<strong>e</strong>. (herself)<br>
+→ → ✅ Elle s'est lavé les mains. (her hands — no agreement on "lavé")</p>
+<hr>
+<h2>🔹 BLOCK J — Full Day: Reflexive Verbs from Morning to Night</h2>
+<p><em>Scenario: Your complete day using reflexive verbs — all tenses combined</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>Tense</th><th>Time of Day</th></tr></thead><tbody><tr><td>91</td><td>Ce matin, je me suis réveillé à sept heures.</td><td>PC</td><td>Wake up</td></tr><tr><td>92</td><td>Je me suis levé tout de suite.</td><td>PC</td><td>Getting up</td></tr><tr><td>93</td><td>Je me suis douché en cinq minutes.</td><td>PC</td><td>Shower</td></tr><tr><td>94</td><td>Je me suis brossé les dents.</td><td>PC</td><td>Teeth</td></tr><tr><td>95</td><td>Je me suis habillé rapidement.</td><td>PC</td><td>Dressing</td></tr><tr><td>96</td><td>Je me suis dépêché parce que j'étais en retard.</td><td>PC + IMP (P11)</td><td>Rushing</td></tr><tr><td>97</td><td>Maintenant, je me repose un peu.</td><td>Present</td><td>Afternoon rest</td></tr><tr><td>98</td><td>Je me sens bien.</td><td>Present</td><td>Current state</td></tr><tr><td>99</td><td>Ce soir, je vais me promener au parc.</td><td>Futur proche</td><td>Evening plan</td></tr><tr><td>100</td><td>Après, je vais me coucher tôt.</td><td>Futur proche</td><td>Bedtime plan</td></tr><tr><td>101</td><td>Demain, je ne vais pas me lever tôt.</td><td>Neg futur proche</td><td>Tomorrow plan</td></tr><tr><td>102</td><td>Lève-toi, il est l'heure !</td><td>Impératif</td><td>Waking someone</td></tr><tr><td>103</td><td>Dépêche-toi, on va être en retard !</td><td>Impératif + futur proche</td><td>Rushing someone</td></tr><tr><td>104</td><td>Ne te couche pas trop tard.</td><td>Neg impératif</td><td>Evening advice</td></tr><tr><td>105</td><td>On s'est bien amusés ce week-end.</td><td>PC</td><td>Weekend recap</td></tr></tbody></table>
+<p><strong>🧠 Notice the TENSE FLOW:</strong><br>
+→ Past morning → PC reflexive (sentences 91-96)<br>
+→ Current moment → Present reflexive (sentences 97-98)<br>
+→ Future plans → Futur proche reflexive (sentences 99-101)<br>
+→ Commands → Impératif reflexive (sentences 102-104)<br>
+→ Past assessment → PC reflexive (sentence 105)<br>
+→ <strong>Reflexive verbs work in EVERY tense</strong> — same pronoun system, different verb tense</p>
+<hr>
+<h1>✅ WHAT SHOULD DO</h1>
+<p>→ <strong>Memorize the 20 essential reflexive verbs</strong> (Step 1) — these cover 90% of daily reflexive usage<br>
+→ <strong>Memorize the reflexive pronouns:</strong> me, te, se, nous, vous, se (and their contracted forms m', t', s')<br>
+→ <strong>Always use ÊTRE in passé composé</strong> for reflexive verbs — no exceptions<br>
+→ <strong>Use definite articles (not possessives) for body parts</strong> with reflexive verbs → "les mains" not "mes mains"<br>
+→ <strong>Practice pronoun placement in futur proche:</strong> aller + pronoun + infinitif → "Je vais <strong>me</strong> lever"<br>
+→ <strong>Practice impératif forms:</strong> affirmative = after (Lève-<strong>toi</strong>) / negative = before (<strong>Ne te</strong> lève pas)<br>
+→ <strong>Connect to Project 1</strong> — "Je m'appelle" was always reflexive — now you understand why<br>
+→ <strong>Connect to Project 2</strong> — the verb conjugation is identical — you just add a reflexive pronoun<br>
+→ <strong>Connect to Project 9</strong> — reflexive PC uses être — same agreement rules as DR MRS VANDERTRAMP<br>
+→ <strong>Connect to Project 13</strong> — impératif reflexive was previewed there (Lève-toi, Dépêche-toi)</p>
+<hr>
+<h1>❌ WHAT SHOULD NOT DO</h1>
+<p>→ ❌ Do NOT forget the reflexive pronoun → <del>"Je lève à sept heures"</del> = "I lift at seven" → "Je <strong>me</strong> lève" ✅<br>
+→ ❌ Do NOT use avoir in reflexive passé composé → <del>"Je m'ai levé"</del> → "Je <strong>me suis</strong> levé" ✅<br>
+→ ❌ Do NOT use possessive adjectives for body parts → <del>"Je me lave <strong>mes</strong> mains"</del> → "Je me lave <strong>les</strong> mains" ✅<br>
+→ ❌ Do NOT place the reflexive pronoun before aller in futur proche → <del>"Je <strong>me</strong> vais lever"</del> → "Je vais <strong>me</strong> lever" ✅<br>
+→ ❌ Do NOT forget te → toi in affirmative impératif → <del>"Lève-te !"</del> → "Lève-<strong>toi</strong> !" ✅<br>
+→ ❌ Do NOT keep toi in negative impératif → <del>"Ne toi lève pas !"</del> → "Ne <strong>te</strong> lève pas !" ✅<br>
+→ ❌ Do NOT drop the reflexive pronoun with verbs that REQUIRE it → <del>"Je souviens"</del> doesn't exist → "Je <strong>me</strong> souviens" ✅<br>
+→ ❌ Do NOT assume all reflexive verbs mean "myself" → some are reciprocal (each other) or have changed meanings<br>
+→ ❌ Do NOT agree the participle when there's a separate direct object → "Elle s'est lavé les mains" (no -e on lavé)</p>
+<hr>
+<h1>🔀 WHEN TO USE WHAT</h1>
+<h2>Reflexive Pronoun Placement by Tense</h2>
+<table><thead><tr><th>Tense</th><th>Pronoun Position</th><th>Example</th></tr></thead><tbody><tr><td><strong>Present</strong></td><td>Before verb</td><td>Je <strong>me</strong> lève.</td></tr><tr><td><strong>Passé composé</strong></td><td>Before être</td><td>Je <strong>me suis</strong> levé(e).</td></tr><tr><td><strong>Futur proche</strong></td><td>Before infinitif</td><td>Je vais <strong>me</strong> lever.</td></tr><tr><td><strong>Impératif (affirm)</strong></td><td>After verb + hyphen</td><td><strong>Lève-toi !</strong></td></tr><tr><td><strong>Impératif (neg)</strong></td><td>Before verb (normal)</td><td><strong>Ne te lève pas !</strong></td></tr></tbody></table>
+<h2>Negation with Reflexive Verbs by Tense</h2>
+<table><thead><tr><th>Tense</th><th>Negation Structure</th></tr></thead><tbody><tr><td><strong>Present</strong></td><td>Je <strong>ne me</strong> lève <strong>pas</strong>.</td></tr><tr><td><strong>Passé composé</strong></td><td>Je <strong>ne me suis pas</strong> levé(e).</td></tr><tr><td><strong>Futur proche</strong></td><td>Je <strong>ne vais pas me</strong> lever.</td></tr><tr><td><strong>Impératif</strong></td><td><strong>Ne te</strong> lève <strong>pas</strong> !</td></tr></tbody></table>
+<h2>Reflexive vs. Non-Reflexive: When to Add "SE"</h2>
+<table><thead><tr><th>Meaning</th><th>Use Reflexive?</th><th>Example</th></tr></thead><tbody><tr><td>Action on <strong>yourself</strong></td><td>✅ YES</td><td>Je <strong>me</strong> lave. (I wash myself.)</td></tr><tr><td>Action on <strong>something else</strong></td><td>❌ NO</td><td>Je lave la voiture. (I wash the car.)</td></tr><tr><td>Action <strong>between people</strong></td><td>✅ YES (reciprocal)</td><td>Ils <strong>se</strong> parlent. (They talk to each other.)</td></tr><tr><td>Action on <strong>another person</strong></td><td>❌ NO</td><td>Je réveille l'enfant. (I wake the child.)</td></tr><tr><td>Verb that <strong>only exists</strong> with se</td><td>✅ YES (always)</td><td>Je <strong>me</strong> souviens. (I remember.)</td></tr><tr><td>Verb that <strong>changes meaning</strong> with se</td><td>✅ YES (for new meaning)</td><td>Je <strong>me</strong> demande... (I wonder...)</td></tr></tbody></table>
+<hr>
+<h1>🚫 WHEN NOT TO USE</h1>
+<p>→ Do NOT make a verb reflexive when the action is on someone/something ELSE<br>
+→ → "I wash the car" = Je lave la voiture. (NOT <del>Je me lave la voiture</del>)<br>
+→ → "I wake the baby" = Je réveille le bébé. (NOT <del>Je me réveille le bébé</del>)<br>
+→ Do NOT use reflexive verbs in passive meaning at this level<br>
+→ → "Ça se mange" = "That can be eaten" / "That's edible" — this is a different use<br>
+→ → You'll encounter this later — for now, focus on self-directed and reciprocal uses<br>
+→ Do NOT add "se" to verbs that aren't reflexive in French just because English uses "self"<br>
+→ → "I enjoy myself" = Je <strong>m'amuse</strong> ✅ (reflexive in French too)<br>
+→ → "I help myself" = Je <strong>me</strong> sers ✅ (reflexive)<br>
+→ → "I see myself" = Je <strong>me</strong> vois ✅ (reflexive)<br>
+→ → But: "I bought myself a book" = Je <strong>me</strong> suis acheté un livre (indirect reflexive — advanced)</p>
+<hr>
+<h1>⚠️ COMMON PITFALLS AND FAILURE MODES</h1>
+<table><thead><tr><th>Pitfall</th><th>What Learners Do Wrong</th><th>Correct Version</th><th>Why</th></tr></thead><tbody><tr><td><strong>Missing pronoun</strong></td><td>Je lève à sept heures.</td><td>Je <strong>me</strong> lève à sept heures.</td><td>Without "me" = I lift (something)</td></tr><tr><td><strong>Avoir in PC</strong></td><td>Je m'ai levé.</td><td>Je <strong>me suis</strong> levé.</td><td>Reflexive PC = always être</td></tr><tr><td><strong>Possessive + body part</strong></td><td>Je me lave mes mains.</td><td>Je me lave <strong>les</strong> mains.</td><td>Reflexive pronoun implies ownership</td></tr><tr><td><strong>Pronoun before aller (FP)</strong></td><td>Je me vais lever.</td><td>Je vais <strong>me</strong> lever.</td><td>Pronoun goes before infinitif in FP</td></tr><tr><td><strong>Te in affirmative impératif</strong></td><td>Lève-te !</td><td>Lève-<strong>toi</strong> !</td><td>te → toi after verb in affirmative</td></tr><tr><td><strong>Toi in negative impératif</strong></td><td>Ne toi lève pas !</td><td>Ne <strong>te</strong> lève pas !</td><td>toi → te in negative (normal position)</td></tr><tr><td><strong>No agreement in PC</strong></td><td>Elle s'est levé. (missing -e)</td><td>Elle s'est levé<strong>e</strong>.</td><td>Être PC = agree with subject</td></tr><tr><td><strong>Wrong agreement with body part</strong></td><td>Elle s'est lavée les mains.</td><td>Elle s'est lavé les mains.</td><td>Separate direct object = no agreement</td></tr><tr><td><strong>Forgetting contraction</strong></td><td>Je me habille.</td><td>Je **m'**habille.</td><td>me → m' before vowel</td></tr><tr><td><strong>Reciprocal confusion</strong></td><td>"Ils se regardent" = they look at themselves</td><td>Could mean either</td><td>Context: "each other" OR "themselves"</td></tr><tr><td><strong>Always-reflexive verbs</strong></td><td>Je souviens de toi.</td><td>Je <strong>me</strong> souviens de toi.</td><td>Se souvenir requires "se" always</td></tr></tbody></table>
+<hr>
+<h1>🔑 KEY TAKEAWAY</h1>
+<blockquote>
+<p><strong>Project 9 → Passé composé (what happened)</strong><br>
+<strong>Project 10 → Imparfait (how things were)</strong><br>
+<strong>Project 11 → PC + IMP together (storytelling)</strong><br>
+<strong>Project 12 → Futur proche (what's going to happen)</strong><br>
+<strong>Project 13 → Impératif (telling people what to do)</strong><br>
+<strong>Project 14 → Reflexive verbs (actions on yourself / each other)</strong></p>
+<p>Reflexive verbs add a <strong>reflexive pronoun</strong> between the subject and verb:</p>
+<code>Subject + me/te/se/nous/vous/se + VERB</code>
+<p>Five critical rules:</p>
+<ol>
+<li><strong>Pronouns match the subject</strong> → je=me, tu=te, il=se, nous=nous, vous=vous, ils=se</li>
+<li><strong>Always use ÊTRE in passé composé</strong> → past participle agrees with subject</li>
+<li><strong>Body parts use definite articles</strong> → "les mains" not "mes mains"</li>
+<li><strong>Futur proche:</strong> pronoun before infinitif → je vais <strong>me</strong> lever</li>
+<li><strong>Impératif:</strong> affirmative = after (toi) / negative = before (te)</li>
+</ol>
+<p><strong>Reflexive verbs are ESSENTIAL — not optional.</strong><br>
+→ Morning routine, evening routine, emotions, social interactions, movement<br>
+→ You cannot describe a single day in French without them</p>
+<p><strong>You now have a COMPLETE Phase 2 toolkit:</strong><br>
+→ Past events (PC) + Past descriptions (IMP) + Stories (PC+IMP)<br>
+→ Future plans (futur proche) + Commands (impératif) + Daily routines (reflexive verbs)</p>
+<p><strong>But you can only state facts — you cannot COMPARE things.</strong><br>
+→ "This restaurant is <strong>better</strong> than that one."<br>
+→ "She is <strong>taller</strong> than me."<br>
+→ "This is the <strong>best</strong> movie I've ever seen."</p>
+</blockquote>
+<hr>
+<h1>🌉 BRIDGE TO PROJECT 15</h1>
+<blockquote>
+<p>You can now describe your complete day: <strong>"Je me suis levé, je me suis douché, je me suis habillé..."</strong><br>
+But at lunch, a friend asks: <strong>"Quel restaurant est mieux, celui-ci ou celui-là ?"</strong> (Which restaurant is better, this one or that one?)<br>
+You want to say:<br>
+→ "This restaurant is <strong>better</strong> than that one."<br>
+→ "The food is <strong>more</strong> expensive <strong>than</strong> last time."<br>
+→ "This is the <strong>best</strong> crêpe in Lyon."<br>
+→ "He runs <strong>faster</strong> than me."<br>
+→ You need <strong>comparatif and superlatif</strong> — the structures for comparing things<br>
+→ Project 15: <strong>"Better, Worse, the Same"</strong> — the final project of Phase 2<br>
+→ After this, you'll be ready for Phase 3: Medium — Professional Techniques</p>
+</blockquote>
+<hr>
+<h1>✅ PROJECT 14 COMPLETE</h1>
+<blockquote>
+<p><strong>Are you ready for PROJECT 15: "Better, Worse, the Same"?</strong><br>
+→ ~100 sentences covering <strong>comparisons and superlatives</strong><br>
+→ Scenario: Comparing restaurants, cities, people, experiences<br>
+→ Final project of Phase 2 — completes the Easy level before entering Medium territory</p>
+</blockquote>
+</div>
+</div>
+
+<!-- ========== data-index="31" ========== -->
+
+        </div>
+
+        <div class="nav-bar">
+            <a href="project-13.html" class="nav-button prev">← Previous Chapter</a>
+            <div class="page-info">
+                <a href="index.html" class="nav-button home">📚 Table of Contents</a><br>
+                <span style="margin-top:8px;display:block">Chapter 14 of 50</span>
+            </div>
+            <a href="project-15.html" class="nav-button next">Next Chapter →</a>
+        </div>
+    </div>
+
+    
+    <div id="progress-track"><div id="progress-fill"></div></div>
+    <div id="progress-pct">0%</div>
+
+
+    <script>
+    const fill = document.getElementById('progress-fill');
+    const pct  = document.getElementById('progress-pct');
+    function updateProgress() {
+        const scrollTop = window.scrollY;
+        const docHeight = document.body.scrollHeight - window.innerHeight;
+        const scrolled  = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+        fill.style.height = scrolled + '%';
+        pct.textContent   = Math.round(scrolled) + '%';
+    }
+    window.addEventListener('scroll', updateProgress);
+    updateProgress();
+
+    document.addEventListener('keydown', function(e) {
+        if (['INPUT','TEXTAREA'].includes(document.activeElement.tagName)) return;
+        if (e.key === 'ArrowLeft') {
+            const b = document.querySelector('.nav-button.prev');
+            if (b && !b.classList.contains('disabled')) window.location.href = b.href;
+        }
+        if (e.key === 'ArrowRight') {
+            const b = document.querySelector('.nav-button.next');
+            if (b && !b.classList.contains('disabled')) window.location.href = b.href;
+        }
+    });
+    </script>
+
+</body>
+</html>

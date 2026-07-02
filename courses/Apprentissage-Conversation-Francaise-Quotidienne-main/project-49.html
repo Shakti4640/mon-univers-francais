@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="images/favicon.png">
+    <title>Project 49: "As They Say in French" — French Daily Sentences</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.75;
+            color: #1a202c;
+            background-color: #f7fafc;
+        }
+        .container {
+            max-width: 1800px;
+            margin: 0 auto;
+            background: white;
+            min-height: 100vh;
+            box-shadow: 0 0 30px rgba(0,0,0,0.08);
+            padding: 48px 52px;
+        }
+        
+        .content { max-width: 1700px; margin: 0 auto; color: #1a202c; }
+        .content h1 {
+            color: #1a202c; margin: 32px 0 20px;
+            padding-bottom: 12px;
+            border-bottom: 4px solid #3b82f6;
+            font-size: 2.1em;
+            font-weight: 700;
+        }
+        .content h2 {
+            color: #1a202c; margin: 28px 0 16px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #60a5fa;
+            font-size: 1.6em;
+            font-weight: 600;
+        }
+        .content h3 { color: #1a202c; margin: 22px 0 12px; font-size: 1.3em; font-weight: 600; }
+        .content h4 { color: #2d3748; margin: 18px 0 10px; font-size: 1.1em; font-weight: 600; }
+        .content p  { margin-bottom: 16px; line-height: 1.8; color: #1a202c; }
+        .content ul, .content ol { margin: 12px 0 18px 30px; color: #1a202c; }
+        .content li { margin-bottom: 8px; line-height: 1.75; color: #1a202c; }
+        .content hr { border: none; border-top: 2px solid #e2e8f0; margin: 26px 0; }
+        .content pre {
+            background: #f7fafc !important;
+            border: 1px solid #cbd5e0 !important;
+            border-left: 4px solid #3b82f6 !important;
+            padding: 18px !important; overflow-x: auto; margin: 18px 0; border-radius: 6px;
+            font-family: 'Consolas','Monaco','Courier New',monospace !important;
+            font-size: 0.9em !important;
+        }
+        .content pre:not([style*="color"]) { color: #1a202c !important; }
+        .content code {
+            font-family: 'Consolas','Monaco','Courier New',monospace !important;
+            font-size: 0.88em !important;
+        }
+        .content code:not(pre code) {
+            background: #dbeafe !important;
+            color: #1a202c !important;
+            padding: 2px 6px;
+            border-radius: 3px;
+        }
+        .content pre code { background: transparent !important; padding: 0; }
+        .content table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+        .content th {
+            background: linear-gradient(135deg, #3b82f6 0%, #60a5fa 100%);
+            color: white; padding: 12px 16px; text-align: left;
+            font-weight: 600;
+        }
+        .content td { padding: 11px 16px; border: 1px solid #e2e8f0; color: #1a202c; }
+        .content tr:nth-child(even) td { background: #eff6ff; }
+        .content blockquote {
+            border-left: 4px solid #3b82f6; background: #eff6ff;
+            padding: 14px 20px; margin: 18px 0; border-radius: 0 6px 6px 0;
+            color: #1a202c;
+        }
+        .content strong { color: #1a202c; font-weight: 600; }
+        .px-2 { padding: 0; }
+        .chat-message { background: transparent; padding: 0; margin: 0; }
+
+        /* Bottom nav bar only */
+        .nav-bar {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 24px 0;
+            margin-top: 50px;
+            border-top: 3px solid #60a5fa;
+        }
+        .nav-button {
+            display: inline-flex; align-items: center; gap: 8px;
+            padding: 12px 26px;
+            background: linear-gradient(135deg, #3b82f6 0%, #60a5fa 100%);
+            color: white !important; text-decoration: none;
+            border-radius: 8px; font-weight: 600; font-size: 0.95em;
+            transition: all 0.2s;
+            box-shadow: 0 2px 8px rgba(59,130,246,0.35);
+        }
+        .nav-button:hover { transform: translateY(-2px); box-shadow: 0 4px 14px rgba(59,130,246,0.5); }
+        .nav-button.disabled { background: #cbd5e1; box-shadow: none; pointer-events: none; }
+        .nav-button.home {
+            background: linear-gradient(135deg, #ef4444 0%, #f87171 100%);
+            box-shadow: 0 2px 8px rgba(239,68,68,0.35);
+        }
+        .nav-button.home:hover { box-shadow: 0 4px 14px rgba(239,68,68,0.5); }
+        .page-info { color: #718096; font-size: 0.9em; text-align: center; }
+
+        /* Progress bar */
+        #progress-track {
+            position: fixed; top: 20px; right: 20px;
+            width: 10px; height: 150px;
+            background: rgba(59,130,246,0.2);
+            border: 2px solid #3b82f6;
+            border-radius: 6px; overflow: hidden; z-index: 1000;
+        }
+        #progress-fill {
+            width: 100%;
+            background: linear-gradient(180deg, #3b82f6, #2563eb);
+            height: 0%;
+            transition: height 0.15s ease;
+        }
+        #progress-pct {
+            position: fixed; top: 0px; right: 16px;
+            color: #2563eb; font-size: 14px; font-weight: bold;
+            z-index: 1001;
+            text-shadow: 0 1px 2px rgba(255,255,255,0.9);
+            line-height: 20px;
+        }
+
+    </style>
+<link rel="stylesheet" href="assets/chapters.css?v=20260421203847"><script src="assets/chapters.js?v=20260421203847" defer></script>
+</head>
+<body>
+    <div class="container">
+        <div class="content">
+            <div class="chat-message" data-index="9">
+<div class="px-2"><h1>🔴 PROJECT 49: "As They Say in French"</h1>
+<h2><em>You speak perfect French — but you never quote anything, reference anything, or season your speech with wisdom — and French people can tell something is missing</em></h2>
+<hr>
+<h1>🎯 THE HYPOTHETICAL PROBLEM</h1>
+<p>→ You're at a dinner party in Lyon — 8 French people around a table<br>
+→ The conversation flows — politics, relationships, work frustrations, life philosophy<br>
+→ Someone says something about patience and another responds: <strong>"Petit à petit, l'oiseau fait son nid."</strong><br>
+→ Everyone nods — it landed perfectly<br>
+→ Someone complains about a betrayal and another says: <strong>"Qui se ressemble s'assemble."</strong><br>
+→ Laughter, agreement<br>
+→ You have opinions — you have vocabulary — you have grammar — but you NEVER drop these cultural anchors<br>
+→ You sound <strong>competent but culturally empty</strong><br>
+→ Like someone who speaks English perfectly but never says "better safe than sorry" or "the grass is always greener"</p>
+<p><strong>The deeper problem:</strong><br>
+→ French proverbs are not decorative — they are <strong>conversational tools</strong><br>
+→ They end arguments<br>
+→ They summarize complex feelings in 5 words<br>
+→ They signal <strong>"I belong to this culture — I think in this language"</strong><br>
+→ French people use them <strong>daily</strong> — not just in literature<br>
+→ If you can place the right proverb at the right moment → people forget you're not native</p>
+<p><strong>What this project covers:</strong><br>
+→ 100 proverbs/sayings/cultural references<br>
+→ Each one placed inside a <strong>real conversational context</strong><br>
+→ You learn not just the saying — but <strong>WHEN to deploy it</strong><br>
+→ Organized by <strong>life situation</strong> — not alphabetically</p>
+<hr>
+<h1>🔍 HOW TO APPROACH IT</h1>
+<p>→ Don't memorize proverbs as isolated phrases<br>
+→ Memorize them as <strong>responses to situations</strong><br>
+→ Think: <strong>"When someone complains about X → I can say Y"</strong></p>
+<p><strong>The deployment formula:</strong></p>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>SITUATION (someone says/does something)
+</span>    → YOUR RESPONSE: Context sentence + PROVERB + Optional comment</code></pre></div>
+<p><strong>Example:</strong><br>
+→ Friend: "I tried to change my boss's mind but it's impossible."<br>
+→ You: <strong>"Bah oui, on ne fait pas boire un âne qui n'a pas soif."</strong> (You can't make a donkey drink if it's not thirsty.)</p>
+<p>→ The proverb IS your argument — no further explanation needed</p>
+<p><strong>Categories covered in this project:</strong></p>
+<table><thead><tr><th>Block</th><th>Life Category</th><th># of Sayings</th></tr></thead><tbody><tr><td>A</td><td>Patience &amp; Time</td><td>10</td></tr><tr><td>B</td><td>Money &amp; Work</td><td>10</td></tr><tr><td>C</td><td>Relationships &amp; Trust</td><td>10</td></tr><tr><td>D</td><td>Mistakes &amp; Learning</td><td>10</td></tr><tr><td>E</td><td>Caution &amp; Risk</td><td>10</td></tr><tr><td>F</td><td>Appearances &amp; Reality</td><td>10</td></tr><tr><td>G</td><td>Effort &amp; Determination</td><td>10</td></tr><tr><td>H</td><td>Food &amp; Daily Life (Cultural)</td><td>10</td></tr><tr><td>I</td><td>Acceptance &amp; Philosophy</td><td>10</td></tr><tr><td>J</td><td>Conversation Closers &amp; Universal Truths</td><td>10</td></tr></tbody></table>
+<hr>
+<h1>🔧 HOW CAN WE SOLVE IT</h1>
+<p>→ Each sentence = <strong>the proverb embedded in a real conversational exchange</strong><br>
+→ Format: Situation → Conversational sentence containing the proverb → Literal meaning → Real meaning → When to use it</p>
+<hr>
+<h1>✅ THE 100 SENTENCES</h1>
+<hr>
+<h2>🔹 BLOCK A — PATIENCE &amp; TIME</h2>
+<h3><em>When someone is impatient, rushing, or frustrated by slow progress</em></h3>
+<hr>
+<p><strong>① Petit à petit, l'oiseau fait son nid.</strong></p>
+<table><thead><tr><th>Element</th><th>Content</th></tr></thead><tbody><tr><td><strong>Literal</strong></td><td>Little by little, the bird builds its nest</td></tr><tr><td><strong>Real meaning</strong></td><td>Steady effort leads to results — be patient</td></tr><tr><td><strong>Situation</strong></td><td>A friend is frustrated that their business is growing slowly</td></tr><tr><td><strong>In conversation</strong></td><td>"T'inquiète pas, petit à petit, l'oiseau fait son nid. Ça va venir."</td></tr><tr><td><strong>Gear (Project 48)</strong></td><td>🟡 Gear 3–4 — works in all casual and semi-formal contexts</td></tr></tbody></table>
+<hr>
+<p><strong>② Rome ne s'est pas faite en un jour.</strong></p>
+<table><thead><tr><th>Element</th><th>Content</th></tr></thead><tbody><tr><td><strong>Literal</strong></td><td>Rome wasn't built in a day</td></tr><tr><td><strong>Real meaning</strong></td><td>Great things take time — identical to English version</td></tr><tr><td><strong>Situation</strong></td><td>A colleague is stressed about a long project</td></tr><tr><td><strong>In conversation</strong></td><td>"Écoute, Rome ne s'est pas faite en un jour, on avance bien."</td></tr><tr><td><strong>Gear</strong></td><td>🟢🔵 Gear 2–4 — universally understood, any register</td></tr></tbody></table>
+<hr>
+<p><strong>③ Tout vient à point à qui sait attendre.</strong></p>
+<table><thead><tr><th>Element</th><th>Content</th></tr></thead><tbody><tr><td><strong>Literal</strong></td><td>Everything comes at the right time to whoever knows how to wait</td></tr><tr><td><strong>Real meaning</strong></td><td>Patience is rewarded — good things come to those who wait</td></tr><tr><td><strong>Situation</strong></td><td>A friend hasn't gotten the promotion yet — feeling anxious</td></tr><tr><td><strong>In conversation</strong></td><td>"Tout vient à point à qui sait attendre. Ton tour viendra."</td></tr><tr><td><strong>Gear</strong></td><td>🟢🔵 Gear 2–4 — slightly more elegant, works in professional encouragement too</td></tr></tbody></table>
+<hr>
+<p><strong>④ Il ne faut pas mettre la charrue avant les bœufs.</strong></p>
+<table><thead><tr><th>Element</th><th>Content</th></tr></thead><tbody><tr><td><strong>Literal</strong></td><td>Don't put the plow before the oxen</td></tr><tr><td><strong>Real meaning</strong></td><td>Don't skip steps — do things in the right order</td></tr><tr><td><strong>Situation</strong></td><td>Someone is planning their wedding before even proposing</td></tr><tr><td><strong>In conversation</strong></td><td>"Attends, faut pas mettre la charrue avant les bœufs, t'as même pas demandé !"</td></tr><tr><td><strong>Gear</strong></td><td>🟡 Gear 3–4 — casual, often said with humor</td></tr></tbody></table>
+<hr>
+<p><strong>⑤ Rien ne sert de courir, il faut partir à point.</strong></p>
+<table><thead><tr><th>Element</th><th>Content</th></tr></thead><tbody><tr><td><strong>Literal</strong></td><td>There's no use running, you must leave on time</td></tr><tr><td><strong>Real meaning</strong></td><td>Rushing doesn't help — proper planning beats speed</td></tr><tr><td><strong>Source</strong></td><td>La Fontaine's fable — "Le Lièvre et la Tortue" (The Hare and the Tortoise)</td></tr><tr><td><strong>Situation</strong></td><td>Someone is panicking and doing everything last minute</td></tr><tr><td><strong>In conversation</strong></td><td>"Rien ne sert de courir, il faut partir à point. La prochaine fois, on s'organise mieux."</td></tr><tr><td><strong>Gear</strong></td><td>🟢🔵 Gear 2–4 — literary reference but universally known</td></tr></tbody></table>
+<hr>
+<p><strong>⑥ Chaque chose en son temps.</strong></p>
+<table><thead><tr><th>Element</th><th>Content</th></tr></thead><tbody><tr><td><strong>Literal</strong></td><td>Each thing in its time</td></tr><tr><td><strong>Real meaning</strong></td><td>Everything has its moment — don't force timing</td></tr><tr><td><strong>Situation</strong></td><td>Someone wants to do everything at once</td></tr><tr><td><strong>In conversation</strong></td><td>"Calme-toi, chaque chose en son temps, on va pas tout faire aujourd'hui."</td></tr><tr><td><strong>Gear</strong></td><td>🟡 Gear 3–4 — very common daily expression</td></tr></tbody></table>
+<hr>
+<p><strong>⑦ Paris ne s'est pas fait en un jour.</strong></p>
+<table><thead><tr><th>Element</th><th>Content</th></tr></thead><tbody><tr><td><strong>Literal</strong></td><td>Paris wasn't made in a day</td></tr><tr><td><strong>Real meaning</strong></td><td>French variation of "Rome wasn't built in a day" — more patriotic/humorous</td></tr><tr><td><strong>Situation</strong></td><td>Same as ② but with a French twist — often used humorously</td></tr><tr><td><strong>In conversation</strong></td><td>"Paris ne s'est pas fait en un jour, hein ! Laisse-toi le temps."</td></tr><tr><td><strong>Gear</strong></td><td>🟡 Gear 3–4 — casual, sometimes humorous</td></tr></tbody></table>
+<hr>
+<p><strong>⑧ Le temps, c'est de l'argent.</strong></p>
+<table><thead><tr><th>Element</th><th>Content</th></tr></thead><tbody><tr><td><strong>Literal</strong></td><td>Time is money</td></tr><tr><td><strong>Real meaning</strong></td><td>Don't waste time — identical to English</td></tr><tr><td><strong>Situation</strong></td><td>Someone is procrastinating or wasting time on unimportant things</td></tr><tr><td><strong>In conversation</strong></td><td>"Allez, on avance, le temps c'est de l'argent !"</td></tr><tr><td><strong>Gear</strong></td><td>🟢🟡 Gear 3–4 — common, sometimes said half-jokingly</td></tr></tbody></table>
+<hr>
+<p><strong>⑨ Il faut laisser le temps au temps.</strong></p>
+<table><thead><tr><th>Element</th><th>Content</th></tr></thead><tbody><tr><td><strong>Literal</strong></td><td>You must let time have its time</td></tr><tr><td><strong>Real meaning</strong></td><td>Some things just need time — you can't accelerate everything</td></tr><tr><td><strong>Situation</strong></td><td>A friend is recovering from a breakup and wants to feel better immediately</td></tr><tr><td><strong>In conversation</strong></td><td>"Faut laisser le temps au temps. Ça ira mieux, j'te promets."</td></tr><tr><td><strong>Gear</strong></td><td>🟡 Gear 3–4 — warm, comforting, very commonly used</td></tr></tbody></table>
+<hr>
+<p><strong>⑩ Qui vivra verra.</strong></p>
+<table><thead><tr><th>Element</th><th>Content</th></tr></thead><tbody><tr><td><strong>Literal</strong></td><td>Who will live will see</td></tr><tr><td><strong>Real meaning</strong></td><td>Time will tell — we'll see what happens</td></tr><tr><td><strong>Situation</strong></td><td>Nobody knows the outcome of a situation — uncertainty</td></tr><tr><td><strong>In conversation</strong></td><td>"On sait pas comment ça va finir. Qui vivra verra."</td></tr><tr><td><strong>Gear</strong></td><td>🟢🟡 Gear 2–4 — short, elegant, works everywhere</td></tr></tbody></table>
+<hr>
+<h2>🔹 BLOCK B — MONEY &amp; WORK</h2>
+<h3><em>When discussing finances, career, ambition, or economic reality</em></h3>
+<hr>
+<p><strong>⑪ L'argent ne fait pas le bonheur.</strong></p>
+<table><thead><tr><th>Element</th><th>Content</th></tr></thead><tbody><tr><td><strong>Literal</strong></td><td>Money doesn't make happiness</td></tr><tr><td><strong>Real meaning</strong></td><td>Money can't buy happiness</td></tr><tr><td><strong>Situation</strong></td><td>Someone envies a rich person's life</td></tr><tr><td><strong>In conversation</strong></td><td>"L'argent ne fait pas le bonheur. Regarde, il a tout et il est malheureux."</td></tr><tr><td><strong>Common addition</strong></td><td>"...mais il y contribue." (…but it helps.) — the ironic French follow-up that EVERYONE adds</td></tr><tr><td><strong>Gear</strong></td><td>🟢🟡 All gears — universal</td></tr></tbody></table>
+<hr>
+<p><strong>⑫ On n'a rien sans rien.</strong></p>
+<table><thead><tr><th>Element</th><th>Content</th></tr></thead><tbody><tr><td><strong>Literal</strong></td><td>You have nothing without nothing</td></tr><tr><td><strong>Real meaning</strong></td><td>No pain, no gain — nothing comes free</td></tr><tr><td><strong>Situation</strong></td><td>Someone wants results without effort</td></tr><tr><td><strong>In conversation</strong></td><td>"Tu veux réussir sans bosser ? On n'a rien sans rien, mon pote."</td></tr><tr><td><strong>Gear</strong></td><td>🟡 Gear 3–4 — direct, motivational</td></tr></tbody></table>
+<hr>
+<p><strong>⑬ C'est en forgeant qu'on devient forgeron.</strong></p>
+<table><thead><tr><th>Element</th><th>Content</th></tr></thead><tbody><tr><td><strong>Literal</strong></td><td>It's by forging that you become a blacksmith</td></tr><tr><td><strong>Real meaning</strong></td><td>Practice makes perfect</td></tr><tr><td><strong>Situation</strong></td><td>Someone is discouraged because they're bad at something new</td></tr><tr><td><strong>In conversation</strong></td><td>"C'est normal au début. C'est en forgeant qu'on devient forgeron."</td></tr><tr><td><strong>Gear</strong></td><td>🟢🔵 Gear 2–4 — elegant, encouraging, works in professional mentoring</td></tr></tbody></table>
+<hr>
+<p><strong>⑭ Il ne faut pas vendre la peau de l'ours avant de l'avoir tué.</strong></p>
+<table><thead><tr><th>Element</th><th>Content</th></tr></thead><tbody><tr><td><strong>Literal</strong></td><td>Don't sell the bear's skin before you've killed it</td></tr><tr><td><strong>Real meaning</strong></td><td>Don't count your chickens before they hatch — don't celebrate prematurely</td></tr><tr><td><strong>Situation</strong></td><td>A friend is already spending money from a deal that isn't signed yet</td></tr><tr><td><strong>In conversation</strong></td><td>"Faut pas vendre la peau de l'ours avant de l'avoir tué. Attends que ce soit signé."</td></tr><tr><td><strong>Gear</strong></td><td>🟡 Gear 3–4 — very common, often shortened to just "faut pas vendre la peau de l'ours"</td></tr></tbody></table>
+<hr>
+<p><strong>⑮ L'habit ne fait pas le moine.</strong></p>
+<table><thead><tr><th>Element</th><th>Content</th></tr></thead><tbody><tr><td><strong>Literal</strong></td><td>The clothing doesn't make the monk</td></tr><tr><td><strong>Real meaning</strong></td><td>Don't judge by appearances — clothes don't define the person</td></tr><tr><td><strong>Situation</strong></td><td>Someone judges a person based on how they dress</td></tr><tr><td><strong>In conversation</strong></td><td>"Il a l'air de rien comme ça, mais l'habit ne fait pas le moine. Il est brillant."</td></tr><tr><td><strong>Gear</strong></td><td>🟢🟡 Gear 2–4 — widely used, all ages</td></tr></tbody></table>
+<hr>
+<p><strong>⑯ Les affaires sont les affaires.</strong></p>
+<table><thead><tr><th>Element</th><th>Content</th></tr></thead><tbody><tr><td><strong>Literal</strong></td><td>Business is business</td></tr><tr><td><strong>Real meaning</strong></td><td>In business, personal feelings don't apply — pragmatic</td></tr><tr><td><strong>Situation</strong></td><td>Someone feels guilty about a tough business decision</td></tr><tr><td><strong>In conversation</strong></td><td>"C'est dur, mais les affaires sont les affaires. Faut pas mélanger."</td></tr><tr><td><strong>Gear</strong></td><td>🟢🔵 Gear 2–4 — professional and casual contexts</td></tr></tbody></table>
+<hr>
+<p><strong>⑰ Qui paie ses dettes s'enrichit.</strong></p>
+<table><thead><tr><th>Element</th><th>Content</th></tr></thead><tbody><tr><td><strong>Literal</strong></td><td>Who pays their debts gets richer</td></tr><tr><td><strong>Real meaning</strong></td><td>Settling obligations frees you for growth — financial wisdom</td></tr><tr><td><strong>Situation</strong></td><td>Encouraging someone to pay off loans before investing</td></tr><tr><td><strong>In conversation</strong></td><td>"Rembourse d'abord ton prêt. Comme on dit, qui paie ses dettes s'enrichit."</td></tr><tr><td><strong>Gear</strong></td><td>🟢 Gear 2–3 — slightly older saying, but still used</td></tr></tbody></table>
+<hr>
+<p><strong>⑱ Le travail, c'est la santé.</strong></p>
+<table><thead><tr><th>Element</th><th>Content</th></tr></thead><tbody><tr><td><strong>Literal</strong></td><td>Work is health</td></tr><tr><td><strong>Real meaning</strong></td><td>Work keeps you healthy/active — often said IRONICALLY</td></tr><tr><td><strong>Common ironic addition</strong></td><td>"...ne rien faire, c'est la conserver." (…doing nothing preserves it.) — Henri Salvador song</td></tr><tr><td><strong>Situation</strong></td><td>Someone complains about having too much work</td></tr><tr><td><strong>In conversation</strong></td><td>"Le travail c'est la santé... ne rien faire c'est la conserver !" (said with a wink)</td></tr><tr><td><strong>Gear</strong></td><td>🟡 Gear 3–4 — always humorous/ironic</td></tr></tbody></table>
+<hr>
+<p><strong>⑲ Métro, boulot, dodo.</strong></p>
+<table><thead><tr><th>Element</th><th>Content</th></tr></thead><tbody><tr><td><strong>Literal</strong></td><td>Metro, work, sleep</td></tr><tr><td><strong>Real meaning</strong></td><td>The monotonous daily grind — commute, work, sleep, repeat</td></tr><tr><td><strong>Source</strong></td><td>Famous phrase describing Parisian working life — originally from Pierre Béarn (1951)</td></tr><tr><td><strong>Situation</strong></td><td>Someone describes their boring routine</td></tr><tr><td><strong>In conversation</strong></td><td>"En ce moment c'est métro, boulot, dodo. J'ai besoin de vacances."</td></tr><tr><td><strong>Gear</strong></td><td>🟡🔴 Gear 3–5 — very common cultural reference, all French people know it</td></tr></tbody></table>
+<hr>
+<p><strong>⑳ L'occasion fait le larron.</strong></p>
+<table><thead><tr><th>Element</th><th>Content</th></tr></thead><tbody><tr><td><strong>Literal</strong></td><td>Opportunity makes the thief</td></tr><tr><td><strong>Real meaning</strong></td><td>Given the right circumstances, anyone might do something wrong — temptation creates crime</td></tr><tr><td><strong>Situation</strong></td><td>Discussing why someone cheated, stole, or cut corners</td></tr><tr><td><strong>In conversation</strong></td><td>"Je le défends pas, mais bon, l'occasion fait le larron."</td></tr><tr><td><strong>Gear</strong></td><td>🟢 Gear 2–3 — somewhat literary but well-known</td></tr></tbody></table>
+<hr>
+<h2>🔹 BLOCK C — RELATIONSHIPS &amp; TRUST</h2>
+<h3><em>When discussing love, friendship, betrayal, social dynamics</em></h3>
+<hr>
+<p><strong>㉑ Qui se ressemble s'assemble.</strong></p>
+<table><thead><tr><th>Element</th><th>Content</th></tr></thead><tbody><tr><td><strong>Literal</strong></td><td>Those who resemble each other gather together</td></tr><tr><td><strong>Real meaning</strong></td><td>Birds of a feather flock together</td></tr><tr><td><strong>Situation</strong></td><td>Two similar people become friends — or two troublemakers team up</td></tr><tr><td><strong>In conversation</strong></td><td>"Regarde ces deux-là ensemble. Qui se ressemble s'assemble !"</td></tr><tr><td><strong>Gear</strong></td><td>🟢🟡 Gear 2–4 — very common</td></tr></tbody></table>
+<hr>
+<p><strong>㉒ Loin des yeux, loin du cœur.</strong></p>
+<table><thead><tr><th>Element</th><th>Content</th></tr></thead><tbody><tr><td><strong>Literal</strong></td><td>Far from the eyes, far from the heart</td></tr><tr><td><strong>Real meaning</strong></td><td>Out of sight, out of mind — distance weakens feelings</td></tr><tr><td><strong>Situation</strong></td><td>A long-distance relationship is struggling</td></tr><tr><td><strong>In conversation</strong></td><td>"C'est triste mais c'est souvent vrai, loin des yeux, loin du cœur."</td></tr><tr><td><strong>Gear</strong></td><td>🟢🟡 Gear 2–4 — bittersweet, used in emotional conversations</td></tr></tbody></table>
+<hr>
+<p><strong>㉓ Il vaut mieux être seul que mal accompagné.</strong></p>
+<table><thead><tr><th>Element</th><th>Content</th></tr></thead><tbody><tr><td><strong>Literal</strong></td><td>It's better to be alone than in bad company</td></tr><tr><td><strong>Real meaning</strong></td><td>Solitude is better than a toxic relationship</td></tr><tr><td><strong>Situation</strong></td><td>A friend just left a bad relationship and feels lonely</td></tr><tr><td><strong>In conversation</strong></td><td>"T'as bien fait de partir. Il vaut mieux être seul que mal accompagné."</td></tr><tr><td><strong>Gear</strong></td><td>🟢🟡 Gear 2–4 — very commonly used as comfort after breakups</td></tr></tbody></table>
+<hr>
+<p><strong>㉔ La confiance se gagne, elle ne se donne pas.</strong></p>
+<table><thead><tr><th>Element</th><th>Content</th></tr></thead><tbody><tr><td><strong>Literal</strong></td><td>Trust is earned, not given</td></tr><tr><td><strong>Real meaning</strong></td><td>You must prove yourself worthy of trust</td></tr><tr><td><strong>Situation</strong></td><td>Someone new wants immediate trust in a team</td></tr><tr><td><strong>In conversation</strong></td><td>"Laisse-lui le temps de faire ses preuves. La confiance se gagne, elle se donne pas."</td></tr><tr><td><strong>Gear</strong></td><td>🟢🟡 Gear 2–4 — wise, measured</td></tr></tbody></table>
+<hr>
+<p><strong>㉕ Les murs ont des oreilles.</strong></p>
+<table><thead><tr><th>Element</th><th>Content</th></tr></thead><tbody><tr><td><strong>Literal</strong></td><td>The walls have ears</td></tr><tr><td><strong>Real meaning</strong></td><td>Be careful what you say — someone might be listening</td></tr><tr><td><strong>Situation</strong></td><td>You're about to share a secret in a public place</td></tr><tr><td><strong>In conversation</strong></td><td>"Chut, pas ici. Les murs ont des oreilles."</td></tr><tr><td><strong>Gear</strong></td><td>🟢🟡 Gear 2–4 — dramatic, conspiratorial tone, often half-humorous</td></tr></tbody></table>
+<hr>
+<p><strong>㉖ Dis-moi qui tu fréquentes, je te dirai qui tu es.</strong></p>
+<table><thead><tr><th>Element</th><th>Content</th></tr></thead><tbody><tr><td><strong>Literal</strong></td><td>Tell me who you hang out with, I'll tell you who you are</td></tr><tr><td><strong>Real meaning</strong></td><td>You're judged by the company you keep</td></tr><tr><td><strong>Situation</strong></td><td>Someone's new friends are a bad influence</td></tr><tr><td><strong>In conversation</strong></td><td>"Fais attention à tes fréquentations. Dis-moi qui tu fréquentes, je te dirai qui tu es."</td></tr><tr><td><strong>Gear</strong></td><td>🟢🟡 Gear 2–4 — parental advice tone, but used between friends too</td></tr></tbody></table>
+<hr>
+<p><strong>㉗ On ne choisit pas sa famille.</strong></p>
+<table><thead><tr><th>Element</th><th>Content</th></tr></thead><tbody><tr><td><strong>Literal</strong></td><td>You don't choose your family</td></tr><tr><td><strong>Real meaning</strong></td><td>You're stuck with your family — accept it</td></tr><tr><td><strong>Situation</strong></td><td>Complaining about a difficult family member</td></tr><tr><td><strong>In conversation</strong></td><td>"Ouais, ton oncle est relou, mais bon, on choisit pas sa famille."</td></tr><tr><td><strong>Gear</strong></td><td>🟡 Gear 3–4 — resigned humor, very commonly used</td></tr></tbody></table>
+<hr>
+<p><strong>㉘ Qui aime bien châtie bien.</strong></p>
+<table><thead><tr><th>Element</th><th>Content</th></tr></thead><tbody><tr><td><strong>Literal</strong></td><td>Who loves well punishes well</td></tr><tr><td><strong>Real meaning</strong></td><td>Tough love — being hard on someone because you care</td></tr><tr><td><strong>Situation</strong></td><td>A parent or friend is being strict and the person complains</td></tr><tr><td><strong>In conversation</strong></td><td>"Elle est dure avec toi parce qu'elle t'aime. Qui aime bien châtie bien."</td></tr><tr><td><strong>Gear</strong></td><td>🟢🟡 Gear 2–4 — classic French saying</td></tr></tbody></table>
+<hr>
+<p><strong>㉙ Il faut tourner sept fois sa langue dans sa bouche avant de parler.</strong></p>
+<table><thead><tr><th>Element</th><th>Content</th></tr></thead><tbody><tr><td><strong>Literal</strong></td><td>You must turn your tongue seven times in your mouth before speaking</td></tr><tr><td><strong>Real meaning</strong></td><td>Think carefully before you speak — don't say something you'll regret</td></tr><tr><td><strong>Situation</strong></td><td>Someone just said something hurtful without thinking</td></tr><tr><td><strong>In conversation</strong></td><td>"Tu vois, t'aurais dû tourner sept fois ta langue dans ta bouche avant de dire ça."</td></tr><tr><td><strong>Gear</strong></td><td>🟢🟡 Gear 2–4 — often used as a gentle reproach</td></tr></tbody></table>
+<hr>
+<p><strong>㉚ La nuit porte conseil.</strong></p>
+<table><thead><tr><th>Element</th><th>Content</th></tr></thead><tbody><tr><td><strong>Literal</strong></td><td>The night brings advice</td></tr><tr><td><strong>Real meaning</strong></td><td>Sleep on it — things are clearer in the morning</td></tr><tr><td><strong>Situation</strong></td><td>Someone must make a big decision and is stressed</td></tr><tr><td><strong>In conversation</strong></td><td>"Décide pas ce soir. La nuit porte conseil. Demain tu verras plus clair."</td></tr><tr><td><strong>Gear</strong></td><td>🟢🟡 Gear 2–4 — comforting, wise, extremely common</td></tr></tbody></table>
+<hr>
+<h2>🔹 BLOCK D — MISTAKES &amp; LEARNING</h2>
+<h3><em>When someone fails, messes up, or needs encouragement after an error</em></h3>
+<hr>
+<p><strong>㉛ Errare humanum est.</strong> (Latin used in French)</p>
+<table><thead><tr><th>Element</th><th>Content</th></tr></thead><tbody><tr><td><strong>French version</strong></td><td>L'erreur est humaine.</td></tr><tr><td><strong>Literal</strong></td><td>Error is human</td></tr><tr><td><strong>Real meaning</strong></td><td>Everyone makes mistakes — it's natural</td></tr><tr><td><strong>Situation</strong></td><td>Someone feels terrible about a mistake</td></tr><tr><td><strong>In conversation</strong></td><td>"T'en fais pas, l'erreur est humaine. L'important c'est de pas recommencer."</td></tr><tr><td><strong>Gear</strong></td><td>🟢🔵 Gear 2–4 — both Latin and French versions used</td></tr></tbody></table>
+<hr>
+<p><strong>㉜ C'est en tombant qu'on apprend à marcher.</strong></p>
+<table><thead><tr><th>Element</th><th>Content</th></tr></thead><tbody><tr><td><strong>Literal</strong></td><td>It's by falling that you learn to walk</td></tr><tr><td><strong>Real meaning</strong></td><td>Failure is part of learning</td></tr><tr><td><strong>Situation</strong></td><td>Someone failed at their first attempt</td></tr><tr><td><strong>In conversation</strong></td><td>"C'est normal de se planter au début. C'est en tombant qu'on apprend à marcher."</td></tr><tr><td><strong>Gear</strong></td><td>🟡 Gear 3–4 — encouraging, warm</td></tr></tbody></table>
+<hr>
+<p><strong>㉝ Faute avouée est à moitié pardonnée.</strong></p>
+<table><thead><tr><th>Element</th><th>Content</th></tr></thead><tbody><tr><td><strong>Literal</strong></td><td>A confessed fault is half forgiven</td></tr><tr><td><strong>Real meaning</strong></td><td>Admitting your mistake is the first step toward forgiveness</td></tr><tr><td><strong>Situation</strong></td><td>Someone is afraid to confess they did something wrong</td></tr><tr><td><strong>In conversation</strong></td><td>"Dis-lui la vérité. Faute avouée est à moitié pardonnée."</td></tr><tr><td><strong>Gear</strong></td><td>🟢🟡 Gear 2–4 — wise counsel</td></tr></tbody></table>
+<hr>
+<p><strong>㉞ On apprend de ses erreurs.</strong></p>
+<table><thead><tr><th>Element</th><th>Content</th></tr></thead><tbody><tr><td><strong>Literal</strong></td><td>You learn from your mistakes</td></tr><tr><td><strong>Real meaning</strong></td><td>Same as English — mistakes are lessons</td></tr><tr><td><strong>Situation</strong></td><td>Post-failure encouragement</td></tr><tr><td><strong>In conversation</strong></td><td>"C'est raté cette fois, mais on apprend de ses erreurs. La prochaine sera meilleure."</td></tr><tr><td><strong>Gear</strong></td><td>🟢🟡 Gear 2–4 — standard encouragement</td></tr></tbody></table>
+<hr>
+<p><strong>㉟ Chat échaudé craint l'eau froide.</strong></p>
+<table><thead><tr><th>Element</th><th>Content</th></tr></thead><tbody><tr><td><strong>Literal</strong></td><td>A scalded cat fears cold water</td></tr><tr><td><strong>Real meaning</strong></td><td>Once burned, twice shy — past bad experience makes you overly cautious</td></tr><tr><td><strong>Situation</strong></td><td>Someone refuses to try something because they were hurt before</td></tr><tr><td><strong>In conversation</strong></td><td>"Je comprends qu'elle veuille plus s'engager. Chat échaudé craint l'eau froide."</td></tr><tr><td><strong>Gear</strong></td><td>🟢🟡 Gear 2–4 — empathetic, understanding</td></tr></tbody></table>
+<hr>
+<p><strong>㊱ Les mêmes causes produisent les mêmes effets.</strong></p>
+<table><thead><tr><th>Element</th><th>Content</th></tr></thead><tbody><tr><td><strong>Literal</strong></td><td>The same causes produce the same effects</td></tr><tr><td><strong>Real meaning</strong></td><td>If you don't change your approach, you'll get the same bad result</td></tr><tr><td><strong>Situation</strong></td><td>Someone keeps making the same mistake in relationships, work, etc.</td></tr><tr><td><strong>In conversation</strong></td><td>"Tu refais exactement pareil et tu t'étonnes ? Les mêmes causes produisent les mêmes effets."</td></tr><tr><td><strong>Gear</strong></td><td>🟢🟡 Gear 2–4 — logical, sometimes blunt</td></tr></tbody></table>
+<hr>
+<p><strong>㊲ Après la pluie, le beau temps.</strong></p>
+<table><thead><tr><th>Element</th><th>Content</th></tr></thead><tbody><tr><td><strong>Literal</strong></td><td>After the rain, good weather</td></tr><tr><td><strong>Real meaning</strong></td><td>After hard times come good times — things will get better</td></tr><tr><td><strong>Situation</strong></td><td>Comforting someone going through a rough patch</td></tr><tr><td><strong>In conversation</strong></td><td>"Courage, après la pluie le beau temps. Ça va passer."</td></tr><tr><td><strong>Gear</strong></td><td>🟢🟡 Gear 2–4 — comforting, hopeful, very common</td></tr></tbody></table>
+<hr>
+<p><strong>㊳ Ce qui ne tue pas rend plus fort.</strong></p>
+<table><thead><tr><th>Element</th><th>Content</th></tr></thead><tbody><tr><td><strong>Literal</strong></td><td>What doesn't kill you makes you stronger</td></tr><tr><td><strong>Real meaning</strong></td><td>Identical to the Nietzsche quote used in English</td></tr><tr><td><strong>Situation</strong></td><td>Someone survived a difficult experience</td></tr><tr><td><strong>In conversation</strong></td><td>"T'as survécu à ça, t'es plus fort maintenant. Ce qui ne tue pas rend plus fort."</td></tr><tr><td><strong>Gear</strong></td><td>🟢🟡 Gear 2–4 — motivational, sometimes ironic</td></tr></tbody></table>
+<hr>
+<p><strong>㊴ Il n'y a que les imbéciles qui ne changent pas d'avis.</strong></p>
+<table><thead><tr><th>Element</th><th>Content</th></tr></thead><tbody><tr><td><strong>Literal</strong></td><td>Only idiots never change their mind</td></tr><tr><td><strong>Real meaning</strong></td><td>It's intelligent to change your opinion when presented with new evidence</td></tr><tr><td><strong>Situation</strong></td><td>Someone is embarrassed about changing their position</td></tr><tr><td><strong>In conversation</strong></td><td>"T'as le droit de changer d'avis. Y'a que les imbéciles qui changent pas d'avis."</td></tr><tr><td><strong>Gear</strong></td><td>🟢🟡 Gear 2–4 — reassuring, often used in debates</td></tr></tbody></table>
+<hr>
+<p><strong>㊵ Mieux vaut tard que jamais.</strong></p>
+<table><thead><tr><th>Element</th><th>Content</th></tr></thead><tbody><tr><td><strong>Literal</strong></td><td>Better late than never</td></tr><tr><td><strong>Real meaning</strong></td><td>Identical to English — doing something late is still better than not doing it</td></tr><tr><td><strong>Situation</strong></td><td>Someone finally does something they should have done long ago</td></tr><tr><td><strong>In conversation</strong></td><td>"Tu t'es enfin inscrit ! Mieux vaut tard que jamais."</td></tr><tr><td><strong>Gear</strong></td><td>🟢🟡 Gear 2–4 — universal, light humor</td></tr></tbody></table>
+<hr>
+<h2>🔹 BLOCK E — CAUTION &amp; RISK</h2>
+<h3><em>When discussing danger, warnings, or careful decision-making</em></h3>
+<hr>
+<p><strong>㊶ Prudence est mère de sûreté.</strong></p>
+<table><thead><tr><th>Element</th><th>Content</th></tr></thead><tbody><tr><td><strong>Literal</strong></td><td>Caution is the mother of safety</td></tr><tr><td><strong>Real meaning</strong></td><td>Better safe than sorry — being careful prevents problems</td></tr><tr><td><strong>Situation</strong></td><td>Advising someone to take precautions before a risky action</td></tr><tr><td><strong>In conversation</strong></td><td>"Prends une assurance quand même. Prudence est mère de sûreté."</td></tr><tr><td><strong>Gear</strong></td><td>🟢🔵 Gear 2–3 — slightly formal, wise</td></tr></tbody></table>
+<hr>
+<p><strong>㊷ Mieux vaut prévenir que guérir.</strong></p>
+<table><thead><tr><th>Element</th><th>Content</th></tr></thead><tbody><tr><td><strong>Literal</strong></td><td>Better to prevent than to cure</td></tr><tr><td><strong>Real meaning</strong></td><td>Prevention is better than dealing with consequences</td></tr><tr><td><strong>Situation</strong></td><td>Health advice, safety measures, preparation</td></tr><tr><td><strong>In conversation</strong></td><td>"Va chez le médecin maintenant, mieux vaut prévenir que guérir."</td></tr><tr><td><strong>Gear</strong></td><td>🟢🟡 Gear 2–4 — extremely common, all contexts</td></tr></tbody></table>
+<hr>
+<p><strong>㊸ La curiosité est un vilain défaut.</strong></p>
+<table><thead><tr><th>Element</th><th>Content</th></tr></thead><tbody><tr><td><strong>Literal</strong></td><td>Curiosity is an ugly flaw</td></tr><tr><td><strong>Real meaning</strong></td><td>Curiosity killed the cat — mind your own business</td></tr><tr><td><strong>Situation</strong></td><td>Someone is being nosy — asking too many personal questions</td></tr><tr><td><strong>In conversation</strong></td><td>"Ah non, j'te dirai pas ! La curiosité est un vilain défaut." (said with a smile)</td></tr><tr><td><strong>Gear</strong></td><td>🟡 Gear 3–4 — playful, teasing, very commonly used to deflect questions</td></tr></tbody></table>
+<hr>
+<p><strong>㊹ Méfie-toi de l'eau qui dort.</strong></p>
+<table><thead><tr><th>Element</th><th>Content</th></tr></thead><tbody><tr><td><strong>Literal</strong></td><td>Beware of sleeping water</td></tr><tr><td><strong>Real meaning</strong></td><td>Still waters run deep — quiet people can be dangerous or surprising</td></tr><tr><td><strong>Situation</strong></td><td>The quiet colleague turns out to be the most strategic</td></tr><tr><td><strong>In conversation</strong></td><td>"Lui ? Il dit rien mais il voit tout. Méfie-toi de l'eau qui dort."</td></tr><tr><td><strong>Gear</strong></td><td>🟢🟡 Gear 2–4 — warning tone, dramatic</td></tr></tbody></table>
+<hr>
+<p><strong>㊺ Il ne faut pas jouer avec le feu.</strong></p>
+<table><thead><tr><th>Element</th><th>Content</th></tr></thead><tbody><tr><td><strong>Literal</strong></td><td>You must not play with fire</td></tr><tr><td><strong>Real meaning</strong></td><td>Don't take dangerous risks — identical to English</td></tr><tr><td><strong>Situation</strong></td><td>Someone is flirting with danger — cheating, lying to authorities, risky investments</td></tr><tr><td><strong>In conversation</strong></td><td>"Arrête, tu vas avoir des problèmes. Faut pas jouer avec le feu."</td></tr><tr><td><strong>Gear</strong></td><td>🟢🟡 Gear 2–4 — serious warning</td></tr></tbody></table>
+<hr>
+<p><strong>㊻ Quand on parle du loup, on en voit la queue.</strong></p>
+<table><thead><tr><th>Element</th><th>Content</th></tr></thead><tbody><tr><td><strong>Literal</strong></td><td>When you speak of the wolf, you see its tail</td></tr><tr><td><strong>Real meaning</strong></td><td>Speak of the devil — the person you're talking about shows up</td></tr><tr><td><strong>Situation</strong></td><td>You're talking about someone and they walk in</td></tr><tr><td><strong>In conversation</strong></td><td>"Oh, quand on parle du loup ! On parlait justement de toi."</td></tr><tr><td><strong>Gear</strong></td><td>🟡 Gear 3–4 — often shortened to just "Quand on parle du loup !"</td></tr><tr><td><strong>Usage note</strong></td><td>Almost ALWAYS cut short — nobody says the full version — just "Quand on parle du loup !"</td></tr></tbody></table>
+<hr>
+<p><strong>㊼ Un homme averti en vaut deux.</strong></p>
+<table><thead><tr><th>Element</th><th>Content</th></tr></thead><tbody><tr><td><strong>Literal</strong></td><td>A warned man is worth two</td></tr><tr><td><strong>Real meaning</strong></td><td>Forewarned is forearmed — knowledge of danger doubles your strength</td></tr><tr><td><strong>Situation</strong></td><td>Giving someone a heads-up about a tricky situation</td></tr><tr><td><strong>In conversation</strong></td><td>"Je te préviens, le client est difficile. Un homme averti en vaut deux."</td></tr><tr><td><strong>Gear</strong></td><td>🟢🔵 Gear 2–3 — professional and casual</td></tr></tbody></table>
+<hr>
+<p><strong>㊽ Qui ne risque rien n'a rien.</strong></p>
+<table><thead><tr><th>Element</th><th>Content</th></tr></thead><tbody><tr><td><strong>Literal</strong></td><td>Who risks nothing has nothing</td></tr><tr><td><strong>Real meaning</strong></td><td>Nothing ventured, nothing gained — you must take risks</td></tr><tr><td><strong>Situation</strong></td><td>Encouraging someone to take a leap — job change, confession of feelings, business launch</td></tr><tr><td><strong>In conversation</strong></td><td>"Lance-toi ! Qui ne risque rien n'a rien."</td></tr><tr><td><strong>Gear</strong></td><td>🟢🟡 Gear 2–4 — motivational, universally used</td></tr></tbody></table>
+<hr>
+<p><strong>㊾ Il ne faut pas courir deux lièvres à la fois.</strong></p>
+<table><thead><tr><th>Element</th><th>Content</th></tr></thead><tbody><tr><td><strong>Literal</strong></td><td>You must not chase two hares at the same time</td></tr><tr><td><strong>Real meaning</strong></td><td>Don't try to do two things at once — you'll fail at both — focus</td></tr><tr><td><strong>Situation</strong></td><td>Someone is juggling two opportunities and doing both badly</td></tr><tr><td><strong>In conversation</strong></td><td>"Choisis. Faut pas courir deux lièvres à la fois, tu vas tout rater."</td></tr><tr><td><strong>Gear</strong></td><td>🟢🟡 Gear 2–4 — practical advice</td></tr></tbody></table>
+<hr>
+<p><strong>㊿ Qui sème le vent récolte la tempête.</strong></p>
+<table><thead><tr><th>Element</th><th>Content</th></tr></thead><tbody><tr><td><strong>Literal</strong></td><td>Who sows the wind reaps the storm</td></tr><tr><td><strong>Real meaning</strong></td><td>If you cause trouble, you'll face worse consequences — what goes around comes around</td></tr><tr><td><strong>Situation</strong></td><td>Someone who was dishonest or aggressive is now facing consequences</td></tr><tr><td><strong>In conversation</strong></td><td>"Il a triché tout le monde et maintenant tout le monde le lâche. Qui sème le vent récolte la tempête."</td></tr><tr><td><strong>Gear</strong></td><td>🟢🔵 Gear 2–4 — serious, moral judgment</td></tr></tbody></table>
+<hr>
+<h2>🔹 BLOCK F — APPEARANCES &amp; REALITY</h2>
+<h3><em>When things aren't what they seem — deception, illusion, surface vs. depth</em></h3>
+<hr>
+<p><strong>51 | Tout ce qui brille n'est pas or.</strong></p>
+<table><thead><tr><th>Element</th><th>Content</th></tr></thead><tbody><tr><td><strong>Literal</strong></td><td>All that glitters is not gold</td></tr><tr><td><strong>Real meaning</strong></td><td>Appearances are deceptive — identical to English</td></tr><tr><td><strong>Situation</strong></td><td>Someone is dazzled by a flashy but superficial opportunity</td></tr><tr><td><strong>In conversation</strong></td><td>"Fais attention, tout ce qui brille n'est pas or. Vérifie avant de signer."</td></tr><tr><td><strong>Gear</strong></td><td>🟢🟡 Gear 2–4</td></tr></tbody></table>
+<hr>
+<p><strong>52 | Les apparences sont trompeuses.</strong></p>
+<table><thead><tr><th>Element</th><th>Content</th></tr></thead><tbody><tr><td><strong>Literal</strong></td><td>Appearances are deceptive</td></tr><tr><td><strong>Real meaning</strong></td><td>Direct statement — don't judge by what you see</td></tr><tr><td><strong>Situation</strong></td><td>Someone looks harmless but is manipulative — or looks tough but is kind</td></tr><tr><td><strong>In conversation</strong></td><td>"Elle a l'air douce comme ça, mais les apparences sont trompeuses."</td></tr><tr><td><strong>Gear</strong></td><td>🟢🟡 Gear 2–4 — direct, no metaphor</td></tr></tbody></table>
+<hr>
+<p><strong>53 | Il ne faut pas se fier aux apparences.</strong></p>
+<table><thead><tr><th>Element</th><th>Content</th></tr></thead><tbody><tr><td><strong>Literal</strong></td><td>You must not trust appearances</td></tr><tr><td><strong>Real meaning</strong></td><td>Same as 52 — more instructive tone</td></tr><tr><td><strong>Situation</strong></td><td>Teaching someone a life lesson about judgment</td></tr><tr><td><strong>In conversation</strong></td><td>"Faut pas se fier aux apparences. J'ai appris ça à mes dépens."</td></tr><tr><td><strong>Gear</strong></td><td>🟢🟡 Gear 2–4 — "à mes dépens" = the hard way (idiomatic — links to Project 42)</td></tr></tbody></table>
+<hr>
+<p><strong>54 | La beauté est dans les yeux de celui qui regarde.</strong></p>
+<table><thead><tr><th>Element</th><th>Content</th></tr></thead><tbody><tr><td><strong>Literal</strong></td><td>Beauty is in the eyes of the one who looks</td></tr><tr><td><strong>Real meaning</strong></td><td>Beauty is subjective — in the eye of the beholder</td></tr><tr><td><strong>Situation</strong></td><td>Disagreeing about whether someone/something is beautiful</td></tr><tr><td><strong>In conversation</strong></td><td>"Moi je trouve ça magnifique. La beauté est dans les yeux de celui qui regarde."</td></tr><tr><td><strong>Gear</strong></td><td>🟢🟡 Gear 2–4 — philosophical, elegant</td></tr></tbody></table>
+<hr>
+<p><strong>55 | On ne juge pas un livre à sa couverture.</strong></p>
+<table><thead><tr><th>Element</th><th>Content</th></tr></thead><tbody><tr><td><strong>Literal</strong></td><td>You don't judge a book by its cover</td></tr><tr><td><strong>Real meaning</strong></td><td>Identical to English — don't judge by surface</td></tr><tr><td><strong>Situation</strong></td><td>Someone dismisses a person/thing based on first impression</td></tr><tr><td><strong>In conversation</strong></td><td>"Donne-lui une chance. On juge pas un livre à sa couverture."</td></tr><tr><td><strong>Gear</strong></td><td>🟢🟡 Gear 2–4 — modern usage, widely understood</td></tr></tbody></table>
+<hr>
+<p><strong>56 | C'est la goutte d'eau qui fait déborder le vase.</strong></p>
+<table><thead><tr><th>Element</th><th>Content</th></tr></thead><tbody><tr><td><strong>Literal</strong></td><td>It's the drop of water that makes the vase overflow</td></tr><tr><td><strong>Real meaning</strong></td><td>The straw that broke the camel's back — the last small thing that triggers an explosion</td></tr><tr><td><strong>Situation</strong></td><td>Someone finally snaps after a series of small annoyances</td></tr><tr><td><strong>In conversation</strong></td><td>"C'est la goutte d'eau qui a fait déborder le vase. J'en pouvais plus."</td></tr><tr><td><strong>Gear</strong></td><td>🟢🟡 Gear 2–4 — extremely common in daily French</td></tr><tr><td><strong>Usage note</strong></td><td>Often shortened to just "C'est la goutte d'eau !" or "La goutte de trop !"</td></tr></tbody></table>
+<hr>
+<p><strong>57 | Il n'y a pas de fumée sans feu.</strong></p>
+<table><thead><tr><th>Element</th><th>Content</th></tr></thead><tbody><tr><td><strong>Literal</strong></td><td>There's no smoke without fire</td></tr><tr><td><strong>Real meaning</strong></td><td>Where there are rumors, there's probably some truth — identical to English</td></tr><tr><td><strong>Situation</strong></td><td>Discussing gossip or accusations</td></tr><tr><td><strong>In conversation</strong></td><td>"Bon, les rumeurs c'est les rumeurs, mais y'a pas de fumée sans feu quand même."</td></tr><tr><td><strong>Gear</strong></td><td>🟢🟡 Gear 2–4</td></tr></tbody></table>
+<hr>
+<p><strong>58 | Chassez le naturel, il revient au galop.</strong></p>
+<table><thead><tr><th>Element</th><th>Content</th></tr></thead><tbody><tr><td><strong>Literal</strong></td><td>Chase away the natural, it comes back at a gallop</td></tr><tr><td><strong>Real meaning</strong></td><td>A person's true nature always resurfaces — you can't change who you really are</td></tr><tr><td><strong>Situation</strong></td><td>Someone pretended to change but reverted to old habits</td></tr><tr><td><strong>In conversation</strong></td><td>"Il a recommencé, évidemment. Chassez le naturel, il revient au galop."</td></tr><tr><td><strong>Gear</strong></td><td>🟢🔵 Gear 2–4 — literary origin (Destouches), but very commonly used</td></tr></tbody></table>
+<hr>
+<p><strong>59 | Les bons comptes font les bons amis.</strong></p>
+<table><thead><tr><th>Element</th><th>Content</th></tr></thead><tbody><tr><td><strong>Literal</strong></td><td>Good accounts make good friends</td></tr><tr><td><strong>Real meaning</strong></td><td>Clear financial dealings preserve friendships — settle debts between friends</td></tr><tr><td><strong>Situation</strong></td><td>Splitting a bill, lending money, shared expenses</td></tr><tr><td><strong>In conversation</strong></td><td>"Je te rembourse maintenant. Les bons comptes font les bons amis."</td></tr><tr><td><strong>Gear</strong></td><td>🟢🟡 Gear 2–4 — practical wisdom, very commonly used when money is involved between friends</td></tr></tbody></table>
+<hr>
+<p><strong>60 | À bon entendeur, salut.</strong></p>
+<table><thead><tr><th>Element</th><th>Content</th></tr></thead><tbody><tr><td><strong>Literal</strong></td><td>To the good listener, greetings (salvation)</td></tr><tr><td><strong>Real meaning</strong></td><td>A word to the wise — if you're smart, you'll take this warning</td></tr><tr><td><strong>Situation</strong></td><td>Ending a warning — "I've said what I needed to say, take it or leave it"</td></tr><tr><td><strong>In conversation</strong></td><td>"Je te préviens une dernière fois. À bon entendeur, salut."</td></tr><tr><td><strong>Gear</strong></td><td>🟢🔵 Gear 2–4 — dramatic, definitive, powerful conversation closer</td></tr></tbody></table>
+<hr>
+<h2>🔹 BLOCK G — EFFORT &amp; DETERMINATION</h2>
+<h3><em>When discussing persistence, giving up, fighting for goals</em></h3>
+<hr>
+<p><strong>61 | Vouloir, c'est pouvoir.</strong></p>
+<table><thead><tr><th>Element</th><th>Content</th></tr></thead><tbody><tr><td><strong>Literal</strong></td><td>To want is to be able</td></tr><tr><td><strong>Real meaning</strong></td><td>Where there's a will, there's a way</td></tr><tr><td><strong>In conversation</strong></td><td>"Tu penses que c'est impossible ? Vouloir, c'est pouvoir. Essaie."</td></tr><tr><td><strong>Gear</strong></td><td>🟢🟡 Gear 2–4 — motivational classic</td></tr></tbody></table>
+<hr>
+<p><strong>62 | Qui veut la fin veut les moyens.</strong></p>
+<table><thead><tr><th>Element</th><th>Content</th></tr></thead><tbody><tr><td><strong>Literal</strong></td><td>Who wants the end wants the means</td></tr><tr><td><strong>Real meaning</strong></td><td>If you want the result, you must accept what it takes to get there</td></tr><tr><td><strong>In conversation</strong></td><td>"Tu veux réussir le concours ? Alors bosse. Qui veut la fin veut les moyens."</td></tr><tr><td><strong>Gear</strong></td><td>🟢🟡 Gear 2–4 — demanding, no-nonsense</td></tr></tbody></table>
+<hr>
+<p><strong>63 | Pierre qui roule n'amasse pas mousse.</strong></p>
+<table><thead><tr><th>Element</th><th>Content</th></tr></thead><tbody><tr><td><strong>Literal</strong></td><td>A rolling stone gathers no moss</td></tr><tr><td><strong>Real meaning</strong></td><td>Someone who never settles doesn't build stability — identical to English</td></tr><tr><td><strong>In conversation</strong></td><td>"Il change de job tous les six mois. Pierre qui roule n'amasse pas mousse."</td></tr><tr><td><strong>Gear</strong></td><td>🟢 Gear 2–3 — slightly literary but well-known</td></tr></tbody></table>
+<hr>
+<p><strong>64 | Aide-toi et le ciel t'aidera.</strong></p>
+<table><thead><tr><th>Element</th><th>Content</th></tr></thead><tbody><tr><td><strong>Literal</strong></td><td>Help yourself and heaven will help you</td></tr><tr><td><strong>Real meaning</strong></td><td>God helps those who help themselves — take initiative</td></tr><tr><td><strong>Source</strong></td><td>La Fontaine — "Le Chartier embourbé"</td></tr><tr><td><strong>In conversation</strong></td><td>"Arrête d'attendre un miracle. Aide-toi et le ciel t'aidera."</td></tr><tr><td><strong>Gear</strong></td><td>🟢🟡 Gear 2–4 — tough love encouragement</td></tr></tbody></table>
+<hr>
+<p><strong>65 | À cœur vaillant, rien d'impossible.</strong></p>
+<table><thead><tr><th>Element</th><th>Content</th></tr></thead><tbody><tr><td><strong>Literal</strong></td><td>To a valiant heart, nothing is impossible</td></tr><tr><td><strong>Real meaning</strong></td><td>With courage, anything is possible</td></tr><tr><td><strong>Source</strong></td><td>Attributed to Jacques Cœur (15th century) — motto of French determination</td></tr><tr><td><strong>In conversation</strong></td><td>"T'as le courage, t'as le talent. À cœur vaillant, rien d'impossible."</td></tr><tr><td><strong>Gear</strong></td><td>🟢🔵 Gear 2–3 — slightly elevated, powerful</td></tr></tbody></table>
+<hr>
+<p><strong>66 | Il ne faut jamais dire jamais.</strong></p>
+<table><thead><tr><th>Element</th><th>Content</th></tr></thead><tbody><tr><td><strong>Literal</strong></td><td>You must never say never</td></tr><tr><td><strong>Real meaning</strong></td><td>Never say never — anything can happen</td></tr><tr><td><strong>In conversation</strong></td><td>"Tu penses que tu retourneras jamais là-bas ? Faut jamais dire jamais."</td></tr><tr><td><strong>Gear</strong></td><td>🟢🟡 Gear 2–4 — light, optimistic</td></tr></tbody></table>
+<hr>
+<p><strong>67 | Pas de nouvelles, bonnes nouvelles.</strong></p>
+<table><thead><tr><th>Element</th><th>Content</th></tr></thead><tbody><tr><td><strong>Literal</strong></td><td>No news, good news</td></tr><tr><td><strong>Real meaning</strong></td><td>If you haven't heard anything bad, things are probably fine</td></tr><tr><td><strong>Situation</strong></td><td>Waiting for test results, news from someone traveling</td></tr><tr><td><strong>In conversation</strong></td><td>"T'as toujours pas de réponse ? Pas de nouvelles, bonnes nouvelles."</td></tr><tr><td><strong>Gear</strong></td><td>🟢🟡 Gear 2–4 — comforting, extremely common</td></tr></tbody></table>
+<hr>
+<p><strong>68 | La fin justifie les moyens.</strong></p>
+<table><thead><tr><th>Element</th><th>Content</th></tr></thead><tbody><tr><td><strong>Literal</strong></td><td>The end justifies the means</td></tr><tr><td><strong>Real meaning</strong></td><td>The result excuses the method — even if questionable</td></tr><tr><td><strong>Situation</strong></td><td>Someone used a morally gray method but achieved a good outcome</td></tr><tr><td><strong>In conversation</strong></td><td>"C'était pas très élégant, mais bon, la fin justifie les moyens."</td></tr><tr><td><strong>Gear</strong></td><td>🟢🟡 Gear 2–4 — philosophical, sometimes controversial</td></tr></tbody></table>
+<hr>
+<p><strong>69 | Quand on veut, on peut.</strong></p>
+<table><thead><tr><th>Element</th><th>Content</th></tr></thead><tbody><tr><td><strong>Literal</strong></td><td>When you want, you can</td></tr><tr><td><strong>Real meaning</strong></td><td>Simpler version of "vouloir c'est pouvoir" — willpower = ability</td></tr><tr><td><strong>In conversation</strong></td><td>"Tu vois, t'as réussi ! Quand on veut, on peut."</td></tr><tr><td><strong>Gear</strong></td><td>🟡 Gear 3–4 — casual encouragement</td></tr></tbody></table>
+<hr>
+<p><strong>70 | C'est dans les vieux pots qu'on fait les meilleures soupes.</strong></p>
+<table><thead><tr><th>Element</th><th>Content</th></tr></thead><tbody><tr><td><strong>Literal</strong></td><td>It's in old pots that you make the best soups</td></tr><tr><td><strong>Real meaning</strong></td><td>Experience and age bring quality — old ways can be the best</td></tr><tr><td><strong>Situation</strong></td><td>Defending experience over youth, tradition over novelty</td></tr><tr><td><strong>In conversation</strong></td><td>"Mon grand-père cuisine mieux que n'importe quel chef. C'est dans les vieux pots qu'on fait les meilleures soupes."</td></tr><tr><td><strong>Gear</strong></td><td>🟡 Gear 3–4 — warm, humorous, often used by/about older people</td></tr></tbody></table>
+<hr>
+<h2>🔹 BLOCK H — FOOD &amp; DAILY LIFE (Cultural Expressions)</h2>
+<h3><em>Expressions rooted in French food culture, daily rituals, and lifestyle</em></h3>
+<hr>
+<p><strong>71 | L'appétit vient en mangeant.</strong></p>
+<table><thead><tr><th>Element</th><th>Content</th></tr></thead><tbody><tr><td><strong>Literal</strong></td><td>Appetite comes while eating</td></tr><tr><td><strong>Real meaning</strong></td><td>Once you start something, you'll want more — interest grows with involvement</td></tr><tr><td><strong>Situation</strong></td><td>Encouraging someone to start a task they don't feel motivated for</td></tr><tr><td><strong>In conversation</strong></td><td>"Commence, même si t'as pas envie. L'appétit vient en mangeant."</td></tr><tr><td><strong>Gear</strong></td><td>🟢🟡 Gear 2–4 — versatile, not just about food</td></tr></tbody></table>
+<hr>
+<p><strong>72 | On ne fait pas d'omelette sans casser des œufs.</strong></p>
+<table><thead><tr><th>Element</th><th>Content</th></tr></thead><tbody><tr><td><strong>Literal</strong></td><td>You can't make an omelet without breaking eggs</td></tr><tr><td><strong>Real meaning</strong></td><td>You can't achieve something without some sacrifice or collateral damage</td></tr><tr><td><strong>Situation</strong></td><td>A reform or change caused some disruption</td></tr><tr><td><strong>In conversation</strong></td><td>"Oui y'a eu des problèmes, mais on fait pas d'omelette sans casser des œufs."</td></tr><tr><td><strong>Gear</strong></td><td>🟢🟡 Gear 2–4 — pragmatic, political</td></tr></tbody></table>
+<hr>
+<p><strong>73 | Les carottes sont cuites.</strong></p>
+<table><thead><tr><th>Element</th><th>Content</th></tr></thead><tbody><tr><td><strong>Literal</strong></td><td>The carrots are cooked</td></tr><tr><td><strong>Real meaning</strong></td><td>It's over — there's nothing more to be done — game over</td></tr><tr><td><strong>Situation</strong></td><td>A situation is beyond saving</td></tr><tr><td><strong>In conversation</strong></td><td>"C'est fini, les carottes sont cuites. On peut plus rien faire."</td></tr><tr><td><strong>Gear</strong></td><td>🟡 Gear 3–4 — dramatic, sometimes humorous</td></tr></tbody></table>
+<hr>
+<p><strong>74 | Avoir du pain sur la planche.</strong></p>
+<table><thead><tr><th>Element</th><th>Content</th></tr></thead><tbody><tr><td><strong>Literal</strong></td><td>To have bread on the board</td></tr><tr><td><strong>Real meaning</strong></td><td>To have a lot of work ahead — a full plate</td></tr><tr><td><strong>Situation</strong></td><td>Looking at a huge to-do list</td></tr><tr><td><strong>In conversation</strong></td><td>"On a du pain sur la planche cette semaine, faut s'y mettre."</td></tr><tr><td><strong>Gear</strong></td><td>🟢🟡 Gear 2–4 — extremely common workplace expression</td></tr></tbody></table>
+<hr>
+<p><strong>75 | Mettre de l'eau dans son vin.</strong></p>
+<table><thead><tr><th>Element</th><th>Content</th></tr></thead><tbody><tr><td><strong>Literal</strong></td><td>To put water in your wine</td></tr><tr><td><strong>Real meaning</strong></td><td>To compromise — to moderate your position or demands</td></tr><tr><td><strong>Situation</strong></td><td>Two people in a negotiation need to meet halfway</td></tr><tr><td><strong>In conversation</strong></td><td>"Vous allez devoir mettre de l'eau dans votre vin si vous voulez un accord."</td></tr><tr><td><strong>Gear</strong></td><td>🟢🔵 Gear 2–4 — professional and casual</td></tr></tbody></table>
+<hr>
+<p><strong>76 | Ce n'est pas la mer à boire.</strong></p>
+<table><thead><tr><th>Element</th><th>Content</th></tr></thead><tbody><tr><td><strong>Literal</strong></td><td>It's not the sea to drink</td></tr><tr><td><strong>Real meaning</strong></td><td>It's not that hard — it's not the end of the world — don't overdramatize</td></tr><tr><td><strong>Situation</strong></td><td>Someone is complaining about something easy</td></tr><tr><td><strong>In conversation</strong></td><td>"Allez, c'est juste un formulaire à remplir, c'est pas la mer à boire."</td></tr><tr><td><strong>Gear</strong></td><td>🟢🟡 Gear 2–4 — dismissive but friendly</td></tr></tbody></table>
+<hr>
+<p><strong>77 | Avoir la moutarde qui monte au nez.</strong></p>
+<table><thead><tr><th>Element</th><th>Content</th></tr></thead><tbody><tr><td><strong>Literal</strong></td><td>To have the mustard rising to your nose</td></tr><tr><td><strong>Real meaning</strong></td><td>To feel anger rising — getting increasingly irritated</td></tr><tr><td><strong>Situation</strong></td><td>You feel yourself getting angry in a conversation</td></tr><tr><td><strong>In conversation</strong></td><td>"Arrête, je sens la moutarde qui me monte au nez là."</td></tr><tr><td><strong>Gear</strong></td><td>🟡 Gear 3–4 — expressive, vivid</td></tr></tbody></table>
+<hr>
+<p><strong>78 | Raconter des salades.</strong></p>
+<table><thead><tr><th>Element</th><th>Content</th></tr></thead><tbody><tr><td><strong>Literal</strong></td><td>To tell salads</td></tr><tr><td><strong>Real meaning</strong></td><td>To tell lies — to make up stories</td></tr><tr><td><strong>Situation</strong></td><td>Someone is obviously lying</td></tr><tr><td><strong>In conversation</strong></td><td>"Arrête de me raconter des salades, je sais que c'est pas vrai."</td></tr><tr><td><strong>Gear</strong></td><td>🟡 Gear 3–4 — accusatory but sometimes humorous</td></tr></tbody></table>
+<hr>
+<p><strong>79 | Avoir un cœur d'artichaut.</strong></p>
+<table><thead><tr><th>Element</th><th>Content</th></tr></thead><tbody><tr><td><strong>Literal</strong></td><td>To have an artichoke heart</td></tr><tr><td><strong>Real meaning</strong></td><td>To fall in love too easily — giving a piece of your heart to everyone (artichoke has many leaves/layers)</td></tr><tr><td><strong>Situation</strong></td><td>A friend who has a new crush every week</td></tr><tr><td><strong>In conversation</strong></td><td>"Encore un nouveau ? T'as vraiment un cœur d'artichaut, toi !"</td></tr><tr><td><strong>Gear</strong></td><td>🟡 Gear 3–4 — teasing, affectionate</td></tr></tbody></table>
+<hr>
+<p><strong>80 | C'est la cerise sur le gâteau.</strong></p>
+<table><thead><tr><th>Element</th><th>Content</th></tr></thead><tbody><tr><td><strong>Literal</strong></td><td>It's the cherry on the cake</td></tr><tr><td><strong>Real meaning</strong></td><td>The icing on the cake — the final perfect touch — OR the final insult (context-dependent!)</td></tr><tr><td><strong>Positive situation</strong></td><td>"Et en plus y'a une piscine ! C'est la cerise sur le gâteau."</td></tr><tr><td><strong>Negative situation</strong></td><td>"Et en plus il m'a menti ! C'est la cerise sur le gâteau." (sarcastic — like "on top of everything")</td></tr><tr><td><strong>Gear</strong></td><td>🟢🟡 Gear 2–4 — very common, dual meaning based on tone</td></tr></tbody></table>
+<hr>
+<h2>🔹 BLOCK I — ACCEPTANCE &amp; PHILOSOPHY</h2>
+<h3><em>When life doesn't go as planned — resignation, acceptance, wisdom</em></h3>
+<hr>
+<p><strong>81 | C'est la vie.</strong></p>
+<table><thead><tr><th>Element</th><th>Content</th></tr></thead><tbody><tr><td><strong>Literal</strong></td><td>That's life</td></tr><tr><td><strong>Real meaning</strong></td><td>Accept it — life is like that — nothing you can do</td></tr><tr><td><strong>In conversation</strong></td><td>"C'est injuste, mais bon, c'est la vie."</td></tr><tr><td><strong>Gear</strong></td><td>🟢🟡 Gear 2–4 — THE most internationally famous French expression</td></tr><tr><td><strong>Usage note</strong></td><td>French people actually DO use this constantly — it's not just a tourist phrase</td></tr></tbody></table>
+<hr>
+<p><strong>82 | On ne peut pas avoir le beurre et l'argent du beurre.</strong></p>
+<table><thead><tr><th>Element</th><th>Content</th></tr></thead><tbody><tr><td><strong>Literal</strong></td><td>You can't have the butter and the money for the butter</td></tr><tr><td><strong>Real meaning</strong></td><td>You can't have it both ways — you must choose</td></tr><tr><td><strong>Cheeky addition</strong></td><td>"...et le sourire de la crémière." (…and the smile of the dairy lady.) — meaning you definitely can't have EVERYTHING</td></tr><tr><td><strong>In conversation</strong></td><td>"Tu veux travailler moins ET gagner plus ? On peut pas avoir le beurre et l'argent du beurre."</td></tr><tr><td><strong>Gear</strong></td><td>🟡 Gear 3–4 — very common, humorous</td></tr></tbody></table>
+<hr>
+<p><strong>83 | Chacun voit midi à sa porte.</strong></p>
+<table><thead><tr><th>Element</th><th>Content</th></tr></thead><tbody><tr><td><strong>Literal</strong></td><td>Everyone sees noon at their own door</td></tr><tr><td><strong>Real meaning</strong></td><td>Everyone judges from their own perspective — subjectivity is natural</td></tr><tr><td><strong>Situation</strong></td><td>Two people have completely different views on the same situation</td></tr><tr><td><strong>In conversation</strong></td><td>"Normal qu'on soit pas d'accord. Chacun voit midi à sa porte."</td></tr><tr><td><strong>Gear</strong></td><td>🟢🟡 Gear 2–4 — wise, accepting</td></tr></tbody></table>
+<hr>
+<p><strong>84 | Il faut de tout pour faire un monde.</strong></p>
+<table><thead><tr><th>Element</th><th>Content</th></tr></thead><tbody><tr><td><strong>Literal</strong></td><td>You need everything to make a world</td></tr><tr><td><strong>Real meaning</strong></td><td>It takes all kinds — diversity is natural and necessary</td></tr><tr><td><strong>Situation</strong></td><td>Reacting to someone's unusual behavior or lifestyle</td></tr><tr><td><strong>In conversation</strong></td><td>"Chacun sa vie. Faut de tout pour faire un monde."</td></tr><tr><td><strong>Gear</strong></td><td>🟢🟡 Gear 2–4 — tolerant, philosophical</td></tr></tbody></table>
+<hr>
+<p><strong>85 | Comme on fait son lit, on se couche.</strong></p>
+<table><thead><tr><th>Element</th><th>Content</th></tr></thead><tbody><tr><td><strong>Literal</strong></td><td>As you make your bed, you lie in it</td></tr><tr><td><strong>Real meaning</strong></td><td>You face the consequences of your own choices</td></tr><tr><td><strong>Situation</strong></td><td>Someone made bad decisions and now suffers</td></tr><tr><td><strong>In conversation</strong></td><td>"Il a choisi de pas étudier. Comme on fait son lit, on se couche."</td></tr><tr><td><strong>Gear</strong></td><td>🟢🟡 Gear 2–4 — stern but fair</td></tr></tbody></table>
+<hr>
+<p><strong>86 | Tant qu'il y a de la vie, il y a de l'espoir.</strong></p>
+<table><thead><tr><th>Element</th><th>Content</th></tr></thead><tbody><tr><td><strong>Literal</strong></td><td>As long as there's life, there's hope</td></tr><tr><td><strong>Real meaning</strong></td><td>Where there's life, there's hope — never give up</td></tr><tr><td><strong>Situation</strong></td><td>Encouraging someone in a seemingly hopeless situation</td></tr><tr><td><strong>In conversation</strong></td><td>"Tant qu'il y a de la vie, il y a de l'espoir. Abandonne pas."</td></tr><tr><td><strong>Gear</strong></td><td>🟢🟡 Gear 2–4 — deeply hopeful</td></tr></tbody></table>
+<hr>
+<p><strong>87 | À quelque chose malheur est bon.</strong></p>
+<table><thead><tr><th>Element</th><th>Content</th></tr></thead><tbody><tr><td><strong>Literal</strong></td><td>Misfortune is good for something</td></tr><tr><td><strong>Real meaning</strong></td><td>Every cloud has a silver lining — something good comes from something bad</td></tr><tr><td><strong>Situation</strong></td><td>Finding the positive in a negative situation</td></tr><tr><td><strong>In conversation</strong></td><td>"J'ai perdu mon emploi mais j'ai trouvé ma vocation. À quelque chose malheur est bon."</td></tr><tr><td><strong>Gear</strong></td><td>🟢🔵 Gear 2–3 — slightly literary but commonly used</td></tr></tbody></table>
+<hr>
+<p><strong>88 | On récolte ce que l'on sème.</strong></p>
+<table><thead><tr><th>Element</th><th>Content</th></tr></thead><tbody><tr><td><strong>Literal</strong></td><td>You reap what you sow</td></tr><tr><td><strong>Real meaning</strong></td><td>Identical to English — your actions determine your outcomes</td></tr><tr><td><strong>Situation</strong></td><td>Someone who was generous receives generosity — or someone cruel receives cruelty</td></tr><tr><td><strong>In conversation</strong></td><td>"Tout le monde l'aide parce qu'elle a toujours aidé tout le monde. On récolte ce que l'on sème."</td></tr><tr><td><strong>Gear</strong></td><td>🟢🟡 Gear 2–4 — universal wisdom</td></tr></tbody></table>
+<hr>
+<p><strong>89 | Ainsi va la vie.</strong></p>
+<table><thead><tr><th>Element</th><th>Content</th></tr></thead><tbody><tr><td><strong>Literal</strong></td><td>Thus goes life</td></tr><tr><td><strong>Real meaning</strong></td><td>Slightly more elegant version of "c'est la vie" — more resigned, more philosophical</td></tr><tr><td><strong>Situation</strong></td><td>Reflecting on life's unpredictability after an event</td></tr><tr><td><strong>In conversation</strong></td><td>"On pensait que tout irait bien et puis... ainsi va la vie."</td></tr><tr><td><strong>Gear</strong></td><td>🟢🔵 Gear 2–3 — slightly more literary than "c'est la vie"</td></tr></tbody></table>
+<hr>
+<p><strong>90 | Tel est pris qui croyait prendre.</strong></p>
+<table><thead><tr><th>Element</th><th>Content</th></tr></thead><tbody><tr><td><strong>Literal</strong></td><td>Caught is he who thought he was catching</td></tr><tr><td><strong>Real meaning</strong></td><td>The trickster got tricked — the hunter became the prey</td></tr><tr><td><strong>Source</strong></td><td>La Fontaine — "Le Rat et l'Huître"</td></tr><tr><td><strong>Situation</strong></td><td>Someone tried to manipulate others and got caught</td></tr><tr><td><strong>In conversation</strong></td><td>"Il voulait arnaquer tout le monde et il s'est fait avoir. Tel est pris qui croyait prendre."</td></tr><tr><td><strong>Gear</strong></td><td>🟢🔵 Gear 2–3 — literary but satisfying to use — signals cultural knowledge</td></tr></tbody></table>
+<hr>
+<h2>🔹 BLOCK J — CONVERSATION CLOSERS &amp; UNIVERSAL TRUTHS</h2>
+<h3><em>The heavy-hitters — sayings that end discussions, settle debates, and summarize life</em></h3>
+<hr>
+<p><strong>91 | Après moi, le déluge.</strong></p>
+<table><thead><tr><th>Element</th><th>Content</th></tr></thead><tbody><tr><td><strong>Literal</strong></td><td>After me, the flood</td></tr><tr><td><strong>Real meaning</strong></td><td>I don't care what happens after I'm gone — selfish but dramatic</td></tr><tr><td><strong>Source</strong></td><td>Attributed to Louis XV or Madame de Pompadour</td></tr><tr><td><strong>Situation</strong></td><td>Someone makes a reckless decision with no concern for consequences</td></tr><tr><td><strong>In conversation</strong></td><td>"Il s'en fiche des conséquences. C'est 'après moi, le déluge' avec lui."</td></tr><tr><td><strong>Gear</strong></td><td>🟢🔵 Gear 2–3 — cultural/historical reference, shows education</td></tr></tbody></table>
+<hr>
+<p><strong>92 | Autres temps, autres mœurs.</strong></p>
+<table><thead><tr><th>Element</th><th>Content</th></tr></thead><tbody><tr><td><strong>Literal</strong></td><td>Other times, other customs</td></tr><tr><td><strong>Real meaning</strong></td><td>Different era, different values — times change and so do norms</td></tr><tr><td><strong>Situation</strong></td><td>Comparing current values with past generations</td></tr><tr><td><strong>In conversation</strong></td><td>"À l'époque c'était normal. Autres temps, autres mœurs."</td></tr><tr><td><strong>Gear</strong></td><td>🟢🔵 Gear 2–3 — intellectual, elegant</td></tr></tbody></table>
+<hr>
+<p><strong>93 | Nul n'est prophète en son pays.</strong></p>
+<table><thead><tr><th>Element</th><th>Content</th></tr></thead><tbody><tr><td><strong>Literal</strong></td><td>No one is a prophet in their own country</td></tr><tr><td><strong>Real meaning</strong></td><td>Your talents are more appreciated elsewhere than at home — people close to you underestimate you</td></tr><tr><td><strong>Source</strong></td><td>Biblical origin — commonly used in French</td></tr><tr><td><strong>Situation</strong></td><td>A talented person is ignored locally but recognized internationally</td></tr><tr><td><strong>In conversation</strong></td><td>"Il est célèbre au Japon mais inconnu en France. Nul n'est prophète en son pays."</td></tr><tr><td><strong>Gear</strong></td><td>🟢🔵 Gear 2–3 — sophisticated, impressive when used correctly</td></tr></tbody></table>
+<hr>
+<p><strong>94 | Toute vérité n'est pas bonne à dire.</strong></p>
+<table><thead><tr><th>Element</th><th>Content</th></tr></thead><tbody><tr><td><strong>Literal</strong></td><td>Not every truth is good to say</td></tr><tr><td><strong>Real meaning</strong></td><td>Some truths are better left unsaid — honesty isn't always the best policy</td></tr><tr><td><strong>Situation</strong></td><td>Someone is about to reveal an uncomfortable truth that will only cause harm</td></tr><tr><td><strong>In conversation</strong></td><td>"Je sais que c'est vrai, mais toute vérité n'est pas bonne à dire. Laisse tomber."</td></tr><tr><td><strong>Gear</strong></td><td>🟢🟡 Gear 2–4 — wise restraint, very commonly used</td></tr></tbody></table>
+<hr>
+<p><strong>95 | La vérité sort de la bouche des enfants.</strong></p>
+<table><thead><tr><th>Element</th><th>Content</th></tr></thead><tbody><tr><td><strong>Literal</strong></td><td>Truth comes out of children's mouths</td></tr><tr><td><strong>Real meaning</strong></td><td>Children say what adults are thinking but won't say — out of the mouths of babes</td></tr><tr><td><strong>Situation</strong></td><td>A child says something embarrassingly accurate</td></tr><tr><td><strong>In conversation</strong></td><td>(Child says "Maman, pourquoi ce monsieur est gros ?") → "Ah... la vérité sort de la bouche des enfants..." (awkward laugh)</td></tr><tr><td><strong>Gear</strong></td><td>🟢🟡 Gear 2–4 — often said to defuse awkwardness</td></tr></tbody></table>
+<hr>
+<p><strong>96 | Il n'y a que la vérité qui blesse.</strong></p>
+<table><thead><tr><th>Element</th><th>Content</th></tr></thead><tbody><tr><td><strong>Literal</strong></td><td>Only the truth hurts</td></tr><tr><td><strong>Real meaning</strong></td><td>If it hurts, it's probably true — people get angry at truths, not lies</td></tr><tr><td><strong>Situation</strong></td><td>You told someone the truth and they got angry</td></tr><tr><td><strong>In conversation</strong></td><td>"Il est furieux parce que j'ai dit la vérité. Y'a que la vérité qui blesse."</td></tr><tr><td><strong>Gear</strong></td><td>🟡 Gear 3–4 — direct, sometimes confrontational</td></tr></tbody></table>
+<hr>
+<p><strong>97 | Le mieux est l'ennemi du bien.</strong></p>
+<table><thead><tr><th>Element</th><th>Content</th></tr></thead><tbody><tr><td><strong>Literal</strong></td><td>The best is the enemy of the good</td></tr><tr><td><strong>Real meaning</strong></td><td>Perfectionism kills progress — good enough is better than endlessly seeking perfect</td></tr><tr><td><strong>Source</strong></td><td>Voltaire</td></tr><tr><td><strong>Situation</strong></td><td>Someone keeps tweaking a project instead of finishing it</td></tr><tr><td><strong>In conversation</strong></td><td>"Arrête de modifier, c'est déjà bien. Le mieux est l'ennemi du bien."</td></tr><tr><td><strong>Gear</strong></td><td>🟢🔵 Gear 2–4 — Voltaire reference, very intellectual, extremely useful in professional contexts</td></tr></tbody></table>
+<hr>
+<p><strong>98 | On a toujours besoin d'un plus petit que soi.</strong></p>
+<table><thead><tr><th>Element</th><th>Content</th></tr></thead><tbody><tr><td><strong>Literal</strong></td><td>You always need someone smaller than yourself</td></tr><tr><td><strong>Real meaning</strong></td><td>Never look down on anyone — even the smallest person can help you</td></tr><tr><td><strong>Source</strong></td><td>La Fontaine — "Le Lion et le Rat"</td></tr><tr><td><strong>Situation</strong></td><td>A powerful person needs help from someone they once dismissed</td></tr><tr><td><strong>In conversation</strong></td><td>"Tu vois, il a eu besoin du stagiaire finalement. On a toujours besoin d'un plus petit que soi."</td></tr><tr><td><strong>Gear</strong></td><td>🟢🔵 Gear 2–4 — literary reference, moral lesson</td></tr></tbody></table>
+<hr>
+<p><strong>99 | Plus ça change, plus c'est la même chose.</strong></p>
+<table><thead><tr><th>Element</th><th>Content</th></tr></thead><tbody><tr><td><strong>Literal</strong></td><td>The more it changes, the more it's the same thing</td></tr><tr><td><strong>Real meaning</strong></td><td>Despite apparent change, nothing fundamentally changes — cynical wisdom</td></tr><tr><td><strong>Source</strong></td><td>Alphonse Karr (1849) — one of the most quoted French phrases worldwide</td></tr><tr><td><strong>Situation</strong></td><td>New government, new policy, same results</td></tr><tr><td><strong>In conversation</strong></td><td>"Nouveau président, mêmes problèmes. Plus ça change, plus c'est la même chose."</td></tr><tr><td><strong>Gear</strong></td><td>🟢🔵 Gear 2–4 — sophisticated, cynical, powerful</td></tr></tbody></table>
+<hr>
+<p><strong>100 | Tout est bien qui finit bien.</strong></p>
+<table><thead><tr><th>Element</th><th>Content</th></tr></thead><tbody><tr><td><strong>Literal</strong></td><td>All is well that ends well</td></tr><tr><td><strong>Real meaning</strong></td><td>If the ending is good, everything is forgiven — identical to English (Shakespeare)</td></tr><tr><td><strong>Situation</strong></td><td>A chaotic situation that finally resolved positively</td></tr><tr><td><strong>In conversation</strong></td><td>"C'était stressant du début à la fin, mais on a réussi. Tout est bien qui finit bien !"</td></tr><tr><td><strong>Gear</strong></td><td>🟢🟡 Gear 2–4 — the perfect conversation closer, universally used</td></tr><tr><td><strong>Usage note</strong></td><td>Often used to wrap up a long story — signals "and that's the end of it — happily"</td></tr></tbody></table>
+<hr>
+<h1>✅ WHAT SHOULD DO</h1>
+<p>→ <strong>Learn proverbs by SITUATION — not by alphabet</strong><br>
+→ Think: "When someone is impatient → I can say 'Petit à petit, l'oiseau fait son nid'"<br>
+→ <strong>Start with the 20 most common ones</strong> — these appear in daily French constantly:</p>
+<table><thead><tr><th>Rank</th><th>Proverb</th><th>Why It's Essential</th></tr></thead><tbody><tr><td>1</td><td>C'est la vie</td><td>Most universal — works in any resignation moment</td></tr><tr><td>2</td><td>C'est la goutte d'eau qui fait déborder le vase</td><td>Describes the breaking point — used weekly</td></tr><tr><td>3</td><td>Mieux vaut tard que jamais</td><td>Universal encouragement</td></tr><tr><td>4</td><td>Petit à petit, l'oiseau fait son nid</td><td>Patience — used in work, relationships, everything</td></tr><tr><td>5</td><td>Métro, boulot, dodo</td><td>Cultural identity — every French person says this</td></tr><tr><td>6</td><td>On n'a rien sans rien</td><td>Motivation — no pain, no gain</td></tr><tr><td>7</td><td>Qui vivra verra</td><td>Uncertainty — used to end unresolvable debates</td></tr><tr><td>8</td><td>La nuit porte conseil</td><td>Comfort — "sleep on it"</td></tr><tr><td>9</td><td>Les carottes sont cuites</td><td>"It's over" — dramatic, common</td></tr><tr><td>10</td><td>Avoir du pain sur la planche</td><td>Workplace classic — "lots to do"</td></tr><tr><td>11</td><td>C'est en forgeant qu'on devient forgeron</td><td>Practice makes perfect</td></tr><tr><td>12</td><td>Après la pluie, le beau temps</td><td>Hope after difficulty</td></tr><tr><td>13</td><td>On ne fait pas d'omelette sans casser des œufs</td><td>Sacrifice is necessary</td></tr><tr><td>14</td><td>L'argent ne fait pas le bonheur (...mais il y contribue)</td><td>Money/happiness — always gets a laugh with the addition</td></tr><tr><td>15</td><td>Quand on parle du loup !</td><td>Someone appears while being discussed — said DAILY</td></tr><tr><td>16</td><td>La curiosité est un vilain défaut</td><td>Deflecting nosy questions — playful</td></tr><tr><td>17</td><td>Ce n'est pas la mer à boire</td><td>"It's not that hard" — dismissing drama</td></tr><tr><td>18</td><td>Tout est bien qui finit bien</td><td>Story closer — universal</td></tr><tr><td>19</td><td>Faut pas vendre la peau de l'ours avant de l'avoir tué</td><td>Don't celebrate too early</td></tr><tr><td>20</td><td>Le mieux est l'ennemi du bien</td><td>Anti-perfectionism — Voltaire — impressive</td></tr></tbody></table>
+<p>→ <strong>Practice dropping ONE proverb per conversation</strong> — don't force 5 at once<br>
+→ <strong>Listen for proverbs in French media</strong> — once you know them, you'll hear them everywhere<br>
+→ <strong>Learn the famous additions/follow-ups</strong> — French people LOVE completing each other's proverbs:</p>
+<ul>
+<li>Someone says: "L'argent ne fait pas le bonheur..." → You add: "...mais il y contribue !" → instant cultural bonding</li>
+<li>Someone says: "Le travail c'est la santé..." → You add: "...ne rien faire c'est la conserver !" → laughter guaranteed<br>
+→ <strong>Use proverbs to END discussions</strong> — not to start them — they're closers, not openers<br>
+→ <strong>Match the proverb register to the gear (Project 48):</strong></li>
+<li>La Fontaine references → Gear 2–3 (signal education)</li>
+<li>Food-based expressions → Gear 3–4 (signal cultural belonging)</li>
+<li>"C'est la vie" / "Qui vivra verra" → any gear (universal)</li>
+</ul>
+<hr>
+<h1>❌ WHAT SHOULD NOT DO</h1>
+<p>→ ❌ Do NOT use 10 proverbs in one conversation — you'll sound like a fortune cookie<br>
+→ ❌ Do NOT explain the proverb after saying it — French people know them — explaining kills the impact<br>
+→ ❌ Do NOT translate English proverbs literally into French — many don't exist or sound bizarre:</p>
+<ul>
+<li>❌ "Il pleut des chats et des chiens" (it's raining cats and dogs) → French say: <strong>"Il pleut des cordes"</strong> (it's raining ropes)</li>
+<li>❌ "Tuer deux oiseaux avec une pierre" → French say: <strong>"Faire d'une pierre deux coups"</strong> (make two hits with one stone)<br>
+→ ❌ Do NOT use La Fontaine references with people under 20 in very casual settings — they might roll their eyes<br>
+→ ❌ Do NOT use proverbs to lecture people — use them to CONNECT, COMFORT, or HUMOR<br>
+→ ❌ Do NOT memorize proverbs without their context — a proverb in the wrong situation sounds absurd<br>
+→ ❌ Do NOT say the full version of proverbs that are ALWAYS shortened:</li>
+<li>✅ "Quand on parle du loup !" (stop here)</li>
+<li>❌ "Quand on parle du loup, on en voit la queue." (sounds pedantic in casual speech)</li>
+</ul>
+<hr>
+<h1>🔀 WHEN TO USE WHAT</h1>
+<h2>By Situation → Best Proverb Match</h2>
+<table><thead><tr><th>Life Situation</th><th>Best Proverb(s) to Deploy</th></tr></thead><tbody><tr><td><strong>Someone is impatient</strong></td><td>① Petit à petit... / ② Rome ne s'est pas faite... / ⑥ Chaque chose en son temps</td></tr><tr><td><strong>Someone failed</strong></td><td>㉜ C'est en tombant qu'on apprend / ㉝ Faute avouée est à moitié pardonnée / ⑬ C'est en forgeant...</td></tr><tr><td><strong>Someone is sad</strong></td><td>㊲ Après la pluie le beau temps / ⑨ Faut laisser le temps au temps / ㊸ Ce qui ne tue pas rend plus fort</td></tr><tr><td><strong>Someone is being nosy</strong></td><td>㊸ La curiosité est un vilain défaut</td></tr><tr><td><strong>Someone appears while being discussed</strong></td><td>㊻ Quand on parle du loup !</td></tr><tr><td><strong>Someone celebrates too early</strong></td><td>⑭ Faut pas vendre la peau de l'ours...</td></tr><tr><td><strong>Someone won't take risks</strong></td><td>㊽ Qui ne risque rien n'a rien</td></tr><tr><td><strong>Someone wants everything</strong></td><td>82 On peut pas avoir le beurre et l'argent du beurre</td></tr><tr><td><strong>A situation is hopeless</strong></td><td>73 Les carottes sont cuites</td></tr><tr><td><strong>A situation is not that hard</strong></td><td>76 C'est pas la mer à boire</td></tr><tr><td><strong>Someone judges by appearances</strong></td><td>⑮ L'habit ne fait pas le moine / 55 On juge pas un livre à sa couverture</td></tr><tr><td><strong>Someone is lying</strong></td><td>78 Arrête de raconter des salades</td></tr><tr><td><strong>Someone is getting angry</strong></td><td>77 La moutarde me monte au nez</td></tr><tr><td><strong>A story ends well</strong></td><td>100 Tout est bien qui finit bien</td></tr><tr><td><strong>Life is unfair</strong></td><td>81 C'est la vie / 89 Ainsi va la vie</td></tr><tr><td><strong>Someone overdramatizes</strong></td><td>76 C'est pas la mer à boire</td></tr><tr><td><strong>Someone needs compromise</strong></td><td>75 Mettre de l'eau dans son vin</td></tr><tr><td><strong>Someone keeps making the same mistake</strong></td><td>㊱ Les mêmes causes produisent les mêmes effets</td></tr><tr><td><strong>Someone's true nature resurfaces</strong></td><td>58 Chassez le naturel, il revient au galop</td></tr><tr><td><strong>Outcome is uncertain</strong></td><td>⑩ Qui vivra verra</td></tr></tbody></table>
+<hr>
+<h2>By Register (Project 48 Gears)</h2>
+<table><thead><tr><th>Gear</th><th>Best Proverbs for This Register</th></tr></thead><tbody><tr><td>⚪🔵 Gear 1–2 (Formal)</td><td>97 Le mieux est l'ennemi du bien (Voltaire) / 93 Nul n'est prophète en son pays / 91 Après moi le déluge / 92 Autres temps, autres mœurs / 90 Tel est pris qui croyait prendre</td></tr><tr><td>🟢 Gear 2–3 (Professional)</td><td>⑬ C'est en forgeant... / ㊼ Un homme averti en vaut deux / 59 Les bons comptes font les bons amis / 75 Mettre de l'eau dans son vin</td></tr><tr><td>🟡 Gear 3–4 (Casual)</td><td>⑲ Métro boulot dodo / 73 Les carottes sont cuites / 82 Le beurre et l'argent du beurre / 78 Raconter des salades / 79 Cœur d'artichaut</td></tr><tr><td>🔴 Gear 4–5 (Very casual)</td><td>81 C'est la vie / ⑩ Qui vivra verra / 69 Quand on veut, on peut / 76 C'est pas la mer à boire</td></tr></tbody></table>
+<hr>
+<h2>By Conversational Function</h2>
+<table><thead><tr><th>Function</th><th>Proverb</th></tr></thead><tbody><tr><td><strong>Ending a debate</strong></td><td>60 À bon entendeur, salut / ⑩ Qui vivra verra / 83 Chacun voit midi à sa porte</td></tr><tr><td><strong>Giving advice</strong></td><td>㊷ Mieux vaut prévenir que guérir / ㉙ Tourne sept fois ta langue / ㉚ La nuit porte conseil</td></tr><tr><td><strong>Comforting someone</strong></td><td>㊲ Après la pluie le beau temps / ⑨ Faut laisser le temps au temps / 86 Tant qu'il y a de la vie...</td></tr><tr><td><strong>Motivating someone</strong></td><td>61 Vouloir c'est pouvoir / ㊽ Qui ne risque rien n'a rien / 64 Aide-toi et le ciel t'aidera</td></tr><tr><td><strong>Warning someone</strong></td><td>㊹ Méfie-toi de l'eau qui dort / ㊺ Faut pas jouer avec le feu / ㊿ Qui sème le vent récolte la tempête</td></tr><tr><td><strong>Expressing resignation</strong></td><td>81 C'est la vie / 85 Comme on fait son lit on se couche / 99 Plus ça change plus c'est la même chose</td></tr><tr><td><strong>Adding humor</strong></td><td>⑱ Le travail c'est la santé (...ne rien faire c'est la conserver) / ⑪ L'argent ne fait pas le bonheur (...mais il y contribue) / 82 Le beurre, l'argent du beurre (...et le sourire de la crémière)</td></tr></tbody></table>
+<hr>
+<h1>🚫 WHEN NOT TO USE</h1>
+<p>→ <strong>Never use a proverb you don't fully understand</strong> — misusing one is worse than not using one<br>
+→ <strong>Never use a proverb to attack someone directly</strong> — "Comme on fait son lit, on se couche" said to someone who just lost everything sounds cruel, not wise<br>
+→ <strong>Never use "Après moi, le déluge" about yourself seriously</strong> — it makes you sound narcissistic (it's used to describe OTHERS' selfishness)<br>
+→ <strong>Never use multiple proverbs back to back</strong> — one per conversation point maximum<br>
+→ <strong>Never use a proverb to START a conversation</strong> — they're responses, not openings<br>
+→ <strong>Never correct someone's proverb mid-conversation</strong> — if they say it slightly wrong, let it go<br>
+→ <strong>Never use "Les carottes sont cuites" in a genuinely tragic situation</strong> — it's too casual for real tragedy (death, serious illness)<br>
+→ <strong>Never use La Fontaine references and then explain "it's from La Fontaine"</strong> — if they know, they know — if they don't, explaining kills it</p>
+<hr>
+<h1>⚠️ COMMON PITFALLS AND FAILURE MODES</h1>
+<table><thead><tr><th>Pitfall</th><th>What Happens</th><th>Fix</th></tr></thead><tbody><tr><td><strong>Proverb overload</strong></td><td>You use 5 proverbs in 10 minutes — you sound like a philosophy textbook</td><td>Maximum ONE per conversation topic — let it breathe</td></tr><tr><td><strong>Wrong tone</strong></td><td>You use a humorous proverb in a serious moment — or a stern proverb when humor is needed</td><td>Match proverb TONE to the emotional register of the conversation</td></tr><tr><td><strong>Wrong timing</strong></td><td>You drop the proverb too early — before the person finished expressing their feelings</td><td>Listen fully → acknowledge their feelings → THEN drop the proverb as closure</td></tr><tr><td><strong>Direct translation from English</strong></td><td>You say "Il pleut des chats et des chiens"</td><td>Learn the FRENCH version of each concept — they're different metaphors</td></tr><tr><td><strong>Using "C'est la vie" for everything</strong></td><td>It becomes your verbal crutch — people notice</td><td>Build a repertoire of at least 10–15 proverbs for different situations</td></tr><tr><td><strong>Forgetting the humorous additions</strong></td><td>You say "L'argent ne fait pas le bonheur" and stop — missing the cultural punchline</td><td>Learn the follow-ups — they're what create the bonding moment</td></tr><tr><td><strong>Using literary proverbs with wrong audience</strong></td><td>You quote Voltaire to a group of teenagers at a party</td><td>Match proverb sophistication to the audience — food proverbs are more universal</td></tr><tr><td><strong>Saying the full version of shortened proverbs</strong></td><td>"Quand on parle du loup, on en voit la queue" — sounds like you're reciting</td><td>Most proverbs are cut short in speech — learn WHERE to stop</td></tr><tr><td><strong>Not knowing dual-meaning proverbs</strong></td><td>You use "C'est la cerise sur le gâteau" thinking it's always positive — but it can be sarcastic</td><td>Context and TONE determine meaning — same proverb, opposite meanings</td></tr><tr><td><strong>Treating proverbs as arguments</strong></td><td>You use a proverb to "win" a debate — as if it proves your point</td><td>Proverbs are wisdom — not evidence — they summarize feelings, they don't prove facts</td></tr></tbody></table>
+<hr>
+<h1>🔑 KEY TAKEAWAY</h1>
+<blockquote>
+<p><strong>Proverbs are not decoration — they are SOCIAL TOOLS.</strong><br>
+French people use them to:<br>
+→ <strong>End debates</strong> without confrontation<br>
+→ <strong>Comfort</strong> without lecturing<br>
+→ <strong>Warn</strong> without threatening<br>
+→ <strong>Bond</strong> through shared cultural references<br>
+→ <strong>Signal</strong> cultural belonging and education level</p>
+<p><strong>The 5 rules of proverb deployment:</strong></p>
+<ol>
+<li><strong>ONE per topic</strong> — never stack</li>
+<li><strong>RESPOND, don't initiate</strong> — proverbs are reactions</li>
+<li><strong>MATCH the tone</strong> — humor for light moments, wisdom for heavy ones</li>
+<li><strong>KNOW the short version</strong> — most proverbs are abbreviated in speech</li>
+<li><strong>LEARN the follow-ups</strong> — completing someone's proverb = instant cultural bonding</li>
+</ol>
+</blockquote>
+<p><strong>What you've built across 49 projects:</strong></p>
+<table><thead><tr><th>Layer</th><th>Project(s)</th><th>What You Gained</th></tr></thead><tbody><tr><td><strong>Sentence engines</strong></td><td>1–8</td><td>How French sentences are born</td></tr><tr><td><strong>Time control</strong></td><td>9–16</td><td>How to place actions in past, present, future</td></tr><tr><td><strong>Politeness &amp; nuance</strong></td><td>17–20</td><td>How to soften, request, suggest</td></tr><tr><td><strong>Complexity</strong></td><td>21–30</td><td>How to connect ideas, argue, explain</td></tr><tr><td><strong>Depth</strong></td><td>31–39</td><td>How to express doubt, regret, hypothesis</td></tr><tr><td><strong>Register</strong></td><td>40 + 48</td><td>How to calibrate speech to any person</td></tr><tr><td><strong>Real sound</strong></td><td>47</td><td>How French actually sounds when spoken</td></tr><tr><td><strong>Idioms</strong></td><td>42</td><td>How to use fixed expressions naturally</td></tr><tr><td><strong>Proverbs</strong></td><td>49</td><td>How to season speech with cultural wisdom</td></tr></tbody></table>
+<p>→ <strong>One layer remains: INTEGRATION</strong><br>
+→ Project 50 takes EVERYTHING and puts it in motion — simultaneously — the way a native speaker does</p>
+<hr>
+<h1>🌉 BRIDGE TO PROJECT 50</h1>
+<blockquote>
+<p>You now have <strong>every tool:</strong><br>
+→ Structures (Projects 1–30)<br>
+→ Advanced patterns (Projects 31–39)<br>
+→ Register calibration (Projects 40, 48)<br>
+→ Spoken compression (Project 47)<br>
+→ Idioms (Project 42)<br>
+→ Discourse flow (Project 43)<br>
+→ Nuance (Project 44)<br>
+→ Argumentation (Project 45)<br>
+→ Hypothetical chains (Project 46)<br>
+→ Proverbs (Project 49)</p>
+<p><strong>But a native speaker doesn't use these one at a time.</strong><br>
+They use ALL OF THEM SIMULTANEOUSLY — switching between structures, registers, idioms, and proverbs mid-sentence — without thinking.</p>
+<p><strong>Project 50: "Speak Like You Were Born There"</strong> is the final integration:<br>
+→ ~100 sentences that MIX every structure from all 49 projects<br>
+→ Scenario: You live one full day in Paris — from waking up to falling asleep — navigating every possible social interaction<br>
+→ Each sentence is analyzed: which projects are active, which compressions are applied, which register is used, which idiom/proverb is deployed<br>
+→ This is your <strong>graduation exercise</strong> — after this, you THINK in French</p>
+</blockquote>
+<hr>
+<h1>✅ PROJECT 49 COMPLETE</h1>
+<blockquote>
+<p><strong>Are you ready for PROJECT 50: "Speak Like You Were Born There"?</strong><br>
+→ The final project — full integration of ALL 49 Previous Chapters<br>
+→ ~100 sentences covering one complete day in Paris — every social context, every structure, every register<br>
+→ Each sentence analyzed for which projects, compressions, idioms, and cultural rules are active<br>
+→ This is the MASTERY project — the bridge from "speaking French" to "thinking in French"</p>
+
+</blockquote></div>
+</div>
+
+<!-- ========== data-index="13" ========== -->
+
+        </div>
+
+        <div class="nav-bar">
+            <a href="project-48.html" class="nav-button prev">← Previous Chapter</a>
+            <div class="page-info">
+                <a href="index.html" class="nav-button home">📚 Table of Contents</a><br>
+                <span style="margin-top:8px;display:block">Chapter 49 of 50</span>
+            </div>
+            <a href="project-50.html" class="nav-button next">Next Chapter →</a>
+        </div>
+    </div>
+
+    
+    <div id="progress-track"><div id="progress-fill"></div></div>
+    <div id="progress-pct">0%</div>
+
+
+    <script>
+    const fill = document.getElementById('progress-fill');
+    const pct  = document.getElementById('progress-pct');
+    function updateProgress() {
+        const scrollTop = window.scrollY;
+        const docHeight = document.body.scrollHeight - window.innerHeight;
+        const scrolled  = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+        fill.style.height = scrolled + '%';
+        pct.textContent   = Math.round(scrolled) + '%';
+    }
+    window.addEventListener('scroll', updateProgress);
+    updateProgress();
+
+    document.addEventListener('keydown', function(e) {
+        if (['INPUT','TEXTAREA'].includes(document.activeElement.tagName)) return;
+        if (e.key === 'ArrowLeft') {
+            const b = document.querySelector('.nav-button.prev');
+            if (b && !b.classList.contains('disabled')) window.location.href = b.href;
+        }
+        if (e.key === 'ArrowRight') {
+            const b = document.querySelector('.nav-button.next');
+            if (b && !b.classList.contains('disabled')) window.location.href = b.href;
+        }
+    });
+    </script>
+
+</body>
+</html>

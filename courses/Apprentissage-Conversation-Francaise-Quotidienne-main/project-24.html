@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="images/favicon.png">
+    <title>Project 24: "It Was Done, It Was Built" — French Daily Sentences</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.75;
+            color: #1a202c;
+            background-color: #f7fafc;
+        }
+        .container {
+            max-width: 1800px;
+            margin: 0 auto;
+            background: white;
+            min-height: 100vh;
+            box-shadow: 0 0 30px rgba(0,0,0,0.08);
+            padding: 48px 52px;
+        }
+        
+        .content { max-width: 1700px; margin: 0 auto; color: #1a202c; }
+        .content h1 {
+            color: #1a202c; margin: 32px 0 20px;
+            padding-bottom: 12px;
+            border-bottom: 4px solid #3b82f6;
+            font-size: 2.1em;
+            font-weight: 700;
+        }
+        .content h2 {
+            color: #1a202c; margin: 28px 0 16px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #60a5fa;
+            font-size: 1.6em;
+            font-weight: 600;
+        }
+        .content h3 { color: #1a202c; margin: 22px 0 12px; font-size: 1.3em; font-weight: 600; }
+        .content h4 { color: #2d3748; margin: 18px 0 10px; font-size: 1.1em; font-weight: 600; }
+        .content p  { margin-bottom: 16px; line-height: 1.8; color: #1a202c; }
+        .content ul, .content ol { margin: 12px 0 18px 30px; color: #1a202c; }
+        .content li { margin-bottom: 8px; line-height: 1.75; color: #1a202c; }
+        .content hr { border: none; border-top: 2px solid #e2e8f0; margin: 26px 0; }
+        .content pre {
+            background: #f7fafc !important;
+            border: 1px solid #cbd5e0 !important;
+            border-left: 4px solid #3b82f6 !important;
+            padding: 18px !important; overflow-x: auto; margin: 18px 0; border-radius: 6px;
+            font-family: 'Consolas','Monaco','Courier New',monospace !important;
+            font-size: 0.9em !important;
+        }
+        .content pre:not([style*="color"]) { color: #1a202c !important; }
+        .content code {
+            font-family: 'Consolas','Monaco','Courier New',monospace !important;
+            font-size: 0.88em !important;
+        }
+        .content code:not(pre code) {
+            background: #dbeafe !important;
+            color: #1a202c !important;
+            padding: 2px 6px;
+            border-radius: 3px;
+        }
+        .content pre code { background: transparent !important; padding: 0; }
+        .content table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+        .content th {
+            background: linear-gradient(135deg, #3b82f6 0%, #60a5fa 100%);
+            color: white; padding: 12px 16px; text-align: left;
+            font-weight: 600;
+        }
+        .content td { padding: 11px 16px; border: 1px solid #e2e8f0; color: #1a202c; }
+        .content tr:nth-child(even) td { background: #eff6ff; }
+        .content blockquote {
+            border-left: 4px solid #3b82f6; background: #eff6ff;
+            padding: 14px 20px; margin: 18px 0; border-radius: 0 6px 6px 0;
+            color: #1a202c;
+        }
+        .content strong { color: #1a202c; font-weight: 600; }
+        .px-2 { padding: 0; }
+        .chat-message { background: transparent; padding: 0; margin: 0; }
+
+        /* Bottom nav bar only */
+        .nav-bar {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 24px 0;
+            margin-top: 50px;
+            border-top: 3px solid #60a5fa;
+        }
+        .nav-button {
+            display: inline-flex; align-items: center; gap: 8px;
+            padding: 12px 26px;
+            background: linear-gradient(135deg, #3b82f6 0%, #60a5fa 100%);
+            color: white !important; text-decoration: none;
+            border-radius: 8px; font-weight: 600; font-size: 0.95em;
+            transition: all 0.2s;
+            box-shadow: 0 2px 8px rgba(59,130,246,0.35);
+        }
+        .nav-button:hover { transform: translateY(-2px); box-shadow: 0 4px 14px rgba(59,130,246,0.5); }
+        .nav-button.disabled { background: #cbd5e1; box-shadow: none; pointer-events: none; }
+        .nav-button.home {
+            background: linear-gradient(135deg, #ef4444 0%, #f87171 100%);
+            box-shadow: 0 2px 8px rgba(239,68,68,0.35);
+        }
+        .nav-button.home:hover { box-shadow: 0 4px 14px rgba(239,68,68,0.5); }
+        .page-info { color: #718096; font-size: 0.9em; text-align: center; }
+
+        /* Progress bar */
+        #progress-track {
+            position: fixed; top: 20px; right: 20px;
+            width: 10px; height: 150px;
+            background: rgba(59,130,246,0.2);
+            border: 2px solid #3b82f6;
+            border-radius: 6px; overflow: hidden; z-index: 1000;
+        }
+        #progress-fill {
+            width: 100%;
+            background: linear-gradient(180deg, #3b82f6, #2563eb);
+            height: 0%;
+            transition: height 0.15s ease;
+        }
+        #progress-pct {
+            position: fixed; top: 0px; right: 16px;
+            color: #2563eb; font-size: 14px; font-weight: bold;
+            z-index: 1001;
+            text-shadow: 0 1px 2px rgba(255,255,255,0.9);
+            line-height: 20px;
+        }
+
+    </style>
+<link rel="stylesheet" href="assets/chapters.css?v=20260421203847"><script src="assets/chapters.js?v=20260421203847" defer></script>
+</head>
+<body>
+    <div class="container">
+        <div class="content">
+            <div class="chat-message" data-index="17">
+<div class="px-2"><h1>🟡 PROJECT 24: "It Was Done, It Was Built"</h1>
+<h2><em>You're at a museum, reading news, hearing formal announcements — things were done BY someone</em></h2>
+<hr>
+<h1>🎯 THE HYPOTHETICAL PROBLEM</h1>
+<p>→ You're visiting a museum in Paris with a French friend<br>
+→ You read plaques, listen to audio guides, overhear tour guides speaking<br>
+→ Every sentence sounds <strong>backwards</strong> compared to what you've learned:</p>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>Museum plaque:  "Ce tableau A ÉTÉ PEINT par Monet en 1872."
+</span>Audio guide:    "Le château A ÉTÉ CONSTRUIT au XIIe siècle."
+Tour guide:     "Cette salle EST UTILISÉE pour les expositions temporaires."</code></pre></div>
+<p>→ You turn on the news that evening:</p>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>News anchor:    "Le suspect A ÉTÉ ARRÊTÉ par la police ce matin."
+</span>Weather:        "Des pluies SONT ATTENDUES dans le sud."
+Politics:       "La loi A ÉTÉ VOTÉE par l'Assemblée nationale."</code></pre></div>
+<p>→ You understand the individual words — but the <strong>sentence architecture</strong> is unfamiliar<br>
+→ In every sentence you've learned so far, the <strong>DOER comes first</strong>:</p>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>ACTIVE (what you know):
+</span>→ Monet A PEINT ce tableau.        (Monet painted this painting.)
+→ La police A ARRÊTÉ le suspect.   (The police arrested the suspect.)</code></pre></div>
+<p>→ But in these new sentences, the <strong>RECEIVER comes first</strong> — and the doer comes last (or disappears entirely):</p>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>PASSIVE (what you're hearing):
+</span>→ Ce tableau A ÉTÉ PEINT par Monet.     (This painting was painted by Monet.)
+→ Le suspect A ÉTÉ ARRÊTÉ par la police. (The suspect was arrested by the police.)</code></pre></div>
+<p>→ This is the <strong>PASSIVE VOICE</strong> — the sentence flips so the OBJECT becomes the SUBJECT<br>
+→ French uses it heavily in <strong>formal speech, news, museums, official documents, and storytelling</strong><br>
+→ Without understanding it, you miss <strong>half of what you read and hear</strong> in formal French</p>
+<p><strong>The core realization:</strong><br>
+→ All Previous Chapters built <strong>active sentences</strong> — Subject DOES something to Object<br>
+→ Project 24 builds <strong>passive sentences</strong> — Object HAS something done to it BY Subject<br>
+→ The passive voice uses <strong>ÊTRE + PARTICIPE PASSÉ</strong> — the same structure as passé composé with être (Project 9)<br>
+→ But here, ÊTRE carries the TENSE — and the participe passé carries the ACTION<br>
+→ This creates a <strong>tense-flexible system</strong> — passive works in present, past, future, and beyond</p>
+<hr>
+<h1>🔍 HOW TO APPROACH IT</h1>
+<p>→ Every passive sentence follows this skeleton:</p>
+<code>SUBJECT (receiver) + ÊTRE (conjugated in any tense) + PARTICIPE PASSÉ (agrees) + PAR + AGENT (doer)</code>
+<p>→ The <strong>agent</strong> (par + doer) is OPTIONAL — often omitted when the doer is unknown or unimportant</p>
+<p>→ Think of it as a <strong>three-part transformation</strong>:</p>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>ACTIVE:   [DOER] + [VERB] + [RECEIVER]
+</span>          La police  a arrêté  le suspect.
+
+PASSIVE:  [RECEIVER] + [ÊTRE + PP] + [PAR + DOER]
+          Le suspect  a été arrêté  par la police.</code></pre></div>
+<p>→ <strong>ÊTRE</strong> takes the tense (present, passé composé, imparfait, futur, conditionnel, etc.)<br>
+→ <strong>PARTICIPE PASSÉ</strong> agrees with the NEW SUBJECT (the receiver) in gender and number<br>
+→ <strong>PAR</strong> introduces the original doer — but can be removed</p>
+<hr>
+<h1>🔧 HOW CAN WE SOLVE IT</h1>
+<h2>Step 1 — The Tense System for Passive Voice</h2>
+<table><thead><tr><th>Tense</th><th>ÊTRE Form</th><th>Full Passive Structure</th><th>Example</th></tr></thead><tbody><tr><td><strong>Présent</strong></td><td>est / sont</td><td>est + PP</td><td>La porte <strong>est fermée</strong>.</td></tr><tr><td><strong>Passé composé</strong></td><td>a été / ont été</td><td>a été + PP</td><td>La porte <strong>a été fermée</strong>.</td></tr><tr><td><strong>Imparfait</strong></td><td>était / étaient</td><td>était + PP</td><td>La porte <strong>était fermée</strong>.</td></tr><tr><td><strong>Futur simple</strong></td><td>sera / seront</td><td>sera + PP</td><td>La porte <strong>sera fermée</strong>.</td></tr><tr><td><strong>Futur proche</strong></td><td>va être</td><td>va être + PP</td><td>La porte <strong>va être fermée</strong>.</td></tr><tr><td><strong>Conditionnel</strong></td><td>serait / seraient</td><td>serait + PP</td><td>La porte <strong>serait fermée</strong>.</td></tr><tr><td><strong>Plus-que-parfait</strong></td><td>avait été</td><td>avait été + PP</td><td>La porte <strong>avait été fermée</strong>.</td></tr></tbody></table>
+<p>→ <strong>The participe passé ALWAYS agrees</strong> with the subject in passive voice — no exceptions<br>
+→ La porte est fermé<strong>e</strong> (fem sing)<br>
+→ Les livres sont vendu<strong>s</strong> (masc plural)<br>
+→ Les lettres ont été envoyé<strong>es</strong> (fem plural)</p>
+<hr>
+<h2>Step 2 — Agreement Rules (Non-Negotiable)</h2>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>The past participle in passive voice ALWAYS agrees with the SUBJECT:
+</span>
+MASCULINE SINGULAR:    Le livre est vendu.         (+nothing)
+FEMININE SINGULAR:     La maison est vendue.       (+e)
+MASCULINE PLURAL:      Les livres sont vendus.     (+s)
+FEMININE PLURAL:       Les maisons sont vendues.   (+es)
+
+This is AUTOMATIC — no exceptions — because the auxiliary is ÊTRE
+(Same rule as Project 9 — être verbs agree with subject)</code></pre></div>
+<hr>
+<h2>Step 3 — PAR vs. DE — Two Ways to Introduce the Agent</h2>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>PAR = by (for ACTIONS — the most common)
+</span>→ Le gâteau a été fait PAR ma mère.
+
+DE = by (for STATES, EMOTIONS, PERCEPTIONS — less common)
+→ Elle est aimée DE tout le monde. (She is loved by everyone.)
+→ Il est respecté DE ses collègues. (He is respected by his colleagues.)
+→ La maison est entourée DE arbres. (The house is surrounded by trees.)
+
+RULE OF THUMB:
+→ Physical/concrete action → PAR (built, broken, arrested, sold, written)
+→ Emotional state/perception → DE (loved, respected, known, surrounded, covered)
+→ When in doubt → PAR (always safe)</code></pre></div>
+<hr>
+<h1>✅ WHAT COULD BE DONE — THE 100 SENTENCES</h1>
+<hr>
+<h2>🔹 BLOCK A — Passive Voice in Présent</h2>
+<p><em>Scenario: Describing current states — how things ARE right now</em></p>
+<table><thead><tr><th>#</th><th>Active Version</th><th>Passive Version</th><th>English (Passive)</th></tr></thead><tbody><tr><td>1</td><td>On ferme le magasin à 20h.</td><td>Le magasin <strong>est fermé</strong> à 20h.</td><td>The store is closed at 8pm.</td></tr><tr><td>2</td><td>On parle français ici.</td><td>Le français <strong>est parlé</strong> ici.</td><td>French is spoken here.</td></tr><tr><td>3</td><td>Tout le monde connaît ce restaurant.</td><td>Ce restaurant <strong>est connu</strong> de tout le monde.</td><td>This restaurant is known by everyone.</td></tr><tr><td>4</td><td>On utilise cette salle pour les réunions.</td><td>Cette salle <strong>est utilisée</strong> pour les réunions.</td><td>This room is used for meetings.</td></tr><tr><td>5</td><td>Les touristes visitent ce musée chaque jour.</td><td>Ce musée <strong>est visité</strong> par des touristes chaque jour.</td><td>This museum is visited by tourists every day.</td></tr><tr><td>6</td><td>Ses collègues respectent le directeur.</td><td>Le directeur <strong>est respecté</strong> de ses collègues.</td><td>The director is respected by his colleagues.</td></tr><tr><td>7</td><td>Des arbres entourent la maison.</td><td>La maison <strong>est entourée</strong> d'arbres.</td><td>The house is surrounded by trees.</td></tr><tr><td>8</td><td>On interdit les téléphones en classe.</td><td>Les téléphones <strong>sont interdits</strong> en classe.</td><td>Phones are forbidden in class.</td></tr><tr><td>9</td><td>Un mur sépare les deux jardins.</td><td>Les deux jardins <strong>sont séparés</strong> par un mur.</td><td>The two gardens are separated by a wall.</td></tr><tr><td>10</td><td>On ouvre la bibliothèque le dimanche.</td><td>La bibliothèque <strong>est ouverte</strong> le dimanche.</td><td>The library is open on Sundays.</td></tr></tbody></table>
+<p><strong>🧠 Structure unlocked:</strong> <code>Subject + ÊTRE (présent) + participe passé (agrees) + [par/de + agent]</code></p>
+<p><strong>🧠 CRITICAL OBSERVATION — Passive Present vs. State Description:</strong></p>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>"La porte est fermée" can mean TWO things:
+</span>1. The door IS closed (state — description)
+2. The door IS BEING closed (passive action — happening now)
+
+Context tells you which:
+→ "La porte est fermée à clé." = The door is locked. (STATE)
+→ "La porte est fermée par le gardien chaque soir." = The door is closed by the guard every evening. (ACTION)
+
+When there's an AGENT (par...) → it's clearly PASSIVE ACTION
+When there's no agent → it could be either — context decides</code></pre></div>
+<hr>
+<h2>🔹 BLOCK B — Passive Voice in Passé Composé</h2>
+<p><em>Scenario: Reporting what happened — news, events, completed actions</em></p>
+<table><thead><tr><th>#</th><th>Active Version</th><th>Passive Version</th><th>English (Passive)</th></tr></thead><tbody><tr><td>11</td><td>La police a arrêté le suspect.</td><td>Le suspect <strong>a été arrêté</strong> par la police.</td><td>The suspect was arrested by the police.</td></tr><tr><td>12</td><td>Monet a peint ce tableau.</td><td>Ce tableau <strong>a été peint</strong> par Monet.</td><td>This painting was painted by Monet.</td></tr><tr><td>13</td><td>On a construit ce pont en 1900.</td><td>Ce pont <strong>a été construit</strong> en 1900.</td><td>This bridge was built in 1900.</td></tr><tr><td>14</td><td>L'Assemblée a voté la loi.</td><td>La loi <strong>a été votée</strong> par l'Assemblée.</td><td>The law was passed by the Assembly.</td></tr><tr><td>15</td><td>Quelqu'un a volé ma voiture.</td><td>Ma voiture <strong>a été volée</strong>.</td><td>My car was stolen.</td></tr><tr><td>16</td><td>On a annulé le concert.</td><td>Le concert <strong>a été annulé</strong>.</td><td>The concert was cancelled.</td></tr><tr><td>17</td><td>Le directeur a pris la décision.</td><td>La décision <strong>a été prise</strong> par le directeur.</td><td>The decision was made by the director.</td></tr><tr><td>18</td><td>Un architecte célèbre a conçu ce bâtiment.</td><td>Ce bâtiment <strong>a été conçu</strong> par un architecte célèbre.</td><td>This building was designed by a famous architect.</td></tr><tr><td>19</td><td>On a livré le colis ce matin.</td><td>Le colis <strong>a été livré</strong> ce matin.</td><td>The package was delivered this morning.</td></tr><tr><td>20</td><td>Plusieurs personnes ont vu l'accident.</td><td>L'accident <strong>a été vu</strong> par plusieurs personnes.</td><td>The accident was seen by several people.</td></tr></tbody></table>
+<p><strong>🧠 Structure unlocked:</strong> <code>Subject + AVOIR (présent) + ÉTÉ + participe passé (agrees) + [par + agent]</code></p>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>PASSIVE PASSÉ COMPOSÉ = a/ont + été + PP
+</span>
+Why "a été" and not "est été"?
+→ ÊTRE in passé composé uses AVOIR as its auxiliary
+→ "J'ai été" = I was/have been
+→ So passive passé composé = AVOIR + ÉTÉ + PP
+→ Le suspect a été arrêté = The suspect has been / was arrested</code></pre></div>
+<p><strong>🧠 AGENT OMISSION — When "par" disappears:</strong></p>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>Sentences 15, 16, 19 have NO AGENT:
+</span>→ Ma voiture a été volée.        (by whom? Unknown → omit agent)
+→ Le concert a été annulé.       (by whom? Doesn't matter → omit agent)
+→ Le colis a été livré.          (by whom? Unimportant → omit agent)
+
+This is VERY COMMON — most passive sentences in real French OMIT the agent
+→ The focus is on WHAT HAPPENED — not WHO did it
+→ "La décision a été prise." = The decision was made. (Period.)</code></pre></div>
+<hr>
+<h2>🔹 BLOCK C — Passive Voice in Imparfait</h2>
+<p><em>Scenario: Describing past situations, backgrounds, ongoing past states</em><br>
+<em>Connection to Project 10: Imparfait for background/description — now in passive</em></p>
+<table><thead><tr><th>#</th><th>French Sentence (Passive)</th><th>English</th><th>Context</th></tr></thead><tbody><tr><td>21</td><td>La ville <strong>était entourée</strong> de remparts au Moyen Âge.</td><td>The city was surrounded by ramparts in the Middle Ages.</td><td>Historical description</td></tr><tr><td>22</td><td>Les rues <strong>étaient éclairées</strong> par des lampes à gaz.</td><td>The streets were lit by gas lamps.</td><td>Past setting</td></tr><tr><td>23</td><td>Cette maison <strong>était habitée</strong> par une famille noble.</td><td>This house was inhabited by a noble family.</td><td>Past state</td></tr><tr><td>24</td><td>Le château <strong>était gardé</strong> par des soldats jour et nuit.</td><td>The castle was guarded by soldiers day and night.</td><td>Ongoing past action</td></tr><tr><td>25</td><td>Les enfants <strong>étaient surveillés</strong> par une nourrice.</td><td>The children were watched by a nanny.</td><td>Habitual past</td></tr><tr><td>26</td><td>À cette époque, le pays <strong>était dirigé</strong> par un roi.</td><td>At that time, the country was led by a king.</td><td>Historical background</td></tr><tr><td>27</td><td>Les lettres <strong>étaient écrites</strong> à la main.</td><td>Letters were written by hand.</td><td>Past habit</td></tr><tr><td>28</td><td>Ce quartier <strong>était considéré</strong> comme dangereux.</td><td>This neighborhood was considered dangerous.</td><td>Past perception</td></tr><tr><td>29</td><td>La musique <strong>était jouée</strong> par un orchestre en direct.</td><td>The music was played by a live orchestra.</td><td>Past setting</td></tr><tr><td>30</td><td>Les repas <strong>étaient préparés</strong> par ma grand-mère.</td><td>The meals were prepared by my grandmother.</td><td>Habitual past</td></tr></tbody></table>
+<p><strong>🧠 Structure unlocked:</strong> <code>Subject + ÊTRE (imparfait) + participe passé (agrees) + [par/de + agent]</code></p>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>PASSIVE IMPARFAIT = était/étaient + PP
+</span>
+USE: Background descriptions, ongoing past states, habitual past actions
+→ Same function as imparfait in active voice (Project 10)
+→ But the focus is on the RECEIVER, not the doer</code></pre></div>
+<p><strong>🧠 PASSÉ COMPOSÉ vs. IMPARFAIT in Passive — Same Logic as Project 11:</strong></p>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>PASSÉ COMPOSÉ PASSIVE = completed event:
+</span>→ Le château a été construit en 1200. (It WAS built — one-time event)
+
+IMPARFAIT PASSIVE = background/ongoing state:
+→ Le château était gardé par des soldats. (It WAS BEING guarded — ongoing)
+
+Same story-layering principle from Project 11 — just in passive form</code></pre></div>
+<hr>
+<h2>🔹 BLOCK D — Passive Voice in Futur Simple &amp; Futur Proche</h2>
+<p><em>Scenario: Predictions, plans, announcements about what WILL be done</em><br>
+<em>Connection to Projects 12, 16: Future structures now in passive</em></p>
+<table><thead><tr><th>#</th><th>French Sentence (Passive)</th><th>English</th><th>Tense</th></tr></thead><tbody><tr><td>31</td><td>Le nouveau pont <strong>sera construit</strong> l'année prochaine.</td><td>The new bridge will be built next year.</td><td>Futur simple</td></tr><tr><td>32</td><td>Les résultats <strong>seront annoncés</strong> demain.</td><td>The results will be announced tomorrow.</td><td>Futur simple</td></tr><tr><td>33</td><td>La route <strong>sera fermée</strong> pendant les travaux.</td><td>The road will be closed during construction.</td><td>Futur simple</td></tr><tr><td>34</td><td>Les invitations <strong>seront envoyées</strong> la semaine prochaine.</td><td>The invitations will be sent next week.</td><td>Futur simple</td></tr><tr><td>35</td><td>Le problème <strong>sera résolu</strong> rapidement.</td><td>The problem will be solved quickly.</td><td>Futur simple</td></tr><tr><td>36</td><td>Ce bâtiment <strong>va être rénové</strong> bientôt.</td><td>This building is going to be renovated soon.</td><td>Futur proche</td></tr><tr><td>37</td><td>Les employés <strong>vont être informés</strong> cet après-midi.</td><td>The employees are going to be informed this afternoon.</td><td>Futur proche</td></tr><tr><td>38</td><td>La réunion <strong>va être reportée</strong> à lundi.</td><td>The meeting is going to be postponed to Monday.</td><td>Futur proche</td></tr><tr><td>39</td><td>De nouvelles mesures <strong>seront prises</strong> par le gouvernement.</td><td>New measures will be taken by the government.</td><td>Futur simple</td></tr><tr><td>40</td><td>La vérité <strong>sera connue</strong> un jour.</td><td>The truth will be known one day.</td><td>Futur simple</td></tr></tbody></table>
+<p><strong>🧠 Structure unlocked:</strong></p>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>FUTUR SIMPLE PASSIVE:  Subject + ÊTRE (futur) + PP
+</span>→ sera/seront + participe passé
+
+FUTUR PROCHE PASSIVE:  Subject + ALLER + ÊTRE + PP
+→ va/vont + être + participe passé</code></pre></div>
+<hr>
+<h2>🔹 BLOCK E — Passive Voice in Conditionnel</h2>
+<p><em>Scenario: Hypothetical passive — what WOULD be done, what COULD be done</em><br>
+<em>Connection to Project 17: Conditionnel now in passive</em></p>
+<table><thead><tr><th>#</th><th>French Sentence (Passive)</th><th>English</th><th>Context</th></tr></thead><tbody><tr><td>41</td><td>Ce projet <strong>serait financé</strong> par l'État.</td><td>This project would be funded by the state.</td><td>Hypothetical plan</td></tr><tr><td>42</td><td>Les travaux <strong>seraient terminés</strong> avant l'été.</td><td>The work would be finished before summer.</td><td>Conditional prediction</td></tr><tr><td>43</td><td>La décision <strong>serait prise</strong> la semaine prochaine.</td><td>The decision would be made next week.</td><td>Uncertain future — news style</td></tr><tr><td>44</td><td>Le suspect <strong>serait interrogé</strong> par la police.</td><td>The suspect would be questioned by the police.</td><td>Reported — unconfirmed news</td></tr><tr><td>45</td><td>Les prix <strong>seraient augmentés</strong> de dix pour cent.</td><td>The prices would be increased by ten percent.</td><td>Hypothetical — rumor</td></tr></tbody></table>
+<p><strong>🧠 CRITICAL INSIGHT — CONDITIONNEL PASSIF IN NEWS:</strong></p>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>French news CONSTANTLY uses conditionnel passif to report UNCONFIRMED information:
+</span>
+→ "Le président serait hospitalisé."
+   = The president is reportedly hospitalized. (NOT confirmed)
+
+→ "Trois personnes auraient été blessées."
+   = Three people were reportedly injured. (NOT confirmed)
+
+This is called "conditionnel journalistique" — the journalistic conditional
+→ It signals: "We heard this, but we haven't verified it"
+→ You will see/hear this EVERY DAY in French media
+→ Connection to Project 17 (conditionnel) — now applied to passive structures</code></pre></div>
+<hr>
+<h2>🔹 BLOCK F — Passive Voice in Plus-que-parfait</h2>
+<p><em>Scenario: Something had ALREADY been done before another past event</em><br>
+<em>Connection to Project 32: Plus-que-parfait — previewed here in passive</em></p>
+<table><thead><tr><th>#</th><th>French Sentence (Passive)</th><th>English</th><th>Context</th></tr></thead><tbody><tr><td>46</td><td>La maison <strong>avait été vendue</strong> avant notre arrivée.</td><td>The house had been sold before our arrival.</td><td>Past before past</td></tr><tr><td>47</td><td>Le message <strong>avait été envoyé</strong> trop tard.</td><td>The message had been sent too late.</td><td>Past before past</td></tr><tr><td>48</td><td>Les billets <strong>avaient été réservés</strong> depuis longtemps.</td><td>The tickets had been booked for a long time.</td><td>Prior completion</td></tr><tr><td>49</td><td>La route <strong>avait été bloquée</strong> par un accident.</td><td>The road had been blocked by an accident.</td><td>Past cause</td></tr><tr><td>50</td><td>Le projet <strong>avait été abandonné</strong> plusieurs années auparavant.</td><td>The project had been abandoned several years earlier.</td><td>Distant past</td></tr></tbody></table>
+<p><strong>🧠 Structure unlocked:</strong></p>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>PLUS-QUE-PARFAIT PASSIVE: Subject + AVOIR (imparfait) + ÉTÉ + PP
+</span>→ avait été / avaient été + participe passé
+
+Timeline:
+    [avait été fait]          [autre événement passé]        [maintenant]
+    ←———————————→             ←———————————→
+    past before past          past event                     present
+
+→ "La maison avait été vendue AVANT notre arrivée."
+   = Selling happened BEFORE arriving — two past layers</code></pre></div>
+<hr>
+<h2>🔹 BLOCK G — Passive Without Agent: The Most Common Form</h2>
+<p><em>Scenario: Real-life passive sentences where WHO did it doesn't matter or is unknown</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English</th><th>Why No Agent</th></tr></thead><tbody><tr><td>51</td><td>Le dîner <strong>est servi</strong>.</td><td>Dinner is served.</td><td>Agent irrelevant — formal announcement</td></tr><tr><td>52</td><td>C'<strong>est</strong> bien <strong>fait</strong>.</td><td>It's well done.</td><td>General quality judgment</td></tr><tr><td>53</td><td>Le problème <strong>est résolu</strong>.</td><td>The problem is solved.</td><td>Focus on result, not solver</td></tr><tr><td>54</td><td>La réunion <strong>est annulée</strong>.</td><td>The meeting is cancelled.</td><td>Agent unimportant</td></tr><tr><td>55</td><td>Les magasins <strong>sont fermés</strong> le dimanche.</td><td>Stores are closed on Sundays.</td><td>General rule</td></tr><tr><td>56</td><td>Mon portefeuille <strong>a été volé</strong>.</td><td>My wallet was stolen.</td><td>Agent unknown</td></tr><tr><td>57</td><td>La fenêtre <strong>a été cassée</strong>.</td><td>The window was broken.</td><td>Agent unknown</td></tr><tr><td>58</td><td>Cette chanson <strong>est chantée</strong> partout.</td><td>This song is sung everywhere.</td><td>Agent = everyone</td></tr><tr><td>59</td><td>Les résultats <strong>sont affichés</strong> sur le site.</td><td>The results are posted on the website.</td><td>Agent unimportant</td></tr><tr><td>60</td><td>Le contrat <strong>a été signé</strong>.</td><td>The contract has been signed.</td><td>Focus on completion</td></tr></tbody></table>
+<p><strong>🧠 KEY INSIGHT — Agentless Passive is the DEFAULT in French:</strong></p>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>In real French, MOST passive sentences have NO AGENT:
+</span>→ "Le dîner est servi." (NOT "Le dîner est servi par le serveur.")
+→ "La décision a été prise." (NOT "La décision a été prise par le directeur.")
+
+WHY?
+→ French often uses passive to HIDE or DEEMPHASIZE the doer
+→ The focus is on the ACTION or RESULT — not on WHO did it
+→ This is especially true in:
+   → Official announcements
+   → News reports
+   → Rules and regulations
+   → Museum descriptions
+   → Professional communication</code></pre></div>
+<hr>
+<h2>🔹 BLOCK H — Active vs. Passive: The Transformation Practice</h2>
+<p><em>Scenario: Same information — two ways to express it — knowing WHEN to choose which</em></p>
+<table><thead><tr><th>#</th><th>Active</th><th>Passive</th><th>When Passive is Better</th></tr></thead><tbody><tr><td>61</td><td>Victor Hugo a écrit ce roman.</td><td>Ce roman <strong>a été écrit</strong> par Victor Hugo.</td><td>Museum plaque — focus on the work</td></tr><tr><td>62</td><td>Un incendie a détruit le bâtiment.</td><td>Le bâtiment <strong>a été détruit</strong> par un incendie.</td><td>News report — focus on damage</td></tr><tr><td>63</td><td>Le maire inaugurera le parc.</td><td>Le parc <strong>sera inauguré</strong> par le maire.</td><td>Official announcement</td></tr><tr><td>64</td><td>On a reporté la réunion.</td><td>La réunion <strong>a été reportée</strong>.</td><td>Email notification — agent irrelevant</td></tr><tr><td>65</td><td>Quelqu'un a cassé la vitre.</td><td>La vitre <strong>a été cassée</strong>.</td><td>Police report — agent unknown</td></tr><tr><td>66</td><td>Les étudiants doivent rendre les devoirs vendredi.</td><td>Les devoirs <strong>doivent être rendus</strong> vendredi.</td><td>Rule — focus on action required</td></tr><tr><td>67</td><td>On peut voir la tour d'ici.</td><td>La tour <strong>peut être vue</strong> d'ici.</td><td>Description — focus on the tower</td></tr><tr><td>68</td><td>On doit respecter les règles.</td><td>Les règles <strong>doivent être respectées</strong>.</td><td>Official sign — focus on rules</td></tr><tr><td>69</td><td>Gustave Eiffel a construit cette tour.</td><td>Cette tour <strong>a été construite</strong> par Gustave Eiffel.</td><td>Tourist guide — focus on the tower</td></tr><tr><td>70</td><td>Ma mère a préparé ce gâteau.</td><td>Ce gâteau <strong>a été préparé</strong> par ma mère.</td><td>Rarely passive — too personal</td></tr></tbody></table>
+<p><strong>🧠 PASSIVE WITH MODAL VERBS (Sentences 66-68):</strong></p>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>DEVOIR + ÊTRE + PP:
+</span>→ Les devoirs doivent être rendus. (Homework must be submitted.)
+→ Ce document doit être signé.     (This document must be signed.)
+
+POUVOIR + ÊTRE + PP:
+→ La tour peut être vue d'ici.     (The tower can be seen from here.)
+→ Ce problème peut être résolu.    (This problem can be solved.)
+
+Structure: Subject + MODAL VERB + ÊTRE + PP (agrees with subject)
+→ The modal verb conjugates normally
+→ ÊTRE stays in infinitif
+→ PP agrees with the subject</code></pre></div>
+<hr>
+<h2>🔹 BLOCK I — When NOT to Use Passive — French Alternatives</h2>
+<p><em>Scenario: Situations where English uses passive but French prefers active structures</em></p>
+<table><thead><tr><th>#</th><th>English (Passive)</th><th>❌ Literal French Passive</th><th>✅ Natural French Alternative</th><th>Structure Used</th></tr></thead><tbody><tr><td>71</td><td>I was given a book.</td><td><del>J'ai été donné un livre.</del></td><td>On <strong>m'a donné</strong> un livre.</td><td>ON + active</td></tr><tr><td>72</td><td>She was told the truth.</td><td><del>Elle a été dite la vérité.</del></td><td>On <strong>lui a dit</strong> la vérité.</td><td>ON + active</td></tr><tr><td>73</td><td>We were asked to leave.</td><td><del>Nous avons été demandés de partir.</del></td><td>On <strong>nous a demandé</strong> de partir.</td><td>ON + active</td></tr><tr><td>74</td><td>He was offered a job.</td><td><del>Il a été offert un emploi.</del></td><td>On <strong>lui a offert</strong> un emploi.</td><td>ON + active</td></tr><tr><td>75</td><td>They were shown the way.</td><td><del>Ils ont été montrés le chemin.</del></td><td>On <strong>leur a montré</strong> le chemin.</td><td>ON + active</td></tr><tr><td>76</td><td>I was born in Paris.</td><td>—</td><td>Je <strong>suis né(e)</strong> à Paris.</td><td>Fixed expression (être + né)</td></tr><tr><td>77</td><td>French is spoken here.</td><td>Le français est parlé ici. ✅</td><td>Ici, on <strong>parle</strong> français.</td><td>ON + active (more natural)</td></tr><tr><td>78</td><td>This car was sold yesterday.</td><td>Cette voiture a été vendue hier. ✅</td><td>On <strong>a vendu</strong> cette voiture hier.</td><td>ON + active (casual)</td></tr><tr><td>79</td><td>The house is being renovated.</td><td>La maison est rénovée. ✅</td><td>La maison <strong>est en train d'être</strong> rénovée.</td><td>Être en train de + passive</td></tr><tr><td>80</td><td>Mistakes were made.</td><td>Des erreurs ont été faites. ✅</td><td><strong>Il y a eu</strong> des erreurs.</td><td>Il y a eu (impersonal)</td></tr></tbody></table>
+<p><strong>🧠 CRITICAL RULE — VERBS THAT CANNOT BE PASSIVE IN FRENCH:</strong></p>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>In English, you can make almost ANY verb passive.
+</span>In French, ONLY VERBS WITH A DIRECT OBJECT (COD) can be made passive.
+
+INDIRECT OBJECT verbs (COI — verbs with "à") CANNOT be passive:
+
+❌ "She was told" → dire À quelqu'un → CANNOT be passive
+   ✅ On lui a dit.
+
+❌ "He was given" → donner À quelqu'un → CANNOT be passive
+   ✅ On lui a donné.
+
+❌ "They were asked" → demander À quelqu'un → CANNOT be passive
+   ✅ On leur a demandé.
+
+❌ "I was offered" → offrir À quelqu'un → CANNOT be passive
+   ✅ On m'a offert.
+
+RULE: If the person is an INDIRECT OBJECT (COI) in active voice
+→ They CANNOT become the subject of a passive sentence
+→ Use "ON" + active voice instead</code></pre></div>
+<p><strong>🧠 "ON" — THE FRENCH PASSIVE REPLACEMENT:</strong></p>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>French VERY often uses "ON" + active verb instead of passive voice:
+</span>
+PASSIVE:  Le français est parlé ici.
+ACTIVE:   On parle français ici.        ← MORE NATURAL in speech
+
+PASSIVE:  Le suspect a été arrêté.
+ACTIVE:   On a arrêté le suspect.       ← MORE NATURAL in casual contexts
+
+"ON" = unspecified agent = "someone" / "people" / "they" / "we"
+→ This is the PREFERRED structure in spoken French
+→ Passive voice is more common in WRITTEN / FORMAL French</code></pre></div>
+<hr>
+<h2>🔹 BLOCK J — Full Contexts: Passive in Real-Life Situations</h2>
+<p><em>Scenario: Museum, news, work, daily life — passive voice in natural context</em></p>
+<h3>Museum / Tourism:</h3>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English</th><th>Tense</th></tr></thead><tbody><tr><td>81</td><td>Ce château <strong>a été construit</strong> au XIIe siècle.</td><td>This castle was built in the 12th century.</td><td>PC passive</td></tr><tr><td>82</td><td>Il <strong>a été restauré</strong> en 2005.</td><td>It was restored in 2005.</td><td>PC passive</td></tr><tr><td>83</td><td>Ces fresques <strong>ont été peintes</strong> par des artistes italiens.</td><td>These frescoes were painted by Italian artists.</td><td>PC passive</td></tr><tr><td>84</td><td>La cathédrale <strong>est classée</strong> monument historique.</td><td>The cathedral is classified as a historical monument.</td><td>Présent passive</td></tr><tr><td>85</td><td>Ce site <strong>est visité</strong> par deux millions de touristes chaque année.</td><td>This site is visited by two million tourists each year.</td><td>Présent passive</td></tr></tbody></table>
+<h3>News / Media:</h3>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English</th><th>Tense</th></tr></thead><tbody><tr><td>86</td><td>Trois personnes <strong>ont été blessées</strong> dans l'accident.</td><td>Three people were injured in the accident.</td><td>PC passive</td></tr><tr><td>87</td><td>Le suspect <strong>a été interpellé</strong> hier soir.</td><td>The suspect was apprehended last night.</td><td>PC passive</td></tr><tr><td>88</td><td>De nouvelles mesures <strong>seront annoncées</strong> demain.</td><td>New measures will be announced tomorrow.</td><td>Futur passive</td></tr><tr><td>89</td><td>Le président <strong>aurait été informé</strong> de la situation.</td><td>The president reportedly was informed of the situation.</td><td>Conditionnel passé passive</td></tr><tr><td>90</td><td>Une enquête <strong>a été ouverte</strong> par le procureur.</td><td>An investigation was opened by the prosecutor.</td><td>PC passive</td></tr></tbody></table>
+<h3>Work / Professional:</h3>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English</th><th>Tense</th></tr></thead><tbody><tr><td>91</td><td>Votre candidature <strong>a été retenue</strong>.</td><td>Your application has been accepted.</td><td>PC passive</td></tr><tr><td>92</td><td>Le rapport <strong>doit être soumis</strong> avant vendredi.</td><td>The report must be submitted before Friday.</td><td>Modal + passive</td></tr><tr><td>93</td><td>Les employés <strong>seront informés</strong> par email.</td><td>Employees will be informed by email.</td><td>Futur passive</td></tr><tr><td>94</td><td>Cette offre <strong>est réservée</strong> aux membres.</td><td>This offer is reserved for members.</td><td>Présent passive</td></tr><tr><td>95</td><td>Le poste <strong>a été pourvu</strong>.</td><td>The position has been filled.</td><td>PC passive</td></tr></tbody></table>
+<h3>Daily Life:</h3>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English</th><th>Tense</th></tr></thead><tbody><tr><td>96</td><td>Le dîner <strong>est prêt</strong>. C'<strong>est</strong> bien <strong>cuit</strong>.</td><td>Dinner is ready. It's well cooked.</td><td>Présent — state</td></tr><tr><td>97</td><td>Ma voiture <strong>est garée</strong> devant la maison.</td><td>My car is parked in front of the house.</td><td>Présent — state</td></tr><tr><td>98</td><td>Les enfants <strong>sont inscrits</strong> à l'école.</td><td>The children are enrolled in school.</td><td>Présent — state</td></tr><tr><td>99</td><td>Ce produit <strong>est fabriqué</strong> en France.</td><td>This product is made in France.</td><td>Présent passive</td></tr><tr><td>100</td><td>Cette photo <strong>a été prise</strong> en Italie.</td><td>This photo was taken in Italy.</td><td>PC passive</td></tr></tbody></table>
+<hr>
+<h1>✅ WHAT SHOULD DO</h1>
+<p>→ <strong>Recognize passive in reading/listening FIRST</strong> — don't try to produce it immediately<br>
+→ <strong>Look for "être + participe passé"</strong> — this is the passive signature<br>
+→ <strong>Check for agent "par..."</strong> — confirms it's passive, not just a description<br>
+→ <strong>Master the agreement</strong> — PP always agrees with the subject in passive<br>
+→ <strong>Use "ON" + active for casual speech</strong> — passive is mainly for formal/written French<br>
+→ <strong>Practice transforming active → passive</strong> — it trains your brain to see both directions<br>
+→ <strong>Pay attention to news French</strong> — passive voice appears in almost every news sentence</p>
+<hr>
+<h1>❌ WHAT SHOULD NOT DO</h1>
+<p>→ ❌ Do NOT make COI verbs passive</p>
+<table><thead><tr><th>Wrong</th><th>Correct</th></tr></thead><tbody><tr><td><del>Elle a été dit la vérité</del></td><td>On <strong>lui a dit</strong> la vérité</td></tr><tr><td><del>Il a été donné un cadeau</del></td><td>On <strong>lui a donné</strong> un cadeau</td></tr><tr><td><del>J'ai été demandé de partir</del></td><td>On <strong>m'a demandé</strong> de partir</td></tr><tr><td><del>Ils ont été montré le chemin</del></td><td>On <strong>leur a montré</strong> le chemin</td></tr></tbody></table>
+<p>→ ❌ Do NOT forget agreement of past participle with subject</p>
+<table><thead><tr><th>Wrong</th><th>Correct</th></tr></thead><tbody><tr><td><del>La lettre a été envoyé</del></td><td>La lettre a été envoyé<strong>e</strong></td></tr><tr><td><del>Les filles ont été invité</del></td><td>Les filles ont été invité<strong>es</strong></td></tr><tr><td><del>La décision a été pris</del></td><td>La décision a été pris<strong>e</strong></td></tr></tbody></table>
+<p>→ ❌ Do NOT confuse passive with passé composé of être-verbs (Project 9)</p>
+<table><thead><tr><th>Passive (action done TO subject)</th><th>Passé composé with être (action done BY subject)</th></tr></thead><tbody><tr><td>Elle <strong>est invitée</strong> par Marie. (She is invited by Marie — passive)</td><td>Elle <strong>est arrivée</strong> à Paris. (She arrived in Paris — active PC)</td></tr><tr><td>Le livre <strong>est vendu</strong> en librairie. (The book is sold in bookstores — passive)</td><td>Il <strong>est parti</strong> ce matin. (He left this morning — active PC)</td></tr></tbody></table>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>HOW TO TELL THE DIFFERENCE:
+</span>→ Can you add "PAR quelqu'un"? → PASSIVE
+   "Elle est invitée PAR Marie." ✅ → passive
+→ Is the verb a movement/state-change verb (aller, venir, partir, arriver, naître, mourir)?
+   → PASSÉ COMPOSÉ with être — NOT passive
+   "Elle est arrivée." → active PC (arriver = movement verb)</code></pre></div>
+<p>→ ❌ Do NOT overuse passive in casual speech</p>
+<table><thead><tr><th>Unnatural (casual context)</th><th>Natural</th></tr></thead><tbody><tr><td><del>Le café a été préparé par Pierre.</del></td><td>Pierre a préparé le café. / C'est Pierre qui a préparé le café.</td></tr><tr><td><del>Le film a été regardé par nous.</del></td><td>On a regardé le film.</td></tr></tbody></table>
+<p>→ ❌ Do NOT use passive for intransitive verbs (verbs with NO object)</p>
+<table><thead><tr><th>Impossible</th><th>Why</th></tr></thead><tbody><tr><td><del>Il est dormi.</del></td><td>Dormir has no direct object — cannot be passive</td></tr><tr><td><del>Elle est partie par quelqu'un.</del></td><td>Partir is intransitive — cannot be passive</td></tr><tr><td><del>Il est tombé par la pluie.</del></td><td>Tomber is intransitive — cannot be passive</td></tr></tbody></table>
+<hr>
+<h1>🔀 WHEN TO USE WHAT</h1>
+<table><thead><tr><th>Context</th><th>Use Passive?</th><th>Alternative</th><th>Why</th></tr></thead><tbody><tr><td>Museum plaques, monuments</td><td>✅ YES</td><td>—</td><td>Focus on the object/artwork, not the creator</td></tr><tr><td>News reports, headlines</td><td>✅ YES</td><td>—</td><td>Focus on the event, not the agent</td></tr><tr><td>Official announcements</td><td>✅ YES</td><td>—</td><td>Formal tone — focus on what was decided</td></tr><tr><td>Professional emails, reports</td><td>✅ YES</td><td>—</td><td>Objective tone — depersonalized</td></tr><tr><td>Rules, regulations, signs</td><td>✅ YES</td><td>—</td><td>Focus on what must be done</td></tr><tr><td>Casual conversation</td><td>⚠️ RARELY</td><td>ON + active</td><td>Passive sounds too formal for daily chat</td></tr><tr><td>Telling personal stories</td><td>⚠️ RARELY</td><td>Active voice</td><td>Stories need active subjects — doers</td></tr><tr><td>Agent is a person you know</td><td>⚠️ RARELY</td><td>Active voice</td><td>"Mon père a fait ça" is more natural than "Ça a été fait par mon père"</td></tr><tr><td>COI verbs (dire à, donner à)</td><td>❌ NEVER</td><td>ON + active</td><td>French cannot passivize COI verbs</td></tr><tr><td>Intransitive verbs</td><td>❌ NEVER</td><td>Active only</td><td>No object → no passive possible</td></tr></tbody></table>
+<hr>
+<h1>🚫 WHEN NOT TO USE</h1>
+<table><thead><tr><th>Situation</th><th>Do NOT Use Passive</th><th>Use Instead</th><th>Why</th></tr></thead><tbody><tr><td>Casual speech between friends</td><td>Passive</td><td>On + active / C'est...qui</td><td>Passive sounds stiff in casual French</td></tr><tr><td>Verb takes indirect object only</td><td>Passive</td><td>On + COI + active verb</td><td>COI verbs cannot be passivized</td></tr><tr><td>Intransitive verbs (no object)</td><td>Passive</td><td>Active only</td><td>No object = no passive</td></tr><tr><td>You want to EMPHASIZE the doer</td><td>Passive</td><td>C'est [doer] qui + active</td><td>Passive hides the doer — opposite effect</td></tr><tr><td>Reflexive verbs</td><td>Passive</td><td>Keep reflexive</td><td>"Ça se fait" NOT "Ça est fait par..."</td></tr></tbody></table>
+<p><strong>🧠 REFLEXIVE AS PASSIVE ALTERNATIVE — PREVIEW:</strong></p>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>French often uses REFLEXIVE verbs where English uses passive:
+</span>
+ENGLISH PASSIVE:     French is spoken here.
+FRENCH REFLEXIVE:    Le français SE PARLE ici.
+
+ENGLISH PASSIVE:     This dish is eaten cold.
+FRENCH REFLEXIVE:    Ce plat SE MANGE froid.
+
+ENGLISH PASSIVE:     That can be explained.
+FRENCH REFLEXIVE:    Ça S'EXPLIQUE.
+
+"Se + verb" = "is [verb]-ed" — very common in French
+→ Already encountered reflexive verbs in Project 14
+→ This passive-reflexive use is a NATURAL extension
+→ Often preferred over formal passive in spoken French</code></pre></div>
+<hr>
+<h1>⚠️ COMMON PITFALLS AND FAILURE MODES</h1>
+<table><thead><tr><th>Pitfall</th><th>What Learners Do</th><th>Why It's Wrong</th><th>Fix</th></tr></thead><tbody><tr><td><strong>COI passive</strong></td><td>"Elle a été dit la vérité"</td><td>Dire À = COI — cannot be passive</td><td>On lui a dit la vérité</td></tr><tr><td><strong>No agreement</strong></td><td>"La porte a été fermé"</td><td>PP must agree with subject</td><td>La porte a été fermé<strong>e</strong></td></tr><tr><td><strong>Confusing PC être verbs</strong></td><td>Thinking "Elle est arrivée" is passive</td><td>Arriver = movement verb — active PC with être</td><td>Only transitive verbs can be passive</td></tr><tr><td><strong>Overusing in speech</strong></td><td>"Le café a été fait par moi"</td><td>Sounds robotic in casual French</td><td>J'ai fait le café / C'est moi qui ai fait le café</td></tr><tr><td><strong>Passive with intransitive</strong></td><td>"Il est dormi"</td><td>Dormir has no object</td><td>Il a dormi (active only)</td></tr><tr><td><strong>Wrong auxiliary</strong></td><td>"La lettre est été envoyée"</td><td>Passive PC = a été (not est été)</td><td>La lettre <strong>a été</strong> envoyée</td></tr><tr><td><strong>Forgetting "par" vs "de"</strong></td><td>Always using "par"</td><td>Some state verbs prefer "de"</td><td>Respecté <strong>de</strong> / Entouré <strong>de</strong> / Aimé <strong>de</strong></td></tr><tr><td><strong>Translating all English passives</strong></td><td>Making every English passive into French passive</td><td>French often prefers ON + active or reflexive</td><td>Check if ON or SE works better</td></tr><tr><td><strong>Not recognizing in reading</strong></td><td>Missing passive structures in text</td><td>Passive is everywhere in formal French</td><td>Train to spot "être + PP + [par]"</td></tr><tr><td><strong>State vs. action confusion</strong></td><td>"La porte est fermée" — passive or description?</td><td>Both are possible — context decides</td><td>Agent (par) = action / No agent = probably state</td></tr></tbody></table>
+<hr>
+<h1>🔑 KEY TAKEAWAY</h1>
+<blockquote>
+<p><strong>The passive voice flips your sentence perspective — from WHO did it to WHAT was done.</strong></p>
+<p>→ Projects 1-23 built <strong>active sentences</strong> — the doer is always the subject<br>
+→ Project 24 introduces <strong>passive sentences</strong> — the receiver becomes the subject</p>
+<p>→ The system is elegantly simple:</p>
+<table><thead><tr><th>Component</th><th>Role</th></tr></thead><tbody><tr><td>ÊTRE (any tense)</td><td>Carries the TIME of the action</td></tr><tr><td>PARTICIPE PASSÉ</td><td>Carries the ACTION (always agrees with subject)</td></tr><tr><td>PAR + agent</td><td>Identifies WHO did it (optional)</td></tr></tbody></table>
+<p>→ Three ways to express "someone did something" in French:</p>
+<table><thead><tr><th>Style</th><th>Example</th><th>Best For</th></tr></thead><tbody><tr><td><strong>Active</strong></td><td>La police a arrêté le suspect.</td><td>Casual, personal, storytelling</td></tr><tr><td><strong>Passive</strong></td><td>Le suspect a été arrêté par la police.</td><td>Formal, news, official, written</td></tr><tr><td><strong>ON + active</strong></td><td>On a arrêté le suspect.</td><td>Casual, unknown agent</td></tr></tbody></table>
+<p>→ You can now <strong>read news, understand museum plaques, follow formal announcements</strong><br>
+→ The passive voice is your gateway to <strong>understanding formal French</strong></p>
+<p>→ But what happens when someone TELLS you what another person said?<br>
+→ "Il a dit qu'il <strong>était</strong> fatigué." — that "était" is not imparfait in the usual sense<br>
+→ It's <strong>reported speech</strong> — the tenses SHIFT when you report what someone else said</p>
+</blockquote>
+<hr>
+<h1>🌉 BRIDGE TO PROJECT 25</h1>
+<blockquote>
+<p>You can now understand and build passive sentences across all tenses<br>
+But in daily life, you constantly need to <strong>report what others said</strong>:</p>
+<p>→ Your boss said: "La réunion est à 15h." (direct speech)<br>
+→ You tell a colleague: "Il a dit que la réunion <strong>était</strong> à 15h." (reported speech)</p>
+<p>→ The tenses SHIFT backward when reporting past speech:<br>
+→ présent → imparfait<br>
+→ passé composé → plus-que-parfait<br>
+→ futur → conditionnel</p>
+<p>→ This is <strong>discours indirect</strong> — indirect/reported speech<br>
+→ It combines EVERYTHING you've learned — tenses, pronouns, que-clauses</p>
+<p>→ Project 25: <strong>"He Said That, She Told Me"</strong></p>
+</blockquote>
+<hr>
+<h1>✅ PROJECT 24 COMPLETE</h1>
+<blockquote>
+<p><strong>Are you ready for PROJECT 25: "He Said That, She Told Me"?</strong><br>
+→ ~100 sentences covering reported speech structures (discours indirect)<br>
+→ Scenario: You're reporting what someone else said to a third person<br>
+→ Builds on all tenses — now they SHIFT when placed inside reported speech</p>
+</blockquote>
+</div>
+</div>
+
+<!-- ========== data-index="19" ========== -->
+
+        </div>
+
+        <div class="nav-bar">
+            <a href="project-23.html" class="nav-button prev">← Previous Chapter</a>
+            <div class="page-info">
+                <a href="index.html" class="nav-button home">📚 Table of Contents</a><br>
+                <span style="margin-top:8px;display:block">Chapter 24 of 50</span>
+            </div>
+            <a href="project-25.html" class="nav-button next">Next Chapter →</a>
+        </div>
+    </div>
+
+    
+    <div id="progress-track"><div id="progress-fill"></div></div>
+    <div id="progress-pct">0%</div>
+
+
+    <script>
+    const fill = document.getElementById('progress-fill');
+    const pct  = document.getElementById('progress-pct');
+    function updateProgress() {
+        const scrollTop = window.scrollY;
+        const docHeight = document.body.scrollHeight - window.innerHeight;
+        const scrolled  = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+        fill.style.height = scrolled + '%';
+        pct.textContent   = Math.round(scrolled) + '%';
+    }
+    window.addEventListener('scroll', updateProgress);
+    updateProgress();
+
+    document.addEventListener('keydown', function(e) {
+        if (['INPUT','TEXTAREA'].includes(document.activeElement.tagName)) return;
+        if (e.key === 'ArrowLeft') {
+            const b = document.querySelector('.nav-button.prev');
+            if (b && !b.classList.contains('disabled')) window.location.href = b.href;
+        }
+        if (e.key === 'ArrowRight') {
+            const b = document.querySelector('.nav-button.next');
+            if (b && !b.classList.contains('disabled')) window.location.href = b.href;
+        }
+    });
+    </script>
+
+</body>
+</html>

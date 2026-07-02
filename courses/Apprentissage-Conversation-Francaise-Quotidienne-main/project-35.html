@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="images/favicon.png">
+    <title>Project 35: "I Should Have, I Could Have" — French Daily Sentences</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.75;
+            color: #1a202c;
+            background-color: #f7fafc;
+        }
+        .container {
+            max-width: 1800px;
+            margin: 0 auto;
+            background: white;
+            min-height: 100vh;
+            box-shadow: 0 0 30px rgba(0,0,0,0.08);
+            padding: 48px 52px;
+        }
+        
+        .content { max-width: 1700px; margin: 0 auto; color: #1a202c; }
+        .content h1 {
+            color: #1a202c; margin: 32px 0 20px;
+            padding-bottom: 12px;
+            border-bottom: 4px solid #3b82f6;
+            font-size: 2.1em;
+            font-weight: 700;
+        }
+        .content h2 {
+            color: #1a202c; margin: 28px 0 16px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #60a5fa;
+            font-size: 1.6em;
+            font-weight: 600;
+        }
+        .content h3 { color: #1a202c; margin: 22px 0 12px; font-size: 1.3em; font-weight: 600; }
+        .content h4 { color: #2d3748; margin: 18px 0 10px; font-size: 1.1em; font-weight: 600; }
+        .content p  { margin-bottom: 16px; line-height: 1.8; color: #1a202c; }
+        .content ul, .content ol { margin: 12px 0 18px 30px; color: #1a202c; }
+        .content li { margin-bottom: 8px; line-height: 1.75; color: #1a202c; }
+        .content hr { border: none; border-top: 2px solid #e2e8f0; margin: 26px 0; }
+        .content pre {
+            background: #f7fafc !important;
+            border: 1px solid #cbd5e0 !important;
+            border-left: 4px solid #3b82f6 !important;
+            padding: 18px !important; overflow-x: auto; margin: 18px 0; border-radius: 6px;
+            font-family: 'Consolas','Monaco','Courier New',monospace !important;
+            font-size: 0.9em !important;
+        }
+        .content pre:not([style*="color"]) { color: #1a202c !important; }
+        .content code {
+            font-family: 'Consolas','Monaco','Courier New',monospace !important;
+            font-size: 0.88em !important;
+        }
+        .content code:not(pre code) {
+            background: #dbeafe !important;
+            color: #1a202c !important;
+            padding: 2px 6px;
+            border-radius: 3px;
+        }
+        .content pre code { background: transparent !important; padding: 0; }
+        .content table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+        .content th {
+            background: linear-gradient(135deg, #3b82f6 0%, #60a5fa 100%);
+            color: white; padding: 12px 16px; text-align: left;
+            font-weight: 600;
+        }
+        .content td { padding: 11px 16px; border: 1px solid #e2e8f0; color: #1a202c; }
+        .content tr:nth-child(even) td { background: #eff6ff; }
+        .content blockquote {
+            border-left: 4px solid #3b82f6; background: #eff6ff;
+            padding: 14px 20px; margin: 18px 0; border-radius: 0 6px 6px 0;
+            color: #1a202c;
+        }
+        .content strong { color: #1a202c; font-weight: 600; }
+        .px-2 { padding: 0; }
+        .chat-message { background: transparent; padding: 0; margin: 0; }
+
+        /* Bottom nav bar only */
+        .nav-bar {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 24px 0;
+            margin-top: 50px;
+            border-top: 3px solid #60a5fa;
+        }
+        .nav-button {
+            display: inline-flex; align-items: center; gap: 8px;
+            padding: 12px 26px;
+            background: linear-gradient(135deg, #3b82f6 0%, #60a5fa 100%);
+            color: white !important; text-decoration: none;
+            border-radius: 8px; font-weight: 600; font-size: 0.95em;
+            transition: all 0.2s;
+            box-shadow: 0 2px 8px rgba(59,130,246,0.35);
+        }
+        .nav-button:hover { transform: translateY(-2px); box-shadow: 0 4px 14px rgba(59,130,246,0.5); }
+        .nav-button.disabled { background: #cbd5e1; box-shadow: none; pointer-events: none; }
+        .nav-button.home {
+            background: linear-gradient(135deg, #ef4444 0%, #f87171 100%);
+            box-shadow: 0 2px 8px rgba(239,68,68,0.35);
+        }
+        .nav-button.home:hover { box-shadow: 0 4px 14px rgba(239,68,68,0.5); }
+        .page-info { color: #718096; font-size: 0.9em; text-align: center; }
+
+        /* Progress bar */
+        #progress-track {
+            position: fixed; top: 20px; right: 20px;
+            width: 10px; height: 150px;
+            background: rgba(59,130,246,0.2);
+            border: 2px solid #3b82f6;
+            border-radius: 6px; overflow: hidden; z-index: 1000;
+        }
+        #progress-fill {
+            width: 100%;
+            background: linear-gradient(180deg, #3b82f6, #2563eb);
+            height: 0%;
+            transition: height 0.15s ease;
+        }
+        #progress-pct {
+            position: fixed; top: 0px; right: 16px;
+            color: #2563eb; font-size: 14px; font-weight: bold;
+            z-index: 1001;
+            text-shadow: 0 1px 2px rgba(255,255,255,0.9);
+            line-height: 20px;
+        }
+
+    </style>
+<link rel="stylesheet" href="assets/chapters.css?v=20260421203847"><script src="assets/chapters.js?v=20260421203847" defer></script>
+</head>
+<body>
+    <div class="container">
+        <div class="content">
+            <div class="chat-message" data-index="9">
+<div class="px-2"><h1>🟠 PROJECT 35: "I Should Have, I Could Have"</h1>
+<h2><em>A day when everything went wrong — reflecting on what should, could, and would have been</em></h2>
+<hr>
+<h1>🎯 THE HYPOTHETICAL PROBLEM</h1>
+<p>→ You had the worst day of your life in Paris<br>
+→ You woke up late → missed a job interview → forgot your friend's birthday → said the wrong thing to your partner → lost your wallet → got caught in the rain without an umbrella<br>
+→ Now you're sitting at home at 11 PM, replaying every mistake<br>
+→ Your brain keeps saying:</p>
+<ul>
+<li>"I should have set an alarm"</li>
+<li>"I could have called to reschedule"</li>
+<li>"I would have liked to be there for her birthday"</li>
+<li>"He shouldn't have reacted like that"</li>
+<li>"We would have had a great evening if..."<br>
+→ In Project 34, you learned to express these regrets <strong>inside si-clauses</strong> — "If I had done X, Y would have happened"<br>
+→ But right now, you don't need conditions — you just need to express <strong>pure standalone regret, reproach, and missed possibility</strong><br>
+→ You try: "Je dois appeler" — but that means "I must call" (NOW — present obligation from P6)<br>
+→ You try: "Je devrais appeler" — that means "I should call" (NOW — polite suggestion from P17)<br>
+→ Neither is right — you need: "J'<strong>aurais dû</strong> appeler" — "I <strong>should have</strong> called" (PAST — it's too late)</li>
+</ul>
+<p><strong>The core realization:</strong><br>
+→ P34 taught conditionnel passé <strong>with a si-clause</strong> as its trigger<br>
+→ P35 teaches conditionnel passé <strong>standing alone</strong> — no condition, just emotion<br>
+→ Combined with <strong>modal verbs</strong> (devoir, pouvoir, vouloir, aimer, falloir), it becomes the full spectrum of human regret</p>
+<hr>
+<h1>🔍 HOW TO APPROACH IT</h1>
+<p>→ Think of the conditionnel passé as having <strong>two lives</strong>:</p>
+<table><thead><tr><th>Life</th><th>Where It Lives</th><th>What It Does</th><th>Project</th></tr></thead><tbody><tr><td>Life 1</td><td>Inside si-clauses</td><td>Result of an unreal past condition</td><td>P34</td></tr><tr><td><strong>Life 2</strong></td><td><strong>Standalone — no si-clause</strong></td><td><strong>Expresses regret, reproach, missed chance, polite past hypothesis</strong></td><td><strong>P35 (NOW)</strong></td></tr></tbody></table>
+<p>→ In Life 2, the conditionnel passé most often combines with <strong>modal verbs</strong>:</p>
+<table><thead><tr><th>Modal Verb</th><th>Conditionnel Passé Form</th><th>Meaning</th></tr></thead><tbody><tr><td><strong>Devoir</strong></td><td>j'aurais dû + infinitif</td><td>I should have / I ought to have</td></tr><tr><td><strong>Pouvoir</strong></td><td>j'aurais pu + infinitif</td><td>I could have / I might have</td></tr><tr><td><strong>Vouloir</strong></td><td>j'aurais voulu + infinitif</td><td>I would have wanted to / I would have liked to</td></tr><tr><td><strong>Aimer</strong></td><td>j'aurais aimé + infinitif</td><td>I would have loved to</td></tr><tr><td><strong>Falloir</strong></td><td>il aurait fallu + infinitif</td><td>It would have been necessary to / One should have</td></tr><tr><td><strong>Savoir</strong></td><td>j'aurais su + infinitif</td><td>I would have known how to</td></tr></tbody></table>
+<p>→ But conditionnel passé also works with <strong>any verb</strong> for standalone hypothetical past statements:</p>
+<ul>
+<li>"J'aurais accepté." = I would have accepted.</li>
+<li>"Elle serait venue." = She would have come.</li>
+<li>"On aurait compris." = We would have understood.</li>
+</ul>
+<hr>
+<h1>🔧 HOW CAN WE SOLVE IT</h1>
+<h2>Quick Recall — Conditionnel Passé Formation (from P34)</h2>
+<code>SUBJECT + AVOIR (conditionnel) or ÊTRE (conditionnel) + PARTICIPE PASSÉ</code>
+<table><thead><tr><th>Subject</th><th>With AVOIR</th><th>With ÊTRE</th></tr></thead><tbody><tr><td>Je / J'</td><td>j'aurais parlé</td><td>je serais parti(e)</td></tr><tr><td>Tu</td><td>tu aurais parlé</td><td>tu serais parti(e)</td></tr><tr><td>Il/Elle/On</td><td>il aurait parlé</td><td>elle serait partie</td></tr><tr><td>Nous</td><td>nous aurions parlé</td><td>nous serions parti(e)s</td></tr><tr><td>Vous</td><td>vous auriez parlé</td><td>vous seriez parti(e)(s)</td></tr><tr><td>Ils/Elles</td><td>ils auraient parlé</td><td>elles seraient parties</td></tr></tbody></table>
+<p>→ Same auxiliary rules as passé composé (P9) — same agreement rules<br>
+→ <strong>New in P35:</strong> When combined with a modal verb, the structure becomes:</p>
+<code>SUBJECT + MODAL VERB (conditionnel passé) + INFINITIF</code>
+<p>Example breakdown:</p>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>J'    aurais    dû     appeler
+</span>│       │        │        │
+│   avoir(cond)  │    infinitif
+│       │        │
+│   auxiliary   past participle of "devoir"
+│
+subject</code></pre></div>
+<p>→ The modal verb goes into conditionnel passé → the ACTION stays as infinitif<br>
+→ This mirrors P6 (present modals: je dois appeler) and P17 (cond. present modals: je devrais appeler)</p>
+<hr>
+<h2>The Three Timelines of Modal Obligation — Complete Map</h2>
+<table><thead><tr><th>Timeline</th><th>Structure</th><th>Example</th><th>Meaning</th></tr></thead><tbody><tr><td>Present obligation</td><td>devoir (présent) + inf</td><td>Je <strong>dois</strong> appeler</td><td>I must call (now) — P6</td></tr><tr><td>Softened suggestion</td><td>devoir (cond. présent) + inf</td><td>Je <strong>devrais</strong> appeler</td><td>I should call (advice) — P17</td></tr><tr><td><strong>Past regret</strong></td><td><strong>devoir (cond. passé) + inf</strong></td><td><strong>J'aurais dû appeler</strong></td><td><strong>I should have called (too late)</strong> — <strong>P35</strong></td></tr></tbody></table>
+<p>→ Same logic applies to pouvoir, vouloir, and all other modals</p>
+<hr>
+<h1>✅ WHAT COULD BE DONE — THE 100 SENTENCES</h1>
+<h2>🔹 BLOCK A — AURAIS DÛ: "I Should Have..." — Personal Regret</h2>
+<p><em>Scenario: Replaying your terrible day — things YOU should have done</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English Meaning</th><th>Emotional Weight</th></tr></thead><tbody><tr><td>1</td><td>J'aurais dû me réveiller plus tôt.</td><td>I should have woken up earlier.</td><td>Mild regret — practical</td></tr><tr><td>2</td><td>J'aurais dû mettre une alarme.</td><td>I should have set an alarm.</td><td>Mild regret — preventable</td></tr><tr><td>3</td><td>J'aurais dû partir avant l'heure de pointe.</td><td>I should have left before rush hour.</td><td>Planning regret</td></tr><tr><td>4</td><td>J'aurais dû vérifier l'adresse avant de sortir.</td><td>I should have checked the address before leaving.</td><td>Preparation regret</td></tr><tr><td>5</td><td>J'aurais dû prendre un parapluie.</td><td>I should have taken an umbrella.</td><td>Classic everyday regret</td></tr><tr><td>6</td><td>J'aurais dû manger ce matin.</td><td>I should have eaten this morning.</td><td>Physical consequence regret</td></tr><tr><td>7</td><td>J'aurais dû appeler pour prévenir de mon retard.</td><td>I should have called to warn about my delay.</td><td>Social responsibility regret</td></tr><tr><td>8</td><td>J'aurais dû préparer mon entretien plus sérieusement.</td><td>I should have prepared for my interview more seriously.</td><td>Career regret</td></tr><tr><td>9</td><td>J'aurais dû noter l'anniversaire de Sophie dans mon agenda.</td><td>I should have written Sophie's birthday in my calendar.</td><td>Friendship regret</td></tr><tr><td>10</td><td>J'aurais dû réfléchir avant de parler.</td><td>I should have thought before speaking.</td><td>Deep personal regret</td></tr></tbody></table>
+<p><strong>🧠 Structure unlocked:</strong> <code>J'aurais dû + infinitif = I should have + past participle</code><br>
+→ This is THE most common regret structure in spoken French<br>
+→ No si-clause needed — the regret stands alone</p>
+<hr>
+<h2>🔹 BLOCK B — AURAIS DÛ: "You/He/She/They Should Have..." — Reproach</h2>
+<p><em>Scenario: Blaming others for what went wrong today</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English Meaning</th><th>Who Is Blamed</th></tr></thead><tbody><tr><td>11</td><td>Tu aurais dû me prévenir.</td><td>You should have warned me.</td><td>Friend — direct reproach</td></tr><tr><td>12</td><td>Tu aurais dû m'envoyer un message.</td><td>You should have sent me a message.</td><td>Friend — mild blame</td></tr><tr><td>13</td><td>Il aurait dû être plus clair dans ses explications.</td><td>He should have been clearer in his explanations.</td><td>Boss/colleague</td></tr><tr><td>14</td><td>Elle aurait dû me rappeler le rendez-vous.</td><td>She should have reminded me about the appointment.</td><td>Assistant/friend</td></tr><tr><td>15</td><td>On aurait dû mieux s'organiser.</td><td>We should have organized ourselves better.</td><td>Shared blame — group</td></tr><tr><td>16</td><td>Nous aurions dû anticiper ce problème.</td><td>We should have anticipated this problem.</td><td>Formal shared blame</td></tr><tr><td>17</td><td>Vous auriez dû lire les conditions avant de signer.</td><td>You should have read the conditions before signing.</td><td>Formal reproach</td></tr><tr><td>18</td><td>Ils auraient dû vérifier les informations.</td><td>They should have verified the information.</td><td>Third party blame</td></tr><tr><td>19</td><td>Le médecin aurait dû prescrire autre chose.</td><td>The doctor should have prescribed something else.</td><td>Professional reproach</td></tr><tr><td>20</td><td>Le gouvernement aurait dû réagir plus tôt.</td><td>The government should have reacted sooner.</td><td>Political reproach</td></tr></tbody></table>
+<p><strong>🧠 Structure unlocked:</strong> <code>[Subject] + aurais/aurait/aurions/auriez/auraient + dû + infinitif</code><br>
+→ When directed at "tu" or "vous" → this is <strong>reproach</strong><br>
+→ When directed at "il/elle/ils" → this is <strong>blame or criticism</strong><br>
+→ When directed at "on/nous" → this is <strong>shared regret</strong><br>
+→ Tone of voice determines whether it's gentle reflection or sharp accusation</p>
+<hr>
+<h2>🔹 BLOCK C — N'AURAIS PAS DÛ: "I/You Shouldn't Have..." — Regret About Action Taken</h2>
+<p><em>Scenario: Things that WERE done but SHOULDN'T have been</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English Meaning</th><th>Key Difference from Block A</th></tr></thead><tbody><tr><td>21</td><td>Je n'aurais pas dû dire ça.</td><td>I shouldn't have said that.</td><td>Regret about something DONE (not undone)</td></tr><tr><td>22</td><td>Je n'aurais pas dû m'énerver.</td><td>I shouldn't have gotten angry.</td><td>Emotional action regret</td></tr><tr><td>23</td><td>Tu n'aurais pas dû lui mentir.</td><td>You shouldn't have lied to him/her.</td><td>Reproach about an action taken</td></tr><tr><td>24</td><td>Elle n'aurait pas dû accepter sans réfléchir.</td><td>She shouldn't have accepted without thinking.</td><td>Criticism of hasty action</td></tr><tr><td>25</td><td>Il n'aurait pas dû démissionner si vite.</td><td>He shouldn't have resigned so quickly.</td><td>Criticism of impulsive decision</td></tr><tr><td>26</td><td>On n'aurait pas dû dépenser autant.</td><td>We shouldn't have spent so much.</td><td>Financial regret</td></tr><tr><td>27</td><td>Nous n'aurions pas dû nous mêler de cette histoire.</td><td>We shouldn't have gotten involved in that situation.</td><td>Boundary regret</td></tr><tr><td>28</td><td>Vous n'auriez pas dû signer ce contrat sans avocat.</td><td>You shouldn't have signed that contract without a lawyer.</td><td>Professional warning (too late)</td></tr><tr><td>29</td><td>Ils n'auraient pas dû annoncer la nouvelle aussi brutalement.</td><td>They shouldn't have announced the news so bluntly.</td><td>Criticism of approach</td></tr><tr><td>30</td><td>Je n'aurais jamais dû lui faire confiance.</td><td>I should never have trusted him/her.</td><td>Deep betrayal regret — ne...jamais (P39)</td></tr></tbody></table>
+<p><strong>🧠 Structure unlocked:</strong> <code>[Subject] + n'aurais/n'aurait pas dû + infinitif = shouldn't have done</code><br>
+→ Block A = regret about NOT doing → "I should have done X" (but didn't)<br>
+→ Block C = regret about DOING → "I shouldn't have done X" (but did)<br>
+→ Sentence 30: <strong>ne...jamais</strong> replaces ne...pas → intensifies the regret (P39 advanced negation)</p>
+<hr>
+<h2>🔹 BLOCK D — AURAIS PU: "I/You Could Have..." — Missed Possibilities</h2>
+<p><em>Scenario: Realizing all the options you HAD but didn't take</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English Meaning</th><th>Nuance</th></tr></thead><tbody><tr><td>31</td><td>J'aurais pu prendre le train au lieu du bus.</td><td>I could have taken the train instead of the bus.</td><td>Missed practical option</td></tr><tr><td>32</td><td>Tu aurais pu me demander de l'aide.</td><td>You could have asked me for help.</td><td>Gentle reproach — "why didn't you?"</td></tr><tr><td>33</td><td>Elle aurait pu réussir si elle avait persévéré.</td><td>She could have succeeded if she had persevered.</td><td>⚠️ Links back to P34 — si-clause appears</td></tr><tr><td>34</td><td>Il aurait pu au moins s'excuser.</td><td>He could have at least apologized.</td><td>Minimum expectation unmet — reproach</td></tr><tr><td>35</td><td>On aurait pu éviter tout ça.</td><td>We could have avoided all of this.</td><td>Collective missed prevention</td></tr><tr><td>36</td><td>Nous aurions pu trouver un compromis.</td><td>We could have found a compromise.</td><td>Negotiation failure regret</td></tr><tr><td>37</td><td>Vous auriez pu nous informer plus tôt.</td><td>You could have informed us earlier.</td><td>Professional reproach</td></tr><tr><td>38</td><td>Ils auraient pu faire un effort.</td><td>They could have made an effort.</td><td>Disappointment in others</td></tr><tr><td>39</td><td>J'aurais pu devenir musicien.</td><td>I could have become a musician.</td><td>Life path not taken</td></tr><tr><td>40</td><td>Ça aurait pu être pire.</td><td>It could have been worse.</td><td>⚠️ POSITIVE framing — silver lining</td></tr></tbody></table>
+<p><strong>🧠 Structure unlocked:</strong> <code>[Subject] + aurais/aurait pu + infinitif = could have done</code><br>
+→ Can express: missed option, gentle reproach, disappointment, OR <strong>consolation</strong> (sentence 40)<br>
+→ "Ça aurait pu être pire" = one of the most common comfort phrases in French<br>
+→ Sentence 33: conditionnel passé standalone + si-clause → shows P34 and P35 naturally merge</p>
+<hr>
+<h2>🔹 BLOCK E — N'AURAIS PAS PU: "I Couldn't Have..." — Impossibility &amp; Defense</h2>
+<p><em>Scenario: Defending yourself — explaining that something was NOT possible</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English Meaning</th><th>Pragmatic Function</th></tr></thead><tbody><tr><td>41</td><td>Je n'aurais pas pu arriver plus tôt, il y avait des embouteillages.</td><td>I couldn't have arrived earlier — there was traffic.</td><td>Self-defense with justification</td></tr><tr><td>42</td><td>Tu n'aurais pas pu le savoir, ne t'en veux pas.</td><td>You couldn't have known — don't blame yourself.</td><td>Comforting someone</td></tr><tr><td>43</td><td>Elle n'aurait pas pu faire mieux dans ces circonstances.</td><td>She couldn't have done better in those circumstances.</td><td>Defending someone</td></tr><tr><td>44</td><td>Il n'aurait pas pu prévoir un tel événement.</td><td>He couldn't have predicted such an event.</td><td>Rational defense</td></tr><tr><td>45</td><td>On n'aurait pas pu imaginer que ça tournerait comme ça.</td><td>We couldn't have imagined it would turn out like this.</td><td>Collective shock — hindsight</td></tr><tr><td>46</td><td>Personne n'aurait pu deviner ce qui allait se passer.</td><td>Nobody could have guessed what was going to happen.</td><td>Universal impossibility — P39 (personne ne)</td></tr><tr><td>47</td><td>Vous n'auriez pas pu être au courant, l'information n'était pas publique.</td><td>You couldn't have been aware — the information wasn't public.</td><td>Professional defense of others</td></tr><tr><td>48</td><td>Même avec plus de temps, je n'aurais pas pu finir ce projet seul.</td><td>Even with more time, I couldn't have finished this project alone.</td><td>Limit acknowledgment</td></tr><tr><td>49</td><td>On n'aurait jamais pu réussir sans ton aide.</td><td>We could never have succeeded without your help.</td><td>⚠️ GRATITUDE through negative impossibility</td></tr><tr><td>50</td><td>Rien n'aurait pu me préparer à cette nouvelle.</td><td>Nothing could have prepared me for this news.</td><td>Deep emotional impossibility — P39 (rien ne)</td></tr></tbody></table>
+<p><strong>🧠 Structure unlocked:</strong> <code>[Subject] + n'aurais/n'aurait pas pu + infinitif = couldn't have done</code><br>
+→ Block D (aurais pu) = missed possibility — "you COULD have but DIDN'T"<br>
+→ Block E (n'aurais pas pu) = impossibility defense — "you COULDN'T have even if you'd tried"<br>
+→ Sentence 49: Negative impossibility → flips into <strong>gratitude</strong> — "we could never have done it without you"<br>
+→ Sentence 50: rien ne + cond.passé → extreme emotional weight</p>
+<hr>
+<h2>🔹 BLOCK F — AURAIS VOULU / AURAIS AIMÉ: "I Would Have Wanted / Loved To..."</h2>
+<p><em>Scenario: Expressing desires that were never fulfilled — gentle, wistful regret</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English Meaning</th><th>Emotional Tone</th></tr></thead><tbody><tr><td>51</td><td>J'aurais voulu être là pour toi.</td><td>I would have wanted to be there for you.</td><td>Tender regret — absence</td></tr><tr><td>52</td><td>J'aurais voulu lui dire au revoir.</td><td>I would have wanted to say goodbye to him/her.</td><td>Loss — death or departure</td></tr><tr><td>53</td><td>J'aurais aimé connaître mon grand-père.</td><td>I would have loved to know my grandfather.</td><td>Family wistfulness</td></tr><tr><td>54</td><td>J'aurais aimé voir ton visage à ce moment-là.</td><td>I would have loved to see your face at that moment.</td><td>Playful regret — missed moment</td></tr><tr><td>55</td><td>Tu aurais adoré cette ville.</td><td>You would have loved this city.</td><td>Sharing an experience the other missed</td></tr><tr><td>56</td><td>Elle aurait voulu venir, mais elle n'a pas pu.</td><td>She would have wanted to come, but she couldn't.</td><td>Explaining someone's absence</td></tr><tr><td>57</td><td>On aurait aimé rester plus longtemps.</td><td>We would have liked to stay longer.</td><td>Travel/visit regret</td></tr><tr><td>58</td><td>Nous aurions souhaité vous rencontrer en personne.</td><td>We would have wished to meet you in person.</td><td>Formal professional regret</td></tr><tr><td>59</td><td>Ils auraient voulu participer, mais ils n'étaient pas disponibles.</td><td>They would have wanted to participate, but they weren't available.</td><td>Explaining third-party absence</td></tr><tr><td>60</td><td>J'aurais tellement aimé que tu sois là.</td><td>I would have so loved for you to be there.</td><td>⚠️ Deep emotional — "que tu sois" = subjonctif (P31)</td></tr></tbody></table>
+<p><strong>🧠 Structure unlocked:</strong> <code>[Subject] + aurais voulu / aurais aimé + infinitif = would have wanted / loved to</code><br>
+→ This is the <strong>gentlest</strong> form of regret — not blame, not reproach, just <strong>longing</strong><br>
+→ Often used when talking about <strong>people who are gone</strong> (death, distance, breakups)<br>
+→ Sentence 60: combines conditionnel passé + subjonctif — emotional peak structure<br>
+→ "Tu aurais adoré..." (sentence 55) uses cond.passé of a NON-modal verb — no infinitif needed — the verb IS the main action</p>
+<hr>
+<h2>🔹 BLOCK G — IL AURAIT FALLU: "It Would Have Been Necessary..." — Impersonal Regret</h2>
+<p><em>Scenario: Reflecting on what NEEDED to happen — without blaming any specific person</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English Meaning</th><th>Why Impersonal</th></tr></thead><tbody><tr><td>61</td><td>Il aurait fallu agir plus vite.</td><td>It would have been necessary to act faster. / We should have acted faster.</td><td>No specific person blamed</td></tr><tr><td>62</td><td>Il aurait fallu prévoir ce risque.</td><td>One should have foreseen this risk.</td><td>Professional/systemic failure</td></tr><tr><td>63</td><td>Il aurait fallu que quelqu'un prenne la décision.</td><td>Someone should have made the decision.</td><td>⚠️ il aurait fallu que + subjonctif (P31)</td></tr><tr><td>64</td><td>Il aurait fallu commencer plus tôt.</td><td>We should have started earlier.</td><td>General timing regret</td></tr><tr><td>65</td><td>Il n'aurait pas fallu accepter ces conditions.</td><td>One shouldn't have accepted those conditions.</td><td>Negative — systemic reproach</td></tr><tr><td>66</td><td>Il aurait fallu y penser avant.</td><td>One should have thought about it before.</td><td>Classic hindsight phrase</td></tr><tr><td>67</td><td>Il aurait fallu être là pour comprendre.</td><td>You would have had to be there to understand.</td><td>Justifying — "you can't judge"</td></tr><tr><td>68</td><td>Il aurait suffi d'un coup de téléphone.</td><td>A single phone call would have been enough.</td><td>⚠️ suffire(cond.passé) — minimal action regret</td></tr><tr><td>69</td><td>Il aurait mieux valu ne rien dire.</td><td>It would have been better to say nothing.</td><td>⚠️ valoir mieux(cond.passé) — evaluating past choices</td></tr><tr><td>70</td><td>Il aurait été préférable d'attendre.</td><td>It would have been preferable to wait.</td><td>Formal — diplomatic regret</td></tr></tbody></table>
+<p><strong>🧠 Structure unlocked:</strong> <code>Il aurait fallu / Il aurait suffi / Il aurait mieux valu + infinitif</code><br>
+→ <strong>Impersonal</strong> regret — nobody is directly accused<br>
+→ Very common in <strong>professional, political, and analytical</strong> French<br>
+→ Sentence 63: "il aurait fallu <strong>que</strong> + subjonctif" — when a specific person IS involved, subjonctif appears (P31)<br>
+→ Sentence 68-69: New impersonal expressions — <strong>suffire</strong> (to suffice) and <strong>valoir mieux</strong> (to be better)</p>
+<hr>
+<h2>🔹 BLOCK H — Non-Modal Conditionnel Passé: "I Would Have Done..."</h2>
+<p><em>Scenario: Standalone statements about what you WOULD HAVE done — without devoir/pouvoir/vouloir</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English Meaning</th><th>Verb Type</th></tr></thead><tbody><tr><td>71</td><td>J'aurais accepté avec plaisir.</td><td>I would have accepted with pleasure.</td><td>avoir verb</td></tr><tr><td>72</td><td>J'aurais dit oui sans hésiter.</td><td>I would have said yes without hesitation.</td><td>avoir verb</td></tr><tr><td>73</td><td>Tu aurais compris si tu avais été là.</td><td>You would have understood if you had been there.</td><td>Links to P34 — si-clause reappears</td></tr><tr><td>74</td><td>Elle serait venue si elle avait pu.</td><td>She would have come if she had been able to.</td><td>être verb — agreement: venue</td></tr><tr><td>75</td><td>On aurait fait pareil à ta place.</td><td>We would have done the same in your place.</td><td>Solidarity — normalizing someone's choice</td></tr><tr><td>76</td><td>Nous aurions préféré une autre solution.</td><td>We would have preferred another solution.</td><td>Formal — diplomatic disagreement</td></tr><tr><td>77</td><td>Vous auriez ri si vous aviez vu la scène.</td><td>You would have laughed if you had seen the scene.</td><td>Sharing a missed funny moment</td></tr><tr><td>78</td><td>Ils auraient tout donné pour être là.</td><td>They would have given everything to be there.</td><td>Expressing others' strong desire</td></tr><tr><td>79</td><td>Je ne l'aurais jamais cru possible.</td><td>I would never have believed it possible.</td><td>Expressing shock about past events</td></tr><tr><td>80</td><td>Ça m'aurait fait plaisir de t'aider.</td><td>It would have given me pleasure to help you.</td><td>Warm — "I wish I could have helped"</td></tr></tbody></table>
+<p><strong>🧠 Structure unlocked:</strong> <code>[Subject] + [any verb in cond.passé] = I/you/he would have [done X]</code><br>
+→ No modal verb needed — the main verb itself goes into conditionnel passé<br>
+→ These sentences often appear WITH si-clauses (P34) but can stand ALONE<br>
+→ When standalone → the "condition" is <strong>implied by context</strong>, not stated<br>
+→ Sentence 75: "On aurait fait pareil" — powerful comfort phrase — "we would have done the same thing"</p>
+<hr>
+<h2>🔹 BLOCK I — Reported Unverified Information: "Apparently... / It Is Said That..."</h2>
+<p><em>Scenario: News, rumors, hearsay — the conditionnel passé used to report unconfirmed past events</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English Meaning</th><th>Context</th></tr></thead><tbody><tr><td>81</td><td>Le président aurait pris cette décision hier soir.</td><td>The president reportedly made this decision last night.</td><td>News — unconfirmed</td></tr><tr><td>82</td><td>L'accident aurait fait trois blessés.</td><td>The accident reportedly injured three people.</td><td>Breaking news — unverified</td></tr><tr><td>83</td><td>Il aurait démissionné pour des raisons personnelles.</td><td>He apparently resigned for personal reasons.</td><td>Rumor in workplace</td></tr><tr><td>84</td><td>Elle aurait quitté le pays sans prévenir personne.</td><td>She reportedly left the country without telling anyone.</td><td>Gossip — être verb: quitt<strong>é</strong> stays because quitter uses avoir</td></tr><tr><td>85</td><td>Ils auraient vendu leur maison en secret.</td><td>They apparently sold their house in secret.</td><td>Neighborhood rumor</td></tr><tr><td>86</td><td>Le feu aurait été causé par un court-circuit.</td><td>The fire was reportedly caused by a short circuit.</td><td>Passive voice (P24) + cond.passé</td></tr><tr><td>87</td><td>Le suspect se serait enfui par la fenêtre.</td><td>The suspect reportedly fled through the window.</td><td>Crime report — reflexive + être</td></tr><tr><td>88</td><td>Les négociations auraient échoué.</td><td>The negotiations reportedly failed.</td><td>Diplomatic/business news</td></tr><tr><td>89</td><td>D'après certaines sources, l'accord aurait déjà été signé.</td><td>According to some sources, the agreement has reportedly already been signed.</td><td>Formal journalism</td></tr><tr><td>90</td><td>Selon les témoins, la voiture aurait grillé un feu rouge.</td><td>According to witnesses, the car reportedly ran a red light.</td><td>Witness report</td></tr></tbody></table>
+<p><strong>🧠 Structure unlocked:</strong> <code>[Subject] + [cond.passé] = reportedly / apparently / allegedly [did X]</code><br>
+→ This is a <strong>completely different use</strong> of conditionnel passé — NOT regret, NOT hypothesis<br>
+→ It signals: <strong>"I'm reporting this, but I cannot confirm it's true"</strong><br>
+→ Extremely common in <strong>French journalism, news, gossip</strong><br>
+→ Compare with P17: conditionnel présent for unverified present info ("Il serait malade" = he is reportedly sick)<br>
+→ P35 adds: conditionnel passé for unverified PAST info ("Il aurait démissionné" = he reportedly resigned)<br>
+→ Sentences 86-87: combines with passive (P24) and reflexive (P14) structures</p>
+<hr>
+<h2>🔹 BLOCK J — Full Conversational Flow: The Worst Day Debrief</h2>
+<p><em>Scenario: You call your best friend at midnight to decompress — mixing all Block A–I patterns</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English Meaning</th><th>Block Reference</th></tr></thead><tbody><tr><td>91</td><td>Tu ne vas pas croire la journée que j'ai eue. J'aurais dû rester au lit.</td><td>You won't believe the day I had. I should have stayed in bed.</td><td>Block A — aurais dû</td></tr><tr><td>92</td><td>D'abord, je me suis réveillé en retard — j'aurais dû mettre deux alarmes.</td><td>First, I woke up late — I should have set two alarms.</td><td>Block A — aurais dû</td></tr><tr><td>93</td><td>J'aurais pu prendre un taxi, mais j'ai voulu économiser.</td><td>I could have taken a taxi, but I wanted to save money.</td><td>Block D — aurais pu</td></tr><tr><td>94</td><td>Résultat : j'ai raté mon entretien. J'aurais au moins pu appeler pour reporter.</td><td>Result: I missed my interview. I could have at least called to reschedule.</td><td>Block D — aurais pu + au moins</td></tr><tr><td>95</td><td>Et le pire — j'ai complètement oublié l'anniversaire de Sophie. J'aurais tellement voulu être là.</td><td>And the worst part — I completely forgot Sophie's birthday. I would have so wanted to be there.</td><td>Block F — aurais voulu</td></tr><tr><td>96</td><td>Je n'aurais pas dû m'énerver contre Marc non plus. Il n'y était pour rien.</td><td>I shouldn't have gotten angry at Marc either. It wasn't his fault.</td><td>Block C — n'aurais pas dû</td></tr><tr><td>97</td><td>Il n'aurait pas pu m'aider de toute façon — il ne savait même pas ce qui se passait.</td><td>He couldn't have helped me anyway — he didn't even know what was happening.</td><td>Block E — n'aurait pas pu</td></tr><tr><td>98</td><td>Il aurait fallu que je respire un grand coup et que je prenne les choses une par une.</td><td>I should have taken a deep breath and taken things one at a time.</td><td>Block G — il aurait fallu que + subjonctif</td></tr><tr><td>99</td><td>N'importe qui aurait craqué à ma place. Ça aurait pu être bien pire.</td><td>Anyone would have cracked in my place. It could have been much worse.</td><td>Block H — non-modal + Block D — consolation</td></tr><tr><td>100</td><td>Demain, je ferai mieux. Mais ce soir, j'aurais vraiment aimé que cette journée n'ait jamais existé.</td><td>Tomorrow, I'll do better. But tonight, I would have really liked this day to have never existed.</td><td>Block F — aurais aimé + que + subjonctif passé (P41 preview) + P16 futur simple for tomorrow</td></tr></tbody></table>
+<hr>
+<h1>✅ WHAT SHOULD DO</h1>
+<p>→ <strong>Memorize the "Big Three" modal combos first:</strong></p>
+<ol>
+<li><strong>Aurais dû</strong> = should have (regret about inaction / reproach)</li>
+<li><strong>Aurais pu</strong> = could have (missed possibility / consolation)</li>
+<li><strong>Aurais voulu / aimé</strong> = would have wanted/loved (gentle longing)</li>
+</ol>
+<p>→ <strong>Practice negative forms equally:</strong></p>
+<ul>
+<li>N'aurais <strong>pas</strong> dû = shouldn't have (regret about action taken)</li>
+<li>N'aurais <strong>pas</strong> pu = couldn't have (impossibility defense)</li>
+<li>N'aurais <strong>jamais</strong> dû = should never have (intense regret — P39)</li>
+</ul>
+<p>→ <strong>Recognize the journalism function</strong> (Block I) — completely separate from regret<br>
+→ <strong>Link to P6</strong> — present modals → <strong>Link to P17</strong> — conditionnel modals → <strong>P35</strong> — conditionnel passé modals<br>
+→ <strong>Link to P34</strong> — some sentences naturally attract si-clauses; let them come when they feel right<br>
+→ <strong>Use "Ça aurait pu être pire"</strong> immediately — it's a universal French comfort phrase</p>
+<hr>
+<h1>❌ WHAT SHOULD NOT DO</h1>
+<p>→ ❌ <strong>Do NOT confuse the three modal timelines:</strong></p>
+<table><thead><tr><th>❌ Wrong Confusion</th><th>What It Actually Means</th><th>What You Probably Meant</th></tr></thead><tbody><tr><td>"Je dois appeler"</td><td>I must call NOW</td><td>If you mean past: "J'aurais dû appeler"</td></tr><tr><td>"Je devrais appeler"</td><td>I should call (now, advice)</td><td>If you mean past: "J'aurais dû appeler"</td></tr><tr><td>"J'aurais dû appeler"</td><td>I should have called (too late)</td><td>✅ Correct for past regret</td></tr></tbody></table>
+<p>→ ❌ <strong>Do NOT use être auxiliary for avoir verbs in conditionnel passé:</strong></p>
+<ul>
+<li>❌ <del>Je serais dû appeler</del> → devoir uses AVOIR → J'<strong>aurais</strong> dû appeler</li>
+<li>❌ <del>Elle serait pu venir</del> → pouvoir uses AVOIR → Elle <strong>aurait</strong> pu venir</li>
+</ul>
+<p>→ ❌ <strong>Do NOT forget agreement with être verbs:</strong></p>
+<ul>
+<li>❌ <del>Elle serait venu</del> → Elle serait venu<strong>e</strong></li>
+<li>❌ <del>Elles seraient parti</del> → Elles seraient parti<strong>es</strong></li>
+</ul>
+<p>→ ❌ <strong>Do NOT confuse "aurais pu" (could have) with "aurais dû" (should have):</strong></p>
+<ul>
+<li>"J'aurais pu l'aider" = I had the ability but didn't → <strong>missed chance</strong></li>
+<li>"J'aurais dû l'aider" = I had the obligation but didn't → <strong>moral regret</strong></li>
+<li>Different emotional weight — different social meaning</li>
+</ul>
+<p>→ ❌ <strong>Do NOT use conditionnel passé for things that DID happen:</strong></p>
+<ul>
+<li>❌ "J'aurais mangé ce matin" (when you DID eat) → This means you DIDN'T eat</li>
+<li>✅ "J'ai mangé ce matin" = I ate this morning (passé composé — P9 — real past)</li>
+</ul>
+<p>→ ❌ <strong>Do NOT mix up the journalism use with the regret use:</strong></p>
+<ul>
+<li>"Il aurait démissionné" in a NEWS context = He reportedly resigned (unverified fact)</li>
+<li>"Il aurait démissionné" in a PERSONAL context = He would have resigned (hypothetical)</li>
+<li><strong>Context determines meaning</strong> — same form, different function</li>
+</ul>
+<hr>
+<h1>🔀 WHEN TO USE WHAT — THE COMPLETE MODAL REGRET MAP</h1>
+<table><thead><tr><th>What You Want to Express</th><th>Structure</th><th>Example</th><th>Emotional Color</th></tr></thead><tbody><tr><td>I should have done X</td><td>aurais dû + inf</td><td>J'aurais dû appeler</td><td>Obligation missed — guilt</td></tr><tr><td>I shouldn't have done X</td><td>n'aurais pas dû + inf</td><td>Je n'aurais pas dû crier</td><td>Action regretted — guilt</td></tr><tr><td>I could have done X</td><td>aurais pu + inf</td><td>J'aurais pu prendre le train</td><td>Option missed — practical</td></tr><tr><td>I couldn't have done X</td><td>n'aurais pas pu + inf</td><td>Je n'aurais pas pu savoir</td><td>Defense — impossibility</td></tr><tr><td>I would have wanted to do X</td><td>aurais voulu + inf</td><td>J'aurais voulu être là</td><td>Longing — wistful</td></tr><tr><td>I would have loved to do X</td><td>aurais aimé + inf</td><td>J'aurais aimé te connaître</td><td>Warmth — tenderness</td></tr><tr><td>One should have done X</td><td>il aurait fallu + inf</td><td>Il aurait fallu prévoir</td><td>Impersonal — systemic</td></tr><tr><td>It would have been better to do X</td><td>il aurait mieux valu + inf</td><td>Il aurait mieux valu se taire</td><td>Evaluative — hindsight</td></tr><tr><td>A phone call would have sufficed</td><td>il aurait suffi de + inf</td><td>Il aurait suffi d'appeler</td><td>Minimal effort missed</td></tr><tr><td>X reportedly happened</td><td>[subject] + cond.passé</td><td>Il aurait démissionné</td><td>Journalistic — unverified</td></tr><tr><td>It could have been worse</td><td>ça aurait pu être pire</td><td>Ça aurait pu être pire</td><td>Consolation — silver lining</td></tr><tr><td>Anyone would have done the same</td><td>n'importe qui aurait fait pareil</td><td>N'importe qui aurait fait pareil</td><td>Comfort — normalizing</td></tr></tbody></table>
+<hr>
+<h1>🚫 WHEN NOT TO USE</h1>
+<p>→ <strong>When the event ACTUALLY HAPPENED</strong> → use passé composé (P9) or plus-que-parfait (P32)</p>
+<ul>
+<li>"I called him" = Je l'ai appelé ✅ (real past)</li>
+<li>NOT: "Je l'aurais appelé" (this means I WOULD HAVE called — but didn't)</li>
+</ul>
+<p>→ <strong>When giving present advice</strong> → use conditionnel présent (P17)</p>
+<ul>
+<li>"You should call him" (now) = Tu devrais l'appeler</li>
+<li>NOT: "Tu aurais dû l'appeler" (this is about the PAST — too late)</li>
+</ul>
+<p>→ <strong>When stating a real obligation</strong> → use présent (P6)</p>
+<ul>
+<li>"I must leave" = Je dois partir</li>
+<li>NOT: "J'aurais dû partir" (this means I should have left already)</li>
+</ul>
+<p>→ <strong>When building a si-clause with a condition</strong> → P34 already covers this</p>
+<ul>
+<li>"If I had known, I would have..." = P34 territory</li>
+<li>P35 = when there is NO si-clause — just standalone emotional expression</li>
+</ul>
+<p>→ <strong>When expressing a polite current request</strong> → use conditionnel présent (P17)</p>
+<ul>
+<li>"I would like a coffee" = Je voudrais un café (now)</li>
+<li>NOT: "J'aurais voulu un café" (this means "I would have liked a coffee" — past, missed)</li>
+<li>EXCEPTION: "J'aurais voulu vous poser une question" = very formal politeness — deliberately using past hypothetical for extreme softness → discussed in P48 (cultural calibration)</li>
+</ul>
+<hr>
+<h1>⚠️ COMMON PITFALLS AND FAILURE MODES</h1>
+<table><thead><tr><th>Pitfall</th><th>What Learners Do Wrong</th><th>Why It Fails</th><th>Correct Version</th></tr></thead><tbody><tr><td><strong>Auxiliary confusion on modals</strong></td><td>Je <strong>serais</strong> dû / Je <strong>serais</strong> pu</td><td>Devoir and pouvoir ALWAYS use avoir</td><td>J'<strong>aurais</strong> dû / J'<strong>aurais</strong> pu</td></tr><tr><td><strong>Timeline confusion</strong></td><td>Using "aurais dû" for present advice</td><td>"Aurais dû" = past only — too late</td><td>Present advice = "devrais" (P17)</td></tr><tr><td><strong>Double past participle panic</strong></td><td>Not knowing where the participe passé goes</td><td>Modal goes into cond.passé → action stays infinitif</td><td>J'aurais <strong>dû</strong> (pp of devoir) + <strong>appeler</strong> (infinitif)</td></tr><tr><td><strong>Forgetting "pas" placement</strong></td><td><del>Je n'aurais dû pas dire</del></td><td>"Pas" goes between auxiliary and past participle</td><td>Je n'aurais <strong>pas</strong> dû dire</td></tr><tr><td><strong>Agreement error with être verbs</strong></td><td>Elle aurait pu être venu</td><td>"Venu" modifies "elle" → agreement</td><td>Elle aurait pu être <strong>venue</strong></td></tr><tr><td><strong>Journalism vs. regret confusion</strong></td><td>Reading news "il aurait volé" as "he should have stolen"</td><td>In news context = reportedly stole</td><td>Context determines function</td></tr><tr><td><strong>Overusing in conversation</strong></td><td>Every other sentence is "j'aurais dû..."</td><td>Sounds obsessively regretful / self-flagellating</td><td>Balance with acceptance: "C'est comme ça" / "Tant pis"</td></tr><tr><td><strong>Missing the consolation use</strong></td><td>Only using aurais pu for regret</td><td>"Ça aurait pu être pire" = comfort, not regret</td><td>Learn both regret AND silver-lining functions</td></tr></tbody></table>
+<hr>
+<h1>🔑 KEY TAKEAWAY</h1>
+<blockquote>
+<p><strong>Project 34 gave you conditionnel passé INSIDE si-clauses — triggered by an unreal past condition.</strong><br>
+<strong>Project 35 frees conditionnel passé to stand ALONE — expressing pure regret, reproach, longing, impossibility, and even unverified news.</strong></p>
+<p>The Big Three modal combos are the emotional backbone of French adult speech:</p>
+<ul>
+<li><strong>Aurais dû</strong> = the weight of missed obligation</li>
+<li><strong>Aurais pu</strong> = the sting of missed possibility (or the comfort of "it could have been worse")</li>
+<li><strong>Aurais voulu/aimé</strong> = the tenderness of unfulfilled desire</li>
+</ul>
+<p>These structures separate a learner who describes WHAT HAPPENED from a speaker who reflects on <strong>WHAT COULD HAVE BEEN.</strong></p>
+<p>You now have COMPLETE control over the French hypothetical system:</p>
+<ul>
+<li>P17: Conditionnel présent → polite requests, current imagination</li>
+<li>P18: Si + présent → futur → real conditions</li>
+<li>P33: Si + imparfait → conditionnel présent → unreal present</li>
+<li>P34: Si + plus-que-parfait → conditionnel passé → unreal past</li>
+<li>P35: Conditionnel passé standalone → regret, reproach, longing, news</li>
+</ul>
+<p>But there's one structural challenge remaining: what happens when you need to replace BOTH the direct and indirect object in these complex sentences?</p>
+</blockquote>
+<hr>
+<h1>🌉 BRIDGE TO PROJECT 36</h1>
+<blockquote>
+<p>In many sentences from P35, you saw pronouns appearing naturally:<br>
+→ "Tu aurais dû <strong>me</strong> prévenir" — one pronoun (me = COI)<br>
+→ "Je <strong>le lui</strong> aurais dit" — wait, TWO pronouns? Where do they go?</p>
+<p>You already know COD/COI pronouns individually (P19)<br>
+You already know Y and En (P20)<br>
+But when you need to <strong>stack two pronouns in the same sentence</strong> — especially in compound tenses like conditionnel passé — the order matters critically</p>
+<p>Project 36 unlocks: <strong>Double pronoun placement</strong><br>
+→ "I gave it to him" = Je <strong>le lui</strong> ai donné<br>
+→ "She told me about it" = Elle <strong>m'en</strong> a parlé<br>
+→ "I would have sent it to them" = Je <strong>le leur</strong> aurais envoyé<br>
+→ The precise stacking order that makes French sentences flow like a native's</p>
+</blockquote>
+<hr>
+<h1>✅ PROJECT 35 COMPLETE</h1>
+<blockquote>
+<p><strong>Are you ready for PROJECT 36: "Stack the Pronouns"?</strong><br>
+→ ~100 sentences covering double pronoun placement in all tenses<br>
+→ Scenario: A busy office day where you're constantly referring to things already mentioned<br>
+→ Builds on P19 (COD/COI), P20 (Y/En), and integrates with compound tenses from P9, P32, P34, P35</p>
+</blockquote>
+</div>
+</div>
+
+<!-- ========== data-index="11" ========== -->
+
+        </div>
+
+        <div class="nav-bar">
+            <a href="project-34.html" class="nav-button prev">← Previous Chapter</a>
+            <div class="page-info">
+                <a href="index.html" class="nav-button home">📚 Table of Contents</a><br>
+                <span style="margin-top:8px;display:block">Chapter 35 of 50</span>
+            </div>
+            <a href="project-36.html" class="nav-button next">Next Chapter →</a>
+        </div>
+    </div>
+
+    
+    <div id="progress-track"><div id="progress-fill"></div></div>
+    <div id="progress-pct">0%</div>
+
+
+    <script>
+    const fill = document.getElementById('progress-fill');
+    const pct  = document.getElementById('progress-pct');
+    function updateProgress() {
+        const scrollTop = window.scrollY;
+        const docHeight = document.body.scrollHeight - window.innerHeight;
+        const scrolled  = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+        fill.style.height = scrolled + '%';
+        pct.textContent   = Math.round(scrolled) + '%';
+    }
+    window.addEventListener('scroll', updateProgress);
+    updateProgress();
+
+    document.addEventListener('keydown', function(e) {
+        if (['INPUT','TEXTAREA'].includes(document.activeElement.tagName)) return;
+        if (e.key === 'ArrowLeft') {
+            const b = document.querySelector('.nav-button.prev');
+            if (b && !b.classList.contains('disabled')) window.location.href = b.href;
+        }
+        if (e.key === 'ArrowRight') {
+            const b = document.querySelector('.nav-button.next');
+            if (b && !b.classList.contains('disabled')) window.location.href = b.href;
+        }
+    });
+    </script>
+
+</body>
+</html>

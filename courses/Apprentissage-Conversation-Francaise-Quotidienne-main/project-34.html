@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="images/favicon.png">
+    <title>Project 34: "If Only I Had Known — Part 3" — French Daily Sentences</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.75;
+            color: #1a202c;
+            background-color: #f7fafc;
+        }
+        .container {
+            max-width: 1800px;
+            margin: 0 auto;
+            background: white;
+            min-height: 100vh;
+            box-shadow: 0 0 30px rgba(0,0,0,0.08);
+            padding: 48px 52px;
+        }
+        
+        .content { max-width: 1700px; margin: 0 auto; color: #1a202c; }
+        .content h1 {
+            color: #1a202c; margin: 32px 0 20px;
+            padding-bottom: 12px;
+            border-bottom: 4px solid #3b82f6;
+            font-size: 2.1em;
+            font-weight: 700;
+        }
+        .content h2 {
+            color: #1a202c; margin: 28px 0 16px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #60a5fa;
+            font-size: 1.6em;
+            font-weight: 600;
+        }
+        .content h3 { color: #1a202c; margin: 22px 0 12px; font-size: 1.3em; font-weight: 600; }
+        .content h4 { color: #2d3748; margin: 18px 0 10px; font-size: 1.1em; font-weight: 600; }
+        .content p  { margin-bottom: 16px; line-height: 1.8; color: #1a202c; }
+        .content ul, .content ol { margin: 12px 0 18px 30px; color: #1a202c; }
+        .content li { margin-bottom: 8px; line-height: 1.75; color: #1a202c; }
+        .content hr { border: none; border-top: 2px solid #e2e8f0; margin: 26px 0; }
+        .content pre {
+            background: #f7fafc !important;
+            border: 1px solid #cbd5e0 !important;
+            border-left: 4px solid #3b82f6 !important;
+            padding: 18px !important; overflow-x: auto; margin: 18px 0; border-radius: 6px;
+            font-family: 'Consolas','Monaco','Courier New',monospace !important;
+            font-size: 0.9em !important;
+        }
+        .content pre:not([style*="color"]) { color: #1a202c !important; }
+        .content code {
+            font-family: 'Consolas','Monaco','Courier New',monospace !important;
+            font-size: 0.88em !important;
+        }
+        .content code:not(pre code) {
+            background: #dbeafe !important;
+            color: #1a202c !important;
+            padding: 2px 6px;
+            border-radius: 3px;
+        }
+        .content pre code { background: transparent !important; padding: 0; }
+        .content table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+        .content th {
+            background: linear-gradient(135deg, #3b82f6 0%, #60a5fa 100%);
+            color: white; padding: 12px 16px; text-align: left;
+            font-weight: 600;
+        }
+        .content td { padding: 11px 16px; border: 1px solid #e2e8f0; color: #1a202c; }
+        .content tr:nth-child(even) td { background: #eff6ff; }
+        .content blockquote {
+            border-left: 4px solid #3b82f6; background: #eff6ff;
+            padding: 14px 20px; margin: 18px 0; border-radius: 0 6px 6px 0;
+            color: #1a202c;
+        }
+        .content strong { color: #1a202c; font-weight: 600; }
+        .px-2 { padding: 0; }
+        .chat-message { background: transparent; padding: 0; margin: 0; }
+
+        /* Bottom nav bar only */
+        .nav-bar {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 24px 0;
+            margin-top: 50px;
+            border-top: 3px solid #60a5fa;
+        }
+        .nav-button {
+            display: inline-flex; align-items: center; gap: 8px;
+            padding: 12px 26px;
+            background: linear-gradient(135deg, #3b82f6 0%, #60a5fa 100%);
+            color: white !important; text-decoration: none;
+            border-radius: 8px; font-weight: 600; font-size: 0.95em;
+            transition: all 0.2s;
+            box-shadow: 0 2px 8px rgba(59,130,246,0.35);
+        }
+        .nav-button:hover { transform: translateY(-2px); box-shadow: 0 4px 14px rgba(59,130,246,0.5); }
+        .nav-button.disabled { background: #cbd5e1; box-shadow: none; pointer-events: none; }
+        .nav-button.home {
+            background: linear-gradient(135deg, #ef4444 0%, #f87171 100%);
+            box-shadow: 0 2px 8px rgba(239,68,68,0.35);
+        }
+        .nav-button.home:hover { box-shadow: 0 4px 14px rgba(239,68,68,0.5); }
+        .page-info { color: #718096; font-size: 0.9em; text-align: center; }
+
+        /* Progress bar */
+        #progress-track {
+            position: fixed; top: 20px; right: 20px;
+            width: 10px; height: 150px;
+            background: rgba(59,130,246,0.2);
+            border: 2px solid #3b82f6;
+            border-radius: 6px; overflow: hidden; z-index: 1000;
+        }
+        #progress-fill {
+            width: 100%;
+            background: linear-gradient(180deg, #3b82f6, #2563eb);
+            height: 0%;
+            transition: height 0.15s ease;
+        }
+        #progress-pct {
+            position: fixed; top: 0px; right: 16px;
+            color: #2563eb; font-size: 14px; font-weight: bold;
+            z-index: 1001;
+            text-shadow: 0 1px 2px rgba(255,255,255,0.9);
+            line-height: 20px;
+        }
+
+    </style>
+<link rel="stylesheet" href="assets/chapters.css?v=20260421203847"><script src="assets/chapters.js?v=20260421203847" defer></script>
+</head>
+<body>
+    <div class="container">
+        <div class="content">
+            <div class="chat-message" data-index="7">
+<div class="px-2"><h1>🟠 PROJECT 34: "If Only I Had Known — Part 3"</h1>
+<h2><em>Expressing regret about the past — things that did NOT happen and never can</em></h2>
+<hr>
+<h1>🎯 THE HYPOTHETICAL PROBLEM</h1>
+<p>→ You are at a reunion dinner with old university friends in Bordeaux<br>
+→ Everyone is reminiscing — talking about roads not taken<br>
+→ One friend says: "Si j'avais écouté mon père, j'aurais fait médecine."<br>
+→ Another sighs: "Si on n'avait pas déménagé, on serait restés amis."<br>
+→ Someone turns to you: "Et toi ? Si tu avais pu changer une chose dans ta vie, qu'est-ce que tu aurais fait ?"<br>
+→ You want to say: "If I had studied in France earlier, I would have been fluent by now"<br>
+→ But you freeze — you don't know how to build this sentence<br>
+→ You try: "Si j'étudiais en France plus tôt, je serais fluide maintenant"<br>
+→ Your friends look confused — that sentence describes an <strong>unreal present</strong> (P33), not an <strong>unreal past</strong><br>
+→ You're talking about something that <strong>ALREADY DIDN'T HAPPEN</strong> — it's too late to change it<br>
+→ This requires the <strong>third and final reality level</strong> — the deepest layer of the French si-clause system</p>
+<p><strong>The core realization:</strong><br>
+→ P18 = "If it rains" → <strong>real future</strong> — it might happen<br>
+→ P33 = "If I were rich" → <strong>unreal present</strong> — it's not true now, but imagine<br>
+→ P34 = "If I had known" → <strong>unreal past</strong> — it DIDN'T happen, it's OVER, and I FEEL something about it<br>
+→ This is the structure of <strong>regret, reproach, reflection, and lost possibility</strong></p>
+<hr>
+<h1>🔍 HOW TO APPROACH IT</h1>
+<p>→ Recall the three-level reality system from P33:</p>
+<table><thead><tr><th>Reality Level</th><th>Si-Clause Tense</th><th>Result Clause Tense</th><th>Meaning</th><th>Project</th></tr></thead><tbody><tr><td>🟢 REAL / LIKELY</td><td>Si + présent</td><td>Futur / présent / impératif</td><td>Might happen</td><td>P18</td></tr><tr><td>🟡 UNREAL PRESENT</td><td>Si + imparfait</td><td>Conditionnel présent</td><td>Not true now — imagine</td><td>P33</td></tr><tr><td>🔴 UNREAL PAST</td><td>Si + <strong>plus-que-parfait</strong></td><td><strong>Conditionnel passé</strong></td><td>Did NOT happen — reflect/regret</td><td><strong>P34 (NOW)</strong></td></tr></tbody></table>
+<p>→ You already built the <strong>plus-que-parfait</strong> engine in P32<br>
+→ Now you need ONE new tool: <strong>conditionnel passé</strong><br>
+→ P35 will explore conditionnel passé fully — but here you learn enough to use it inside si-clauses</p>
+<hr>
+<h1>🔧 HOW CAN WE SOLVE IT</h1>
+<h2>The Unreal Past Formula</h2>
+<code>SI + SUBJECT + PLUS-QUE-PARFAIT  →  SUBJECT + CONDITIONNEL PASSÉ</code>
+<p>→ The si-clause sets up <strong>what DID NOT happen in the past</strong><br>
+→ The result clause delivers <strong>what WOULD HAVE happened as a consequence</strong><br>
+→ Both events are <strong>locked in the past — impossible to change</strong></p>
+<hr>
+<h2>Quick Recall — Plus-que-parfait Formation (from P32)</h2>
+<code>SUBJECT + AVOIR (imparfait) or ÊTRE (imparfait) + PARTICIPE PASSÉ</code>
+<table><thead><tr><th>Subject</th><th>With AVOIR</th><th>With ÊTRE</th></tr></thead><tbody><tr><td>Je / J'</td><td>j'avais parlé</td><td>j'étais parti(e)</td></tr><tr><td>Tu</td><td>tu avais parlé</td><td>tu étais parti(e)</td></tr><tr><td>Il/Elle/On</td><td>il avait parlé</td><td>elle était partie</td></tr><tr><td>Nous</td><td>nous avions parlé</td><td>nous étions parti(e)s</td></tr><tr><td>Vous</td><td>vous aviez parlé</td><td>vous étiez parti(e)(s)</td></tr><tr><td>Ils/Elles</td><td>ils avaient parlé</td><td>elles étaient parties</td></tr></tbody></table>
+<p>→ Same verbs use ÊTRE as in passé composé (P9) — movement, reflexive, DR MRS VANDERTRAMP</p>
+<hr>
+<h2>NEW TOOL — Conditionnel Passé Formation</h2>
+<code>SUBJECT + AVOIR (conditionnel présent) or ÊTRE (conditionnel présent) + PARTICIPE PASSÉ</code>
+<table><thead><tr><th>Subject</th><th>With AVOIR</th><th>With ÊTRE</th></tr></thead><tbody><tr><td>Je / J'</td><td>j'<strong>aurais</strong> parlé</td><td>je <strong>serais</strong> parti(e)</td></tr><tr><td>Tu</td><td>tu <strong>aurais</strong> parlé</td><td>tu <strong>serais</strong> parti(e)</td></tr><tr><td>Il/Elle/On</td><td>il <strong>aurait</strong> parlé</td><td>elle <strong>serait</strong> partie</td></tr><tr><td>Nous</td><td>nous <strong>aurions</strong> parlé</td><td>nous <strong>serions</strong> parti(e)s</td></tr><tr><td>Vous</td><td>vous <strong>auriez</strong> parlé</td><td>vous <strong>seriez</strong> parti(e)(s)</td></tr><tr><td>Ils/Elles</td><td>ils <strong>auraient</strong> parlé</td><td>elles <strong>seraient</strong> parties</td></tr></tbody></table>
+<p>→ <strong>The logic:</strong> Take the auxiliary (avoir/être) → put it in conditionnel présent (P17) → add the past participle<br>
+→ Same auxiliary choice rules as passé composé (P9) and plus-que-parfait (P32)<br>
+→ Gender/number agreement on past participle follows same rules (P9)</p>
+<hr>
+<h2>The Complete Si-Clause Example — Fully Broken Down</h2>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>Si j'avais étudié en France, j'aurais été bilingue.
+</span>│         │                    │         │
+│    plus-que-parfait          │    conditionnel passé
+│    (had studied)             │    (would have been)
+│                              │
+SI + UNREAL PAST CONDITION  →  UNREAL PAST RESULT</code></pre></div>
+<p><strong>English:</strong> If I had studied in France, I would have been bilingual.<br>
+<strong>Reality:</strong> I did NOT study in France → I am NOT bilingual → I regret it</p>
+<hr>
+<h1>✅ WHAT COULD BE DONE — THE 100 SENTENCES</h1>
+<h2>🔹 BLOCK A — Personal Life Regrets</h2>
+<p><em>Scenario: Reflecting alone or with a close friend — things you wish you'd done differently</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English Meaning</th><th>Structure Breakdown</th></tr></thead><tbody><tr><td>1</td><td>Si j'avais su, j'aurais agi différemment.</td><td>If I had known, I would have acted differently.</td><td>si + savoir(pqp) → agir(cond.passé)</td></tr><tr><td>2</td><td>Si tu avais été là, tu aurais compris.</td><td>If you had been there, you would have understood.</td><td>si + être(pqp) → comprendre(cond.passé)</td></tr><tr><td>3</td><td>Si elle avait réfléchi avant, elle n'aurait pas fait cette erreur.</td><td>If she had thought before, she wouldn't have made that mistake.</td><td>si + réfléchir(pqp) → faire(cond.passé/neg)</td></tr><tr><td>4</td><td>Si on avait pris le temps, on aurait trouvé une meilleure solution.</td><td>If we had taken the time, we would have found a better solution.</td><td>si + prendre(pqp) → trouver(cond.passé)</td></tr><tr><td>5</td><td>Si j'avais écouté mon instinct, j'aurais évité beaucoup de problèmes.</td><td>If I had listened to my instinct, I would have avoided many problems.</td><td>si + écouter(pqp) → éviter(cond.passé)</td></tr><tr><td>6</td><td>Si nous avions planifié à l'avance, tout se serait mieux passé.</td><td>If we had planned ahead, everything would have gone better.</td><td>si + planifier(pqp) → se passer(cond.passé/être)</td></tr><tr><td>7</td><td>Si vous aviez posé la question, vous auriez obtenu une réponse.</td><td>If you had asked the question, you would have gotten an answer.</td><td>si + poser(pqp) → obtenir(cond.passé)</td></tr><tr><td>8</td><td>Si ils avaient fait attention, ils n'auraient pas eu cet accident.</td><td>If they had paid attention, they wouldn't have had that accident.</td><td>si + faire attention(pqp) → avoir(cond.passé/neg)</td></tr><tr><td>9</td><td>Si j'avais commencé plus tôt, j'aurais déjà terminé.</td><td>If I had started earlier, I would have already finished.</td><td>si + commencer(pqp) → terminer(cond.passé)</td></tr><tr><td>10</td><td>Si on avait été plus prudents, rien de tout cela ne serait arrivé.</td><td>If we had been more careful, none of this would have happened.</td><td>si + être(pqp) → arriver(cond.passé/être/neg)</td></tr></tbody></table>
+<p><strong>🧠 Structure unlocked:</strong> <code>Si + [what you DIDN'T do — pqp] → [what WOULD HAVE happened — cond.passé]</code></p>
+<hr>
+<h2>🔹 BLOCK B — Relationship Regrets &amp; Reflections</h2>
+<p><em>Scenario: Talking about past friendships, romances, family moments you missed</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English Meaning</th><th>Structure Breakdown</th></tr></thead><tbody><tr><td>11</td><td>Si je lui avais dit la vérité, il m'aurait pardonné.</td><td>If I had told him the truth, he would have forgiven me.</td><td>si + dire(pqp) → pardonner(cond.passé)</td></tr><tr><td>12</td><td>Si tu étais resté, on aurait pu en discuter calmement.</td><td>If you had stayed, we could have discussed it calmly.</td><td>si + rester(pqp/être) → pouvoir(cond.passé)</td></tr><tr><td>13</td><td>Si elle ne l'avait pas quitté, ils seraient encore ensemble.</td><td>If she hadn't left him, they would still be together.</td><td>si + quitter(pqp/neg) → être(cond.passé)</td></tr><tr><td>14</td><td>Si on s'était parlé plus tôt, on aurait résolu le malentendu.</td><td>If we had talked to each other earlier, we would have resolved the misunderstanding.</td><td>si + se parler(pqp/être) → résoudre(cond.passé)</td></tr><tr><td>15</td><td>Si j'avais fait plus d'efforts, notre amitié aurait survécu.</td><td>If I had made more effort, our friendship would have survived.</td><td>si + faire(pqp) → survivre(cond.passé)</td></tr><tr><td>16</td><td>Si tu m'avais appelé, je serais venu immédiatement.</td><td>If you had called me, I would have come immediately.</td><td>si + appeler(pqp) → venir(cond.passé/être)</td></tr><tr><td>17</td><td>Si nous nous étions rencontrés plus jeunes, tout aurait été différent.</td><td>If we had met younger, everything would have been different.</td><td>si + se rencontrer(pqp/être) → être(cond.passé)</td></tr><tr><td>18</td><td>Si il avait été plus honnête avec elle, elle ne serait pas partie.</td><td>If he had been more honest with her, she wouldn't have left.</td><td>si + être(pqp) → partir(cond.passé/être/neg)</td></tr><tr><td>19</td><td>Si mes parents avaient divorcé, ma vie aurait pris un autre chemin.</td><td>If my parents had divorced, my life would have taken another path.</td><td>si + divorcer(pqp) → prendre(cond.passé)</td></tr><tr><td>20</td><td>Si on ne s'était jamais disputés, on n'aurait jamais grandi non plus.</td><td>If we had never argued, we would never have grown either.</td><td>si + se disputer(pqp/être/neg) → grandir(cond.passé/neg)</td></tr></tbody></table>
+<p><strong>🧠 Structure unlocked:</strong> <code>Si + [relationship event that didn't happen — pqp] → [emotional consequence that didn't happen — cond.passé]</code><br>
+→ Note sentences 12, 13, 14, 17, 18: <strong>ÊTRE verbs</strong> in both clauses — past participle agreement critical</p>
+<hr>
+<h2>🔹 BLOCK C — Education &amp; Career Regrets</h2>
+<p><em>Scenario: At the reunion dinner — friends reflecting on studies and professional choices</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English Meaning</th><th>Structure Breakdown</th></tr></thead><tbody><tr><td>21</td><td>Si j'avais étudié la médecine, je serais devenu chirurgien.</td><td>If I had studied medicine, I would have become a surgeon.</td><td>si + étudier(pqp) → devenir(cond.passé/être)</td></tr><tr><td>22</td><td>Si tu avais passé ce concours, tu aurais eu ta place.</td><td>If you had taken that exam, you would have gotten your spot.</td><td>si + passer(pqp) → avoir(cond.passé)</td></tr><tr><td>23</td><td>Si elle avait accepté cette offre à l'étranger, sa carrière aurait décollé.</td><td>If she had accepted that offer abroad, her career would have taken off.</td><td>si + accepter(pqp) → décoller(cond.passé)</td></tr><tr><td>24</td><td>Si on avait créé cette entreprise ensemble, on aurait réussi.</td><td>If we had created that company together, we would have succeeded.</td><td>si + créer(pqp) → réussir(cond.passé)</td></tr><tr><td>25</td><td>Si j'avais appris le chinois à l'université, j'aurais eu plus d'opportunités.</td><td>If I had learned Chinese at university, I would have had more opportunities.</td><td>si + apprendre(pqp) → avoir(cond.passé)</td></tr><tr><td>26</td><td>Si nous avions investi dans cette start-up, nous serions riches aujourd'hui.</td><td>If we had invested in that startup, we would be rich today.</td><td>⚠️ si + pqp → cond. PRÉSENT — mixed structure — explained below</td></tr><tr><td>27</td><td>Si vous aviez suivi cette formation, vous auriez obtenu la promotion.</td><td>If you had taken that training, you would have gotten the promotion.</td><td>si + suivre(pqp) → obtenir(cond.passé)</td></tr><tr><td>28</td><td>Si il n'avait pas abandonné ses études, il aurait eu son diplôme.</td><td>If he hadn't dropped out, he would have gotten his degree.</td><td>si + abandonner(pqp/neg) → avoir(cond.passé)</td></tr><tr><td>29</td><td>Si j'avais eu un meilleur professeur, j'aurais aimé les maths.</td><td>If I had had a better teacher, I would have liked math.</td><td>si + avoir(pqp) → aimer(cond.passé)</td></tr><tr><td>30</td><td>Si on avait osé, on aurait changé de voie bien avant.</td><td>If we had dared, we would have changed paths long before.</td><td>si + oser(pqp) → changer(cond.passé)</td></tr></tbody></table>
+<hr>
+<h3>⚠️ SPECIAL CASE — Sentence 26: The Mixed Conditional</h3>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>Si nous avions investi → nous serions riches AUJOURD'HUI
+</span>     (plus-que-parfait)       (conditionnel PRÉSENT)</code></pre></div>
+<p>→ This is <strong>NOT an error</strong> — it's a <strong>mixed conditional</strong><br>
+→ The past action (investing) would have a <strong>present result</strong> (being rich NOW)<br>
+→ Standard formula: si + pqp → cond. passé = both past<br>
+→ Mixed formula: si + pqp → cond. <strong>présent</strong> = past cause → present result<br>
+→ French allows this when the consequence <strong>is still relevant today</strong><br>
+→ You will see this pattern more in P46 (chained/mixed conditionals)</p>
+<p><strong>🧠 Structure unlocked:</strong> <code>Si + [missed career/education opportunity — pqp] → [imaginary professional outcome — cond.passé]</code></p>
+<hr>
+<h2>🔹 BLOCK D — "If Someone Had Told Me..."</h2>
+<p><em>Scenario: Reflecting on information you DIDN'T have — if you had been warned, informed, advised</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English Meaning</th><th>Structure Breakdown</th></tr></thead><tbody><tr><td>31</td><td>Si quelqu'un m'avait prévenu, j'aurais fait autrement.</td><td>If someone had warned me, I would have done things differently.</td><td>si + prévenir(pqp) → faire(cond.passé)</td></tr><tr><td>32</td><td>Si on m'avait dit que c'était si difficile, je me serais mieux préparé.</td><td>If I had been told it was so hard, I would have prepared better.</td><td>si + dire(pqp/impersonal) → se préparer(cond.passé/être)</td></tr><tr><td>33</td><td>Si tu m'avais averti plus tôt, j'aurais pu m'organiser.</td><td>If you had warned me earlier, I could have organized myself.</td><td>si + avertir(pqp) → pouvoir(cond.passé)</td></tr><tr><td>34</td><td>Si elle avait lu les critiques, elle n'aurait pas choisi ce restaurant.</td><td>If she had read the reviews, she wouldn't have chosen that restaurant.</td><td>si + lire(pqp) → choisir(cond.passé/neg)</td></tr><tr><td>35</td><td>Si j'avais connu cette règle avant, je n'aurais pas fait cette faute.</td><td>If I had known that rule before, I wouldn't have made that mistake.</td><td>si + connaître(pqp) → faire(cond.passé/neg)</td></tr><tr><td>36</td><td>Si nous avions eu accès à cette information, nous aurions pris une autre décision.</td><td>If we had had access to that information, we would have made a different decision.</td><td>si + avoir(pqp) → prendre(cond.passé)</td></tr><tr><td>37</td><td>Si on m'avait expliqué clairement, j'aurais compris du premier coup.</td><td>If it had been explained to me clearly, I would have understood the first time.</td><td>si + expliquer(pqp) → comprendre(cond.passé)</td></tr><tr><td>38</td><td>Si il avait su la vérité, il n'aurait jamais signé ce contrat.</td><td>If he had known the truth, he would never have signed that contract.</td><td>si + savoir(pqp) → signer(cond.passé/neg) + jamais</td></tr><tr><td>39</td><td>Si vous aviez consulté un expert, vous auriez économisé beaucoup d'argent.</td><td>If you had consulted an expert, you would have saved a lot of money.</td><td>si + consulter(pqp) → économiser(cond.passé)</td></tr><tr><td>40</td><td>Si j'avais eu toutes les cartes en main, j'aurais joué différemment.</td><td>If I had had all the cards in hand, I would have played differently.</td><td>si + avoir(pqp) → jouer(cond.passé) — idiomatic</td></tr></tbody></table>
+<p><strong>🧠 Structure unlocked:</strong> <code>Si + [information/warning you didn't receive — pqp] → [better decision you would have made — cond.passé]</code></p>
+<hr>
+<h2>🔹 BLOCK E — "If X Hadn't Happened..." — Negative Past Conditions</h2>
+<p><em>Scenario: Imagining the ABSENCE of a past event — what if it hadn't occurred?</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English Meaning</th><th>Negation Pattern</th></tr></thead><tbody><tr><td>41</td><td>Si je n'étais pas parti, je n'aurais jamais rencontré ma femme.</td><td>If I hadn't left, I would never have met my wife.</td><td>ne...pas(pqp) → ne...jamais(cond.passé)</td></tr><tr><td>42</td><td>Si tu n'avais pas insisté, j'aurais abandonné.</td><td>If you hadn't insisted, I would have given up.</td><td>ne...pas(pqp) → result(cond.passé)</td></tr><tr><td>43</td><td>Si elle n'avait rien dit, personne n'aurait su.</td><td>If she had said nothing, nobody would have known.</td><td>ne...rien(pqp) → personne ne(cond.passé)</td></tr><tr><td>44</td><td>Si on n'avait pas pris ce risque, on n'en serait pas là aujourd'hui.</td><td>If we hadn't taken that risk, we wouldn't be here today.</td><td>ne...pas(pqp) → ne...pas(cond.passé) + mixed present result</td></tr><tr><td>45</td><td>Si il n'avait pas plu ce jour-là, le pique-nique aurait été parfait.</td><td>If it hadn't rained that day, the picnic would have been perfect.</td><td>ne...pas(pqp) → result(cond.passé)</td></tr><tr><td>46</td><td>Si nous n'avions pas déménagé, les enfants auraient gardé leurs amis.</td><td>If we hadn't moved, the children would have kept their friends.</td><td>ne...pas(pqp) → result(cond.passé)</td></tr><tr><td>47</td><td>Si vous n'étiez pas intervenu, la situation aurait dégénéré.</td><td>If you hadn't intervened, the situation would have deteriorated.</td><td>ne...pas(pqp/être) → result(cond.passé)</td></tr><tr><td>48</td><td>Si personne n'avait réagi, les conséquences auraient été graves.</td><td>If nobody had reacted, the consequences would have been serious.</td><td>personne ne(pqp) → result(cond.passé)</td></tr><tr><td>49</td><td>Si rien n'avait changé, je serais encore malheureux.</td><td>If nothing had changed, I would still be unhappy.</td><td>rien ne(pqp) → être(cond.passé/mixed)</td></tr><tr><td>50</td><td>Si cet accident n'avait jamais eu lieu, tout serait différent aujourd'hui.</td><td>If that accident had never happened, everything would be different today.</td><td>ne...jamais(pqp) → cond.présent (mixed — present result)</td></tr></tbody></table>
+<p><strong>🧠 Structure unlocked:</strong> <code>Si + [negated past event — pqp/neg] → [consequence that would/wouldn't have followed — cond.passé]</code><br>
+→ Advanced negation patterns from P39 apply fully here (ne...rien, ne...personne, ne...jamais)<br>
+→ Sentences 44, 49, 50: <strong>mixed conditionals</strong> again — past cause, present consequence</p>
+<hr>
+<h2>🔹 BLOCK F — Third-Person Regrets: Talking About Others' Missed Chances</h2>
+<p><em>Scenario: Discussing historical figures, public events, other people's mistakes</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English Meaning</th><th>Context</th></tr></thead><tbody><tr><td>51</td><td>Si Napoléon n'avait pas envahi la Russie, l'histoire de l'Europe aurait changé.</td><td>If Napoleon hadn't invaded Russia, European history would have changed.</td><td>Historical reflection</td></tr><tr><td>52</td><td>Si le capitaine avait écouté les avertissements, le navire n'aurait pas coulé.</td><td>If the captain had listened to the warnings, the ship wouldn't have sunk.</td><td>Disaster analysis</td></tr><tr><td>53</td><td>Si cette entreprise avait innové plus tôt, elle n'aurait pas fait faillite.</td><td>If that company had innovated earlier, it wouldn't have gone bankrupt.</td><td>Business analysis</td></tr><tr><td>54</td><td>Si le gouvernement avait agi plus vite, la crise aurait été moins grave.</td><td>If the government had acted faster, the crisis would have been less severe.</td><td>Political commentary</td></tr><tr><td>55</td><td>Si l'arbitre n'avait pas sifflé, l'équipe aurait marqué.</td><td>If the referee hadn't blown the whistle, the team would have scored.</td><td>Sports regret</td></tr><tr><td>56</td><td>Si mes grands-parents n'avaient pas émigré, je ne serais pas né ici.</td><td>If my grandparents hadn't emigrated, I wouldn't have been born here.</td><td>Family history</td></tr><tr><td>57</td><td>Si ce film avait eu un meilleur scénario, il aurait remporté le prix.</td><td>If that movie had had a better screenplay, it would have won the award.</td><td>Cultural commentary</td></tr><tr><td>58</td><td>Si l'architecte avait respecté les normes, le bâtiment n'aurait pas eu de défauts.</td><td>If the architect had respected the standards, the building wouldn't have had defects.</td><td>Professional analysis</td></tr><tr><td>59</td><td>Si les scientifiques avaient été écoutés, on aurait pu éviter cette catastrophe.</td><td>If the scientists had been listened to, we could have avoided this catastrophe.</td><td>Societal regret</td></tr><tr><td>60</td><td>Si ce joueur n'avait pas été blessé, son équipe aurait gagné le championnat.</td><td>If that player hadn't been injured, his team would have won the championship.</td><td>Sports reflection</td></tr></tbody></table>
+<p><strong>🧠 Structure unlocked:</strong> <code>Si + [third-person past action/inaction — pqp] → [historical/societal consequence — cond.passé]</code><br>
+→ This is how French people discuss <strong>history, news, sports, politics</strong> in cafés<br>
+→ Not personal regret — but <strong>analytical reflection</strong> using the same structure</p>
+<hr>
+<h2>🔹 BLOCK G — Reversed Order: Result First, Condition Second</h2>
+<p><em>Scenario: Emphasizing what WOULD HAVE happened — the condition is an afterthought</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English Meaning</th><th>Structure Note</th></tr></thead><tbody><tr><td>61</td><td>J'aurais accepté si tu me l'avais proposé.</td><td>I would have accepted if you had offered it to me.</td><td>Result first — emphasizes willingness</td></tr><tr><td>62</td><td>Tu aurais adoré ce film si tu l'avais vu.</td><td>You would have loved that movie if you had seen it.</td><td>Result first — emphasizes the experience</td></tr><tr><td>63</td><td>Elle serait restée si il lui avait demandé pardon.</td><td>She would have stayed if he had asked for her forgiveness.</td><td>Result first — être verb — agreement: rest<strong>ée</strong></td></tr><tr><td>64</td><td>On aurait pu gagner si on avait mieux joué en deuxième mi-temps.</td><td>We could have won if we had played better in the second half.</td><td>Result first — sports context</td></tr><tr><td>65</td><td>Nous aurions été ravis si vous aviez pu venir.</td><td>We would have been delighted if you had been able to come.</td><td>Result first — formal/polite after-event regret</td></tr><tr><td>66</td><td>Il n'aurait rien dit si personne ne lui avait posé la question.</td><td>He wouldn't have said anything if nobody had asked him.</td><td>Result first — negative + P39 negation</td></tr><tr><td>67</td><td>La fête aurait été parfaite si il n'avait pas plu.</td><td>The party would have been perfect if it hadn't rained.</td><td>Result first — impersonal</td></tr><tr><td>68</td><td>J'aurais tout donné si j'avais eu une deuxième chance.</td><td>I would have given everything if I had had a second chance.</td><td>Result first — deep personal regret</td></tr><tr><td>69</td><td>Ça n'aurait jamais fonctionné si on avait continué comme ça.</td><td>It would never have worked if we had continued like that.</td><td>Result first — analytical</td></tr><tr><td>70</td><td>Tout aurait été différent si cette rencontre n'avait pas eu lieu.</td><td>Everything would have been different if that meeting hadn't happened.</td><td>Result first — pivotal moment reflection</td></tr></tbody></table>
+<p><strong>🧠 Structure unlocked:</strong> <code>[What would have happened — cond.passé] + si + [what didn't happen — pqp]</code><br>
+→ Same rules as P33 reversed order — no comma when si-clause comes second<br>
+→ Emphasis shifts to the <strong>imagined result</strong> — more dramatic, more emotional<br>
+→ Very common in spoken French when expressing strong feelings</p>
+<hr>
+<h2>🔹 BLOCK H — "Si seulement..." — The Pure Wish / Deep Regret Structure</h2>
+<p><em>Scenario: You don't even state the result — the condition alone carries all the emotion</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English Meaning</th><th>Structure Note</th></tr></thead><tbody><tr><td>71</td><td>Si seulement j'avais su...</td><td>If only I had known...</td><td>Incomplete — emotion speaks louder than words</td></tr><tr><td>72</td><td>Si seulement tu avais été là...</td><td>If only you had been there...</td><td>Trailing off — the result is implied</td></tr><tr><td>73</td><td>Si seulement elle avait dit oui...</td><td>If only she had said yes...</td><td>Romance regret — no result needed</td></tr><tr><td>74</td><td>Si seulement on avait eu plus de temps...</td><td>If only we had had more time...</td><td>Universal regret — time</td></tr><tr><td>75</td><td>Si seulement j'avais osé lui parler ce jour-là...</td><td>If only I had dared to speak to her that day...</td><td>Specific moment regret</td></tr><tr><td>76</td><td>Si seulement nous avions fait les choses autrement...</td><td>If only we had done things differently...</td><td>Group regret</td></tr><tr><td>77</td><td>Si seulement il avait écouté...</td><td>If only he had listened...</td><td>Frustration about someone else</td></tr><tr><td>78</td><td>Si seulement j'avais compris plus tôt ce qui se passait...</td><td>If only I had understood earlier what was happening...</td><td>Awareness regret</td></tr><tr><td>79</td><td>Si seulement vous aviez vu son visage à ce moment-là...</td><td>If only you had seen his face at that moment...</td><td>Sharing a missed experience</td></tr><tr><td>80</td><td>Si seulement les choses avaient été différentes...</td><td>If only things had been different...</td><td>Most universal regret of all</td></tr></tbody></table>
+<p><strong>🧠 Structure unlocked:</strong> <code>Si seulement + [plus-que-parfait]... (no result clause needed)</code><br>
+→ The result is <strong>left unsaid</strong> — the listener fills it in emotionally<br>
+→ This is one of the most <strong>powerful emotional structures</strong> in French<br>
+→ The trailing "..." is part of the meaning — silence carries the weight<br>
+→ Compare with P33: "Si seulement j'avais de l'argent..." (unreal present wish)<br>
+→ Here: "Si seulement j'avais <strong>eu</strong> de l'argent..." (unreal past wish — it's too late)</p>
+<hr>
+<h2>🔹 BLOCK I — Reproach &amp; Blame: "You Should Have / If You Had..."</h2>
+<p><em>Scenario: Confronting someone about a past mistake — or being confronted</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English Meaning</th><th>Pragmatic Function</th></tr></thead><tbody><tr><td>81</td><td>Si tu avais fait attention, on n'en serait pas là.</td><td>If you had been careful, we wouldn't be in this mess.</td><td>Blame — mixed conditional (past → present)</td></tr><tr><td>82</td><td>Si tu m'avais écouté, rien de tout cela ne serait arrivé.</td><td>If you had listened to me, none of this would have happened.</td><td>Direct reproach</td></tr><tr><td>83</td><td>Si vous aviez respecté les consignes, il n'y aurait pas eu de problème.</td><td>If you had followed the instructions, there wouldn't have been a problem.</td><td>Professional reproach</td></tr><tr><td>84</td><td>Si elle avait vérifié les chiffres, on n'aurait pas perdu ce client.</td><td>If she had checked the numbers, we wouldn't have lost that client.</td><td>Workplace blame</td></tr><tr><td>85</td><td>Si on avait été mieux organisés, le projet n'aurait pas pris de retard.</td><td>If we had been better organized, the project wouldn't have been delayed.</td><td>Team self-reproach</td></tr><tr><td>86</td><td>Si tu n'avais pas menti, je te ferais encore confiance.</td><td>If you hadn't lied, I would still trust you.</td><td>⚠️ Mixed: pqp → cond. présent — past cause, present broken trust</td></tr><tr><td>87</td><td>Si il avait tenu sa promesse, je n'aurais pas eu besoin de m'en mêler.</td><td>If he had kept his promise, I wouldn't have needed to get involved.</td><td>Explaining your intervention</td></tr><tr><td>88</td><td>Si quelqu'un avait pris la peine de vérifier, cette erreur aurait été évitée.</td><td>If someone had taken the trouble to check, this mistake would have been avoided.</td><td>Passive reproach (P24 — passive voice)</td></tr><tr><td>89</td><td>Si vous aviez pris ma suggestion au sérieux, les résultats auraient été meilleurs.</td><td>If you had taken my suggestion seriously, the results would have been better.</td><td>"I told you so" — formal</td></tr><tr><td>90</td><td>Si tu avais réfléchi deux secondes, tu aurais compris que c'était une mauvaise idée.</td><td>If you had thought for two seconds, you would have realized it was a bad idea.</td><td>Sharp reproach</td></tr></tbody></table>
+<p><strong>🧠 Structure unlocked:</strong> <code>Si + [what YOU/THEY didn't do — pqp] → [the mess that resulted — cond.passé]</code><br>
+→ Sentence 81, 86: <strong>Mixed conditionals</strong> — past cause → present consequence — very common in reproach<br>
+→ This structure is <strong>emotionally loaded</strong> — use carefully in real life<br>
+→ P35 will expand reproach structures using conditionnel passé WITHOUT si-clauses (tu aurais dû...)</p>
+<hr>
+<h2>🔹 BLOCK J — Full Conversational Flow: Reunion Dinner</h2>
+<p><em>Scenario: The entire dinner conversation — mixing all patterns from this project and connecting to P33</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English Meaning</th><th>Context &amp; Connection</th></tr></thead><tbody><tr><td>91</td><td>Vous vous souvenez de la fac ? Si on avait su ce qui nous attendait...</td><td>Do you remember university? If we had known what awaited us...</td><td>Si seulement — trailing off (Block H)</td></tr><tr><td>92</td><td>Si j'avais choisi le droit au lieu de la philo, j'aurais probablement un meilleur salaire.</td><td>If I had chosen law instead of philosophy, I'd probably have a better salary.</td><td>Career regret (Block C) + mixed conditional</td></tr><tr><td>93</td><td>Oui, mais tu n'aurais pas été heureux — si tu avais fait du droit, tu te serais ennuyé à mourir.</td><td>Yes, but you wouldn't have been happy — if you had done law, you would have been bored to death.</td><td>Friend countering — reversed order (Block G)</td></tr><tr><td>94</td><td>Si on m'avait dit il y a vingt ans que je finirais par vivre à Bordeaux, je ne l'aurais jamais cru.</td><td>If someone had told me twenty years ago that I'd end up living in Bordeaux, I would never have believed it.</td><td>"If told" pattern (Block D)</td></tr><tr><td>95</td><td>Et toi, Sophie ? Si tu avais pu tout recommencer, tu aurais changé quoi ?</td><td>And you, Sophie? If you could have started over, what would you have changed?</td><td>Question format</td></tr><tr><td>96</td><td>Honnêtement ? Si je n'avais pas rencontré Paul, toute ma vie serait différente aujourd'hui.</td><td>Honestly? If I hadn't met Paul, my whole life would be different today.</td><td>Mixed conditional — past → present (Block E)</td></tr><tr><td>97</td><td>Si seulement Marc était encore là... il aurait adoré cette soirée.</td><td>If only Marc were still here... he would have loved this evening.</td><td>⚠️ Mixed: si seulement + imparfait (P33) → cond.passé — mourning</td></tr><tr><td>98</td><td>Tu as raison. Si il avait été parmi nous ce soir, il nous aurait fait rire toute la nuit.</td><td>You're right. If he had been among us tonight, he would have made us laugh all night.</td><td>Standard pqp → cond.passé — tribute</td></tr><tr><td>99</td><td>Si on avait pris plus de photos à l'époque, on aurait de quoi se souvenir.</td><td>If we had taken more photos back then, we'd have something to remember.</td><td>Mixed: pqp → cond.présent — present result</td></tr><tr><td>100</td><td>Promettez-moi une chose : si on ne se revoit pas avant dix ans, on n'aura aucun regret parce qu'on aura passé cette soirée ensemble.</td><td>Promise me one thing: if we don't see each other for ten years, we'll have no regrets because we'll have spent this evening together.</td><td>⚠️ SHIFT to P18 — si + présent → futur — REAL condition — the future is real, not imaginary</td></tr></tbody></table>
+<hr>
+<h3>⚠️ Sentence 97 — The Mourning Mixed Conditional</h3>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>Si seulement Marc était encore là → il aurait adoré cette soirée
+</span>        (imparfait — P33)              (conditionnel passé — P34)</code></pre></div>
+<p>→ The condition is about the <strong>present</strong> (he's not here NOW — imparfait from P33)<br>
+→ The result is about the <strong>past evening</strong> (he WOULD HAVE loved tonight — cond.passé from P34)<br>
+→ This <strong>cross-level mixing</strong> is natural in emotional French<br>
+→ Full exploration in P46 (mixed/chained conditionals)</p>
+<h3>⚠️ Sentence 100 — The Return to Reality</h3>
+<p>→ After 99 sentences in the unreal past — the conversation <strong>snaps back to reality</strong><br>
+→ "Si on ne se revoit pas" = si + présent → <strong>real condition</strong> (P18)<br>
+→ This shows that in natural conversation, <strong>all three levels coexist</strong></p>
+<hr>
+<h1>✅ WHAT SHOULD DO</h1>
+<p>→ <strong>Lock in the formula:</strong> Si + plus-que-parfait → conditionnel passé — this is non-negotiable<br>
+→ <strong>Practice "Si seulement..."</strong> structures (Block H) — they're emotionally powerful and easy to use<br>
+→ <strong>Recognize mixed conditionals</strong> — they're not errors, they're natural when past causes have present effects<br>
+→ <strong>Master the auxiliary choice</strong> — avoir or être in BOTH the si-clause (pqp) AND result clause (cond.passé)<br>
+→ <strong>Connect to P32</strong> — plus-que-parfait was "past before past" in narration; now it's "the past that didn't happen" in si-clauses<br>
+→ <strong>Connect to P33</strong> — same architecture, one level deeper</p>
+<hr>
+<h1>❌ WHAT SHOULD NOT DO</h1>
+<p>→ ❌ <strong>NEVER put conditionnel passé after "si"</strong></p>
+<ul>
+<li>❌ <del>Si j'aurais su</del> → <strong>THE MOST COMMON ERROR IN FRENCH — even some native speakers make it</strong></li>
+<li>✅ Si j'<strong>avais</strong> su → always plus-que-parfait after si</li>
+</ul>
+<p>→ ❌ <strong>NEVER confuse P33 and P34</strong></p>
+<ul>
+<li>P33: Si j'<strong>avais</strong> de l'argent → if I had money (but I don't — RIGHT NOW)</li>
+<li>P34: Si j'<strong>avais eu</strong> de l'argent → if I had had money (but I didn't — IN THE PAST)</li>
+<li>The difference is ONE WORD (the past participle) but the TIME REFERENCE changes entirely</li>
+</ul>
+<p>→ ❌ <strong>NEVER forget past participle agreement with être verbs</strong></p>
+<ul>
+<li>❌ <del>Si elle était parti</del> → elle est<strong>partie</strong> (fem agreement)</li>
+<li>❌ <del>Elles seraient allé</del> → elles seraient allé<strong>es</strong> (fem plural agreement)</li>
+</ul>
+<p>→ ❌ <strong>NEVER use this structure for things that might still happen</strong></p>
+<ul>
+<li>"If it rains tomorrow" → still possible → P18 (si + présent → futur)</li>
+<li>"If I had more time" → not true now but imaginable → P33 (si + imparfait → cond.présent)</li>
+<li>"If I had known yesterday" → it's over, can't change it → <strong>P34</strong> (si + pqp → cond.passé)</li>
+</ul>
+<p>→ ❌ <strong>NEVER overuse "si seulement" in conversation</strong></p>
+<ul>
+<li>It's heavy, emotional, dramatic</li>
+<li>Using it constantly makes you sound perpetually regretful</li>
+<li>Reserve it for moments of genuine reflection</li>
+</ul>
+<hr>
+<h1>🔀 WHEN TO USE WHAT — THE COMPLETE SI-CLAUSE MAP</h1>
+<table><thead><tr><th>What You Feel</th><th>Structure</th><th>Example</th><th>Project</th></tr></thead><tbody><tr><td>Planning for a real possibility</td><td>Si + présent → futur</td><td>Si il pleut, je resterai.</td><td>P18</td></tr><tr><td>Imagining an unreal present</td><td>Si + imparfait → cond. présent</td><td>Si j'étais riche, je voyagerais.</td><td>P33</td></tr><tr><td><strong>Reflecting on an unreal past</strong></td><td><strong>Si + pqp → cond. passé</strong></td><td><strong>Si j'avais su, j'aurais agi.</strong></td><td><strong>P34</strong></td></tr><tr><td><strong>Past cause → present result</strong></td><td><strong>Si + pqp → cond. présent</strong></td><td><strong>Si j'avais investi, je serais riche.</strong></td><td><strong>P34 (mixed)</strong></td></tr><tr><td><strong>Present condition → past result</strong></td><td><strong>Si + imparfait → cond. passé</strong></td><td><strong>Si Marc était là, il aurait adoré.</strong></td><td><strong>P34 (mixed)</strong></td></tr><tr><td>Deep wish about the past</td><td>Si seulement + pqp...</td><td>Si seulement j'avais su...</td><td>P34</td></tr><tr><td>Giving unreal present advice</td><td>Si j'étais toi + cond. présent</td><td>Si j'étais toi, je partirais.</td><td>P33</td></tr><tr><td>Reproach about the past</td><td>Si tu avais + pqp → cond. passé</td><td>Si tu avais écouté, ça n'aurait pas...</td><td>P34</td></tr></tbody></table>
+<hr>
+<h1>🚫 WHEN NOT TO USE</h1>
+<p>→ <strong>When the past event DID happen and you're narrating it</strong> → use P11 (passé composé + imparfait)</p>
+<ul>
+<li>"It was raining and I took a taxi" = Il pleuvait et j'ai pris un taxi</li>
+<li>NOT: Si il avait plu... (this imagines rain that didn't happen)</li>
+</ul>
+<p>→ <strong>When you're expressing regret WITHOUT a condition</strong> → use P35 (conditionnel passé alone)</p>
+<ul>
+<li>"I should have listened" = J'aurais dû écouter (no si-clause needed)</li>
+<li>P34 requires a <strong>si-clause</strong> — P35 will cover standalone regret</li>
+</ul>
+<p>→ <strong>When the future is uncertain but still possible</strong> → use P18</p>
+<ul>
+<li>"If he calls tomorrow" = S'il appelle demain (real possibility)</li>
+<li>NOT: S'il avait appelé demain (grammatically broken — pqp doesn't combine with "demain")</li>
+</ul>
+<p>→ <strong>When imagining a general/timeless truth</strong> → use P33</p>
+<ul>
+<li>"If people were kinder, the world would be better" = Si les gens étaient plus gentils... (general)</li>
+<li>P34 is for <strong>specific past events that didn't happen</strong></li>
+</ul>
+<hr>
+<h1>⚠️ COMMON PITFALLS AND FAILURE MODES</h1>
+<table><thead><tr><th>Pitfall</th><th>What Learners Do Wrong</th><th>Why It Fails</th><th>Correct Version</th></tr></thead><tbody><tr><td><strong>The Cardinal Sin — Level 2</strong></td><td>Si j'<strong>aurais</strong> su</td><td>Conditionnel NEVER follows si — same rule as P33 but now with passé</td><td>Si j'<strong>avais</strong> su</td></tr><tr><td><strong>Level confusion</strong></td><td>Si j'avais de l'argent (meaning past)</td><td>"Si j'avais" = unreal PRESENT (P33); for past: "Si j'avais <strong>eu</strong>"</td><td>Si j'avais <strong>eu</strong> de l'argent (P34)</td></tr><tr><td><strong>Double auxiliary confusion</strong></td><td>Si j'avais <strong>été su</strong></td><td>Mixing two structures — "su" goes with avoir, not être</td><td>Si j'avais su</td></tr><tr><td><strong>Agreement amnesia</strong></td><td>Si elle était <strong>parti</strong></td><td>Être verb → agreement with subject</td><td>Si elle était <strong>partie</strong></td></tr><tr><td><strong>Result auxiliary confusion</strong></td><td>Elle <strong>aurait</strong> venue</td><td>Venir uses ÊTRE → elle <strong>serait</strong> venue</td><td>Elle serait venue</td></tr><tr><td><strong>Mixed conditional panic</strong></td><td>Thinking "Si j'avais investi, je serais riche" is wrong</td><td>It's correct — past cause → present result is natural</td><td>Accept and use mixed conditionals</td></tr><tr><td><strong>Overcomplicating</strong></td><td>Trying to use pqp + cond.passé for everything</td><td>Sometimes P33 (simpler) is what you actually mean</td><td>Check: Is this about the PAST or the PRESENT?</td></tr><tr><td><strong>Forgetting s'il contraction</strong></td><td>Si il avait su</td><td>Must contract: <strong>s'il</strong> avait su (but "si elle" stays)</td><td>S'il avait su</td></tr><tr><td><strong>Translating English word order</strong></td><td>"Had I known" = Si j'avais su — NOT "Avais-je su"</td><td>French doesn't invert in si-clauses like English literary style</td><td>Si j'avais su (always)</td></tr></tbody></table>
+<hr>
+<h1>🔑 KEY TAKEAWAY</h1>
+<blockquote>
+<p><strong>Project 33 let you imagine a different present: "If I were..."</strong><br>
+<strong>Project 34 lets you imagine a different past: "If I had..."</strong></p>
+<p>The difference is devastating in meaning:<br>
+→ "Si j'avais de l'argent, je voyagerais" = I don't have money NOW — but imagine<br>
+→ "Si j'avais <strong>eu</strong> de l'argent, j'<strong>aurais</strong> voyagé" = I didn't have money THEN — it's too late</p>
+<p>You now control ALL THREE reality levels of the French si-clause system:</p>
+<ul>
+<li>🟢 P18: Real future — Si + présent → futur</li>
+<li>🟡 P33: Unreal present — Si + imparfait → conditionnel présent</li>
+<li>🔴 P34: Unreal past — Si + plus-que-parfait → conditionnel passé</li>
+</ul>
+<p>Plus the <strong>mixed conditionals</strong> that cross levels — natural in emotional speech.</p>
+<p>The si-clause architecture is now COMPLETE.</p>
+<p>But the <strong>conditionnel passé</strong> you just met has a life BEYOND si-clauses.<br>
+It can express regret, reproach, and missed obligation <strong>all by itself</strong> — without any "si."</p>
+</blockquote>
+<hr>
+<h1>🌉 BRIDGE TO PROJECT 35</h1>
+<blockquote>
+<p>You used conditionnel passé inside si-clauses — as a <strong>result</strong> of an unreal past condition<br>
+But what happens when there IS no condition — just pure regret?</p>
+<p>→ "I should have called." — <strong>J'aurais dû appeler.</strong><br>
+→ "You could have warned me." — <strong>Tu aurais pu me prévenir.</strong><br>
+→ "I would have liked to come." — <strong>J'aurais aimé venir.</strong><br>
+→ "She shouldn't have said that." — <strong>Elle n'aurait pas dû dire ça.</strong></p>
+<p>Project 35 unlocks: <strong>Conditionnel passé as standalone regret, reproach, and missed opportunity</strong><br>
+→ No si-clause required<br>
+→ Combined with devoir, pouvoir, vouloir, aimer → the full spectrum of "what should/could/would have been"<br>
+→ The emotional peak of French verb mastery</p>
+</blockquote>
+<hr>
+<h1>✅ PROJECT 34 COMPLETE</h1>
+<blockquote>
+<p><strong>Are you ready for PROJECT 35: "I Should Have, I Could Have"?</strong><br>
+→ ~100 sentences covering conditionnel passé used independently for regret, reproach, and missed opportunity<br>
+→ Scenario: A day when everything went wrong — reflecting on what should/could/would have been done<br>
+→ Builds directly on P34 (conditionnel passé inside si-clauses) and expands it to standalone emotional expression</p>
+</blockquote>
+</div>
+</div>
+
+<!-- ========== data-index="9" ========== -->
+
+        </div>
+
+        <div class="nav-bar">
+            <a href="project-33.html" class="nav-button prev">← Previous Chapter</a>
+            <div class="page-info">
+                <a href="index.html" class="nav-button home">📚 Table of Contents</a><br>
+                <span style="margin-top:8px;display:block">Chapter 34 of 50</span>
+            </div>
+            <a href="project-35.html" class="nav-button next">Next Chapter →</a>
+        </div>
+    </div>
+
+    
+    <div id="progress-track"><div id="progress-fill"></div></div>
+    <div id="progress-pct">0%</div>
+
+
+    <script>
+    const fill = document.getElementById('progress-fill');
+    const pct  = document.getElementById('progress-pct');
+    function updateProgress() {
+        const scrollTop = window.scrollY;
+        const docHeight = document.body.scrollHeight - window.innerHeight;
+        const scrolled  = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+        fill.style.height = scrolled + '%';
+        pct.textContent   = Math.round(scrolled) + '%';
+    }
+    window.addEventListener('scroll', updateProgress);
+    updateProgress();
+
+    document.addEventListener('keydown', function(e) {
+        if (['INPUT','TEXTAREA'].includes(document.activeElement.tagName)) return;
+        if (e.key === 'ArrowLeft') {
+            const b = document.querySelector('.nav-button.prev');
+            if (b && !b.classList.contains('disabled')) window.location.href = b.href;
+        }
+        if (e.key === 'ArrowRight') {
+            const b = document.querySelector('.nav-button.next');
+            if (b && !b.classList.contains('disabled')) window.location.href = b.href;
+        }
+    });
+    </script>
+
+</body>
+</html>

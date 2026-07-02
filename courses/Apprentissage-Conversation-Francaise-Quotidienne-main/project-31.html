@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="images/favicon.png">
+    <title>Project 31: "I Doubt It, I Wish It, I Fear It" — French Daily Sentences</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.75;
+            color: #1a202c;
+            background-color: #f7fafc;
+        }
+        .container {
+            max-width: 1800px;
+            margin: 0 auto;
+            background: white;
+            min-height: 100vh;
+            box-shadow: 0 0 30px rgba(0,0,0,0.08);
+            padding: 48px 52px;
+        }
+        
+        .content { max-width: 1700px; margin: 0 auto; color: #1a202c; }
+        .content h1 {
+            color: #1a202c; margin: 32px 0 20px;
+            padding-bottom: 12px;
+            border-bottom: 4px solid #3b82f6;
+            font-size: 2.1em;
+            font-weight: 700;
+        }
+        .content h2 {
+            color: #1a202c; margin: 28px 0 16px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #60a5fa;
+            font-size: 1.6em;
+            font-weight: 600;
+        }
+        .content h3 { color: #1a202c; margin: 22px 0 12px; font-size: 1.3em; font-weight: 600; }
+        .content h4 { color: #2d3748; margin: 18px 0 10px; font-size: 1.1em; font-weight: 600; }
+        .content p  { margin-bottom: 16px; line-height: 1.8; color: #1a202c; }
+        .content ul, .content ol { margin: 12px 0 18px 30px; color: #1a202c; }
+        .content li { margin-bottom: 8px; line-height: 1.75; color: #1a202c; }
+        .content hr { border: none; border-top: 2px solid #e2e8f0; margin: 26px 0; }
+        .content pre {
+            background: #f7fafc !important;
+            border: 1px solid #cbd5e0 !important;
+            border-left: 4px solid #3b82f6 !important;
+            padding: 18px !important; overflow-x: auto; margin: 18px 0; border-radius: 6px;
+            font-family: 'Consolas','Monaco','Courier New',monospace !important;
+            font-size: 0.9em !important;
+        }
+        .content pre:not([style*="color"]) { color: #1a202c !important; }
+        .content code {
+            font-family: 'Consolas','Monaco','Courier New',monospace !important;
+            font-size: 0.88em !important;
+        }
+        .content code:not(pre code) {
+            background: #dbeafe !important;
+            color: #1a202c !important;
+            padding: 2px 6px;
+            border-radius: 3px;
+        }
+        .content pre code { background: transparent !important; padding: 0; }
+        .content table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+        .content th {
+            background: linear-gradient(135deg, #3b82f6 0%, #60a5fa 100%);
+            color: white; padding: 12px 16px; text-align: left;
+            font-weight: 600;
+        }
+        .content td { padding: 11px 16px; border: 1px solid #e2e8f0; color: #1a202c; }
+        .content tr:nth-child(even) td { background: #eff6ff; }
+        .content blockquote {
+            border-left: 4px solid #3b82f6; background: #eff6ff;
+            padding: 14px 20px; margin: 18px 0; border-radius: 0 6px 6px 0;
+            color: #1a202c;
+        }
+        .content strong { color: #1a202c; font-weight: 600; }
+        .px-2 { padding: 0; }
+        .chat-message { background: transparent; padding: 0; margin: 0; }
+
+        /* Bottom nav bar only */
+        .nav-bar {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 24px 0;
+            margin-top: 50px;
+            border-top: 3px solid #60a5fa;
+        }
+        .nav-button {
+            display: inline-flex; align-items: center; gap: 8px;
+            padding: 12px 26px;
+            background: linear-gradient(135deg, #3b82f6 0%, #60a5fa 100%);
+            color: white !important; text-decoration: none;
+            border-radius: 8px; font-weight: 600; font-size: 0.95em;
+            transition: all 0.2s;
+            box-shadow: 0 2px 8px rgba(59,130,246,0.35);
+        }
+        .nav-button:hover { transform: translateY(-2px); box-shadow: 0 4px 14px rgba(59,130,246,0.5); }
+        .nav-button.disabled { background: #cbd5e1; box-shadow: none; pointer-events: none; }
+        .nav-button.home {
+            background: linear-gradient(135deg, #ef4444 0%, #f87171 100%);
+            box-shadow: 0 2px 8px rgba(239,68,68,0.35);
+        }
+        .nav-button.home:hover { box-shadow: 0 4px 14px rgba(239,68,68,0.5); }
+        .page-info { color: #718096; font-size: 0.9em; text-align: center; }
+
+        /* Progress bar */
+        #progress-track {
+            position: fixed; top: 20px; right: 20px;
+            width: 10px; height: 150px;
+            background: rgba(59,130,246,0.2);
+            border: 2px solid #3b82f6;
+            border-radius: 6px; overflow: hidden; z-index: 1000;
+        }
+        #progress-fill {
+            width: 100%;
+            background: linear-gradient(180deg, #3b82f6, #2563eb);
+            height: 0%;
+            transition: height 0.15s ease;
+        }
+        #progress-pct {
+            position: fixed; top: 0px; right: 16px;
+            color: #2563eb; font-size: 14px; font-weight: bold;
+            z-index: 1001;
+            text-shadow: 0 1px 2px rgba(255,255,255,0.9);
+            line-height: 20px;
+        }
+
+    </style>
+<link rel="stylesheet" href="assets/chapters.css?v=20260421203847"><script src="assets/chapters.js?v=20260421203847" defer></script>
+</head>
+<body>
+    <div class="container">
+        <div class="content">
+            <div class="chat-message" data-index="31">
+<div class="px-2"><h1>🟠 PROJECT 31: "I Doubt It, I Wish It, I Fear It"</h1>
+<h2><em>The complete subjonctif system — every trigger, every form, every exception</em></h2>
+<hr>
+<h1>🎯 THE HYPOTHETICAL PROBLEM</h1>
+<p>→ You've been using subjonctif since Project 23 — emotions, opinions, obligations<br>
+→ You know "il faut que tu sois" and "je suis content que tu viennes"<br>
+→ But you keep hitting <strong>walls</strong>:</p>
+<p><strong>Wall 1 — Unknown triggers:</strong><br>
+→ Your French colleague says: "Je t'ai envoyé le fichier <strong>pour que</strong> tu <strong>puisses</strong> le vérifier."<br>
+→ You didn't know "pour que" triggers subjonctif</p>
+<p><strong>Wall 2 — New connector triggers:</strong><br>
+→ Your boss says: "Vous pouvez partir <strong>à condition que</strong> le rapport <strong>soit</strong> terminé."<br>
+→ Another subjonctif trigger you haven't learned</p>
+<p><strong>Wall 3 — Past subjonctif:</strong><br>
+→ Your friend says: "Je suis content que tu <strong>aies réussi</strong> ton examen."<br>
+→ That's not regular subjonctif — it's <strong>subjonctif passé</strong> — and you don't know how to form it</p>
+<p><strong>Wall 4 — Subtle judgment triggers:</strong><br>
+→ Someone says: "C'est le meilleur film que j'<strong>aie</strong> jamais vu."<br>
+→ Subjonctif after a superlative? You had no idea.</p>
+<p><strong>Wall 5 — Fixed expressions:</strong><br>
+→ You hear: "**Quoi qu'**il <strong>fasse</strong>, ça ne marche pas."<br>
+→ "<strong>Où que</strong> tu <strong>ailles</strong>, je te suivrai."<br>
+→ These are <strong>concessive expressions</strong> — all subjonctif — and completely new to you.</p>
+<p>→ You realize: Project 23 gave you the <strong>introduction</strong> — about 40% of the subjonctif system<br>
+→ Project 31 gives you the <strong>remaining 60%</strong> — the triggers, forms, and patterns that complete your mastery</p>
+<p><strong>The core realization:</strong><br>
+→ Subjonctif isn't just for emotions and obligations<br>
+→ It appears after <strong>purpose connectors</strong> (pour que, afin que)<br>
+→ It appears after <strong>condition connectors</strong> (à condition que, pourvu que)<br>
+→ It appears after <strong>negative connectors</strong> (sans que, à moins que)<br>
+→ It appears after <strong>superlatives</strong> and <strong>unique/restrictive expressions</strong><br>
+→ It appears in <strong>fixed concessive expressions</strong> (quoi que, où que, qui que)<br>
+→ And it has a <strong>PAST form</strong> (subjonctif passé) for completed actions<br>
+→ Without full mastery, you'll hit a ceiling — you'll understand 80% of French but miss the sophisticated 20%</p>
+<hr>
+<h1>🔍 HOW TO APPROACH IT</h1>
+<p>→ Think of the subjonctif as having <strong>7 trigger families</strong> — Project 23 covered families 1-4<br>
+→ This project completes the remaining families AND adds the past form</p>
+<table><thead><tr><th>Family</th><th>Trigger Type</th><th>Introduced In</th><th>Completed In</th></tr></thead><tbody><tr><td>1. Emotion</td><td>content que, triste que, peur que...</td><td>P23 ✅</td><td>P31 (review + expand)</td></tr><tr><td>2. Doubt/Uncertainty</td><td>douter que, il est possible que...</td><td>P23 ✅</td><td>P31 (review + expand)</td></tr><tr><td>3. Desire/Wish</td><td>vouloir que, souhaiter que...</td><td>P23 ✅</td><td>P31 (review + expand)</td></tr><tr><td>4. Necessity/Judgment</td><td>il faut que, il est important que...</td><td>P23/P26 ✅</td><td>P31 (review)</td></tr><tr><td><strong>5. Purpose/Goal</strong></td><td><strong>pour que, afin que, de sorte que...</strong></td><td>NEW</td><td><strong>P31</strong></td></tr><tr><td><strong>6. Condition/Concession</strong></td><td><strong>à condition que, pourvu que, sans que, à moins que, bien que...</strong></td><td>Partial (P29/P30)</td><td><strong>P31</strong></td></tr><tr><td><strong>7. Superlative/Unique/Restrictive</strong></td><td><strong>le seul que, le meilleur que, rien que...</strong></td><td>NEW</td><td><strong>P31</strong></td></tr><tr><td><strong>BONUS: Fixed Expressions</strong></td><td><strong>quoi que, où que, qui que, quel que...</strong></td><td>NEW</td><td><strong>P31</strong></td></tr><tr><td><strong>FORM: Subjonctif Passé</strong></td><td><strong>que j'aie fait, qu'il soit parti...</strong></td><td>NEW</td><td><strong>P31</strong></td></tr></tbody></table>
+<hr>
+<h1>🔧 HOW CAN WE SOLVE IT</h1>
+<h2>SUBJONCTIF FORMS — Complete Review + Expansion</h2>
+<h3>Regular Formation (Review from P23):</h3>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>STEM: Take ILS/ELLES form of présent → remove -ENT → add subjonctif endings
+</span>
+Endings: -e, -es, -e, -ions, -iez, -ent
+
+PARLER:  ils parlent → parl-
+que je parle, que tu parles, qu'il parle
+que nous parlions, que vous parliez, qu'ils parlent
+
+FINIR:   ils finissent → finiss-
+que je finisse, que tu finisses, qu'il finisse
+que nous finissions, que vous finissiez, qu'ils finissent</code></pre></div>
+<h3>The 10 Critical Irregulars (Review from P23):</h3>
+<table><thead><tr><th>Verb</th><th>je</th><th>tu</th><th>il/elle</th><th>nous</th><th>vous</th><th>ils/elles</th></tr></thead><tbody><tr><td><strong>être</strong></td><td>sois</td><td>sois</td><td>soit</td><td>soyons</td><td>soyez</td><td>soient</td></tr><tr><td><strong>avoir</strong></td><td>aie</td><td>aies</td><td>ait</td><td>ayons</td><td>ayez</td><td>aient</td></tr><tr><td><strong>aller</strong></td><td>aille</td><td>ailles</td><td>aille</td><td>allions</td><td>alliez</td><td>aillent</td></tr><tr><td><strong>faire</strong></td><td>fasse</td><td>fasses</td><td>fasse</td><td>fassions</td><td>fassiez</td><td>fassent</td></tr><tr><td><strong>pouvoir</strong></td><td>puisse</td><td>puisses</td><td>puisse</td><td>puissions</td><td>puissiez</td><td>puissent</td></tr><tr><td><strong>savoir</strong></td><td>sache</td><td>saches</td><td>sache</td><td>sachions</td><td>sachiez</td><td>sachent</td></tr><tr><td><strong>vouloir</strong></td><td>veuille</td><td>veuilles</td><td>veuille</td><td>voulions</td><td>vouliez</td><td>veuillent</td></tr><tr><td><strong>prendre</strong></td><td>prenne</td><td>prennes</td><td>prenne</td><td>prenions</td><td>preniez</td><td>prennent</td></tr><tr><td><strong>venir</strong></td><td>vienne</td><td>viennes</td><td>vienne</td><td>venions</td><td>veniez</td><td>viennent</td></tr><tr><td><strong>devoir</strong></td><td>doive</td><td>doives</td><td>doive</td><td>devions</td><td>deviez</td><td>doivent</td></tr></tbody></table>
+<h3>NEW — Additional Irregular/Semi-Irregular Verbs to Know:</h3>
+<table><thead><tr><th>Verb</th><th>Subjonctif (il)</th><th>Why Important</th></tr></thead><tbody><tr><td><strong>pleuvoir</strong></td><td>qu'il <strong>pleuve</strong></td><td>Weather — "avant qu'il pleuve"</td></tr><tr><td><strong>falloir</strong></td><td>qu'il <strong>faille</strong></td><td>"bien qu'il faille" — rare but exists</td></tr><tr><td><strong>valoir</strong></td><td>qu'il <strong>vaille</strong></td><td>"pour que ça vaille la peine"</td></tr><tr><td><strong>croire</strong></td><td>qu'il <strong>croie</strong></td><td>"sans que je croie..."</td></tr><tr><td><strong>voir</strong></td><td>qu'il <strong>voie</strong></td><td>"pour qu'il voie"</td></tr><tr><td><strong>boire</strong></td><td>qu'il <strong>boive</strong></td><td>"avant qu'il boive"</td></tr><tr><td><strong>écrire</strong></td><td>qu'il <strong>écrive</strong></td><td>"pour qu'il écrive"</td></tr><tr><td><strong>dire</strong></td><td>qu'il <strong>dise</strong></td><td>"sans qu'il dise rien"</td></tr><tr><td><strong>mettre</strong></td><td>qu'il <strong>mette</strong></td><td>"il faut qu'il mette"</td></tr><tr><td><strong>connaître</strong></td><td>qu'il <strong>connaisse</strong></td><td>"pour qu'il connaisse"</td></tr><tr><td><strong>recevoir</strong></td><td>qu'il <strong>reçoive</strong></td><td>"avant qu'il reçoive"</td></tr><tr><td><strong>vivre</strong></td><td>qu'il <strong>vive</strong></td><td>"pour qu'il vive" — "Vive la France !"</td></tr><tr><td><strong>mourir</strong></td><td>qu'il <strong>meure</strong></td><td>"avant qu'il meure"</td></tr><tr><td><strong>plaire</strong></td><td>qu'il <strong>plaise</strong></td><td>"pour que ça plaise"</td></tr><tr><td><strong>paraître</strong></td><td>qu'il <strong>paraisse</strong></td><td>"sans que ça paraisse"</td></tr></tbody></table>
+<hr>
+<h2>NEW — THE SUBJONCTIF PASSÉ</h2>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>FORMATION: AVOIR or ÊTRE (in subjonctif présent) + PARTICIPE PASSÉ
+</span>
+AVOIR verbs:
+que j'aie mangé          que nous ayons mangé
+que tu aies mangé         que vous ayez mangé
+qu'il ait mangé           qu'ils aient mangé
+
+ÊTRE verbs:
+que je sois arrivé(e)     que nous soyons arrivé(e)s
+que tu sois arrivé(e)     que vous soyez arrivé(e)(s)
+qu'il soit arrivé         qu'ils soient arrivés
+qu'elle soit arrivée      qu'elles soient arrivées
+
+REFLEXIVE verbs:
+que je me sois reposé(e)
+qu'il se soit trompé
+qu'elle se soit souvenue
+
+WHEN TO USE:
+→ When the action in the subjonctif clause happened BEFORE the main clause
+→ "Je suis content que tu SOIS VENU." = I'm happy you came (you came BEFORE I'm happy)
+→ "C'est dommage qu'il AIT PERDU." = It's a shame he lost (he lost BEFORE it's a shame)
+
+COMPARISON:
+→ Subjonctif présent: action simultaneous or future relative to main clause
+   "Je veux qu'il VIENNE." = I want him to come (hasn't happened yet)
+→ Subjonctif passé: action COMPLETED before main clause
+   "Je suis content qu'il SOIT VENU." = I'm happy he came (already happened)</code></pre></div>
+<hr>
+<h1>✅ WHAT COULD BE DONE — THE 100 SENTENCES</h1>
+<hr>
+<h2>🔹 BLOCK A — Family 5: Purpose / Goal Triggers (NEW)</h2>
+<p><em>Scenario: Explaining WHY you do something — the goal, the purpose, the intention</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English</th><th>Trigger</th><th>Subjonctif Form</th></tr></thead><tbody><tr><td>1</td><td>Je t'explique <strong>pour que</strong> tu <strong>comprennes</strong>.</td><td>I'm explaining so that you understand.</td><td>pour que</td><td>comprennes (comprendre)</td></tr><tr><td>2</td><td>Parle plus fort **pour qu'**on t'<strong>entende</strong>.</td><td>Speak louder so that people hear you.</td><td>pour que</td><td>entende (entendre)</td></tr><tr><td>3</td><td>Je lui ai écrit **pour qu'**il <strong>sache</strong> la vérité.</td><td>I wrote to him so that he knows the truth.</td><td>pour que</td><td>sache (savoir)</td></tr><tr><td>4</td><td>On a tout organisé <strong>pour que</strong> la fête <strong>soit</strong> parfaite.</td><td>We organized everything so that the party would be perfect.</td><td>pour que</td><td>soit (être)</td></tr><tr><td>5</td><td>Je t'envoie le document <strong>pour que</strong> tu <strong>puisses</strong> le vérifier.</td><td>I'm sending you the document so you can check it.</td><td>pour que</td><td>puisses (pouvoir)</td></tr><tr><td>6</td><td><strong>Afin que</strong> tout le monde <strong>soit</strong> informé, j'envoie un email.</td><td>So that everyone is informed, I'm sending an email.</td><td>afin que</td><td>soit (être)</td></tr><tr><td>7</td><td><strong>Afin que</strong> vous <strong>compreniez</strong> bien, je vais répéter.</td><td>So that you understand clearly, I'll repeat.</td><td>afin que</td><td>compreniez (comprendre)</td></tr><tr><td>8</td><td>Il travaille dur <strong>pour que</strong> ses enfants <strong>aient</strong> une meilleure vie.</td><td>He works hard so his children have a better life.</td><td>pour que</td><td>aient (avoir)</td></tr><tr><td>9</td><td>J'ai fermé la porte **pour qu'**on ne nous <strong>dérange</strong> pas.</td><td>I closed the door so we won't be disturbed.</td><td>pour que</td><td>dérange (déranger)</td></tr><tr><td>10</td><td>Mets une alarme <strong>pour que</strong> tu ne <strong>sois</strong> pas en retard.</td><td>Set an alarm so you're not late.</td><td>pour que</td><td>sois (être)</td></tr></tbody></table>
+<p><strong>🧠 "POUR QUE" vs. "AFIN QUE" vs. "POUR" + infinitif:</strong></p>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>POUR QUE + subjonctif = So that [someone else] does X
+</span>→ DIFFERENT subjects required
+→ "Je t'explique POUR QUE TU comprennes." (I explain / you understand)
+→ Register: Universal — very common in speech and writing
+
+AFIN QUE + subjonctif = So that [someone else] does X
+→ Same meaning as "pour que" — MORE FORMAL
+→ "Afin que vous compreniez..." = So that you understand...
+→ Register: Formal / written — rarely used in casual speech
+
+POUR + infinitif = In order to / To (SAME subject)
+→ "Je travaille POUR réussir." (I work to succeed — same person)
+→ NO subjonctif — just infinitif
+→ ❌ "Je travaille pour que je réussisse." (WRONG — same subject)
+→ ✅ "Je travaille pour réussir." (CORRECT)
+
+AFIN DE + infinitif = In order to (SAME subject — formal)
+→ "Afin de mieux comprendre, j'ai relu le document."
+→ Same as "pour" but more formal
+
+SAME-SUBJECT RULE (Connection to P23):
+→ Same subject → POUR / AFIN DE + infinitif
+→ Different subjects → POUR QUE / AFIN QUE + subjonctif</code></pre></div>
+<p><strong>🧠 "DE SORTE QUE / DE FAÇON QUE / DE MANIÈRE QUE" — The Dual-Mood Connectors:</strong></p>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>These connectors can take EITHER indicatif OR subjonctif:
+</span>
+SUBJONCTIF = PURPOSE (so that — intention):
+→ "J'ai parlé doucement DE SORTE QU'il ne m'ENTENDE pas."
+   = I spoke softly SO THAT he wouldn't hear me. (my intention)
+
+INDICATIF = RESULT (so that — actual outcome):
+→ "J'ai parlé doucement, DE SORTE QU'il ne m'a pas ENTENDU."
+   = I spoke softly, so he didn't hear me. (what actually happened)
+
+→ Connection to Project 28: "de sorte que" appeared as consequence connector (indicatif)
+→ Now you see it can ALSO be a purpose connector (subjonctif)
+→ The MOOD tells you whether it's purpose (subj) or result (indic)</code></pre></div>
+<hr>
+<h2>🔹 BLOCK B — Family 6A: Condition Triggers (NEW)</h2>
+<p><em>Scenario: Setting conditions for something to happen — "provided that," "on condition that"</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English</th><th>Trigger</th><th>Subjonctif Form</th></tr></thead><tbody><tr><td>11</td><td>Tu peux sortir <strong>à condition que</strong> tu <strong>fasses</strong> tes devoirs d'abord.</td><td>You can go out on condition that you do your homework first.</td><td>à condition que</td><td>fasses (faire)</td></tr><tr><td>12</td><td>Je viendrai <strong>à condition que</strong> tu <strong>sois</strong> là.</td><td>I'll come on condition that you're there.</td><td>à condition que</td><td>sois (être)</td></tr><tr><td>13</td><td>On accepte <strong>à condition que</strong> le prix ne <strong>change</strong> pas.</td><td>We accept on condition that the price doesn't change.</td><td>à condition que</td><td>change (changer)</td></tr><tr><td>14</td><td><strong>Pourvu que</strong> le temps <strong>soit</strong> bon, on partira en randonnée.</td><td>Provided the weather is good, we'll go hiking.</td><td>pourvu que</td><td>soit (être)</td></tr><tr><td>15</td><td>**Pourvu qu'**il ne <strong>pleuve</strong> pas demain !</td><td>Let's hope it doesn't rain tomorrow!</td><td>pourvu que (wish)</td><td>pleuve (pleuvoir)</td></tr><tr><td>16</td><td><strong>Pourvu que</strong> tu <strong>aies</strong> ton passeport, il n'y aura pas de problème.</td><td>Provided you have your passport, there won't be a problem.</td><td>pourvu que</td><td>aies (avoir)</td></tr><tr><td>17</td><td><strong>Pourvu que</strong> tout <strong>aille</strong> bien !</td><td>Let's hope everything goes well!</td><td>pourvu que (wish)</td><td>aille (aller)</td></tr><tr><td>18</td><td>Tu peux emprunter ma voiture <strong>à condition que</strong> tu la <strong>rendes</strong> demain.</td><td>You can borrow my car on condition you return it tomorrow.</td><td>à condition que</td><td>rendes (rendre)</td></tr><tr><td>19</td><td>On sera là <strong>à condition que</strong> le train ne <strong>soit</strong> pas annulé.</td><td>We'll be there provided the train isn't cancelled.</td><td>à condition que</td><td>soit (être)</td></tr><tr><td>20</td><td><strong>Pourvu que</strong> ça <strong>dure</strong> !</td><td>Let's hope it lasts!</td><td>pourvu que (wish)</td><td>dure (durer)</td></tr></tbody></table>
+<p><strong>🧠 "À CONDITION QUE" vs. "POURVU QUE":</strong></p>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>À CONDITION QUE + subjonctif = On condition that / Provided that
+</span>→ Sets a SPECIFIC CONDITION for something to happen
+→ "Tu peux sortir à condition que tu fasses tes devoirs."
+→ Implies: IF you don't meet the condition → the result won't happen
+→ Register: Neutral — used in conversation and writing
+
+POURVU QUE + subjonctif = Provided that / Let's hope that
+→ TWO USES:
+
+USE 1 — CONDITION (= à condition que):
+→ "Pourvu que tu aies ton billet, tu pourras entrer."
+→ = Provided you have your ticket...
+
+USE 2 — WISH/HOPE (standalone — very common):
+→ "Pourvu qu'il fasse beau !" = Let's hope the weather is nice!
+→ "Pourvu que ça marche !" = Let's hope it works!
+→ "Pourvu que..." alone = an anxious HOPE
+→ No consequence clause needed — the wish stands alone
+→ Very common in spoken French
+
+SAME-SUBJECT ALTERNATIVE:
+→ à condition de + infinitif (same subject)
+→ "Tu peux sortir à condition DE finir tes devoirs."
+→ "J'accepte à condition DE recevoir une confirmation."</code></pre></div>
+<hr>
+<h2>🔹 BLOCK C — Family 6B: Negative Condition &amp; Absence Triggers (NEW)</h2>
+<p><em>Scenario: Without X happening, unless X happens — negative/absence conditions</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English</th><th>Trigger</th><th>Subjonctif Form</th></tr></thead><tbody><tr><td>21</td><td>Il est parti <strong>sans que</strong> je le <strong>sache</strong>.</td><td>He left without me knowing.</td><td>sans que</td><td>sache (savoir)</td></tr><tr><td>22</td><td>Elle a tout organisé <strong>sans que</strong> personne ne l'<strong>aide</strong>.</td><td>She organized everything without anyone helping her.</td><td>sans que</td><td>aide (aider)</td></tr><tr><td>23</td><td>Il a réussi **sans qu'**on lui <strong>donne</strong> de conseil.</td><td>He succeeded without anyone giving him advice.</td><td>sans que</td><td>donne (donner)</td></tr><tr><td>24</td><td><strong>Sans que</strong> tu le <strong>saches</strong>, j'ai tout préparé pour ton anniversaire.</td><td>Without you knowing, I prepared everything for your birthday.</td><td>sans que</td><td>saches (savoir)</td></tr><tr><td>25</td><td>Le temps passe **sans qu'**on s'en <strong>rende</strong> compte.</td><td>Time passes without us realizing it.</td><td>sans que</td><td>rende (rendre)</td></tr><tr><td>26</td><td>On ne partira pas <strong>à moins que</strong> tu ne <strong>sois</strong> prêt.</td><td>We won't leave unless you're ready.</td><td>à moins que</td><td>sois (être)</td></tr><tr><td>27</td><td>Je viendrai, **à moins qu'**il ne <strong>pleuve</strong>.</td><td>I'll come, unless it rains.</td><td>à moins que</td><td>pleuve (pleuvoir)</td></tr><tr><td>28</td><td><strong>À moins que</strong> vous n'<strong>ayez</strong> une meilleure idée, on garde ce plan.</td><td>Unless you have a better idea, we keep this plan.</td><td>à moins que</td><td>ayez (avoir)</td></tr><tr><td>29</td><td>Il ne changera pas, **à moins qu'**on ne le <strong>force</strong>.</td><td>He won't change, unless we force him.</td><td>à moins que</td><td>force (forcer)</td></tr><tr><td>30</td><td>Tu peux tout manger, <strong>à moins que</strong> tu ne <strong>sois</strong> allergique.</td><td>You can eat everything, unless you're allergic.</td><td>à moins que</td><td>sois (être)</td></tr></tbody></table>
+<p><strong>🧠 "SANS QUE" — Without [someone doing something]:</strong></p>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>SANS QUE + subjonctif = Without [someone] doing [something]
+</span>→ ALWAYS subjonctif — no exceptions
+→ "Il est parti SANS QUE je le SACHE." = He left without me knowing
+
+SAME-SUBJECT ALTERNATIVE:
+→ SANS + infinitif (same subject)
+→ "Il est parti SANS dire au revoir." = He left without saying goodbye
+→ Same-subject rule: sans + inf / Different: sans que + subj
+
+EXAMPLES OF BOTH:
+→ "Il mange SANS faire de bruit." (same subject — he eats quietly)
+→ "Il mange SANS QUE personne le VOIE." (different — without anyone seeing)</code></pre></div>
+<p><strong>🧠 "À MOINS QUE" — Unless:</strong></p>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>À MOINS QUE + subjonctif = Unless
+</span>→ ALWAYS subjonctif — no exceptions
+→ "Je viendrai, à moins qu'il ne pleuve." = I'll come, unless it rains.
+
+NE EXPLÉTIF:
+→ Like "avant que" and fear verbs (P23, P30)
+→ "À moins qu'il NE pleuve" — the "ne" is expletive (optional, no negation)
+→ Formal writing → include it
+→ Casual speech → skip it: "À moins qu'il pleuve"
+
+SAME-SUBJECT ALTERNATIVE:
+→ À MOINS DE + infinitif
+→ "Je viendrai, à moins D'ÊTRE malade." = I'll come, unless I'm sick
+→ "À moins de trouver une solution..." = Unless we find a solution...</code></pre></div>
+<hr>
+<h2>🔹 BLOCK D — Family 6C: Fear-Based Purpose (NEW — Expanding P23)</h2>
+<p><em>Scenario: Doing something to PREVENT something else — "lest," "for fear that"</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English</th><th>Trigger</th><th>Subjonctif Form</th></tr></thead><tbody><tr><td>31</td><td>Je ferme la porte **de peur qu'**il ne <strong>fasse</strong> froid.</td><td>I'm closing the door for fear it gets cold.</td><td>de peur que</td><td>fasse (faire)</td></tr><tr><td>32</td><td>Elle parle doucement <strong>de peur que</strong> les enfants ne l'<strong>entendent</strong>.</td><td>She speaks softly for fear the children hear her.</td><td>de peur que</td><td>entendent (entendre)</td></tr><tr><td>33</td><td>Il a menti **de crainte qu'**on ne le <strong>punisse</strong>.</td><td>He lied for fear of being punished.</td><td>de crainte que</td><td>punisse (punir)</td></tr><tr><td>34</td><td>Prends un parapluie **de peur qu'**il ne <strong>pleuve</strong>.</td><td>Take an umbrella in case it rains.</td><td>de peur que</td><td>pleuve (pleuvoir)</td></tr><tr><td>35</td><td>Ils ont tout vérifié **de crainte qu'**il n'y <strong>ait</strong> une erreur.</td><td>They checked everything for fear there was an error.</td><td>de crainte que</td><td>ait (avoir)</td></tr></tbody></table>
+<p><strong>🧠 "DE PEUR QUE / DE CRAINTE QUE" — For Fear That:</strong></p>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>DE PEUR QUE + subjonctif = For fear that / Lest
+</span>DE CRAINTE QUE + subjonctif = For fear that / Lest (more formal)
+
+→ Both express doing something to PREVENT an unwanted outcome
+→ Both take NE EXPLÉTIF (optional):
+   "De peur qu'il NE pleuve" = For fear it rains
+
+SAME-SUBJECT:
+→ DE PEUR DE + infinitif
+→ "Il a menti DE PEUR D'être puni." = He lied for fear of being punished
+→ DE CRAINTE DE + infinitif
+→ "Elle se tait DE CRAINTE DE déranger." = She stays quiet for fear of disturbing</code></pre></div>
+<hr>
+<h2>🔹 BLOCK E — Family 7: Superlative, Unique, and Restrictive Triggers (NEW)</h2>
+<p><em>Scenario: Describing something as the best, worst, only, first, or last — a hidden subjonctif trigger</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English</th><th>Trigger</th><th>Subjonctif Form</th></tr></thead><tbody><tr><td>36</td><td>C'est le meilleur film que j'<strong>aie</strong> jamais vu.</td><td>It's the best movie I've ever seen.</td><td>superlative + que</td><td>aie (avoir) — subj passé</td></tr><tr><td>37</td><td>C'est la plus belle ville que je <strong>connaisse</strong>.</td><td>It's the most beautiful city I know.</td><td>superlative + que</td><td>connaisse (connaître)</td></tr><tr><td>38</td><td>C'est le pire restaurant où j'<strong>aie</strong> jamais mangé.</td><td>It's the worst restaurant I've ever eaten at.</td><td>superlative + que/où</td><td>aie (avoir) — subj passé</td></tr><tr><td>39</td><td>C'est la seule personne qui <strong>puisse</strong> m'aider.</td><td>It's the only person who can help me.</td><td>le seul...qui</td><td>puisse (pouvoir)</td></tr><tr><td>40</td><td>C'est le premier qui <strong>soit</strong> arrivé.</td><td>He's the first one who arrived.</td><td>le premier...qui</td><td>soit (être)</td></tr><tr><td>41</td><td>C'est le dernier livre qu'il <strong>ait</strong> écrit.</td><td>It's the last book he wrote.</td><td>le dernier...que</td><td>ait (avoir) — subj passé</td></tr><tr><td>42</td><td>Il n'y a rien qui me <strong>fasse</strong> peur.</td><td>There's nothing that scares me.</td><td>rien...qui</td><td>fasse (faire)</td></tr><tr><td>43</td><td>Je ne connais personne qui <strong>sache</strong> faire ça.</td><td>I don't know anyone who knows how to do that.</td><td>personne...qui</td><td>sache (savoir)</td></tr><tr><td>44</td><td>C'est le seul endroit où je me <strong>sente</strong> en sécurité.</td><td>It's the only place where I feel safe.</td><td>le seul...où</td><td>sente (sentir)</td></tr><tr><td>45</td><td>Y a-t-il quelqu'un qui <strong>puisse</strong> m'aider ?</td><td>Is there anyone who can help me?</td><td>quelqu'un...qui (question)</td><td>puisse (pouvoir)</td></tr></tbody></table>
+<p><strong>🧠 THE SUPERLATIVE / UNIQUE / RESTRICTIVE TRIGGER SYSTEM:</strong></p>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>SUPERLATIVES (le plus, le moins, le meilleur, le pire) + QUE → SUBJONCTIF:
+</span>→ "C'est le meilleur film que j'AIE vu." (subjonctif)
+→ "C'est la plus belle chose que je CONNAISSE." (subjonctif)
+
+WHY? → A superlative is a SUBJECTIVE JUDGMENT — not an objective fact
+→ "The best I've ever seen" = YOUR personal evaluation → subjonctif
+→ Note: in casual speech, some speakers use indicatif — but subjonctif is the standard
+
+UNIQUE/RESTRICTIVE WORDS + QUI/QUE → SUBJONCTIF:
+→ le seul / la seule...qui/que    (the only...who/that)
+→ le premier / la première...qui   (the first...who)
+→ le dernier / la dernière...qui   (the last...who)
+→ l'unique...qui                   (the unique...who)
+
+NEGATIVE + QUI/QUE → SUBJONCTIF:
+→ rien...qui/que       (nothing that...)
+→ personne...qui       (nobody who...)
+→ aucun...qui          (no one...who)
+
+QUESTION + QUI/QUE → SUBJONCTIF (uncertainty):
+→ "Y a-t-il quelqu'un qui PUISSE m'aider ?"
+→ The existence of the person is UNCERTAIN → subjonctif
+
+⚠️ NOT ALWAYS SUBJONCTIF:
+→ If you're stating a FACT (not a judgment):
+→ "C'est le premier qui EST arrivé." (indicatif — factual, I saw him arrive)
+→ "C'est le premier qui SOIT arrivé." (subjonctif — emphasizing uniqueness)
+→ Both are acceptable — subjonctif is more "correct" / literary
+→ In casual speech, indicatif is common after superlatives</code></pre></div>
+<hr>
+<h2>🔹 BLOCK F — Fixed Concessive Expressions (NEW)</h2>
+<p><em>Scenario: "Whatever," "wherever," "whoever" — expressing "no matter what/where/who"</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English</th><th>Expression</th><th>Subjonctif Form</th></tr></thead><tbody><tr><td>46</td><td><strong>Quoi que</strong> tu <strong>fasses</strong>, je te soutiendrai.</td><td>Whatever you do, I'll support you.</td><td>quoi que</td><td>fasses (faire)</td></tr><tr><td>47</td><td>**Quoi qu'**il <strong>dise</strong>, ne le crois pas.</td><td>Whatever he says, don't believe him.</td><td>quoi que</td><td>dise (dire)</td></tr><tr><td>48</td><td>**Quoi qu'**il en <strong>soit</strong>, on doit avancer.</td><td>Whatever the case, we must move forward.</td><td>quoi que</td><td>soit (être) — fixed</td></tr><tr><td>49</td><td>**Quoi qu'**il <strong>arrive</strong>, reste calme.</td><td>Whatever happens, stay calm.</td><td>quoi que</td><td>arrive (arriver)</td></tr><tr><td>50</td><td><strong>Où que</strong> tu <strong>ailles</strong>, je te suivrai.</td><td>Wherever you go, I'll follow you.</td><td>où que</td><td>ailles (aller)</td></tr><tr><td>51</td><td><strong>Où que</strong> vous <strong>soyez</strong>, restez en contact.</td><td>Wherever you are, stay in touch.</td><td>où que</td><td>soyez (être)</td></tr><tr><td>52</td><td><strong>Qui que</strong> vous <strong>soyez</strong>, vous devez respecter les règles.</td><td>Whoever you are, you must respect the rules.</td><td>qui que</td><td>soyez (être)</td></tr><tr><td>53</td><td><strong>Qui que</strong> ce <strong>soit</strong>, dites-lui d'attendre.</td><td>Whoever it is, tell them to wait.</td><td>qui que</td><td>soit (être)</td></tr><tr><td>54</td><td><strong>Quel que</strong> <strong>soit</strong> le résultat, je serai fier de toi.</td><td>Whatever the result, I'll be proud of you.</td><td>quel que + soit</td><td>soit (être)</td></tr><tr><td>55</td><td><strong>Quelle que</strong> <strong>soit</strong> la raison, c'est inacceptable.</td><td>Whatever the reason, it's unacceptable.</td><td>quelle que + soit</td><td>soit (être)</td></tr><tr><td>56</td><td><strong>Quels que</strong> <strong>soient</strong> les obstacles, on avancera.</td><td>Whatever the obstacles, we'll move forward.</td><td>quels que + soient</td><td>soient (être)</td></tr><tr><td>57</td><td><strong>Quelles que</strong> <strong>soient</strong> vos questions, n'hésitez pas.</td><td>Whatever your questions, don't hesitate.</td><td>quelles que + soient</td><td>soient (être)</td></tr><tr><td>58</td><td>**Où qu'**on <strong>regarde</strong>, il y a de la beauté.</td><td>Wherever you look, there's beauty.</td><td>où que</td><td>regarde (regarder)</td></tr><tr><td>59</td><td>**Quoi qu'**il <strong>fasse</strong>, il réussit toujours.</td><td>Whatever he does, he always succeeds.</td><td>quoi que</td><td>fasse (faire)</td></tr><tr><td>60</td><td><strong>Qui que</strong> tu <strong>sois</strong>, tu es le bienvenu.</td><td>Whoever you are, you're welcome.</td><td>qui que</td><td>sois (être)</td></tr></tbody></table>
+<p><strong>🧠 THE FIXED CONCESSIVE EXPRESSION SYSTEM:</strong></p>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>QUOI QUE + subjonctif = Whatever (thing)
+</span>→ "Quoi que tu fasses..." = Whatever you do...
+→ "Quoi qu'il arrive..." = Whatever happens...
+→ "Quoi qu'il en soit..." = Whatever the case may be (FIXED — very common)
+
+⚠️ DO NOT CONFUSE:
+→ QUOI QUE (two words) = Whatever → SUBJONCTIF
+→ QUOIQUE (one word) = Although → SUBJONCTIF (= bien que — P29)
+→ "QUOI QUE tu fasses, je t'aime." = Whatever you do, I love you.
+→ "QUOIQUE ce soit difficile, j'essaie." = Although it's difficult, I try.
+
+OÙ QUE + subjonctif = Wherever
+→ "Où que tu ailles..." = Wherever you go...
+→ "Où que vous soyez..." = Wherever you are...
+
+QUI QUE + subjonctif = Whoever
+→ "Qui que vous soyez..." = Whoever you are...
+→ "Qui que ce soit" = Whoever it is / Anyone (fixed expression)
+
+QUEL(LE)(S) QUE + SOIT/SOIENT + noun = Whatever [noun]
+→ AGREES in gender and number with the NOUN:
+   → Quel que soit le problème (masc sing)
+   → Quelle que soit la raison (fem sing)
+   → Quels que soient les obstacles (masc plural)
+   → Quelles que soient les conséquences (fem plural)
+→ ALWAYS followed by SOIT/SOIENT (être in subjonctif)
+→ Very common in formal speech and writing</code></pre></div>
+<hr>
+<h2>🔹 BLOCK G — Subjonctif Passé: Completed Actions (NEW)</h2>
+<p><em>Scenario: Reacting to something that ALREADY happened — the subjonctif has a past form</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English</th><th>Trigger</th><th>Subj Passé Form</th></tr></thead><tbody><tr><td>61</td><td>Je suis content que tu <strong>aies réussi</strong>.</td><td>I'm happy you succeeded.</td><td>content que</td><td>aies réussi (avoir + PP)</td></tr><tr><td>62</td><td>C'est dommage qu'il <strong>ait perdu</strong> son travail.</td><td>It's a shame he lost his job.</td><td>dommage que</td><td>ait perdu (avoir + PP)</td></tr><tr><td>63</td><td>Je doute qu'elle <strong>ait compris</strong>.</td><td>I doubt she understood.</td><td>douter que</td><td>ait compris (avoir + PP)</td></tr><tr><td>64</td><td>Il est surpris que nous <strong>soyons arrivés</strong> si tôt.</td><td>He's surprised we arrived so early.</td><td>surpris que</td><td>soyons arrivés (être + PP)</td></tr><tr><td>65</td><td>Je regrette que tu n'<strong>aies</strong> pas <strong>pu</strong> venir.</td><td>I regret you couldn't come.</td><td>regretter que</td><td>aies pu (avoir + PP)</td></tr><tr><td>66</td><td>C'est le meilleur livre que j'<strong>aie</strong> jamais <strong>lu</strong>.</td><td>It's the best book I've ever read.</td><td>superlative + que</td><td>aie lu (avoir + PP)</td></tr><tr><td>67</td><td>**Bien qu'**il <strong>ait fait</strong> des erreurs, il a appris.</td><td>Although he made mistakes, he learned.</td><td>bien que</td><td>ait fait (avoir + PP)</td></tr><tr><td>68</td><td>Je suis fier que tu <strong>aies obtenu</strong> ton diplôme.</td><td>I'm proud you got your degree.</td><td>fier que</td><td>aies obtenu (avoir + PP)</td></tr><tr><td>69</td><td>Il est parti **sans qu'**on l'<strong>ait vu</strong>.</td><td>He left without us seeing him.</td><td>sans que</td><td>ait vu (avoir + PP)</td></tr><tr><td>70</td><td>C'est la seule erreur qu'il <strong>ait commise</strong>.</td><td>It's the only mistake he made.</td><td>le seul...que</td><td>ait commise (avoir + PP — agrees!)</td></tr></tbody></table>
+<p><strong>🧠 SUBJONCTIF PASSÉ — When to Use It:</strong></p>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>USE SUBJONCTIF PASSÉ when the action in the "que" clause
+</span>happened BEFORE the action in the main clause:
+
+TIMELINE:
+   [subj passé action]  ←  [main clause reaction]  ←  [now]
+   He succeeded              I'm happy                  (present)
+
+PRESENT REACTION to PAST EVENT:
+→ "Je suis content que tu AIES RÉUSSI." (past success → present happiness)
+→ "C'est dommage qu'il AIT PERDU." (past loss → present regret)
+
+PAST REACTION to EARLIER PAST EVENT:
+→ "J'étais content que tu AIES RÉUSSI." (earlier success → past happiness)
+
+WITH CONNECTORS:
+→ "Bien qu'il AIT FAIT des erreurs..." (past mistakes → despite)
+→ "Sans qu'on l'AIT VU..." (past — without seeing)
+→ "Avant qu'il AIT FINI..." (before he had finished)
+
+VERSUS SUBJONCTIF PRÉSENT:
+→ Subj présent = simultaneous or future: "Je veux qu'il VIENNE." (hasn't happened)
+→ Subj passé = completed: "Je suis content qu'il SOIT VENU." (already happened)
+
+AGREEMENT RULE:
+→ Same as passé composé:
+   → Avoir verbs: PP agrees with preceding COD (rare in subj passé)
+   → Être verbs: PP agrees with subject
+   → "C'est la seule erreur qu'il ait commisE." (que = COD fem → agreement)</code></pre></div>
+<hr>
+<h2>🔹 BLOCK H — The Complete "When Subjonctif / When NOT" Decision System</h2>
+<p><em>Scenario: You're mid-sentence — how do you know if you need subjonctif or indicatif?</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>Mood</th><th>Why</th></tr></thead><tbody><tr><td>71</td><td>Je sais que tu <strong>es</strong> là.</td><td>INDICATIF</td><td>savoir = certainty → always indicatif</td></tr><tr><td>72</td><td>Je veux que tu <strong>sois</strong> là.</td><td>SUBJONCTIF</td><td>vouloir = desire → subjonctif</td></tr><tr><td>73</td><td>Je pense que c'<strong>est</strong> vrai.</td><td>INDICATIF</td><td>penser (affirm) = belief → indicatif</td></tr><tr><td>74</td><td>Je ne pense pas que ce <strong>soit</strong> vrai.</td><td>SUBJONCTIF</td><td>penser (negative) = doubt → subjonctif</td></tr><tr><td>75</td><td>J'espère qu'il <strong>viendra</strong>.</td><td>INDICATIF</td><td>espérer = always indicatif (P23 exception)</td></tr><tr><td>76</td><td>Je souhaite qu'il <strong>vienne</strong>.</td><td>SUBJONCTIF</td><td>souhaiter = wish → subjonctif</td></tr><tr><td>77</td><td>Il est certain que c'<strong>est</strong> lui.</td><td>INDICATIF</td><td>certain (affirm) = certainty → indicatif</td></tr><tr><td>78</td><td>Il n'est pas certain que ce <strong>soit</strong> lui.</td><td>SUBJONCTIF</td><td>certain (negative) = doubt → subjonctif</td></tr><tr><td>79</td><td>Je cherche un hôtel qui <strong>a</strong> une piscine.</td><td>INDICATIF</td><td>I know it exists — specific hotel</td></tr><tr><td>80</td><td>Je cherche un hôtel qui <strong>ait</strong> une piscine.</td><td>SUBJONCTIF</td><td>I don't know if it exists — hypothetical</td></tr></tbody></table>
+<p><strong>🧠 THE MASTER DECISION FRAMEWORK — Subjonctif vs. Indicatif:</strong></p>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>ASK YOURSELF: Is the "que" clause presenting something as...
+</span>
+REAL / CERTAIN / FACTUAL?          → INDICATIF
+→ Je sais que... / Il est clair que... / Je pense que... (affirm)
+→ Après que... / Parce que... / Quand...
+
+DESIRED / DOUBTED / FEARED / JUDGED / POSSIBLE / NOT YET REAL? → SUBJONCTIF
+→ Je veux que... / Il faut que... / Je doute que...
+→ Pour que... / Avant que... / Bien que...
+→ Il est possible que... / C'est dommage que...
+
+SPECIAL CASE — Existence uncertain:
+→ "Je cherche quelqu'un qui SACHE parler chinois." (subj — maybe nobody exists)
+→ "Je connais quelqu'un qui SAIT parler chinois." (indic — the person exists)
+→ SEARCHING for something uncertain → subjonctif
+→ STATING something known → indicatif
+
+THE EXCEPTIONS TO MEMORIZE:
+→ ESPÉRER QUE → always INDICATIF (despite being a wish)
+→ APRÈS QUE → traditionally INDICATIF (despite "avant que" being subj)
+→ SI → NEVER subjonctif (P18)
+→ Affirmative PENSER/CROIRE/ÊTRE SÛR → INDICATIF
+→ Negative PENSER/CROIRE/ÊTRE SÛR → SUBJONCTIF</code></pre></div>
+<hr>
+<h2>🔹 BLOCK I — Subjonctif in Professional and Formal Contexts</h2>
+<p><em>Scenario: Work, official communication, structured argumentation — subjonctif in formal French</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English</th><th>Trigger</th><th>Context</th></tr></thead><tbody><tr><td>81</td><td>Il est impératif que ce rapport <strong>soit</strong> remis avant vendredi.</td><td>It's imperative this report be submitted before Friday.</td><td>il est impératif que</td><td>Professional</td></tr><tr><td>82</td><td>Le directeur exige que tout le monde <strong>soit</strong> présent.</td><td>The director demands everyone be present.</td><td>exiger que</td><td>Professional</td></tr><tr><td>83</td><td>Nous souhaitons que cette collaboration <strong>puisse</strong> continuer.</td><td>We wish this collaboration could continue.</td><td>souhaiter que</td><td>Formal letter</td></tr><tr><td>84</td><td>Il est inadmissible que de telles erreurs <strong>se produisent</strong>.</td><td>It's unacceptable that such errors occur.</td><td>il est inadmissible que</td><td>Official complaint</td></tr><tr><td>85</td><td><strong>À supposer que</strong> cette hypothèse <strong>soit</strong> correcte, les résultats changeraient.</td><td>Assuming this hypothesis is correct, the results would change.</td><td>à supposer que</td><td>Academic</td></tr><tr><td>86</td><td><strong>En admettant que</strong> vous <strong>ayez</strong> raison, cela ne change rien.</td><td>Assuming you're right, that changes nothing.</td><td>en admettant que</td><td>Debate</td></tr><tr><td>87</td><td>Le règlement stipule que chaque employé <strong>fasse</strong> une déclaration.</td><td>The regulation stipulates that each employee make a declaration.</td><td>stipuler que (demand)</td><td>Legal</td></tr><tr><td>88</td><td><strong>Non que</strong> je <strong>sois</strong> contre, mais je préfère attendre.</td><td>Not that I'm against it, but I prefer to wait.</td><td>non que</td><td>Formal nuance</td></tr><tr><td>89</td><td>Il suffit que vous <strong>signiez</strong> ici.</td><td>You just need to sign here.</td><td>il suffit que</td><td>Administrative</td></tr><tr><td>90</td><td>Il se peut que la date <strong>soit</strong> modifiée.</td><td>It may be that the date will be changed.</td><td>il se peut que</td><td>Professional uncertainty</td></tr></tbody></table>
+<p><strong>🧠 NEW TRIGGERS FROM THIS BLOCK:</strong></p>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>DEMAND VERBS + que → SUBJONCTIF:
+</span>→ exiger que     (to demand that)
+→ ordonner que   (to order that)
+→ commander que  (to command that)
+→ stipuler que   (to stipulate that — legal)
+→ demander que   (to request that)
+→ proposer que   (to propose that)
+→ suggérer que   (to suggest that)
+→ recommander que (to recommend that)
+→ insister pour que (to insist that)
+
+ASSUMPTION CONNECTORS + subjonctif:
+→ à supposer que     (assuming that)
+→ en admettant que   (admitting/assuming that)
+→ en supposant que   (supposing that)
+
+OTHER FORMAL TRIGGERS:
+→ il suffit que      (it suffices that / you just need to)
+→ non que            (not that — explaining what ISN'T the reason)
+→ ce n'est pas que   (it's not that)
+→ il se peut que     (it may be that — P27)
+→ il semble que      (it seems that — subjonctif when impersonal)
+   ⚠️ vs. "il me semble que" (indicatif — P22 — personal impression)</code></pre></div>
+<hr>
+<h2>🔹 BLOCK J — Full Subjonctif Mastery in Natural Conversation</h2>
+<p><em>Scenario: Real dialogues where subjonctif flows naturally across all trigger types</em></p>
+<table><thead><tr><th>#</th><th>Speaker</th><th>French</th><th>English</th><th>Trigger Family</th></tr></thead><tbody><tr><td>91</td><td>A:</td><td>Tu penses que Marc viendra ?</td><td>Do you think Marc will come?</td><td>— (indicatif — affirm opinion)</td></tr><tr><td>92</td><td>B:</td><td>Je doute qu'il <strong>vienne</strong>. Il est très occupé.</td><td>I doubt he'll come. He's very busy.</td><td>Doubt (F2)</td></tr><tr><td>93</td><td>A:</td><td>C'est dommage qu'il ne <strong>puisse</strong> pas être là.</td><td>It's a shame he can't be there.</td><td>Emotion (F1)</td></tr><tr><td>94</td><td>B:</td><td>Oui, mais **quoi qu'**il en <strong>soit</strong>, on passera une bonne soirée.</td><td>Yes, but whatever the case, we'll have a good evening.</td><td>Fixed expression (Bonus)</td></tr><tr><td>95</td><td>A:</td><td>J'ai tout préparé <strong>pour que</strong> la soirée <strong>soit</strong> parfaite.</td><td>I prepared everything so the evening is perfect.</td><td>Purpose (F5)</td></tr><tr><td>96</td><td>B:</td><td>C'est la meilleure fête que tu <strong>aies</strong> jamais organisée !</td><td>It's the best party you've ever organized!</td><td>Superlative (F7) + subj passé</td></tr><tr><td>97</td><td>A:</td><td>Merci ! <strong>Pourvu que</strong> tout le monde <strong>s'amuse</strong> !</td><td>Thanks! Let's hope everyone has fun!</td><td>Condition/wish (F6A)</td></tr><tr><td>98</td><td>B:</td><td>Je suis sûr que oui. <strong>Bien que</strong> la salle <strong>soit</strong> petite, l'ambiance est super.</td><td>I'm sure of it. Although the room is small, the atmosphere is great.</td><td>Concession (F6B — P29)</td></tr><tr><td>99</td><td>A:</td><td><strong>Quel que soit</strong> le résultat, je suis content d'avoir essayé.</td><td>Whatever the result, I'm happy to have tried.</td><td>Fixed expression (Bonus)</td></tr><tr><td>100</td><td>B:</td><td>Moi aussi. Et je suis fier que tu <strong>aies</strong> tout fait toi-même.</td><td>Me too. And I'm proud you did everything yourself.</td><td>Emotion (F1) + subj passé</td></tr></tbody></table>
+<hr>
+<h1>✅ WHAT SHOULD DO</h1>
+<p>→ <strong>Memorize the 7 trigger families</strong> — know which family each trigger belongs to<br>
+→ <strong>Add the new triggers from this project:</strong> pour que, sans que, à condition que, pourvu que, à moins que, de peur que, quel que soit<br>
+→ <strong>Master the subjonctif passé</strong> — it's just avoir/être (subjonctif) + PP — same as passé composé but with subjonctif auxiliaries<br>
+→ <strong>Learn the fixed expressions:</strong> quoi que, où que, qui que, quel que soit — they appear constantly in formal French<br>
+→ <strong>Practice the existence test:</strong> "Je cherche quelqu'un qui sache..." (uncertain) vs. "Je connais quelqu'un qui sait..." (certain)<br>
+→ <strong>Review all connector triggers from P29-30:</strong> bien que, avant que, jusqu'à ce que — now part of your complete system<br>
+→ <strong>Apply same-subject rule everywhere:</strong> pour/sans/avant/à condition + infinitif (same) vs. pour que/sans que/avant que/à condition que + subjonctif (different)</p>
+<hr>
+<h1>❌ WHAT SHOULD NOT DO</h1>
+<p>→ ❌ Do NOT use subjonctif after these — EVER:</p>
+<table><thead><tr><th>Always INDICATIF</th><th>Why</th></tr></thead><tbody><tr><td>espérer que</td><td>Hope = positive expectation (P23)</td></tr><tr><td>savoir que</td><td>Knowledge = certainty</td></tr><tr><td>après que</td><td>Action completed = real (traditionally)</td></tr><tr><td>parce que / car / puisque</td><td>Cause = factual (P28)</td></tr><tr><td>quand / lorsque / dès que</td><td>Time = factual (P30)</td></tr><tr><td>pendant que</td><td>Simultaneity = factual (P30)</td></tr><tr><td>si (conditional)</td><td>Si never takes subjonctif (P18)</td></tr><tr><td>aussitôt que / depuis que</td><td>Time = factual (P30)</td></tr></tbody></table>
+<p>→ ❌ Do NOT use "que" clause when same subject — use infinitif</p>
+<table><thead><tr><th>Wrong</th><th>Correct</th><th>Rule</th></tr></thead><tbody><tr><td><del>pour que je réussisse</del></td><td><strong>pour</strong> réussir</td><td>Same subject → infinitif</td></tr><tr><td><del>sans que je sache</del> (I didn't know — same subj)</td><td><strong>sans</strong> savoir</td><td>Same subject → infinitif</td></tr><tr><td><del>avant que je parte</del> (same subj)</td><td><strong>avant de</strong> partir</td><td>Same subject → infinitif</td></tr><tr><td><del>à condition que je finisse</del> (same subj)</td><td><strong>à condition de</strong> finir</td><td>Same subject → infinitif</td></tr></tbody></table>
+<p>→ ❌ Do NOT confuse "quoi que" (whatever) with "quoique" (although)</p>
+<table><thead><tr><th>Expression</th><th>Meaning</th><th>Example</th></tr></thead><tbody><tr><td><strong>Quoi que</strong> (2 words)</td><td>Whatever</td><td><strong>Quoi que</strong> tu fasses...</td></tr><tr><td><strong>Quoique</strong> (1 word)</td><td>Although</td><td><strong>Quoique</strong> ce soit difficile...</td></tr></tbody></table>
+<p>→ ❌ Do NOT forget agreement in "quel que soit"</p>
+<table><thead><tr><th>Wrong</th><th>Correct</th><th>Why</th></tr></thead><tbody><tr><td><del>Quel que soit la raison</del></td><td><strong>Quelle</strong> que soit la raison</td><td>raison = fem → quelle</td></tr><tr><td><del>Quel que soit les problèmes</del></td><td><strong>Quels</strong> que <strong>soient</strong> les problèmes</td><td>problèmes = masc pl → quels + soient</td></tr></tbody></table>
+<p>→ ❌ Do NOT use subjonctif passé when the action is simultaneous/future</p>
+<table><thead><tr><th>Wrong</th><th>Correct</th></tr></thead><tbody><tr><td><del>Je veux que tu aies venu</del> (future action)</td><td>Je veux que tu <strong>viennes</strong> (subj présent)</td></tr><tr><td>Subj passé = action ALREADY completed</td><td>Subj présent = action not yet done or simultaneous</td></tr></tbody></table>
+<p>→ ❌ Do NOT use subjonctif after "il me semble que" (personal impression)</p>
+<table><thead><tr><th>Expression</th><th>Mood</th><th>Why</th></tr></thead><tbody><tr><td><strong>Il semble que</strong> (impersonal)</td><td>SUBJONCTIF</td><td>No personal commitment → uncertain</td></tr><tr><td><strong>Il ME semble que</strong> (personal)</td><td>INDICATIF</td><td>Personal impression → presented as belief</td></tr></tbody></table>
+<hr>
+<h1>🔀 WHEN TO USE WHAT — THE COMPLETE SUBJONCTIF TRIGGER MAP</h1>
+<table><thead><tr><th>Family</th><th>Triggers</th><th>Grammar</th><th>Covered In</th></tr></thead><tbody><tr><td><strong>F1: Emotion</strong></td><td>content, triste, peur, surpris, fier, furieux, dommage...</td><td>+ que + subj</td><td>P23 + P31</td></tr><tr><td><strong>F2: Doubt</strong></td><td>douter, ne pas penser, ne pas croire, ne pas être sûr, il est possible...</td><td>+ que + subj</td><td>P23 + P31</td></tr><tr><td><strong>F3: Desire</strong></td><td>vouloir, souhaiter, aimer, préférer, désirer...</td><td>+ que + subj</td><td>P23 + P31</td></tr><tr><td><strong>F4: Necessity</strong></td><td>il faut, il est important, il est nécessaire, il est temps...</td><td>+ que + subj</td><td>P23/P26 + P31</td></tr><tr><td><strong>F5: Purpose</strong></td><td>pour que, afin que, de sorte que (purpose), de peur que, de crainte que</td><td>+ subj</td><td>P31 NEW</td></tr><tr><td><strong>F6: Condition</strong></td><td>à condition que, pourvu que, sans que, à moins que, bien que, avant que, jusqu'à ce que</td><td>+ subj</td><td>P29/P30 + P31</td></tr><tr><td><strong>F7: Superlative/Unique</strong></td><td>le meilleur...que, le seul...qui, le premier...qui, rien...qui, personne...qui</td><td>+ subj</td><td>P31 NEW</td></tr><tr><td><strong>Bonus: Fixed</strong></td><td>quoi que, où que, qui que, quel(le)(s) que + soit/soient</td><td>+ subj</td><td>P31 NEW</td></tr><tr><td><strong>Form: Subj Passé</strong></td><td>Any trigger + completed action</td><td>avoir/être (subj) + PP</td><td>P31 NEW</td></tr><tr><td><strong>Demand verbs</strong></td><td>exiger, ordonner, proposer, suggérer, recommander, insister pour</td><td>+ que + subj</td><td>P31 NEW</td></tr><tr><td><strong>Assumption</strong></td><td>à supposer que, en admettant que</td><td>+ subj</td><td>P31 NEW</td></tr></tbody></table>
+<hr>
+<h1>🚫 THE "NEVER SUBJONCTIF" LIST</h1>
+<table><thead><tr><th>Structure</th><th>Always Takes</th><th>Why</th></tr></thead><tbody><tr><td>espérer que</td><td>INDICATIF</td><td>Positive expectation</td></tr><tr><td>savoir que</td><td>INDICATIF</td><td>Certainty</td></tr><tr><td>penser que (affirm)</td><td>INDICATIF</td><td>Belief presented as fact</td></tr><tr><td>croire que (affirm)</td><td>INDICATIF</td><td>Belief</td></tr><tr><td>être sûr/certain que (affirm)</td><td>INDICATIF</td><td>Certainty</td></tr><tr><td>il est clair/évident/certain que</td><td>INDICATIF</td><td>Certainty</td></tr><tr><td>après que</td><td>INDICATIF (traditional)</td><td>Completed = real</td></tr><tr><td>parce que / car / puisque</td><td>INDICATIF</td><td>Cause = fact</td></tr><tr><td>quand / lorsque / dès que / depuis que</td><td>INDICATIF</td><td>Time = fact</td></tr><tr><td>pendant que / tant que</td><td>INDICATIF</td><td>Duration = fact</td></tr><tr><td>si (conditional)</td><td>INDICATIF (présent/imparfait/PQP)</td><td>Si system (P18)</td></tr><tr><td>même si</td><td>INDICATIF</td><td>Concession but real (P29)</td></tr></tbody></table>
+<hr>
+<h1>⚠️ COMMON PITFALLS AND FAILURE MODES</h1>
+<table><thead><tr><th>Pitfall</th><th>What Learners Do</th><th>Why It's Wrong</th><th>Fix</th></tr></thead><tbody><tr><td><strong>Subj after espérer</strong></td><td>J'espère qu'il vienne</td><td>Espérer always takes indicatif</td><td>J'espère qu'il <strong>viendra</strong></td></tr><tr><td><strong>Indicatif after pour que</strong></td><td>Pour que tu peux...</td><td>Pour que always takes subjonctif</td><td>Pour que tu <strong>puisses</strong>...</td></tr><tr><td><strong>Same subject with pour que</strong></td><td>Pour que je réussisse</td><td>Same subject → pour + infinitif</td><td><strong>Pour</strong> réussir</td></tr><tr><td><strong>Quoi que vs. quoique</strong></td><td>Mixing them up</td><td>Two words = whatever / One word = although</td><td>Check: whatever → quoi que / although → quoique</td></tr><tr><td><strong>No agreement in quel que</strong></td><td>Quel que soit les raisons</td><td>Must agree in gender/number</td><td><strong>Quelles</strong> que <strong>soient</strong> les raisons</td></tr><tr><td><strong>Subj passé for future</strong></td><td>Je veux que tu aies fait</td><td>Subj passé = already completed</td><td>Je veux que tu <strong>fasses</strong> (future → subj présent)</td></tr><tr><td><strong>Il semble vs. il me semble</strong></td><td>Same mood for both</td><td>Il semble = subj / Il me semble = indicatif</td><td>Check: impersonal → subj / personal → indic</td></tr><tr><td><strong>Forgetting subj after superlative</strong></td><td>Le meilleur film que j'ai vu</td><td>Superlative + que → subjonctif</td><td>Le meilleur film que j'<strong>aie</strong> vu</td></tr><tr><td><strong>Indicatif after sans que</strong></td><td>Sans qu'il sait</td><td>Sans que always takes subjonctif</td><td>Sans qu'il <strong>sache</strong></td></tr><tr><td><strong>Indicatif after à moins que</strong></td><td>À moins qu'il vient</td><td>À moins que always takes subjonctif</td><td>À moins qu'il <strong>vienne</strong></td></tr><tr><td><strong>Overusing subjonctif</strong></td><td>Using it after every "que"</td><td>Only SPECIFIC triggers activate subjonctif</td><td>Check the trigger map — not every "que" = subjonctif</td></tr><tr><td><strong>Panicking</strong></td><td>Avoiding subjonctif entirely</td><td>Missing subjonctif = missing 20% of French</td><td>Start with il faut que + être/avoir — then expand</td></tr></tbody></table>
+<hr>
+<h1>🔑 KEY TAKEAWAY</h1>
+<blockquote>
+<p><strong>The subjonctif is now COMPLETE in your toolkit.</strong></p>
+<p>→ Project 23 gave you <strong>the introduction</strong> — emotions, doubt, desire, necessity<br>
+→ Project 31 gives you <strong>the full system</strong> — purpose, condition, absence, superlative, fixed expressions, AND the past form</p>
+<p>→ The subjonctif is NOT random — it follows a <strong>clear logic</strong>:</p>
+<table><thead><tr><th>The "que" clause expresses...</th><th>Mood</th></tr></thead><tbody><tr><td>Something REAL, CERTAIN, FACTUAL</td><td>INDICATIF</td></tr><tr><td>Something DESIRED, DOUBTED, FEARED, JUDGED, POSSIBLE, PURPOSEFUL, CONDITIONAL, NOT YET REAL</td><td>SUBJONCTIF</td></tr></tbody></table>
+<p>→ <strong>7 trigger families</strong> — all memorized and practiced<br>
+→ <strong>Subjonctif passé</strong> — for completed actions in subjonctif contexts<br>
+→ <strong>Same-subject rule</strong> — infinitif replaces subjonctif when subjects match<br>
+→ <strong>Fixed expressions</strong> — quoi que, où que, qui que, quel que soit — the mark of sophisticated French</p>
+<p>→ You now own the COMPLETE mood system of French:</p>
+<table><thead><tr><th>Mood</th><th>What It Expresses</th><th>When</th></tr></thead><tbody><tr><td>INDICATIF</td><td>Reality, facts, beliefs, certainty</td><td>Default — most sentences</td></tr><tr><td>SUBJONCTIF</td><td>Subjectivity, desire, doubt, purpose, judgment</td><td>After specific triggers</td></tr><tr><td>CONDITIONNEL</td><td>Hypothesis, politeness, unconfirmed</td><td>After si (imparfait), for politeness</td></tr><tr><td>IMPÉRATIF</td><td>Commands</td><td>Direct orders (P13)</td></tr></tbody></table>
+<p>→ But there's a tense you've been seeing in reported speech and passive voice without fully mastering it<br>
+→ "Il avait déjà mangé quand je suis arrivé" — the PLUS-QUE-PARFAIT<br>
+→ The past-before-the-past — essential for complex storytelling and si-clauses Part 3</p>
+</blockquote>
+<hr>
+<h1>🌉 BRIDGE TO PROJECT 32</h1>
+<blockquote>
+<p>You now have complete subjonctif mastery — every trigger, every form, every exception<br>
+But in complex narratives, you keep hitting a tense gap:</p>
+<p>→ "Quand je suis arrivé, il <strong>avait déjà mangé</strong>." (When I arrived, he had already eaten.)<br>
+→ "Elle <strong>était partie</strong> avant mon arrivée." (She had left before my arrival.)<br>
+→ "Si j'<strong>avais su</strong>, je ne serais pas venu." (If I had known, I wouldn't have come — P34 preview)</p>
+<p>→ This is the <strong>PLUS-QUE-PARFAIT</strong> — the "past before the past"<br>
+→ It places one past event BEFORE another past event on the timeline<br>
+→ Without it, you can't tell complex stories, explain past causes, or build regret sentences (P34)</p>
+<p>→ Project 32: <strong>"Before That Happened, This Had Already Happened"</strong><br>
+→ The plus-que-parfait — unlocking layered past narratives</p>
+</blockquote>
+<hr>
+<h1>✅ PROJECT 31 COMPLETE</h1>
+<blockquote>
+<p><strong>Are you ready for PROJECT 32: "Before That Happened, This Had Already Happened"?</strong><br>
+→ ~100 sentences covering plus-que-parfait in all contexts<br>
+→ Scenario: You're telling a complex story — layered past events requiring past-before-past<br>
+→ Builds on all past tenses (P9-11) — adds the missing timeline layer<br>
+→ Essential foundation for si-clauses Part 3 (P34) and conditionnel passé (P35)</p>
+</blockquote>
+</div>
+</div>
+
+<!-- ========== data-index="33" ========== -->
+
+        </div>
+
+        <div class="nav-bar">
+            <a href="project-30.html" class="nav-button prev">← Previous Chapter</a>
+            <div class="page-info">
+                <a href="index.html" class="nav-button home">📚 Table of Contents</a><br>
+                <span style="margin-top:8px;display:block">Chapter 31 of 50</span>
+            </div>
+            <a href="project-32.html" class="nav-button next">Next Chapter →</a>
+        </div>
+    </div>
+
+    
+    <div id="progress-track"><div id="progress-fill"></div></div>
+    <div id="progress-pct">0%</div>
+
+
+    <script>
+    const fill = document.getElementById('progress-fill');
+    const pct  = document.getElementById('progress-pct');
+    function updateProgress() {
+        const scrollTop = window.scrollY;
+        const docHeight = document.body.scrollHeight - window.innerHeight;
+        const scrolled  = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+        fill.style.height = scrolled + '%';
+        pct.textContent   = Math.round(scrolled) + '%';
+    }
+    window.addEventListener('scroll', updateProgress);
+    updateProgress();
+
+    document.addEventListener('keydown', function(e) {
+        if (['INPUT','TEXTAREA'].includes(document.activeElement.tagName)) return;
+        if (e.key === 'ArrowLeft') {
+            const b = document.querySelector('.nav-button.prev');
+            if (b && !b.classList.contains('disabled')) window.location.href = b.href;
+        }
+        if (e.key === 'ArrowRight') {
+            const b = document.querySelector('.nav-button.next');
+            if (b && !b.classList.contains('disabled')) window.location.href = b.href;
+        }
+    });
+    </script>
+
+</body>
+</html>

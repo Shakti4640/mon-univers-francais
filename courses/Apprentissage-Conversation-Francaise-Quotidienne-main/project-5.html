@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="images/favicon.png">
+    <title>Project 5: "Saying No in 10 Ways" — French Daily Sentences</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.75;
+            color: #1a202c;
+            background-color: #f7fafc;
+        }
+        .container {
+            max-width: 1800px;
+            margin: 0 auto;
+            background: white;
+            min-height: 100vh;
+            box-shadow: 0 0 30px rgba(0,0,0,0.08);
+            padding: 48px 52px;
+        }
+        
+        .content { max-width: 1700px; margin: 0 auto; color: #1a202c; }
+        .content h1 {
+            color: #1a202c; margin: 32px 0 20px;
+            padding-bottom: 12px;
+            border-bottom: 4px solid #3b82f6;
+            font-size: 2.1em;
+            font-weight: 700;
+        }
+        .content h2 {
+            color: #1a202c; margin: 28px 0 16px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #60a5fa;
+            font-size: 1.6em;
+            font-weight: 600;
+        }
+        .content h3 { color: #1a202c; margin: 22px 0 12px; font-size: 1.3em; font-weight: 600; }
+        .content h4 { color: #2d3748; margin: 18px 0 10px; font-size: 1.1em; font-weight: 600; }
+        .content p  { margin-bottom: 16px; line-height: 1.8; color: #1a202c; }
+        .content ul, .content ol { margin: 12px 0 18px 30px; color: #1a202c; }
+        .content li { margin-bottom: 8px; line-height: 1.75; color: #1a202c; }
+        .content hr { border: none; border-top: 2px solid #e2e8f0; margin: 26px 0; }
+        .content pre {
+            background: #f7fafc !important;
+            border: 1px solid #cbd5e0 !important;
+            border-left: 4px solid #3b82f6 !important;
+            padding: 18px !important; overflow-x: auto; margin: 18px 0; border-radius: 6px;
+            font-family: 'Consolas','Monaco','Courier New',monospace !important;
+            font-size: 0.9em !important;
+        }
+        .content pre:not([style*="color"]) { color: #1a202c !important; }
+        .content code {
+            font-family: 'Consolas','Monaco','Courier New',monospace !important;
+            font-size: 0.88em !important;
+        }
+        .content code:not(pre code) {
+            background: #dbeafe !important;
+            color: #1a202c !important;
+            padding: 2px 6px;
+            border-radius: 3px;
+        }
+        .content pre code { background: transparent !important; padding: 0; }
+        .content table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+        .content th {
+            background: linear-gradient(135deg, #3b82f6 0%, #60a5fa 100%);
+            color: white; padding: 12px 16px; text-align: left;
+            font-weight: 600;
+        }
+        .content td { padding: 11px 16px; border: 1px solid #e2e8f0; color: #1a202c; }
+        .content tr:nth-child(even) td { background: #eff6ff; }
+        .content blockquote {
+            border-left: 4px solid #3b82f6; background: #eff6ff;
+            padding: 14px 20px; margin: 18px 0; border-radius: 0 6px 6px 0;
+            color: #1a202c;
+        }
+        .content strong { color: #1a202c; font-weight: 600; }
+        .px-2 { padding: 0; }
+        .chat-message { background: transparent; padding: 0; margin: 0; }
+
+        /* Bottom nav bar only */
+        .nav-bar {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 24px 0;
+            margin-top: 50px;
+            border-top: 3px solid #60a5fa;
+        }
+        .nav-button {
+            display: inline-flex; align-items: center; gap: 8px;
+            padding: 12px 26px;
+            background: linear-gradient(135deg, #3b82f6 0%, #60a5fa 100%);
+            color: white !important; text-decoration: none;
+            border-radius: 8px; font-weight: 600; font-size: 0.95em;
+            transition: all 0.2s;
+            box-shadow: 0 2px 8px rgba(59,130,246,0.35);
+        }
+        .nav-button:hover { transform: translateY(-2px); box-shadow: 0 4px 14px rgba(59,130,246,0.5); }
+        .nav-button.disabled { background: #cbd5e1; box-shadow: none; pointer-events: none; }
+        .nav-button.home {
+            background: linear-gradient(135deg, #ef4444 0%, #f87171 100%);
+            box-shadow: 0 2px 8px rgba(239,68,68,0.35);
+        }
+        .nav-button.home:hover { box-shadow: 0 4px 14px rgba(239,68,68,0.5); }
+        .page-info { color: #718096; font-size: 0.9em; text-align: center; }
+
+        /* Progress bar */
+        #progress-track {
+            position: fixed; top: 20px; right: 20px;
+            width: 10px; height: 150px;
+            background: rgba(59,130,246,0.2);
+            border: 2px solid #3b82f6;
+            border-radius: 6px; overflow: hidden; z-index: 1000;
+        }
+        #progress-fill {
+            width: 100%;
+            background: linear-gradient(180deg, #3b82f6, #2563eb);
+            height: 0%;
+            transition: height 0.15s ease;
+        }
+        #progress-pct {
+            position: fixed; top: 0px; right: 16px;
+            color: #2563eb; font-size: 14px; font-weight: bold;
+            z-index: 1001;
+            text-shadow: 0 1px 2px rgba(255,255,255,0.9);
+            line-height: 20px;
+        }
+
+    </style>
+<link rel="stylesheet" href="assets/chapters.css?v=20260421203847"><script src="assets/chapters.js?v=20260421203847" defer></script>
+</head>
+<body>
+    <div class="container">
+        <div class="content">
+            <div class="chat-message" data-index="11">
+<div class="px-2"><h1>🟢 PROJECT 5: "Saying No in 10 Ways"</h1>
+<h2><em>Someone assumes wrong, offers unwanted things — how do you deny, refuse, and correct?</em></h2>
+<hr>
+<h1>🎯 THE HYPOTHETICAL PROBLEM</h1>
+<p>→ You're at a <strong>dinner party</strong> with your host family and their friends in Lyon<br>
+→ People make assumptions about you — some correct, some wrong<br>
+→ They offer you food, drinks, invitations — some you want, some you don't<br>
+→ They state things that aren't true — you need to correct them<br>
+→ You know how to say things (Projects 1-3) and ask things (Project 4)<br>
+→ But every time you want to say <strong>NO</strong> — you freeze at "Non..."<br>
+→ You can't say:<br>
+→ → "I <strong>don't</strong> speak Chinese."<br>
+→ → "I <strong>never</strong> drink alcohol."<br>
+→ → "I <strong>no longer</strong> live in America."<br>
+→ → "<strong>Nobody</strong> told me."<br>
+→ → "I have <strong>nothing</strong> to say."<br>
+→ → "That's <strong>not</strong> true."<br>
+→ In French, negation is NOT just one word — it's a <strong>sandwich structure</strong><br>
+→ Two pieces of bread wrap around the verb — and which bread you pick changes the meaning entirely</p>
+<p><strong>The core realization:</strong><br>
+→ English negation = add "not" / "don't" before the verb → done<br>
+→ French negation = <strong>two-part system</strong> → one piece BEFORE the verb, one piece AFTER<br>
+→ The <strong>first piece</strong> is always <strong>NE</strong> (or <strong>N'</strong> before vowel)<br>
+→ The <strong>second piece</strong> changes based on WHAT you're negating<br>
+→ And in spoken French — the first piece <strong>disappears</strong> almost entirely<br>
+→ This creates a massive gap between what you READ and what you HEAR</p>
+<hr>
+<h1>🔍 HOW TO APPROACH IT</h1>
+<p>→ Think of French negation as a <strong>sandwich:</strong></p>
+<code>SUBJECT + NE + VERB + [SECOND PIECE] + rest of sentence</code>
+<p>→ The <strong>second piece</strong> determines the TYPE of negation:</p>
+<table><thead><tr><th>Second Piece</th><th>Meaning</th><th>English Equivalent</th></tr></thead><tbody><tr><td><strong>pas</strong></td><td>not</td><td>basic negation</td></tr><tr><td><strong>plus</strong></td><td>no more / no longer</td><td>stopping something</td></tr><tr><td><strong>jamais</strong></td><td>never</td><td>frequency = zero</td></tr><tr><td><strong>rien</strong></td><td>nothing</td><td>zero things</td></tr><tr><td><strong>personne</strong></td><td>nobody</td><td>zero people</td></tr><tr><td><strong>aucun(e)</strong></td><td>not a single one</td><td>emphatic zero</td></tr><tr><td><strong>que</strong></td><td>only</td><td>restriction (not full negation)</td></tr><tr><td><strong>ni...ni</strong></td><td>neither...nor</td><td>double exclusion</td></tr></tbody></table>
+<p>→ At this level (Project 5), you master: <strong>pas, plus, jamais</strong> fully<br>
+→ You get introduced to: <strong>rien, personne</strong> (basics only)<br>
+→ Deep mastery of rien, personne, aucun, que, ni...ni → Project 39 (Phase 4)</p>
+<hr>
+<h1>🔧 HOW CAN WE SOLVE IT</h1>
+<h2>Step 1 — The Basic Sandwich: NE...PAS</h2>
+<code>SUBJECT + NE + VERB + PAS + rest</code>
+<p>→ <strong>Ne</strong> goes BEFORE the verb<br>
+→ <strong>Pas</strong> goes AFTER the verb<br>
+→ <strong>N'</strong> replaces "ne" before a vowel sound</p>
+<table><thead><tr><th>Statement</th><th>Negation</th></tr></thead><tbody><tr><td>Je <strong>parle</strong> français.</td><td>Je <strong>ne parle pas</strong> français.</td></tr><tr><td>Tu <strong>es</strong> français.</td><td>Tu <strong>n'es pas</strong> français.</td></tr><tr><td>Il <strong>a</strong> un chat.</td><td>Il <strong>n'a pas</strong> de chat.</td></tr><tr><td>Nous <strong>aimons</strong> ça.</td><td>Nous <strong>n'aimons pas</strong> ça.</td></tr></tbody></table>
+<hr>
+<h2>Step 2 — What Happens to Articles After Negation</h2>
+<p><strong>Recall from Project 3:</strong><br>
+→ After negation, <strong>un / une / des / du / de la / de l'</strong> → ALL become <strong>DE</strong> (or <strong>D'</strong>)</p>
+<table><thead><tr><th>Affirmative</th><th>Negative</th><th>Rule</th></tr></thead><tbody><tr><td>J'ai <strong>un</strong> chat.</td><td>Je n'ai pas <strong>de</strong> chat.</td><td>un → de</td></tr><tr><td>J'ai <strong>une</strong> voiture.</td><td>Je n'ai pas <strong>de</strong> voiture.</td><td>une → de</td></tr><tr><td>J'ai <strong>des</strong> amis.</td><td>Je n'ai pas **d'**amis.</td><td>des → d'</td></tr><tr><td>Je bois <strong>du</strong> café.</td><td>Je ne bois pas <strong>de</strong> café.</td><td>du → de</td></tr><tr><td>Je mange <strong>de la</strong> viande.</td><td>Je ne mange pas <strong>de</strong> viande.</td><td>de la → de</td></tr><tr><td>J'ai **de l'**argent.</td><td>Je n'ai pas **d'**argent.</td><td>de l' → d'</td></tr></tbody></table>
+<p><strong>EXCEPTION — Definite articles (le, la, les) DO NOT CHANGE after negation:</strong><br>
+→ ✅ J'aime <strong>le</strong> fromage. → Je n'aime pas <strong>le</strong> fromage. (le stays le)<br>
+→ Why? Because you're negating the <strong>feeling</strong>, not the <strong>existence</strong> of the noun</p>
+<hr>
+<h2>Step 3 — Spoken French Reality: The Vanishing "NE"</h2>
+<p>→ In real daily spoken French, <strong>the "ne" is dropped about 95% of the time</strong></p>
+<table><thead><tr><th>Written / Correct</th><th>Spoken / Real</th><th>What You Hear</th></tr></thead><tbody><tr><td>Je <strong>ne</strong> parle <strong>pas</strong></td><td>Je parle <strong>pas</strong></td><td>"zhuh parl pah"</td></tr><tr><td>Je <strong>ne</strong> sais <strong>pas</strong></td><td>Je sais <strong>pas</strong> / "Chais pas"</td><td>"shay pah"</td></tr><tr><td>Il **n'**y a <strong>pas</strong></td><td>Y'a <strong>pas</strong></td><td>"yah pah"</td></tr><tr><td>Ce **n'**est <strong>pas</strong></td><td>C'est <strong>pas</strong></td><td>"say pah"</td></tr></tbody></table>
+<p>→ You WILL hear sentences with only <strong>"pas"</strong> and no <strong>"ne"</strong><br>
+→ This is NOT incorrect French — this is <strong>how French people actually talk</strong><br>
+→ For writing and formal speech → keep the "ne"<br>
+→ For casual speech → dropping "ne" is the norm<br>
+→ <strong>You should learn the full form but recognize the spoken shortcut</strong></p>
+<hr>
+<h1>✅ WHAT COULD BE DONE — THE 100 SENTENCES</h1>
+<h2>🔹 BLOCK A — NE...PAS with ÊTRE: Denying Identity, State, Location</h2>
+<p><em>Scenario: People at the dinner make wrong assumptions about you — you correct them</em></p>
+<table><thead><tr><th>#</th><th>French Sentence (Written)</th><th>Spoken Version</th><th>English</th></tr></thead><tbody><tr><td>1</td><td>Je ne suis pas français.</td><td>Je suis pas français.</td><td>I am not French.</td></tr><tr><td>2</td><td>Je ne suis pas fatigué.</td><td>Je suis pas fatigué.</td><td>I am not tired.</td></tr><tr><td>3</td><td>Tu n'es pas d'ici ?</td><td>T'es pas d'ici ?</td><td>You're not from here?</td></tr><tr><td>4</td><td>Il n'est pas médecin.</td><td>Il est pas médecin.</td><td>He is not a doctor.</td></tr><tr><td>5</td><td>Elle n'est pas là.</td><td>Elle est pas là.</td><td>She is not here.</td></tr><tr><td>6</td><td>Ce n'est pas vrai.</td><td>C'est pas vrai.</td><td>That's not true.</td></tr><tr><td>7</td><td>Ce n'est pas mon sac.</td><td>C'est pas mon sac.</td><td>That's not my bag.</td></tr><tr><td>8</td><td>Nous ne sommes pas prêts.</td><td>On est pas prêts.</td><td>We are not ready.</td></tr><tr><td>9</td><td>Vous n'êtes pas obligé.</td><td>Vous êtes pas obligé.</td><td>You are not obligated.</td></tr><tr><td>10</td><td>Ce n'est pas grave.</td><td>C'est pas grave.</td><td>It's not a big deal.</td></tr></tbody></table>
+<p><strong>🧠 Structure unlocked:</strong> <code>Subject + NE + ÊTRE + PAS + [adjective / noun / location]</code></p>
+<p><strong>🧠 Critical expression — Sentence 10:</strong><br>
+→ <strong>"C'est pas grave"</strong> = one of the MOST used expressions in daily French<br>
+→ Means: "It's no big deal" / "Don't worry about it" / "It's okay"<br>
+→ You will hear this <strong>multiple times per day</strong> in France</p>
+<hr>
+<h2>🔹 BLOCK B — NE...PAS with AVOIR: Denying Possession, Age, Sensations</h2>
+<p><em>Scenario: Correcting wrong assumptions about what you have, how old you are, how you feel</em></p>
+<table><thead><tr><th>#</th><th>French Sentence (Written)</th><th>Spoken Version</th><th>English</th></tr></thead><tbody><tr><td>11</td><td>Je n'ai pas de voiture.</td><td>J'ai pas de voiture.</td><td>I don't have a car.</td></tr><tr><td>12</td><td>Je n'ai pas d'enfants.</td><td>J'ai pas d'enfants.</td><td>I don't have children.</td></tr><tr><td>13</td><td>Tu n'as pas faim ?</td><td>T'as pas faim ?</td><td>You're not hungry?</td></tr><tr><td>14</td><td>Il n'a pas vingt ans.</td><td>Il a pas vingt ans.</td><td>He is not twenty years old.</td></tr><tr><td>15</td><td>Elle n'a pas peur.</td><td>Elle a pas peur.</td><td>She is not scared.</td></tr><tr><td>16</td><td>Je n'ai pas froid.</td><td>J'ai pas froid.</td><td>I am not cold.</td></tr><tr><td>17</td><td>On n'a pas le temps.</td><td>On a pas le temps.</td><td>We don't have time.</td></tr><tr><td>18</td><td>Vous n'avez pas de réservation ?</td><td>Vous avez pas de réservation ?</td><td>You don't have a reservation?</td></tr><tr><td>19</td><td>Je n'ai pas sommeil.</td><td>J'ai pas sommeil.</td><td>I am not sleepy.</td></tr><tr><td>20</td><td>Ce n'est pas de ma faute.</td><td>C'est pas de ma faute.</td><td>It's not my fault.</td></tr></tbody></table>
+<p><strong>🧠 Recall from Project 1:</strong><br>
+→ Avoir controls age, sensations, possession<br>
+→ Negating them follows the SAME sandwich: ne + avoir form + pas<br>
+→ Articles change after pas: un/une/des/du/de la → <strong>de/d'</strong> (Step 2 above)</p>
+<p><strong>🧠 Critical expression — Sentence 17:</strong><br>
+→ <strong>"On a pas le temps"</strong> = "We don't have time" — extremely common daily phrase<br>
+→ Notice: <strong>le temps</strong> keeps its article because it's a definite specific concept, not indefinite</p>
+<hr>
+<h2>🔹 BLOCK C — NE...PAS with Action Verbs: Denying Actions</h2>
+<p><em>Scenario: People ask if you do certain things — you say you don't</em></p>
+<table><thead><tr><th>#</th><th>French Sentence (Written)</th><th>Spoken Version</th><th>English</th></tr></thead><tbody><tr><td>21</td><td>Je ne parle pas chinois.</td><td>Je parle pas chinois.</td><td>I don't speak Chinese.</td></tr><tr><td>22</td><td>Je ne mange pas de viande.</td><td>Je mange pas de viande.</td><td>I don't eat meat.</td></tr><tr><td>23</td><td>Tu ne travailles pas le dimanche ?</td><td>Tu travailles pas le dimanche ?</td><td>You don't work on Sundays?</td></tr><tr><td>24</td><td>Il ne dort pas bien.</td><td>Il dort pas bien.</td><td>He doesn't sleep well.</td></tr><tr><td>25</td><td>Elle ne regarde pas la télé.</td><td>Elle regarde pas la télé.</td><td>She doesn't watch TV.</td></tr><tr><td>26</td><td>Nous ne comprenons pas.</td><td>On comprend pas.</td><td>We don't understand.</td></tr><tr><td>27</td><td>Vous ne mangez pas de porc ?</td><td>Vous mangez pas de porc ?</td><td>You don't eat pork?</td></tr><tr><td>28</td><td>Ils ne sortent pas souvent.</td><td>Ils sortent pas souvent.</td><td>They don't go out often.</td></tr><tr><td>29</td><td>Je ne fais pas de sport.</td><td>Je fais pas de sport.</td><td>I don't do sports.</td></tr><tr><td>30</td><td>On ne va pas au cinéma ce soir.</td><td>On va pas au cinéma ce soir.</td><td>We're not going to the cinema tonight.</td></tr></tbody></table>
+<p><strong>🧠 Structure confirmed:</strong> <code>Subject + NE + [any action verb from Project 2] + PAS + rest</code></p>
+<p>→ Notice sentence 22: "Je ne mange pas <strong>de</strong> viande" — not "de la viande"<br>
+→ Notice sentence 29: "Je ne fais pas <strong>de</strong> sport" — not "du sport"<br>
+→ <strong>The negation article rule (Project 3 reminder) applies to ALL verbs, not just avoir</strong></p>
+<hr>
+<h2>🔹 BLOCK D — NE...PAS with C'EST and IL Y A: Denying What Exists</h2>
+<p><em>Scenario: Someone points at things or states facts — you correct them</em></p>
+<table><thead><tr><th>#</th><th>French Sentence (Written)</th><th>Spoken Version</th><th>English</th></tr></thead><tbody><tr><td>31</td><td>Ce n'est pas bon.</td><td>C'est pas bon.</td><td>It's not good.</td></tr><tr><td>32</td><td>Ce n'est pas cher.</td><td>C'est pas cher.</td><td>It's not expensive.</td></tr><tr><td>33</td><td>Ce n'est pas facile.</td><td>C'est pas facile.</td><td>It's not easy.</td></tr><tr><td>34</td><td>Ce n'est pas normal.</td><td>C'est pas normal.</td><td>It's not normal.</td></tr><tr><td>35</td><td>Ce n'est pas la bonne direction.</td><td>C'est pas la bonne direction.</td><td>It's not the right direction.</td></tr><tr><td>36</td><td>Ce ne sont pas mes affaires.</td><td>C'est pas mes affaires.</td><td>It's not my business.</td></tr><tr><td>37</td><td>Il n'y a pas de problème.</td><td>Y'a pas de problème.</td><td>There is no problem.</td></tr><tr><td>38</td><td>Il n'y a pas de place.</td><td>Y'a pas de place.</td><td>There is no room / space.</td></tr><tr><td>39</td><td>Il n'y a pas de raison.</td><td>Y'a pas de raison.</td><td>There is no reason.</td></tr><tr><td>40</td><td>Il n'y a pas de bruit.</td><td>Y'a pas de bruit.</td><td>There is no noise.</td></tr></tbody></table>
+<p><strong>🧠 Spoken compression pattern:</strong><br>
+→ "Il n'y a pas" → spoken as <strong>"Y'a pas"</strong> — one of the most compressed forms in daily French<br>
+→ Written: Il n'y a pas de problème.<br>
+→ Spoken: Y'a pas d'problème. → even shorter: "Ya pas d'problème"<br>
+→ You MUST recognize this in listening — it sounds nothing like the written form</p>
+<p><strong>🧠 Critical expressions from this block:</strong><br>
+→ <strong>"C'est pas grave"</strong> (Block A, sentence 10) + <strong>"Y'a pas de problème"</strong> (sentence 37) = the two most common "it's fine" responses in French</p>
+<hr>
+<h2>🔹 BLOCK E — NE...PLUS: No More / No Longer</h2>
+<p><em>Scenario: Things have changed — you used to do something but now you don't</em></p>
+<table><thead><tr><th>#</th><th>French Sentence (Written)</th><th>Spoken Version</th><th>English</th></tr></thead><tbody><tr><td>41</td><td>Je ne fume plus.</td><td>Je fume plus.</td><td>I no longer smoke. / I don't smoke anymore.</td></tr><tr><td>42</td><td>Je n'habite plus à Paris.</td><td>J'habite plus à Paris.</td><td>I no longer live in Paris.</td></tr><tr><td>43</td><td>Tu ne travailles plus là-bas ?</td><td>Tu travailles plus là-bas ?</td><td>You don't work there anymore?</td></tr><tr><td>44</td><td>Il n'est plus étudiant.</td><td>Il est plus étudiant.</td><td>He is no longer a student.</td></tr><tr><td>45</td><td>Elle n'a plus faim.</td><td>Elle a plus faim.</td><td>She is no longer hungry.</td></tr><tr><td>46</td><td>On ne sort plus le soir.</td><td>On sort plus le soir.</td><td>We don't go out at night anymore.</td></tr><tr><td>47</td><td>Il n'y a plus de pain.</td><td>Y'a plus de pain.</td><td>There is no more bread.</td></tr><tr><td>48</td><td>Il n'y a plus de place.</td><td>Y'a plus de place.</td><td>There is no more room.</td></tr><tr><td>49</td><td>Je ne veux plus attendre.</td><td>Je veux plus attendre.</td><td>I don't want to wait anymore.</td></tr><tr><td>50</td><td>Ce n'est plus comme avant.</td><td>C'est plus comme avant.</td><td>It's not like before anymore.</td></tr></tbody></table>
+<p><strong>🧠 NE...PLUS structure:</strong></p>
+<code>Subject + NE + VERB + PLUS + rest</code>
+<p>→ Same sandwich as ne...pas — just replace <strong>pas</strong> with <strong>plus</strong><br>
+→ <strong>Plus</strong> here is pronounced <strong>"plü"</strong> (NOT "plüss")<br>
+→ "Plus" with the "s" sound = "more" (comparative) → completely different meaning<br>
+→ "Plus" without the "s" sound = "no more" (negation)</p>
+<p><strong>🧠 CRITICAL PRONUNCIATION TRAP:</strong></p>
+<table><thead><tr><th>Written</th><th>Pronounced</th><th>Meaning</th></tr></thead><tbody><tr><td>Je ne fume <strong>plus</strong>.</td><td>"plü" (silent s)</td><td>I don't smoke <strong>anymore</strong>.</td></tr><tr><td>Je veux <strong>plus</strong> de café.</td><td>"plüss" (s pronounced)</td><td>I want <strong>more</strong> coffee.</td></tr></tbody></table>
+<p>→ Same word — opposite meanings — distinguished ONLY by pronunciation<br>
+→ In spoken French (where "ne" is dropped), context and pronunciation are your only guides</p>
+<hr>
+<h2>🔹 BLOCK F — NE...JAMAIS: Never</h2>
+<p><em>Scenario: People ask about habits — some things you have NEVER done</em></p>
+<table><thead><tr><th>#</th><th>French Sentence (Written)</th><th>Spoken Version</th><th>English</th></tr></thead><tbody><tr><td>51</td><td>Je ne bois jamais d'alcool.</td><td>Je bois jamais d'alcool.</td><td>I never drink alcohol.</td></tr><tr><td>52</td><td>Je ne mange jamais le matin.</td><td>Je mange jamais le matin.</td><td>I never eat in the morning.</td></tr><tr><td>53</td><td>Tu ne sors jamais ?</td><td>Tu sors jamais ?</td><td>You never go out?</td></tr><tr><td>54</td><td>Il ne parle jamais de sa famille.</td><td>Il parle jamais de sa famille.</td><td>He never talks about his family.</td></tr><tr><td>55</td><td>Elle n'est jamais en retard.</td><td>Elle est jamais en retard.</td><td>She is never late.</td></tr><tr><td>56</td><td>On ne va jamais au théâtre.</td><td>On va jamais au théâtre.</td><td>We never go to the theater.</td></tr><tr><td>57</td><td>Vous ne regardez jamais la télé ?</td><td>Vous regardez jamais la télé ?</td><td>You never watch TV?</td></tr><tr><td>58</td><td>Ils ne font jamais la vaisselle.</td><td>Ils font jamais la vaisselle.</td><td>They never do the dishes.</td></tr><tr><td>59</td><td>Je n'ai jamais froid.</td><td>J'ai jamais froid.</td><td>I am never cold.</td></tr><tr><td>60</td><td>Ce n'est jamais facile.</td><td>C'est jamais facile.</td><td>It's never easy.</td></tr></tbody></table>
+<p><strong>🧠 NE...JAMAIS structure:</strong></p>
+<code>Subject + NE + VERB + JAMAIS + rest</code>
+<p>→ Same sandwich — replace <strong>pas</strong> with <strong>jamais</strong><br>
+→ <strong>Jamais</strong> can also answer questions alone:<br>
+→ → "Tu fumes ?" → "<strong>Jamais.</strong>" (Never.)<br>
+→ Article rule still applies: du/de la/des → <strong>de/d'</strong> after jamais<br>
+→ → Je ne bois jamais **d'**alcool. (not "de l'alcool")</p>
+<hr>
+<h2>🔹 BLOCK G — NE...RIEN: Nothing</h2>
+<p><em>Scenario: People ask what you're doing, what you want — sometimes the answer is NOTHING</em></p>
+<table><thead><tr><th>#</th><th>French Sentence (Written)</th><th>Spoken Version</th><th>English</th></tr></thead><tbody><tr><td>61</td><td>Je ne fais rien.</td><td>Je fais rien.</td><td>I'm not doing anything. / I'm doing nothing.</td></tr><tr><td>62</td><td>Je ne veux rien.</td><td>Je veux rien.</td><td>I don't want anything.</td></tr><tr><td>63</td><td>Tu ne manges rien ?</td><td>Tu manges rien ?</td><td>You're not eating anything?</td></tr><tr><td>64</td><td>Il ne dit rien.</td><td>Il dit rien.</td><td>He doesn't say anything.</td></tr><tr><td>65</td><td>Elle ne comprend rien.</td><td>Elle comprend rien.</td><td>She doesn't understand anything.</td></tr><tr><td>66</td><td>On ne change rien.</td><td>On change rien.</td><td>We're not changing anything.</td></tr><tr><td>67</td><td>Il n'y a rien ici.</td><td>Y'a rien ici.</td><td>There is nothing here.</td></tr><tr><td>68</td><td>Ce n'est rien.</td><td>C'est rien.</td><td>It's nothing.</td></tr><tr><td>69</td><td>Rien ne change.</td><td>Rien change.</td><td>Nothing changes.</td></tr><tr><td>70</td><td>Rien n'est parfait.</td><td>Rien est parfait.</td><td>Nothing is perfect.</td></tr></tbody></table>
+<p><strong>🧠 RIEN has TWO positions:</strong></p>
+<table><thead><tr><th>Rien = OBJECT (after verb)</th><th>Rien = SUBJECT (before verb)</th></tr></thead><tbody><tr><td>Je ne fais <strong>rien</strong>. (I do nothing.)</td><td><strong>Rien</strong> ne change. (Nothing changes.)</td></tr><tr><td>Standard sandwich: ne + verb + rien</td><td>Rien + ne + verb (rien goes FIRST)</td></tr></tbody></table>
+<p>→ When <strong>rien IS the subject</strong> → it comes BEFORE ne + verb<br>
+→ When <strong>rien IS the object</strong> → it comes AFTER the verb (inside the sandwich)<br>
+→ <strong>"De rien"</strong> = "You're welcome" (literally "of nothing") — very common expression</p>
+<hr>
+<h2>🔹 BLOCK H — NE...PERSONNE: Nobody</h2>
+<p><em>Scenario: You're alone, nobody is around, nobody called, nobody knows</em></p>
+<table><thead><tr><th>#</th><th>French Sentence (Written)</th><th>Spoken Version</th><th>English</th></tr></thead><tbody><tr><td>71</td><td>Je ne connais personne ici.</td><td>Je connais personne ici.</td><td>I don't know anyone here.</td></tr><tr><td>72</td><td>Je ne vois personne.</td><td>Je vois personne.</td><td>I don't see anyone.</td></tr><tr><td>73</td><td>Tu n'attends personne ?</td><td>T'attends personne ?</td><td>You're not waiting for anyone?</td></tr><tr><td>74</td><td>Il ne parle à personne.</td><td>Il parle à personne.</td><td>He doesn't talk to anyone.</td></tr><tr><td>75</td><td>Elle n'invite personne.</td><td>Elle invite personne.</td><td>She doesn't invite anyone.</td></tr><tr><td>76</td><td>Il n'y a personne.</td><td>Y'a personne.</td><td>There is nobody.</td></tr><tr><td>77</td><td>Personne ne comprend.</td><td>Personne comprend.</td><td>Nobody understands.</td></tr><tr><td>78</td><td>Personne n'est parfait.</td><td>Personne est parfait.</td><td>Nobody is perfect.</td></tr><tr><td>79</td><td>Personne ne parle anglais ici.</td><td>Personne parle anglais ici.</td><td>Nobody speaks English here.</td></tr><tr><td>80</td><td>Personne ne sait.</td><td>Personne sait.</td><td>Nobody knows.</td></tr></tbody></table>
+<p><strong>🧠 PERSONNE behaves exactly like RIEN — two positions:</strong></p>
+<table><thead><tr><th>Personne = OBJECT (after verb)</th><th>Personne = SUBJECT (before verb)</th></tr></thead><tbody><tr><td>Je ne connais <strong>personne</strong>.</td><td><strong>Personne</strong> ne comprend.</td></tr><tr><td>ne + verb + personne</td><td>Personne + ne + verb</td></tr></tbody></table>
+<p>→ Same logic as rien (Block G)<br>
+→ <strong>"Personne"</strong> alone also means "a person" (noun) — context tells you which meaning<br>
+→ → "Une personne" = a person<br>
+→ → "Personne ne..." = nobody</p>
+<hr>
+<h2>🔹 BLOCK I — Polite Refusals: Saying No Without Being Rude</h2>
+<p><em>Scenario: At the dinner party — people offer you food, drinks, invitations — you decline politely</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English</th><th>Politeness Strategy</th></tr></thead><tbody><tr><td>81</td><td>Non merci.</td><td>No thank you.</td><td>Simplest polite refusal</td></tr><tr><td>82</td><td>Non merci, ça va.</td><td>No thanks, I'm fine.</td><td>Refusal + reassurance</td></tr><tr><td>83</td><td>Non merci, je n'ai plus faim.</td><td>No thanks, I'm not hungry anymore.</td><td>Refusal + ne...plus reason</td></tr><tr><td>84</td><td>C'est gentil, mais non merci.</td><td>That's kind, but no thank you.</td><td>Acknowledge kindness + refuse</td></tr><tr><td>85</td><td>Je veux bien, mais je ne peux pas.</td><td>I'd like to, but I can't.</td><td>Accept in spirit + deny in reality</td></tr><tr><td>86</td><td>Pas pour moi, merci.</td><td>Not for me, thanks.</td><td>Casual polite refusal</td></tr><tr><td>87</td><td>Merci, mais je ne bois pas d'alcool.</td><td>Thanks, but I don't drink alcohol.</td><td>Gratitude + permanent negation</td></tr><tr><td>88</td><td>Peut-être une autre fois.</td><td>Maybe another time.</td><td>Soft refusal for invitations</td></tr><tr><td>89</td><td>Désolé, je ne suis pas libre.</td><td>Sorry, I'm not free.</td><td>Apology + ne...pas reason</td></tr><tr><td>90</td><td>Je préfère pas, merci.</td><td>I'd rather not, thanks.</td><td>Spoken casual — "ne" dropped</td></tr></tbody></table>
+<p><strong>🧠 Politeness structure unlocked:</strong></p>
+<table><thead><tr><th>Strategy</th><th>Pattern</th><th>Register</th></tr></thead><tbody><tr><td>Direct refusal</td><td><strong>Non merci.</strong></td><td>Universal</td></tr><tr><td>Refusal + reason</td><td>Non merci, + <strong>negation sentence</strong></td><td>Standard</td></tr><tr><td>Soft acknowledge + refuse</td><td><strong>C'est gentil, mais</strong> + refusal</td><td>Polite</td></tr><tr><td>Accept spirit + deny reality</td><td><strong>Je veux bien, mais</strong> + negation</td><td>Very polite</td></tr><tr><td>Postpone</td><td><strong>Peut-être une autre fois.</strong></td><td>Diplomatic</td></tr><tr><td>Apologize + explain</td><td><strong>Désolé(e),</strong> + negation sentence</td><td>Standard polite</td></tr></tbody></table>
+<hr>
+<h2>🔹 BLOCK J — Correcting Misunderstandings: "No, Actually..."</h2>
+<p><em>Scenario: People state wrong things — you correct them with the right information</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English</th><th>Correction Pattern</th></tr></thead><tbody><tr><td>91</td><td>Non, ce n'est pas ça.</td><td>No, that's not it.</td><td>Deny + point to error</td></tr><tr><td>92</td><td>Non, je ne suis pas espagnol, je suis italien.</td><td>No, I'm not Spanish, I'm Italian.</td><td>Deny + replace with truth</td></tr><tr><td>93</td><td>Non, j'habite pas à Paris, j'habite à Lyon.</td><td>No, I don't live in Paris, I live in Lyon.</td><td>Deny + correct location</td></tr><tr><td>94</td><td>En fait, ce n'est pas lui, c'est elle.</td><td>Actually, it's not him, it's her.</td><td>Soft correction with "en fait"</td></tr><tr><td>95</td><td>Pas du tout.</td><td>Not at all.</td><td>Strong denial — standalone</td></tr><tr><td>96</td><td>Absolument pas.</td><td>Absolutely not.</td><td>Emphatic denial — standalone</td></tr><tr><td>97</td><td>Pas vraiment.</td><td>Not really.</td><td>Soft denial — standalone</td></tr><tr><td>98</td><td>Pas encore.</td><td>Not yet.</td><td>Time-based denial — standalone</td></tr><tr><td>99</td><td>Pas toujours.</td><td>Not always.</td><td>Frequency-based correction</td></tr><tr><td>100</td><td>Si, je parle français !</td><td>Yes (actually), I do speak French!</td><td>Contradicting a negative assumption</td></tr></tbody></table>
+<p><strong>🧠 CRITICAL DISCOVERY — Sentence 100: THE WORD "SI"</strong></p>
+<p>→ In French, there are <strong>TWO words for "yes":</strong></p>
+<table><thead><tr><th>Word</th><th>When to Use</th><th>Example</th></tr></thead><tbody><tr><td><strong>Oui</strong></td><td>Agreeing with a <strong>positive</strong> statement or question</td><td>"Tu parles français ?" → "<strong>Oui.</strong>"</td></tr><tr><td><strong>Si</strong></td><td>Contradicting a <strong>negative</strong> statement or question</td><td>"Tu ne parles pas français ?" → "<strong>Si !</strong>" (Yes I DO!)</td></tr></tbody></table>
+<p>→ English has no equivalent — English always uses "yes"<br>
+→ French distinguishes between <strong>agreeing</strong> (oui) and <strong>contradicting a negation</strong> (si)<br>
+→ This is one of the most elegant features of French — and one learners always miss</p>
+<p><strong>🧠 Standalone negation expressions from this block:</strong></p>
+<table><thead><tr><th>Expression</th><th>Meaning</th><th>Use</th></tr></thead><tbody><tr><td><strong>Pas du tout</strong></td><td>Not at all</td><td>Strong denial</td></tr><tr><td><strong>Absolument pas</strong></td><td>Absolutely not</td><td>Very strong denial</td></tr><tr><td><strong>Pas vraiment</strong></td><td>Not really</td><td>Soft / hesitant denial</td></tr><tr><td><strong>Pas encore</strong></td><td>Not yet</td><td>Denial with future possibility</td></tr><tr><td><strong>Pas toujours</strong></td><td>Not always</td><td>Partial correction</td></tr><tr><td><strong>Pas exactement</strong></td><td>Not exactly</td><td>Nuanced correction</td></tr><tr><td><strong>Bien sûr que non</strong></td><td>Of course not</td><td>Obvious denial</td></tr><tr><td><strong>Jamais de la vie</strong></td><td>Never in my life</td><td>Dramatic denial</td></tr></tbody></table>
+<p>→ Notice: these all use <strong>PAS / JAMAIS</strong> without a verb — <strong>standalone fragments</strong><br>
+→ This is very common in spoken French — negation pieces can stand alone</p>
+<hr>
+<h1>✅ WHAT SHOULD DO</h1>
+<p>→ <strong>Master ne...pas FIRST</strong> — it covers 80% of all negation in French<br>
+→ <strong>Learn the article change rule by heart</strong> — un/une/des/du/de la → <strong>de</strong> after any negation<br>
+→ <strong>EXCEPT definite articles (le, la, les)</strong> — they NEVER change after negation<br>
+→ <strong>Practice BOTH written and spoken forms</strong> — know "je ne sais pas" AND "je sais pas" / "chais pas"<br>
+→ <strong>Memorize the polite refusal formulas</strong> (Block I) — you will use them every single day<br>
+→ <strong>Learn the word SI</strong> — it will save you in conversations where someone assumes a negative about you<br>
+→ <strong>Connect to Project 3</strong> — the article change rule you learned there applies fully here<br>
+→ <strong>Connect to Project 1</strong> — negating être and avoir follows the same sandwich: ne + verb + pas</p>
+<hr>
+<h1>❌ WHAT SHOULD NOT DO</h1>
+<p>→ ❌ Do NOT say "Je ne mange pas <strong>de la</strong> viande" → "Je ne mange pas <strong>de</strong> viande" (article changes!)<br>
+→ ❌ Do NOT say "Je ne mange pas <strong>le</strong> fromage" when you mean "I don't eat cheese in general"<br>
+→ → "Je ne mange pas <strong>de</strong> fromage" = I don't eat cheese (general negation)<br>
+→ → "Je ne mange pas <strong>le</strong> fromage" = I'm not eating THE cheese (specific cheese in front of you)<br>
+→ ❌ Do NOT pronounce "plus" with the "s" in negation → "plü" not "plüss"<br>
+→ ❌ Do NOT say "Oui" when contradicting a negative → use <strong>"Si"</strong><br>
+→ ❌ Do NOT write "ne" in text messages / casual writing — French people drop it everywhere in informal writing too<br>
+→ ❌ Do NOT put pas/plus/jamais BEFORE the verb → <del>"Je pas parle"</del> → "Je <strong>ne parle pas</strong>"<br>
+→ ❌ Do NOT double-negate like English → "Je ne fais pas rien" ❌ → this would mean "I don't do nothing" = "I do something" (double negative cancels out in French too)</p>
+<hr>
+<h1>🔀 WHEN TO USE WHAT</h1>
+<table><thead><tr><th>You Want to Express</th><th>Negation Word</th><th>Example</th></tr></thead><tbody><tr><td>Simple "not"</td><td><strong>ne...pas</strong></td><td>Je ne suis pas français.</td></tr><tr><td>"Not anymore" / "no longer"</td><td><strong>ne...plus</strong></td><td>Je ne fume plus.</td></tr><tr><td>"Never"</td><td><strong>ne...jamais</strong></td><td>Je ne bois jamais d'alcool.</td></tr><tr><td>"Nothing"</td><td><strong>ne...rien</strong></td><td>Je ne fais rien.</td></tr><tr><td>"Nobody"</td><td><strong>ne...personne</strong></td><td>Je ne connais personne.</td></tr><tr><td>Polite refusal</td><td><strong>Non merci</strong> + reason</td><td>Non merci, je n'ai plus faim.</td></tr><tr><td>Correct a wrong assumption</td><td><strong>Non</strong> + negation + truth</td><td>Non, je ne suis pas espagnol, je suis italien.</td></tr><tr><td>Contradict a negative question</td><td><strong>Si</strong></td><td>"Tu ne viens pas ?" → "Si, je viens !"</td></tr><tr><td>Strong denial</td><td><strong>Pas du tout / Absolument pas</strong></td><td>— Standalone —</td></tr><tr><td>Soft denial</td><td><strong>Pas vraiment / Pas exactement</strong></td><td>— Standalone —</td></tr></tbody></table>
+<hr>
+<h1>🚫 WHEN NOT TO USE</h1>
+<p>→ Do NOT use <strong>ne...plus</strong> when you NEVER did something → use <strong>ne...jamais</strong><br>
+→ → "I don't smoke anymore" (I used to) = <strong>ne...plus</strong> → Je ne fume plus.<br>
+→ → "I never smoke" (I never have) = <strong>ne...jamais</strong> → Je ne fume jamais.<br>
+→ Do NOT use <strong>ne...rien</strong> for people → use <strong>ne...personne</strong><br>
+→ → "I see nothing" = Je ne vois <strong>rien</strong>.<br>
+→ → "I see nobody" = Je ne vois <strong>personne</strong>.<br>
+→ Do NOT use <strong>ne...pas</strong> when a more specific negation exists<br>
+→ → "I don't eat anymore" → <strong>ne...plus</strong> is more precise than "ne...pas"<br>
+→ Do NOT use <strong>rien / personne</strong> as object AND subject in the same sentence → pick one role<br>
+→ Do NOT use formal written negation (with "ne") in casual texts to French friends → it looks stiff</p>
+<hr>
+<h1>⚠️ COMMON PITFALLS AND FAILURE MODES</h1>
+<table><thead><tr><th>Pitfall</th><th>What Learners Do Wrong</th><th>Correct Version</th><th>Why</th></tr></thead><tbody><tr><td><strong>Article trap after negation</strong></td><td>Je n'ai pas <strong>un</strong> chat.</td><td>Je n'ai pas <strong>de</strong> chat.</td><td>un/une → de after negation</td></tr><tr><td><strong>Definite article trap</strong></td><td>Je n'aime pas <strong>de</strong> fromage.</td><td>Je n'aime pas <strong>le</strong> fromage.</td><td>le/la/les STAY after negation with aimer</td></tr><tr><td><strong>Plus pronunciation</strong></td><td>"Je ne fume plüss"</td><td>"Je ne fume plü"</td><td>Silent "s" in negation</td></tr><tr><td><strong>Oui vs. Si</strong></td><td>"Tu ne viens pas ?" → "Oui !"</td><td>→ "<strong>Si</strong> !"</td><td>Si contradicts a negative</td></tr><tr><td><strong>Sandwich order</strong></td><td>"Je pas ne parle français"</td><td>Je <strong>ne</strong> parle <strong>pas</strong> français</td><td>ne BEFORE verb, pas AFTER</td></tr><tr><td><strong>Double negative</strong></td><td>"Je ne fais pas rien"</td><td>Je ne fais <strong>rien</strong> (drop pas)</td><td>One negation only — pas + rien = error</td></tr><tr><td><strong>Rien/Personne as subject</strong></td><td>"Ne rien change"</td><td><strong>Rien ne</strong> change.</td><td>Subject rien/personne comes FIRST</td></tr><tr><td><strong>Forgetting "de" after negation</strong></td><td>"Il n'y a pas problème"</td><td>Il n'y a pas <strong>de</strong> problème</td><td>Need "de" between pas and noun</td></tr><tr><td><strong>Written vs. spoken confusion</strong></td><td>Writing "je sais pas" in a formal email</td><td>Je <strong>ne</strong> sais <strong>pas</strong></td><td>Keep "ne" in writing/formal contexts</td></tr><tr><td><strong>Personne confusion</strong></td><td>"Une personne ne vient" (wrong meaning)</td><td><strong>Personne</strong> ne vient. (Nobody comes.)</td><td>"Une personne" = a person / "Personne" alone = nobody</td></tr></tbody></table>
+<hr>
+<h1>🔑 KEY TAKEAWAY</h1>
+<blockquote>
+<p><strong>Project 1 → You exist and possess.</strong><br>
+<strong>Project 2 → You act.</strong><br>
+<strong>Project 3 → You identify and point at the world.</strong><br>
+<strong>Project 4 → You ask questions.</strong><br>
+<strong>Project 5 → You DENY, REFUSE, and CORRECT.</strong></p>
+<p>The <strong>negation sandwich</strong> (ne + verb + pas/plus/jamais/rien/personne) is the backbone of all French denial.</p>
+<p>Three layers of mastery:</p>
+<ol>
+<li><strong>Know the written form</strong> → ne + verb + second piece</li>
+<li><strong>Know the spoken form</strong> → drop ne → verb + second piece</li>
+<li><strong>Know the article change</strong> → un/une/des/du/de la → de after negation</li>
+</ol>
+<p>You now have a <strong>complete basic interaction toolkit:</strong><br>
+→ State facts → Describe actions → Identify things → Ask questions → Deny/Refuse/Correct</p>
+<p><strong>But you can only describe what IS — you cannot describe what you WANT, NEED, or CAN DO.</strong><br>
+→ "I want to eat" / "I can help" / "I have to go" — these require <strong>modal structures.</strong></p>
+</blockquote>
+<hr>
+<h1>🌉 BRIDGE TO PROJECT 6</h1>
+<blockquote>
+<p>You can now say <strong>"I don't speak Chinese"</strong> and <strong>"No thank you, I'm not hungry anymore"</strong><br>
+But you're in a hotel room — you need something:<br>
+→ "I <strong>want</strong> to change rooms."<br>
+→ "I <strong>can't</strong> open the window."<br>
+→ "I <strong>need</strong> to call someone."<br>
+→ "I <strong>must</strong> leave early tomorrow."<br>
+→ These require <strong>VOULOIR, POUVOIR, DEVOIR, AVOIR BESOIN DE</strong> — the modal verbs<br>
+→ Project 6: <strong>"I Want, I Need, I Can"</strong> unlocks desire, ability, and obligation structures</p>
+</blockquote>
+<hr>
+<h1>✅ PROJECT 5 COMPLETE</h1>
+<blockquote>
+<p><strong>Are you ready for PROJECT 6: "I Want, I Need, I Can"?</strong><br>
+→ ~100 sentences covering modal verb structures<br>
+→ Scenario: You're in a hotel — expressing desires, abilities, needs, obligations<br>
+→ Builds on the negation structures from Project 5 + all Previous Chapters</p>
+</blockquote>
+</div>
+</div>
+
+<!-- ========== data-index="13" ========== -->
+
+        </div>
+
+        <div class="nav-bar">
+            <a href="project-4.html" class="nav-button prev">← Previous Chapter</a>
+            <div class="page-info">
+                <a href="index.html" class="nav-button home">📚 Table of Contents</a><br>
+                <span style="margin-top:8px;display:block">Chapter 5 of 50</span>
+            </div>
+            <a href="project-6.html" class="nav-button next">Next Chapter →</a>
+        </div>
+    </div>
+
+    
+    <div id="progress-track"><div id="progress-fill"></div></div>
+    <div id="progress-pct">0%</div>
+
+
+    <script>
+    const fill = document.getElementById('progress-fill');
+    const pct  = document.getElementById('progress-pct');
+    function updateProgress() {
+        const scrollTop = window.scrollY;
+        const docHeight = document.body.scrollHeight - window.innerHeight;
+        const scrolled  = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+        fill.style.height = scrolled + '%';
+        pct.textContent   = Math.round(scrolled) + '%';
+    }
+    window.addEventListener('scroll', updateProgress);
+    updateProgress();
+
+    document.addEventListener('keydown', function(e) {
+        if (['INPUT','TEXTAREA'].includes(document.activeElement.tagName)) return;
+        if (e.key === 'ArrowLeft') {
+            const b = document.querySelector('.nav-button.prev');
+            if (b && !b.classList.contains('disabled')) window.location.href = b.href;
+        }
+        if (e.key === 'ArrowRight') {
+            const b = document.querySelector('.nav-button.next');
+            if (b && !b.classList.contains('disabled')) window.location.href = b.href;
+        }
+    });
+    </script>
+
+</body>
+</html>

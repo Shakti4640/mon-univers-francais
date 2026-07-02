@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="images/favicon.png">
+    <title>Project 13: "Tell Them What to Do" — French Daily Sentences</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.75;
+            color: #1a202c;
+            background-color: #f7fafc;
+        }
+        .container {
+            max-width: 1800px;
+            margin: 0 auto;
+            background: white;
+            min-height: 100vh;
+            box-shadow: 0 0 30px rgba(0,0,0,0.08);
+            padding: 48px 52px;
+        }
+        
+        .content { max-width: 1700px; margin: 0 auto; color: #1a202c; }
+        .content h1 {
+            color: #1a202c; margin: 32px 0 20px;
+            padding-bottom: 12px;
+            border-bottom: 4px solid #3b82f6;
+            font-size: 2.1em;
+            font-weight: 700;
+        }
+        .content h2 {
+            color: #1a202c; margin: 28px 0 16px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #60a5fa;
+            font-size: 1.6em;
+            font-weight: 600;
+        }
+        .content h3 { color: #1a202c; margin: 22px 0 12px; font-size: 1.3em; font-weight: 600; }
+        .content h4 { color: #2d3748; margin: 18px 0 10px; font-size: 1.1em; font-weight: 600; }
+        .content p  { margin-bottom: 16px; line-height: 1.8; color: #1a202c; }
+        .content ul, .content ol { margin: 12px 0 18px 30px; color: #1a202c; }
+        .content li { margin-bottom: 8px; line-height: 1.75; color: #1a202c; }
+        .content hr { border: none; border-top: 2px solid #e2e8f0; margin: 26px 0; }
+        .content pre {
+            background: #f7fafc !important;
+            border: 1px solid #cbd5e0 !important;
+            border-left: 4px solid #3b82f6 !important;
+            padding: 18px !important; overflow-x: auto; margin: 18px 0; border-radius: 6px;
+            font-family: 'Consolas','Monaco','Courier New',monospace !important;
+            font-size: 0.9em !important;
+        }
+        .content pre:not([style*="color"]) { color: #1a202c !important; }
+        .content code {
+            font-family: 'Consolas','Monaco','Courier New',monospace !important;
+            font-size: 0.88em !important;
+        }
+        .content code:not(pre code) {
+            background: #dbeafe !important;
+            color: #1a202c !important;
+            padding: 2px 6px;
+            border-radius: 3px;
+        }
+        .content pre code { background: transparent !important; padding: 0; }
+        .content table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+        .content th {
+            background: linear-gradient(135deg, #3b82f6 0%, #60a5fa 100%);
+            color: white; padding: 12px 16px; text-align: left;
+            font-weight: 600;
+        }
+        .content td { padding: 11px 16px; border: 1px solid #e2e8f0; color: #1a202c; }
+        .content tr:nth-child(even) td { background: #eff6ff; }
+        .content blockquote {
+            border-left: 4px solid #3b82f6; background: #eff6ff;
+            padding: 14px 20px; margin: 18px 0; border-radius: 0 6px 6px 0;
+            color: #1a202c;
+        }
+        .content strong { color: #1a202c; font-weight: 600; }
+        .px-2 { padding: 0; }
+        .chat-message { background: transparent; padding: 0; margin: 0; }
+
+        /* Bottom nav bar only */
+        .nav-bar {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 24px 0;
+            margin-top: 50px;
+            border-top: 3px solid #60a5fa;
+        }
+        .nav-button {
+            display: inline-flex; align-items: center; gap: 8px;
+            padding: 12px 26px;
+            background: linear-gradient(135deg, #3b82f6 0%, #60a5fa 100%);
+            color: white !important; text-decoration: none;
+            border-radius: 8px; font-weight: 600; font-size: 0.95em;
+            transition: all 0.2s;
+            box-shadow: 0 2px 8px rgba(59,130,246,0.35);
+        }
+        .nav-button:hover { transform: translateY(-2px); box-shadow: 0 4px 14px rgba(59,130,246,0.5); }
+        .nav-button.disabled { background: #cbd5e1; box-shadow: none; pointer-events: none; }
+        .nav-button.home {
+            background: linear-gradient(135deg, #ef4444 0%, #f87171 100%);
+            box-shadow: 0 2px 8px rgba(239,68,68,0.35);
+        }
+        .nav-button.home:hover { box-shadow: 0 4px 14px rgba(239,68,68,0.5); }
+        .page-info { color: #718096; font-size: 0.9em; text-align: center; }
+
+        /* Progress bar */
+        #progress-track {
+            position: fixed; top: 20px; right: 20px;
+            width: 10px; height: 150px;
+            background: rgba(59,130,246,0.2);
+            border: 2px solid #3b82f6;
+            border-radius: 6px; overflow: hidden; z-index: 1000;
+        }
+        #progress-fill {
+            width: 100%;
+            background: linear-gradient(180deg, #3b82f6, #2563eb);
+            height: 0%;
+            transition: height 0.15s ease;
+        }
+        #progress-pct {
+            position: fixed; top: 0px; right: 16px;
+            color: #2563eb; font-size: 14px; font-weight: bold;
+            z-index: 1001;
+            text-shadow: 0 1px 2px rgba(255,255,255,0.9);
+            line-height: 20px;
+        }
+
+    </style>
+<link rel="stylesheet" href="assets/chapters.css?v=20260421203847"><script src="assets/chapters.js?v=20260421203847" defer></script>
+</head>
+<body>
+    <div class="container">
+        <div class="content">
+            <div class="chat-message" data-index="27">
+<div class="px-2"><h1>🔵 PROJECT 13: "Tell Them What to Do"</h1>
+<h2><em>You're cooking with a friend, giving directions, offering advice — how do you give commands?</em></h2>
+<hr>
+<h1>🎯 THE HYPOTHETICAL PROBLEM</h1>
+<p>→ It's <strong>Saturday evening</strong> at your host family's kitchen in Lyon<br>
+→ The mother, Catherine, is teaching you to make <strong>crêpes</strong> — a classic French recipe<br>
+→ She speaks rapidly, firing off instructions:<br>
+→ → <strong>"Mélange la farine et les œufs !"</strong> (Mix the flour and eggs!)<br>
+→ → <strong>"Ajoute du lait !"</strong> (Add some milk!)<br>
+→ → <strong>"Ne mets pas trop de sucre !"</strong> (Don't put too much sugar!)<br>
+→ → <strong>"Attends cinq minutes !"</strong> (Wait five minutes!)<br>
+→ → <strong>"Goûte !"</strong> (Taste!)<br>
+→ You understand WHAT she wants — but you notice something strange:<br>
+→ → There's <strong>no "tu"</strong> or "vous" in these sentences<br>
+→ → The verbs look ALMOST like present tense — but not exactly<br>
+→ → Some have an <strong>"s" missing</strong> that you'd expect<br>
+→ Later, you're walking with friends and need to say:<br>
+→ → "<strong>Let's go!</strong>" / "<strong>Turn</strong> left!" / "<strong>Don't</strong> touch that!" / "<strong>Listen</strong> to me!"<br>
+→ You can describe plans (Project 12), tell stories (Project 11), ask questions (Project 4)<br>
+→ But you CANNOT directly <strong>instruct, command, suggest, or guide</strong> someone</p>
+<p><strong>The core realization:</strong><br>
+→ The impératif (imperative) is the <strong>command form</strong> of verbs<br>
+→ It's used for: orders, instructions, advice, suggestions, invitations, recipes, directions<br>
+→ It has <strong>only 3 forms</strong> — the simplest conjugation in all of French:</p>
+<table><thead><tr><th>Form</th><th>Who You're Talking To</th><th>Example</th></tr></thead><tbody><tr><td><strong>Tu form</strong></td><td>One person (informal)</td><td><strong>Mange !</strong> (Eat!)</td></tr><tr><td><strong>Nous form</strong></td><td>"Let's..." (including yourself)</td><td><strong>Mangeons !</strong> (Let's eat!)</td></tr><tr><td><strong>Vous form</strong></td><td>One person (formal) OR a group</td><td><strong>Mangez !</strong> (Eat!)</td></tr></tbody></table>
+<p>→ The KEY difference from present tense: <strong>NO subject pronoun</strong><br>
+→ Present: <strong>Tu</strong> manges. (You eat.)<br>
+→ Impératif: <strong>Mange !</strong> (Eat!) — no "tu", no "vous"<br>
+→ The missing subject IS the command — you're speaking directly to someone</p>
+<hr>
+<h1>🔍 HOW TO APPROACH IT</h1>
+<p>→ The impératif is built directly from <strong>present tense forms</strong> (Project 2)<br>
+→ With ONE important twist for -ER verbs</p>
+<table><thead><tr><th>Verb Type</th><th>Present "tu" Form</th><th>Impératif "tu" Form</th><th>What Changed?</th></tr></thead><tbody><tr><td><strong>-ER verbs</strong></td><td>Tu parl<strong>es</strong></td><td>Parl<strong>e</strong> !</td><td><strong>Drop the -s</strong></td></tr><tr><td><strong>-IR verbs</strong></td><td>Tu fin<strong>is</strong></td><td>Fin<strong>is</strong> !</td><td>Keep the -s</td></tr><tr><td><strong>-RE verbs</strong></td><td>Tu attend<strong>s</strong></td><td>Attend<strong>s</strong> !</td><td>Keep the -s</td></tr></tbody></table>
+<p>→ The <strong>nous</strong> and <strong>vous</strong> forms are <strong>IDENTICAL</strong> to present tense — no changes at all<br>
+→ The only special rule: <strong>-ER verbs (and aller) lose the -s in the tu form</strong></p>
+<hr>
+<h1>🔧 HOW CAN WE SOLVE IT</h1>
+<h2>Step 1 — Regular -ER Verbs in Impératif</h2>
+<p><strong>Present tense tu form → DROP the -s → Impératif</strong></p>
+<table><thead><tr><th>Verb</th><th>Present (tu)</th><th>Impératif (tu)</th><th>Impératif (nous)</th><th>Impératif (vous)</th></tr></thead><tbody><tr><td><strong>Parler</strong></td><td>Tu parl<strong>es</strong></td><td><strong>Parle !</strong></td><td><strong>Parlons !</strong></td><td><strong>Parlez !</strong></td></tr><tr><td><strong>Manger</strong></td><td>Tu mang<strong>es</strong></td><td><strong>Mange !</strong></td><td><strong>Mangeons !</strong></td><td><strong>Mangez !</strong></td></tr><tr><td><strong>Écouter</strong></td><td>Tu écout<strong>es</strong></td><td><strong>Écoute !</strong></td><td><strong>Écoutons !</strong></td><td><strong>Écoutez !</strong></td></tr><tr><td><strong>Regarder</strong></td><td>Tu regard<strong>es</strong></td><td><strong>Regarde !</strong></td><td><strong>Regardons !</strong></td><td><strong>Regardez !</strong></td></tr><tr><td><strong>Goûter</strong></td><td>Tu goût<strong>es</strong></td><td><strong>Goûte !</strong></td><td><strong>Goûtons !</strong></td><td><strong>Goûtez !</strong></td></tr><tr><td><strong>Ajouter</strong></td><td>Tu ajout<strong>es</strong></td><td><strong>Ajoute !</strong></td><td><strong>Ajoutons !</strong></td><td><strong>Ajoutez !</strong></td></tr></tbody></table>
+<p>→ The <strong>-s disappears</strong> in the tu form for ALL -ER verbs<br>
+→ This is the ONLY change — nous and vous forms are identical to present tense<br>
+→ <strong>Why drop the -s?</strong> Historical reasons — but the practical effect: <strong>it sounds exactly the same</strong> in speech<br>
+→ → "Tu parles" and "Parle !" sound identical: "parl"<br>
+→ → The difference is only visible in <strong>writing</strong></p>
+<hr>
+<h2>Step 2 — Regular -IR and -RE Verbs in Impératif</h2>
+<p><strong>Present tense forms → NO changes → Impératif</strong></p>
+<table><thead><tr><th>Verb</th><th>Impératif (tu)</th><th>Impératif (nous)</th><th>Impératif (vous)</th></tr></thead><tbody><tr><td><strong>Finir</strong></td><td><strong>Finis !</strong></td><td><strong>Finissons !</strong></td><td><strong>Finissez !</strong></td></tr><tr><td><strong>Choisir</strong></td><td><strong>Choisis !</strong></td><td><strong>Choisissons !</strong></td><td><strong>Choisissez !</strong></td></tr><tr><td><strong>Attendre</strong></td><td><strong>Attends !</strong></td><td><strong>Attendons !</strong></td><td><strong>Attendez !</strong></td></tr><tr><td><strong>Dormir</strong></td><td><strong>Dors !</strong></td><td><strong>Dormons !</strong></td><td><strong>Dormez !</strong></td></tr><tr><td><strong>Partir</strong></td><td><strong>Pars !</strong></td><td><strong>Partons !</strong></td><td><strong>Partez !</strong></td></tr><tr><td><strong>Sortir</strong></td><td><strong>Sors !</strong></td><td><strong>Sortons !</strong></td><td><strong>Sortez !</strong></td></tr><tr><td><strong>Prendre</strong></td><td><strong>Prends !</strong></td><td><strong>Prenons !</strong></td><td><strong>Prenez !</strong></td></tr></tbody></table>
+<p>→ -IR and -RE verbs: <strong>keep everything</strong> from present tense — just remove the subject pronoun<br>
+→ The -s stays for tu forms of -IR and -RE verbs</p>
+<hr>
+<h2>Step 3 — Irregular Impératif: The Big 4</h2>
+<p><strong>Four verbs have SPECIAL impératif forms that DON'T come from present tense:</strong></p>
+<h3>ÊTRE</h3>
+<table><thead><tr><th>Form</th><th>Impératif</th></tr></thead><tbody><tr><td>Tu</td><td><strong>Sois !</strong></td></tr><tr><td>Nous</td><td><strong>Soyons !</strong></td></tr><tr><td>Vous</td><td><strong>Soyez !</strong></td></tr></tbody></table>
+<p>→ NOT from present tense (tu es → <del>Es !</del>)<br>
+→ Comes from the <strong>subjonctif</strong> stem (you'll learn this in Project 23/31)<br>
+→ For now: just memorize sois, soyons, soyez</p>
+<h3>AVOIR</h3>
+<table><thead><tr><th>Form</th><th>Impératif</th></tr></thead><tbody><tr><td>Tu</td><td><strong>Aie !</strong></td></tr><tr><td>Nous</td><td><strong>Ayons !</strong></td></tr><tr><td>Vous</td><td><strong>Ayez !</strong></td></tr></tbody></table>
+<p>→ NOT from present tense (tu as → <del>As !</del>)<br>
+→ Also from subjonctif stem<br>
+→ Less common in daily speech — but appears in fixed expressions</p>
+<h3>SAVOIR</h3>
+<table><thead><tr><th>Form</th><th>Impératif</th></tr></thead><tbody><tr><td>Tu</td><td><strong>Sache !</strong></td></tr><tr><td>Nous</td><td><strong>Sachons !</strong></td></tr><tr><td>Vous</td><td><strong>Sachez !</strong></td></tr></tbody></table>
+<p>→ NOT from present tense (tu sais → <del>Sais !</del>)<br>
+→ Used in formal contexts: "Sachez que..." (Know that... / Be aware that...)</p>
+<h3>ALLER (special tu form only)</h3>
+<table><thead><tr><th>Form</th><th>Impératif</th></tr></thead><tbody><tr><td>Tu</td><td><strong>Va !</strong></td></tr><tr><td>Nous</td><td><strong>Allons !</strong></td></tr><tr><td>Vous</td><td><strong>Allez !</strong></td></tr></tbody></table>
+<p>→ Tu form: <strong>Va !</strong> (not <del>Vas !</del>) — the -s is dropped (same rule as -ER verbs — aller ends in -er)<br>
+→ Nous and vous: regular present tense forms → allons, allez<br>
+→ <strong>"Allez !"</strong> and <strong>"Allons !"</strong> are among the most common words in spoken French<br>
+→ → "Allez !" = "Come on!" / "Go!" / "Go ahead!"<br>
+→ → "Allons-y !" = "Let's go!"</p>
+<hr>
+<h2>Step 4 — The -S Returns Before Y and EN</h2>
+<p><strong>Special pronunciation rule:</strong></p>
+<p>→ When the tu impératif of an -ER verb is followed by <strong>"y"</strong> or <strong>"en"</strong>, the <strong>-s comes back</strong></p>
+<table><thead><tr><th>Without Y/EN</th><th>With Y</th><th>With EN</th></tr></thead><tbody><tr><td><strong>Mange !</strong> (Eat!)</td><td><strong>Manges-en !</strong> (Eat some!)</td><td>—</td></tr><tr><td><strong>Va !</strong> (Go!)</td><td><strong>Vas-y !</strong> (Go ahead! / Go there!)</td><td>—</td></tr><tr><td><strong>Parle !</strong> (Speak!)</td><td>—</td><td><strong>Parles-en !</strong> (Talk about it!)</td></tr></tbody></table>
+<p>→ Why? <strong>Pronunciation</strong> — French avoids the collision of two vowel sounds<br>
+→ "Va" + "y" → "Va-y" sounds awkward → "Va<strong>s</strong>-y" flows better<br>
+→ The -s acts as a <strong>liaison sound</strong> between the verb and y/en<br>
+→ <strong>"Vas-y !"</strong> = one of the TOP 5 most used expressions in spoken French<br>
+→ → Means: "Go ahead!" / "Go for it!" / "Do it!" / "Come on!"</p>
+<hr>
+<h2>Step 5 — Negative Impératif</h2>
+<code>NE + VERB (impératif) + PAS + rest</code>
+<p>→ Same negation sandwich (Project 5) — wraps around the imperative verb<br>
+→ <strong>"Ne"</strong> before → <strong>"Pas"</strong> after</p>
+<table><thead><tr><th>Affirmative</th><th>Negative</th></tr></thead><tbody><tr><td><strong>Mange !</strong> (Eat!)</td><td><strong>Ne mange pas !</strong> (Don't eat!)</td></tr><tr><td><strong>Pars !</strong> (Leave!)</td><td><strong>Ne pars pas !</strong> (Don't leave!)</td></tr><tr><td><strong>Touche !</strong> (Touch!)</td><td><strong>Ne touche pas !</strong> (Don't touch!)</td></tr><tr><td><strong>Sois triste !</strong> (Be sad!)</td><td><strong>Ne sois pas triste !</strong> (Don't be sad!)</td></tr></tbody></table>
+<p>→ Spoken French: "ne" drops as usual<br>
+→ Written: Ne mange pas ! → Spoken: Mange pas !</p>
+<hr>
+<h1>✅ WHAT COULD BE DONE — THE 100 SENTENCES</h1>
+<h2>🔹 BLOCK A — Kitchen Commands: -ER Verbs (Tu Form)</h2>
+<p><em>Scenario: Catherine teaches you to make crêpes — rapid-fire instructions</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English Meaning</th><th>Verb</th></tr></thead><tbody><tr><td>1</td><td>Mélange la farine et les œufs.</td><td>Mix the flour and eggs.</td><td>mélanger</td></tr><tr><td>2</td><td>Ajoute du lait.</td><td>Add some milk.</td><td>ajouter</td></tr><tr><td>3</td><td>Verse la pâte dans la poêle.</td><td>Pour the batter into the pan.</td><td>verser</td></tr><tr><td>4</td><td>Tourne la crêpe.</td><td>Flip the crêpe.</td><td>tourner</td></tr><tr><td>5</td><td>Goûte un peu.</td><td>Taste a little.</td><td>goûter</td></tr><tr><td>6</td><td>Coupe les fruits.</td><td>Cut the fruit.</td><td>couper</td></tr><tr><td>7</td><td>Prépare la table.</td><td>Set the table.</td><td>préparer</td></tr><tr><td>8</td><td>Lave tes mains.</td><td>Wash your hands.</td><td>laver</td></tr><tr><td>9</td><td>Cherche le sucre dans le placard.</td><td>Look for the sugar in the cupboard.</td><td>chercher</td></tr><tr><td>10</td><td>Regarde comment je fais.</td><td>Watch how I do it.</td><td>regarder</td></tr></tbody></table>
+<p><strong>🧠 Structure confirmed:</strong> <code>-ER impératif (tu) = present tu form MINUS the -s</code><br>
+→ Tu mélanges → <strong>Mélange</strong><br>
+→ Tu ajoutes → <strong>Ajoute</strong><br>
+→ Tu verses → <strong>Verse</strong><br>
+→ All end in <strong>-e</strong> (not -es)</p>
+<p><strong>🧠 Cooking vocabulary unlocked:</strong></p>
+<table><thead><tr><th>French</th><th>English</th></tr></thead><tbody><tr><td>mélanger</td><td>to mix</td></tr><tr><td>ajouter</td><td>to add</td></tr><tr><td>verser</td><td>to pour</td></tr><tr><td>tourner</td><td>to flip / to turn</td></tr><tr><td>goûter</td><td>to taste</td></tr><tr><td>couper</td><td>to cut</td></tr><tr><td>la farine</td><td>flour</td></tr><tr><td>les œufs</td><td>eggs</td></tr><tr><td>le lait</td><td>milk</td></tr><tr><td>la pâte</td><td>batter / dough</td></tr><tr><td>la poêle</td><td>frying pan</td></tr><tr><td>le placard</td><td>cupboard</td></tr></tbody></table>
+<p>→ Cooking is one of the BEST contexts for learning impératif — recipes are nothing but commands</p>
+<hr>
+<h2>🔹 BLOCK B — Kitchen Commands: -IR, -RE, and Irregular Verbs</h2>
+<p><em>Scenario: More complex instructions while cooking</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English Meaning</th><th>Verb Type</th></tr></thead><tbody><tr><td>11</td><td>Attends cinq minutes.</td><td>Wait five minutes.</td><td>-RE (attendre)</td></tr><tr><td>12</td><td>Prends un bol.</td><td>Take a bowl.</td><td>-RE irregular (prendre)</td></tr><tr><td>13</td><td>Mets le beurre dans la poêle.</td><td>Put the butter in the pan.</td><td>Irregular (mettre → mets)</td></tr><tr><td>14</td><td>Fais attention, c'est chaud !</td><td>Be careful, it's hot!</td><td>Irregular (faire → fais)</td></tr><tr><td>15</td><td>Choisis un dessert.</td><td>Choose a dessert.</td><td>-IR (choisir)</td></tr><tr><td>16</td><td>Finis ton assiette.</td><td>Finish your plate.</td><td>-IR (finir)</td></tr><tr><td>17</td><td>Sors le fromage du frigo.</td><td>Take the cheese out of the fridge.</td><td>-IR rebel (sortir)</td></tr><tr><td>18</td><td>Ouvre la bouteille.</td><td>Open the bottle.</td><td>-IR (ouvrir → ouvre — like -ER!)</td></tr><tr><td>19</td><td>Dis-moi quand c'est prêt.</td><td>Tell me when it's ready.</td><td>Irregular (dire → dis)</td></tr><tr><td>20</td><td>Viens m'aider.</td><td>Come help me.</td><td>Irregular (venir → viens)</td></tr></tbody></table>
+<p><strong>🧠 Sentence 18 — OUVRIR in impératif:</strong><br>
+→ Ouvrir conjugates like an -ER verb in present: tu ouvr<strong>es</strong><br>
+→ So impératif tu form: <strong>Ouvre !</strong> (drop the -s, like -ER verbs)<br>
+→ Same for: couvrir (cover) → Couvre ! / offrir (offer) → Offre ! / découvrir (discover) → Découvre !<br>
+→ These -IR verbs that conjugate like -ER verbs follow -ER impératif rules</p>
+<p><strong>🧠 Sentence 19 — "DIS-MOI":</strong><br>
+→ <strong>Dis</strong> (tell) + <strong>moi</strong> (me) = Tell me<br>
+→ In affirmative impératif, pronouns go <strong>AFTER</strong> the verb with a hyphen<br>
+→ This is a MAJOR difference from normal sentence structure<br>
+→ Normal: Tu <strong>me</strong> dis. (You tell me.) → pronoun BEFORE verb<br>
+→ Impératif: <strong>Dis-moi !</strong> (Tell me!) → pronoun AFTER verb<br>
+→ Full pronoun exploration in Project 19 — for now, absorb these common patterns:</p>
+<table><thead><tr><th>Impératif + Pronoun</th><th>English</th></tr></thead><tbody><tr><td><strong>Dis-moi</strong></td><td>Tell me</td></tr><tr><td><strong>Donne-moi</strong></td><td>Give me</td></tr><tr><td><strong>Aide-moi</strong></td><td>Help me</td></tr><tr><td><strong>Excuse-moi</strong></td><td>Excuse me</td></tr><tr><td><strong>Montre-moi</strong></td><td>Show me</td></tr><tr><td><strong>Écoute-moi</strong></td><td>Listen to me</td></tr><tr><td><strong>Appelle-moi</strong></td><td>Call me</td></tr><tr><td><strong>Attends-moi</strong></td><td>Wait for me</td></tr></tbody></table>
+<p>→ <strong>"Moi"</strong> is the stress pronoun (from Project 7 — chez moi)<br>
+→ In affirmative impératif: "me" becomes <strong>"moi"</strong> after the verb</p>
+<hr>
+<h2>🔹 BLOCK C — Vous Form: Polite Commands and Group Instructions</h2>
+<p><em>Scenario: A tour guide gives instructions to a group / A waiter speaks to customers</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English Meaning</th><th>Context</th></tr></thead><tbody><tr><td>21</td><td>Entrez, s'il vous plaît.</td><td>Come in, please.</td><td>Welcoming</td></tr><tr><td>22</td><td>Asseyez-vous.</td><td>Sit down. / Have a seat.</td><td>Offering a seat</td></tr><tr><td>23</td><td>Suivez-moi.</td><td>Follow me.</td><td>Leading the way</td></tr><tr><td>24</td><td>Regardez à votre gauche.</td><td>Look to your left.</td><td>Tour guide</td></tr><tr><td>25</td><td>Écoutez bien.</td><td>Listen carefully.</td><td>Teacher / guide</td></tr><tr><td>26</td><td>Prenez votre temps.</td><td>Take your time.</td><td>Polite / patient</td></tr><tr><td>27</td><td>Choisissez votre plat.</td><td>Choose your dish.</td><td>Waiter</td></tr><tr><td>28</td><td>Signez ici, s'il vous plaît.</td><td>Sign here, please.</td><td>Administrative</td></tr><tr><td>29</td><td>Attendez un instant.</td><td>Wait a moment.</td><td>Asking for patience</td></tr><tr><td>30</td><td>N'hésitez pas à demander.</td><td>Don't hesitate to ask.</td><td>Customer service</td></tr></tbody></table>
+<p><strong>🧠 VOUS IMPÉRATIF = Present tense vous form — NO changes:</strong><br>
+→ Vous entrez → <strong>Entrez !</strong><br>
+→ Vous prenez → <strong>Prenez !</strong><br>
+→ Vous attendez → <strong>Attendez !</strong><br>
+→ Just drop "vous" — everything else stays the same</p>
+<p><strong>🧠 Key polite expressions from this block:</strong></p>
+<table><thead><tr><th>Expression</th><th>Meaning</th><th>Usage Level</th></tr></thead><tbody><tr><td><strong>Entrez.</strong></td><td>Come in.</td><td>Standard polite</td></tr><tr><td><strong>Asseyez-vous.</strong></td><td>Sit down. / Have a seat.</td><td>Very common</td></tr><tr><td><strong>Suivez-moi.</strong></td><td>Follow me.</td><td>Very common</td></tr><tr><td><strong>Prenez votre temps.</strong></td><td>Take your time.</td><td>Polite / patient</td></tr><tr><td><strong>N'hésitez pas.</strong></td><td>Don't hesitate.</td><td>Customer service standard</td></tr></tbody></table>
+<p><strong>🧠 Sentence 30 — "N'HÉSITEZ PAS À + infinitif":</strong><br>
+→ = "Don't hesitate to [do something]"<br>
+→ Negative impératif + à + infinitif<br>
+→ This is a FIXED EXPRESSION used constantly in professional French<br>
+→ → "N'hésitez pas à <strong>me contacter</strong>." (Don't hesitate to contact me.)<br>
+→ → "N'hésitez pas à <strong>demander</strong>." (Don't hesitate to ask.)<br>
+→ → You'll see this in every French email, shop, and customer service interaction</p>
+<hr>
+<h2>🔹 BLOCK D — Nous Form: "Let's...!" Suggestions and Invitations</h2>
+<p><em>Scenario: You suggest activities to your friends — inclusive commands</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English Meaning</th><th>Verb</th></tr></thead><tbody><tr><td>31</td><td>Mangeons !</td><td>Let's eat!</td><td>manger</td></tr><tr><td>32</td><td>Allons au cinéma !</td><td>Let's go to the cinema!</td><td>aller</td></tr><tr><td>33</td><td>Partons maintenant.</td><td>Let's leave now.</td><td>partir</td></tr><tr><td>34</td><td>Essayons ce restaurant.</td><td>Let's try this restaurant.</td><td>essayer</td></tr><tr><td>35</td><td>Prenons un café.</td><td>Let's have a coffee.</td><td>prendre</td></tr><tr><td>36</td><td>Sortons ce soir !</td><td>Let's go out tonight!</td><td>sortir</td></tr><tr><td>37</td><td>Faisons une pause.</td><td>Let's take a break.</td><td>faire</td></tr><tr><td>38</td><td>Commençons.</td><td>Let's begin.</td><td>commencer</td></tr><tr><td>39</td><td>Restons ici.</td><td>Let's stay here.</td><td>rester</td></tr><tr><td>40</td><td>Allons-y !</td><td>Let's go!</td><td>aller + y</td></tr></tbody></table>
+<p><strong>🧠 NOUS IMPÉRATIF = Present tense nous form — NO changes:</strong><br>
+→ Nous mangeons → <strong>Mangeons !</strong><br>
+→ Nous allons → <strong>Allons !</strong><br>
+→ Nous prenons → <strong>Prenons !</strong><br>
+→ Just drop "nous" — everything else stays the same</p>
+<p><strong>🧠 Sentence 40 — "ALLONS-Y !":</strong><br>
+→ One of the <strong>most famous French expressions</strong><br>
+→ Allons (let's go) + y (there) = Let's go (there)!<br>
+→ Used to signal "Let's do this!" / "Let's get started!" / "Here we go!"<br>
+→ Compare with "Vas-y !" (Go ahead! — tu form from Step 4)</p>
+<p><strong>🧠 "On" vs. "Nous" for suggestions:</strong><br>
+→ In daily speech, the "nous" impératif is sometimes replaced by <strong>"On + present"</strong> as a suggestion:<br>
+→ → "<strong>Allons</strong> au cinéma !" (impératif — slightly formal)<br>
+→ → "<strong>On va</strong> au cinéma ?" (present with question — very casual suggestion)<br>
+→ → "<strong>On y va</strong> ?" (Let's go? — very casual)<br>
+→ The impératif nous form is <strong>correct and natural</strong> but more decisive<br>
+→ The "on" question form is softer — more like a suggestion than a command</p>
+<hr>
+<h2>🔹 BLOCK E — Negative Impératif: "Don't...!"</h2>
+<p><em>Scenario: Warnings, prohibitions, advice about what NOT to do</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English Meaning</th><th>Negation Type</th></tr></thead><tbody><tr><td>41</td><td>Ne touche pas !</td><td>Don't touch!</td><td>ne...pas</td></tr><tr><td>42</td><td>Ne bouge pas.</td><td>Don't move.</td><td>ne...pas</td></tr><tr><td>43</td><td>Ne t'inquiète pas.</td><td>Don't worry. (informal)</td><td>ne...pas + reflexive</td></tr><tr><td>44</td><td>Ne vous inquiétez pas.</td><td>Don't worry. (formal/plural)</td><td>ne...pas + reflexive</td></tr><tr><td>45</td><td>Ne fais pas de bruit.</td><td>Don't make noise.</td><td>ne...pas + de (P5)</td></tr><tr><td>46</td><td>Ne mange pas trop vite.</td><td>Don't eat too fast.</td><td>ne...pas + adverb</td></tr><tr><td>47</td><td>Ne sois pas triste.</td><td>Don't be sad.</td><td>ne...pas + irregular être</td></tr><tr><td>48</td><td>N'aie pas peur.</td><td>Don't be afraid.</td><td>ne...pas + irregular avoir</td></tr><tr><td>49</td><td>Ne pars pas sans moi.</td><td>Don't leave without me.</td><td>ne...pas + sans</td></tr><tr><td>50</td><td>Ne dis rien.</td><td>Don't say anything.</td><td>ne...rien</td></tr><tr><td>51</td><td>N'oublie pas ton passeport.</td><td>Don't forget your passport.</td><td>ne...pas</td></tr><tr><td>52</td><td>Ne regarde pas en arrière.</td><td>Don't look back.</td><td>ne...pas</td></tr><tr><td>53</td><td>N'entre jamais dans cette pièce.</td><td>Never enter this room.</td><td>ne...jamais</td></tr><tr><td>54</td><td>Ne parle à personne.</td><td>Don't talk to anyone.</td><td>ne...personne</td></tr><tr><td>55</td><td>Ne changeons rien.</td><td>Let's not change anything.</td><td>ne...rien (nous form)</td></tr></tbody></table>
+<p><strong>🧠 NEGATIVE IMPÉRATIF STRUCTURE:</strong></p>
+<code>NE + VERB (impératif form) + PAS/PLUS/JAMAIS/RIEN + rest</code>
+<p>→ Same negation sandwich as always (Project 5)<br>
+→ Works with all negation words: pas, plus, jamais, rien, personne</p>
+<p><strong>🧠 CRITICAL — PRONOUN POSITION REVERSAL IN NEGATIVE:</strong><br>
+→ Affirmative: pronoun goes <strong>AFTER</strong> → <strong>Dis-moi !</strong> (Tell me!)<br>
+→ Negative: pronoun goes <strong>BEFORE</strong> (back to normal position) → <strong>Ne me dis pas !</strong> (Don't tell me!)<br>
+→ Also: "moi" reverts to <strong>"me"</strong> in negative</p>
+<table><thead><tr><th>Affirmative</th><th>Negative</th></tr></thead><tbody><tr><td><strong>Dis-moi !</strong> (Tell me!)</td><td><strong>Ne me dis pas !</strong> (Don't tell me!)</td></tr><tr><td><strong>Donne-moi ça !</strong> (Give me that!)</td><td><strong>Ne me donne pas ça !</strong> (Don't give me that!)</td></tr><tr><td><strong>Écoute-moi !</strong> (Listen to me!)</td><td><strong>Ne m'écoute pas !</strong> (Don't listen to me!)</td></tr></tbody></table>
+<p>→ This reversal will be fully explored in Project 19 (pronouns)<br>
+→ For now: remember <strong>affirmative = after</strong> / <strong>negative = before</strong></p>
+<p><strong>🧠 Key negative expressions from this block:</strong></p>
+<table><thead><tr><th>Expression</th><th>Meaning</th><th>Frequency</th></tr></thead><tbody><tr><td><strong>Ne t'inquiète pas.</strong></td><td>Don't worry. (tu)</td><td>Extremely common</td></tr><tr><td><strong>Ne vous inquiétez pas.</strong></td><td>Don't worry. (vous)</td><td>Extremely common</td></tr><tr><td><strong>N'aie pas peur.</strong></td><td>Don't be afraid.</td><td>Common</td></tr><tr><td><strong>Ne touche pas !</strong></td><td>Don't touch!</td><td>Common (especially with children)</td></tr><tr><td><strong>Ne bouge pas.</strong></td><td>Don't move.</td><td>Common</td></tr><tr><td><strong>N'oublie pas...</strong></td><td>Don't forget...</td><td>Very common</td></tr></tbody></table>
+<hr>
+<h2>🔹 BLOCK F — Giving Directions: Impératif in the Streets</h2>
+<p><em>Scenario: Someone asks you for directions — you guide them using commands</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English Meaning</th><th>Direction Vocabulary (P7)</th></tr></thead><tbody><tr><td>56</td><td>Tourne à gauche.</td><td>Turn left.</td><td>à gauche</td></tr><tr><td>57</td><td>Tourne à droite.</td><td>Turn right.</td><td>à droite</td></tr><tr><td>58</td><td>Continue tout droit.</td><td>Continue straight ahead.</td><td>tout droit</td></tr><tr><td>59</td><td>Prends la première rue à gauche.</td><td>Take the first street on the left.</td><td>premier + à gauche</td></tr><tr><td>60</td><td>Traverse le pont.</td><td>Cross the bridge.</td><td>traverser</td></tr><tr><td>61</td><td>Passe devant l'église.</td><td>Go past the church.</td><td>devant (P7)</td></tr><tr><td>62</td><td>Descends cette rue.</td><td>Go down this street.</td><td>descendre</td></tr><tr><td>63</td><td>Monte les escaliers.</td><td>Go up the stairs.</td><td>monter</td></tr><tr><td>64</td><td>Suis cette route pendant cinq minutes.</td><td>Follow this road for five minutes.</td><td>suivre + pendant (P8)</td></tr><tr><td>65</td><td>Arrête-toi au feu rouge.</td><td>Stop at the red light.</td><td>reflexive (preview)</td></tr></tbody></table>
+<p><strong>🧠 Direction-giving = natural impératif territory:</strong><br>
+→ Recipes and directions are the two contexts where impératif dominates completely<br>
+→ Notice: all these use the <strong>tu form</strong> — giving directions casually<br>
+→ For formal/polite directions, switch to <strong>vous form</strong>:<br>
+→ → "Tournez à gauche." / "Continuez tout droit." / "Prenez la première rue."</p>
+<p><strong>🧠 Sentence 65 — "ARRÊTE-TOI":</strong><br>
+→ Arrêter = to stop → reflexive: s'arrêter = to stop (yourself)<br>
+→ Tu form impératif of reflexive: <strong>Arrête-toi !</strong> (Stop!)<br>
+→ "Toi" is the stress pronoun for "tu" (recall Project 7 — chez toi)<br>
+→ In affirmative reflexive impératif: <strong>te → toi</strong> (placed after verb with hyphen)<br>
+→ Full reflexive verb exploration in Project 14 — this is a preview</p>
+<hr>
+<h2>🔹 BLOCK G — Advice and Encouragement: Soft Commands</h2>
+<p><em>Scenario: A friend is stressed — you give advice and encouragement using impératif</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English Meaning</th><th>Tone</th></tr></thead><tbody><tr><td>66</td><td>Calme-toi.</td><td>Calm down.</td><td>Gentle advice</td></tr><tr><td>67</td><td>Respire.</td><td>Breathe.</td><td>Calming</td></tr><tr><td>68</td><td>Prends ton temps.</td><td>Take your time.</td><td>Patient</td></tr><tr><td>69</td><td>Repose-toi un peu.</td><td>Rest a little.</td><td>Caring</td></tr><tr><td>70</td><td>Mange quelque chose.</td><td>Eat something.</td><td>Practical advice</td></tr><tr><td>71</td><td>Parle-moi de ton problème.</td><td>Tell me about your problem.</td><td>Supportive</td></tr><tr><td>72</td><td>Essaie encore.</td><td>Try again.</td><td>Encouraging</td></tr><tr><td>73</td><td>N'abandonne pas.</td><td>Don't give up.</td><td>Motivating</td></tr><tr><td>74</td><td>Sois patient.</td><td>Be patient.</td><td>Advice (irregular être)</td></tr><tr><td>75</td><td>Aie confiance.</td><td>Have confidence. / Trust.</td><td>Advice (irregular avoir)</td></tr><tr><td>76</td><td>Fais de ton mieux.</td><td>Do your best.</td><td>Encouraging</td></tr><tr><td>77</td><td>Crois en toi.</td><td>Believe in yourself.</td><td>Motivating</td></tr><tr><td>78</td><td>Ne te compare pas aux autres.</td><td>Don't compare yourself to others.</td><td>Wisdom</td></tr><tr><td>79</td><td>Profite de la vie.</td><td>Enjoy life.</td><td>Philosophical</td></tr><tr><td>80</td><td>Sois toi-même.</td><td>Be yourself.</td><td>Classic advice</td></tr></tbody></table>
+<p><strong>🧠 IMPÉRATIF = NOT JUST ORDERS — also:</strong></p>
+<table><thead><tr><th>Function</th><th>Example</th><th>Tone</th></tr></thead><tbody><tr><td><strong>Order</strong></td><td>Ferme la porte !</td><td>Authoritative</td></tr><tr><td><strong>Instruction</strong></td><td>Mélange la farine.</td><td>Neutral / teaching</td></tr><tr><td><strong>Direction</strong></td><td>Tourne à gauche.</td><td>Neutral / helpful</td></tr><tr><td><strong>Advice</strong></td><td>Repose-toi.</td><td>Caring / gentle</td></tr><tr><td><strong>Encouragement</strong></td><td>N'abandonne pas.</td><td>Motivating</td></tr><tr><td><strong>Invitation</strong></td><td>Viens chez moi !</td><td>Friendly</td></tr><tr><td><strong>Suggestion</strong></td><td>Essayons ce restaurant.</td><td>Inclusive</td></tr><tr><td><strong>Warning</strong></td><td>Ne touche pas !</td><td>Urgent</td></tr><tr><td><strong>Polite request</strong></td><td>Entrez, s'il vous plaît.</td><td>Formal polite</td></tr></tbody></table>
+<p>→ The impératif covers an enormous range of tones<br>
+→ The CONTEXT and your VOICE determine whether it's a command, advice, or gentle suggestion<br>
+→ Adding <strong>"s'il te plaît"</strong> (informal) or <strong>"s'il vous plaît"</strong> (formal) softens any command into a polite request</p>
+<p><strong>🧠 Key expressions from this block:</strong></p>
+<table><thead><tr><th>Expression</th><th>Meaning</th><th>When Used</th></tr></thead><tbody><tr><td><strong>Calme-toi.</strong></td><td>Calm down.</td><td>Someone is stressed/angry</td></tr><tr><td><strong>Sois patient(e).</strong></td><td>Be patient.</td><td>Someone is impatient</td></tr><tr><td><strong>Aie confiance.</strong></td><td>Have confidence.</td><td>Someone is doubting themselves</td></tr><tr><td><strong>Fais de ton mieux.</strong></td><td>Do your best.</td><td>Before a challenge</td></tr><tr><td><strong>Sois toi-même.</strong></td><td>Be yourself.</td><td>General life advice</td></tr><tr><td><strong>N'abandonne pas.</strong></td><td>Don't give up.</td><td>Encouragement</td></tr></tbody></table>
+<hr>
+<h2>🔹 BLOCK H — Common Impératif Expressions: Fixed Phrases You'll Hear Daily</h2>
+<p><em>Scenario: Everyday French expressions that are actually impératif forms</em></p>
+<table><thead><tr><th>#</th><th>French Expression</th><th>English Meaning</th><th>When You Hear It</th></tr></thead><tbody><tr><td>81</td><td>Tiens !</td><td>Here! / Hold this! / Hey! (surprise)</td><td>Giving something / expressing surprise</td></tr><tr><td>82</td><td>Tiens, regarde ça !</td><td>Hey, look at this!</td><td>Drawing attention</td></tr><tr><td>83</td><td>Voyons...</td><td>Let's see...</td><td>Thinking out loud</td></tr><tr><td>84</td><td>Disons...</td><td>Let's say...</td><td>Approximating / suggesting</td></tr><tr><td>85</td><td>Allez !</td><td>Come on! / Go! / Let's go!</td><td>Encouragement / impatience</td></tr><tr><td>86</td><td>Vas-y !</td><td>Go ahead! / Go for it!</td><td>Encouraging action</td></tr><tr><td>87</td><td>Allons-y !</td><td>Let's go!</td><td>Starting something</td></tr><tr><td>88</td><td>Tais-toi !</td><td>Shut up! / Be quiet!</td><td>Telling someone to be quiet (direct)</td></tr><tr><td>89</td><td>Attends, attends...</td><td>Wait, wait...</td><td>Asking for a moment to think</td></tr><tr><td>90</td><td>Écoute...</td><td>Listen... / Look...</td><td>Starting a serious conversation</td></tr><tr><td>91</td><td>Excuse-moi.</td><td>Excuse me.</td><td>Getting attention / apologizing</td></tr><tr><td>92</td><td>Excusez-moi.</td><td>Excuse me. (formal)</td><td>Same — formal register</td></tr><tr><td>93</td><td>Dis donc !</td><td>Hey! / Well! / Say!</td><td>Expressing surprise</td></tr><tr><td>94</td><td>Imagine un peu...</td><td>Just imagine...</td><td>Storytelling opener</td></tr><tr><td>95</td><td>Laisse tomber.</td><td>Drop it. / Forget about it. / Never mind.</td><td>Giving up on a topic</td></tr></tbody></table>
+<p><strong>🧠 EXPRESSIONS THAT DON'T "FEEL" LIKE COMMANDS:</strong><br>
+→ Many daily French expressions are technically impératif forms<br>
+→ But they've become <strong>discourse markers</strong> — they organize conversation, not give orders</p>
+<table><thead><tr><th>Expression</th><th>Literal Command</th><th>Actual Daily Use</th></tr></thead><tbody><tr><td><strong>Tiens !</strong></td><td>Hold!</td><td>Surprise / Giving something</td></tr><tr><td><strong>Voyons...</strong></td><td>Let's see...</td><td>Thinking / Considering</td></tr><tr><td><strong>Disons...</strong></td><td>Let's say...</td><td>Approximating</td></tr><tr><td><strong>Allez !</strong></td><td>Go!</td><td>Encouragement / "Come on!"</td></tr><tr><td><strong>Écoute...</strong></td><td>Listen!</td><td>"Look..." / "Here's the thing..."</td></tr><tr><td><strong>Attends...</strong></td><td>Wait!</td><td>"Hold on..." / "Let me think..."</td></tr><tr><td><strong>Dis donc !</strong></td><td>Say then!</td><td>"Hey!" / "Wow!" (surprise)</td></tr></tbody></table>
+<p>→ These are NOT commands in practice — they're <strong>conversation tools</strong><br>
+→ You'll hear them <strong>dozens of times per day</strong> in French conversation<br>
+→ Full discourse marker exploration in Project 43 — for now, absorb them</p>
+<p><strong>🧠 Sentence 95 — "LAISSE TOMBER":</strong><br>
+→ Literally: "Let fall" / "Drop"<br>
+→ Actual meaning: "Forget about it" / "Never mind" / "Drop the subject"<br>
+→ Extremely common in casual French<br>
+→ → "Tu comprends ?" "Non." "Bon, <strong>laisse tomber</strong>." (You understand? No. OK, never mind.)</p>
+<hr>
+<h2>🔹 BLOCK I — Impératif + S'il te plaît / S'il vous plaît: Polite Requests</h2>
+<p><em>Scenario: Transforming commands into polite requests by adding "please"</em></p>
+<table><thead><tr><th>#</th><th>Direct Command</th><th>Polite Request</th><th>English</th></tr></thead><tbody><tr><td>96a</td><td>Ferme la porte.</td><td>96b</td><td>Ferme la porte, <strong>s'il te plaît</strong>.</td></tr><tr><td></td><td>Close the door.</td><td></td><td>Close the door, please. (tu)</td></tr><tr><td>97a</td><td>Passez-moi le sel.</td><td>97b</td><td>Passez-moi le sel, <strong>s'il vous plaît</strong>.</td></tr><tr><td></td><td>Pass me the salt.</td><td></td><td>Pass me the salt, please. (vous)</td></tr><tr><td>98a</td><td>Attends une minute.</td><td>98b</td><td>Attends une minute, <strong>s'il te plaît</strong>.</td></tr><tr><td></td><td>Wait a minute.</td><td></td><td>Wait a minute, please. (tu)</td></tr><tr><td>99a</td><td>Répétez.</td><td>99b</td><td>Répétez, <strong>s'il vous plaît</strong>.</td></tr><tr><td></td><td>Repeat.</td><td></td><td>Repeat, please. (vous)</td></tr><tr><td>100a</td><td>Aide-moi.</td><td>100b</td><td>Aide-moi, <strong>s'il te plaît</strong>.</td></tr><tr><td></td><td>Help me.</td><td></td><td>Help me, please. (tu)</td></tr></tbody></table>
+<p><strong>🧠 S'IL TE PLAÎT vs. S'IL VOUS PLAÎT:</strong></p>
+<table><thead><tr><th>Expression</th><th>Register</th><th>Who You're Talking To</th></tr></thead><tbody><tr><td><strong>S'il te plaît</strong> (STP)</td><td>Informal</td><td>Friends, family, children, peers</td></tr><tr><td><strong>S'il vous plaît</strong> (SVP)</td><td>Formal / Plural</td><td>Strangers, elders, groups, professional</td></tr></tbody></table>
+<p>→ Literally: "If it pleases you"<br>
+→ Can go at the <strong>end</strong> or <strong>beginning</strong> of the command:<br>
+→ → "Ferme la porte, <strong>s'il te plaît</strong>." (end — most common)<br>
+→ → "<strong>S'il te plaît</strong>, ferme la porte." (beginning — slightly more urgent/begging)<br>
+→ Adding s'il te/vous plaît transforms ANY command into a polite request<br>
+→ Without it, commands can sound blunt (fine between close friends, but risky with others)</p>
+<hr>
+<h2>🔹 BLOCK J — Full Day of Impératif: All Forms in Real Life</h2>
+<p><em>Scenario: A complete day where you use impératif in every situation</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>Form</th><th>Situation</th></tr></thead><tbody><tr><td>101</td><td>Réveille-toi, il est huit heures !</td><td>Tu (reflexive)</td><td>Waking someone up</td></tr><tr><td>102</td><td>Dépêche-toi, on va être en retard !</td><td>Tu (reflexive)</td><td>Rushing</td></tr><tr><td>103</td><td>Prends ton petit-déjeuner.</td><td>Tu</td><td>Morning routine</td></tr><tr><td>104</td><td>N'oublie pas tes clés.</td><td>Tu (negative)</td><td>Leaving the house</td></tr><tr><td>105</td><td>Allons-y !</td><td>Nous</td><td>Departing together</td></tr><tr><td>106</td><td>Excusez-moi, tournez à droite après le feu.</td><td>Vous</td><td>Giving directions to stranger</td></tr><tr><td>107</td><td>Entrez et asseyez-vous, s'il vous plaît.</td><td>Vous</td><td>Arriving at school</td></tr><tr><td>108</td><td>Écoutez bien et prenez des notes.</td><td>Vous</td><td>Teacher's instruction</td></tr><tr><td>109</td><td>Essaie encore, tu vas y arriver !</td><td>Tu + futur proche (P12)</td><td>Encouragement</td></tr><tr><td>110</td><td>Allons manger, j'ai faim !</td><td>Nous</td><td>Lunchtime suggestion</td></tr><tr><td>111</td><td>Goûte ça, c'est délicieux !</td><td>Tu</td><td>Sharing food</td></tr><tr><td>112</td><td>Ne mange pas trop vite.</td><td>Tu (negative)</td><td>Friendly advice</td></tr><tr><td>113</td><td>Appelle-moi ce soir.</td><td>Tu + pronoun</td><td>Making plans</td></tr><tr><td>114</td><td>Ne t'inquiète pas, ça va aller.</td><td>Tu (neg + reflexive) + futur proche</td><td>Reassurance</td></tr><tr><td>115</td><td>Soyez prudents sur la route.</td><td>Vous (irregular être)</td><td>Safety warning</td></tr></tbody></table>
+<hr>
+<h1>✅ WHAT SHOULD DO</h1>
+<p>→ <strong>Memorize the -ER verb rule:</strong> drop the -s in tu form → Tu parles → <strong>Parle !</strong><br>
+→ <strong>Remember -IR and -RE keep the -s</strong> in tu form → Tu finis → <strong>Finis !</strong> / Tu attends → <strong>Attends !</strong><br>
+→ <strong>Memorize the 4 irregulars:</strong> être (sois/soyons/soyez), avoir (aie/ayons/ayez), savoir (sache/sachons/sachez), aller (va/allons/allez)<br>
+→ <strong>Learn "Vas-y !" and "Allons-y !"</strong> — you'll use them daily<br>
+→ <strong>Add "s'il te plaît / s'il vous plaît"</strong> to soften any command into a polite request<br>
+→ <strong>Learn the discourse markers</strong> (Tiens ! Voyons... Écoute... Allez ! Dis donc !) — they're everywhere in spoken French<br>
+→ <strong>Practice negative impératif</strong> — Ne + verb + pas — same sandwich as always<br>
+→ <strong>Remember pronoun position flip</strong> — affirmative: after verb (Dis-<strong>moi</strong>) / negative: before verb (<strong>Ne me</strong> dis pas)<br>
+→ <strong>Connect to Project 2</strong> — impératif forms come directly from present tense<br>
+→ <strong>Connect to Project 5</strong> — negation rules are identical<br>
+→ <strong>Connect to Project 7</strong> — direction vocabulary (à gauche, à droite, tout droit) combines with impératif</p>
+<hr>
+<h1>❌ WHAT SHOULD NOT DO</h1>
+<p>→ ❌ Do NOT keep the -s in tu form of -ER verbs → <del>"Manges !"</del> → <strong>"Mange !"</strong><br>
+→ ❌ EXCEPT before y and en → <del>"Va-y !"</del> → <strong>"Vas-y !"</strong> (the -s returns)<br>
+→ ❌ Do NOT use subject pronouns → <del>"Tu mange !"</del> → <strong>"Mange !"</strong> (no tu)<br>
+→ ❌ Do NOT use impératif with il/elle/ils/elles → there's no third-person imperative in French<br>
+→ → You can't say <del>"Mange il !"</del> → use "Qu'il mange !" (subjunctive — Project 31)<br>
+→ ❌ Do NOT use present tense forms for être/avoir/savoir impératif → <del>"Es courageux !"</del> → <strong>"Sois courageux !"</strong><br>
+→ ❌ Do NOT put pronouns BEFORE the verb in affirmative impératif → <del>"Me dis !"</del> → <strong>"Dis-moi !"</strong><br>
+→ ❌ Do NOT put pronouns AFTER the verb in negative impératif → <del>"Ne dis-moi pas !"</del> → <strong>"Ne me dis pas !"</strong><br>
+→ ❌ Do NOT use impératif for polite requests without softening → bare commands to strangers can sound rude → add <strong>s'il vous plaît</strong><br>
+→ ❌ Do NOT confuse impératif with infinitif in written instructions → Recipe books use BOTH:<br>
+→ → Impératif: "<strong>Mélangez</strong> la farine." (addressed to "you")<br>
+→ → Infinitif: "<strong>Mélanger</strong> la farine." (impersonal instruction)<br>
+→ → Both are correct in recipes — but impératif is more personal</p>
+<hr>
+<h1>🔀 WHEN TO USE WHAT</h1>
+<h2>Choosing the Right Impératif Form</h2>
+<table><thead><tr><th>Talking To</th><th>Form</th><th>Example</th></tr></thead><tbody><tr><td><strong>One friend / child / peer</strong></td><td>Tu form</td><td><strong>Mange !</strong> / <strong>Viens !</strong></td></tr><tr><td><strong>One stranger / elder / boss</strong></td><td>Vous form</td><td><strong>Mangez !</strong> / <strong>Venez !</strong></td></tr><tr><td><strong>A group of people</strong></td><td>Vous form</td><td><strong>Écoutez !</strong> / <strong>Regardez !</strong></td></tr><tr><td><strong>"Let's..." (including yourself)</strong></td><td>Nous form</td><td><strong>Mangeons !</strong> / <strong>Allons !</strong></td></tr></tbody></table>
+<h2>Choosing the Right Tone</h2>
+<table><thead><tr><th>Desired Tone</th><th>Strategy</th><th>Example</th></tr></thead><tbody><tr><td><strong>Direct command</strong></td><td>Impératif alone</td><td>Ferme la porte.</td></tr><tr><td><strong>Polite request</strong></td><td>Impératif + s'il te/vous plaît</td><td>Ferme la porte, s'il te plaît.</td></tr><tr><td><strong>Very polite request</strong></td><td>Conditionnel (P17)</td><td>Tu pourrais fermer la porte ?</td></tr><tr><td><strong>Gentle suggestion</strong></td><td>Nous form or On + question</td><td>Allons au cinéma ! / On va au cinéma ?</td></tr><tr><td><strong>Urgent warning</strong></td><td>Impératif + exclamation</td><td>Attention ! Ne touche pas !</td></tr><tr><td><strong>Soft advice</strong></td><td>Impératif + gentle tone</td><td>Repose-toi un peu.</td></tr></tbody></table>
+<hr>
+<h1>🚫 WHEN NOT TO USE</h1>
+<p>→ Do NOT use impératif when you should be <strong>polite and indirect</strong> → with strangers, use conditionnel (Project 17): "Pourriez-vous fermer la porte ?" instead of "Fermez la porte !"<br>
+→ Do NOT use impératif for <strong>third persons</strong> (he, she, they) → French has no third-person imperative → use subjunctive construction (Project 31): "Qu'il parte !" (Let him leave!)<br>
+→ Do NOT use impératif for <strong>past commands</strong> → "I told you to eat" = reported speech (Project 25), not impératif<br>
+→ Do NOT use impératif when making <strong>general rules</strong> → use "il faut" (Project 6): "Il faut manger" (One must eat) vs. "Mange !" (Eat! — directed at someone)<br>
+→ Do NOT use impératif to describe <strong>what you do</strong> → "Je mange" (I eat) ≠ "Mange !" (Eat!)<br>
+→ Do NOT overuse impératif in French culture → French people soften commands more than English speakers → use questions, conditionnel, or s'il vous plaît frequently</p>
+<hr>
+<h1>⚠️ COMMON PITFALLS AND FAILURE MODES</h1>
+<table><thead><tr><th>Pitfall</th><th>What Learners Do Wrong</th><th>Correct Version</th><th>Why</th></tr></thead><tbody><tr><td><strong>-ER verb -s kept</strong></td><td>Manges ! / Parles !</td><td><strong>Mange !</strong> / <strong>Parle !</strong></td><td>-ER tu impératif drops the -s</td></tr><tr><td><strong>-s dropped from -IR/-RE</strong></td><td>Fini ! / Attend !</td><td><strong>Finis !</strong> / <strong>Attends !</strong></td><td>Only -ER verbs drop the -s</td></tr><tr><td><strong>Subject pronoun included</strong></td><td>Tu mange !</td><td><strong>Mange !</strong></td><td>No subject pronoun in impératif</td></tr><tr><td><strong>Irregular être forgotten</strong></td><td>Es courageux !</td><td><strong>Sois</strong> courageux !</td><td>Être impératif = sois/soyons/soyez</td></tr><tr><td><strong>Irregular avoir forgotten</strong></td><td>As confiance !</td><td><strong>Aie</strong> confiance !</td><td>Avoir impératif = aie/ayons/ayez</td></tr><tr><td><strong>Va + y without -s</strong></td><td>Va-y !</td><td><strong>Vas-y !</strong></td><td>-s returns before y and en</td></tr><tr><td><strong>Pronoun before verb (affirmative)</strong></td><td>Me donne ça !</td><td><strong>Donne-moi</strong> ça !</td><td>Affirmative = pronoun AFTER verb</td></tr><tr><td><strong>Pronoun after verb (negative)</strong></td><td>Ne donne-moi pas !</td><td><strong>Ne me donne pas !</strong></td><td>Negative = pronoun BEFORE verb (normal position)</td></tr><tr><td><strong>Moi in negative</strong></td><td>Ne moi dis pas !</td><td><strong>Ne me dis pas !</strong></td><td>In negative, moi reverts to me</td></tr><tr><td><strong>Third person impératif</strong></td><td>Mange il !</td><td>No direct form — use "Qu'il mange !"</td><td>No third-person impératif exists</td></tr><tr><td><strong>Too direct with strangers</strong></td><td>Donnez-moi un café.</td><td>Donnez-moi un café, <strong>s'il vous plaît</strong>.</td><td>Add s'il vous plaît for politeness</td></tr></tbody></table>
+<hr>
+<h1>🔑 KEY TAKEAWAY</h1>
+<blockquote>
+<p><strong>Project 9 → What HAPPENED (passé composé)</strong><br>
+<strong>Project 10 → How things WERE (imparfait)</strong><br>
+<strong>Project 11 → Layered storytelling (PC + IMP together)</strong><br>
+<strong>Project 12 → What's GOING TO happen (futur proche)</strong><br>
+<strong>Project 13 → TELLING people what to do (impératif)</strong></p>
+<p>The impératif has only <strong>3 forms</strong> — the simplest conjugation in French:<br>
+→ <strong>Tu form:</strong> Present tu minus subject (and minus -s for -ER verbs)<br>
+→ <strong>Nous form:</strong> Present nous minus subject → "Let's..."<br>
+→ <strong>Vous form:</strong> Present vous minus subject → polite/plural commands</p>
+<p>Four irregular verbs: <strong>être</strong> (sois), <strong>avoir</strong> (aie), <strong>savoir</strong> (sache), <strong>aller</strong> (va)</p>
+<p>Key rules:</p>
+<ol>
+<li><strong>No subject pronoun</strong> in impératif</li>
+<li><strong>-ER verbs drop the -s</strong> in tu form (but it returns before y/en)</li>
+<li><strong>Pronouns flip position:</strong> after verb (affirmative) / before verb (negative)</li>
+<li><strong>Add s'il te/vous plaît</strong> to soften any command into a polite request</li>
+</ol>
+<p><strong>You can now DIRECT people:</strong><br>
+→ Give instructions, directions, advice, encouragement, warnings<br>
+→ Suggest activities ("Let's go!"), refuse politely ("Don't worry!")</p>
+<p><strong>But you keep saying "je" for everything:</strong><br>
+→ "I wash" / "I get up" / "I dress" — English uses separate words<br>
+→ French uses <strong>reflexive verbs</strong> — "je ME lave" / "je ME lève" / "je M'habille"<br>
+→ These verbs where the action reflects back onto yourself are EVERYWHERE in daily French</p>
+</blockquote>
+<hr>
+<h1>🌉 BRIDGE TO PROJECT 14</h1>
+<blockquote>
+<p>You can now give commands: <strong>"Lève-toi !"</strong> (Get up!) / <strong>"Dépêche-toi !"</strong> (Hurry up!)<br>
+But you noticed something in these commands — the <strong>"-toi"</strong> at the end<br>
+This is a <strong>reflexive pronoun</strong> — the action reflects back onto the subject<br>
+In your morning routine, almost EVERY action is reflexive:<br>
+→ "I <strong>get up</strong>" = Je <strong>me</strong> lève / "I <strong>wash</strong>" = Je <strong>me</strong> lave / "I <strong>get dressed</strong>" = Je **m'**habille<br>
+→ Project 14: <strong>"I Wake Up, I Get Ready"</strong> unlocks <strong>reflexive verbs</strong> (verbes pronominaux)<br>
+→ These verbs are essential for describing daily routines — and they behave differently in passé composé</p>
+</blockquote>
+<hr>
+<h1>✅ PROJECT 13 COMPLETE</h1>
+<blockquote>
+<p><strong>Are you ready for PROJECT 14: "I Wake Up, I Get Ready"?</strong><br>
+→ ~100 sentences covering <strong>reflexive verbs</strong> in present, passé composé, and impératif<br>
+→ Scenario: Describing your complete morning routine in detail<br>
+→ Builds on present tense (P2), passé composé (P9), negation (P5), and impératif (P13)</p>
+</blockquote>
+</div>
+</div>
+
+<!-- ========== data-index="29" ========== -->
+
+        </div>
+
+        <div class="nav-bar">
+            <a href="project-12.html" class="nav-button prev">← Previous Chapter</a>
+            <div class="page-info">
+                <a href="index.html" class="nav-button home">📚 Table of Contents</a><br>
+                <span style="margin-top:8px;display:block">Chapter 13 of 50</span>
+            </div>
+            <a href="project-14.html" class="nav-button next">Next Chapter →</a>
+        </div>
+    </div>
+
+    
+    <div id="progress-track"><div id="progress-fill"></div></div>
+    <div id="progress-pct">0%</div>
+
+
+    <script>
+    const fill = document.getElementById('progress-fill');
+    const pct  = document.getElementById('progress-pct');
+    function updateProgress() {
+        const scrollTop = window.scrollY;
+        const docHeight = document.body.scrollHeight - window.innerHeight;
+        const scrolled  = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+        fill.style.height = scrolled + '%';
+        pct.textContent   = Math.round(scrolled) + '%';
+    }
+    window.addEventListener('scroll', updateProgress);
+    updateProgress();
+
+    document.addEventListener('keydown', function(e) {
+        if (['INPUT','TEXTAREA'].includes(document.activeElement.tagName)) return;
+        if (e.key === 'ArrowLeft') {
+            const b = document.querySelector('.nav-button.prev');
+            if (b && !b.classList.contains('disabled')) window.location.href = b.href;
+        }
+        if (e.key === 'ArrowRight') {
+            const b = document.querySelector('.nav-button.next');
+            if (b && !b.classList.contains('disabled')) window.location.href = b.href;
+        }
+    });
+    </script>
+
+</body>
+</html>

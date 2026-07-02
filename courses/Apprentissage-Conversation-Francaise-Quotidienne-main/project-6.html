@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="images/favicon.png">
+    <title>Project 6: "I Want, I Need, I Can" — French Daily Sentences</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.75;
+            color: #1a202c;
+            background-color: #f7fafc;
+        }
+        .container {
+            max-width: 1800px;
+            margin: 0 auto;
+            background: white;
+            min-height: 100vh;
+            box-shadow: 0 0 30px rgba(0,0,0,0.08);
+            padding: 48px 52px;
+        }
+        
+        .content { max-width: 1700px; margin: 0 auto; color: #1a202c; }
+        .content h1 {
+            color: #1a202c; margin: 32px 0 20px;
+            padding-bottom: 12px;
+            border-bottom: 4px solid #3b82f6;
+            font-size: 2.1em;
+            font-weight: 700;
+        }
+        .content h2 {
+            color: #1a202c; margin: 28px 0 16px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #60a5fa;
+            font-size: 1.6em;
+            font-weight: 600;
+        }
+        .content h3 { color: #1a202c; margin: 22px 0 12px; font-size: 1.3em; font-weight: 600; }
+        .content h4 { color: #2d3748; margin: 18px 0 10px; font-size: 1.1em; font-weight: 600; }
+        .content p  { margin-bottom: 16px; line-height: 1.8; color: #1a202c; }
+        .content ul, .content ol { margin: 12px 0 18px 30px; color: #1a202c; }
+        .content li { margin-bottom: 8px; line-height: 1.75; color: #1a202c; }
+        .content hr { border: none; border-top: 2px solid #e2e8f0; margin: 26px 0; }
+        .content pre {
+            background: #f7fafc !important;
+            border: 1px solid #cbd5e0 !important;
+            border-left: 4px solid #3b82f6 !important;
+            padding: 18px !important; overflow-x: auto; margin: 18px 0; border-radius: 6px;
+            font-family: 'Consolas','Monaco','Courier New',monospace !important;
+            font-size: 0.9em !important;
+        }
+        .content pre:not([style*="color"]) { color: #1a202c !important; }
+        .content code {
+            font-family: 'Consolas','Monaco','Courier New',monospace !important;
+            font-size: 0.88em !important;
+        }
+        .content code:not(pre code) {
+            background: #dbeafe !important;
+            color: #1a202c !important;
+            padding: 2px 6px;
+            border-radius: 3px;
+        }
+        .content pre code { background: transparent !important; padding: 0; }
+        .content table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+        .content th {
+            background: linear-gradient(135deg, #3b82f6 0%, #60a5fa 100%);
+            color: white; padding: 12px 16px; text-align: left;
+            font-weight: 600;
+        }
+        .content td { padding: 11px 16px; border: 1px solid #e2e8f0; color: #1a202c; }
+        .content tr:nth-child(even) td { background: #eff6ff; }
+        .content blockquote {
+            border-left: 4px solid #3b82f6; background: #eff6ff;
+            padding: 14px 20px; margin: 18px 0; border-radius: 0 6px 6px 0;
+            color: #1a202c;
+        }
+        .content strong { color: #1a202c; font-weight: 600; }
+        .px-2 { padding: 0; }
+        .chat-message { background: transparent; padding: 0; margin: 0; }
+
+        /* Bottom nav bar only */
+        .nav-bar {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 24px 0;
+            margin-top: 50px;
+            border-top: 3px solid #60a5fa;
+        }
+        .nav-button {
+            display: inline-flex; align-items: center; gap: 8px;
+            padding: 12px 26px;
+            background: linear-gradient(135deg, #3b82f6 0%, #60a5fa 100%);
+            color: white !important; text-decoration: none;
+            border-radius: 8px; font-weight: 600; font-size: 0.95em;
+            transition: all 0.2s;
+            box-shadow: 0 2px 8px rgba(59,130,246,0.35);
+        }
+        .nav-button:hover { transform: translateY(-2px); box-shadow: 0 4px 14px rgba(59,130,246,0.5); }
+        .nav-button.disabled { background: #cbd5e1; box-shadow: none; pointer-events: none; }
+        .nav-button.home {
+            background: linear-gradient(135deg, #ef4444 0%, #f87171 100%);
+            box-shadow: 0 2px 8px rgba(239,68,68,0.35);
+        }
+        .nav-button.home:hover { box-shadow: 0 4px 14px rgba(239,68,68,0.5); }
+        .page-info { color: #718096; font-size: 0.9em; text-align: center; }
+
+        /* Progress bar */
+        #progress-track {
+            position: fixed; top: 20px; right: 20px;
+            width: 10px; height: 150px;
+            background: rgba(59,130,246,0.2);
+            border: 2px solid #3b82f6;
+            border-radius: 6px; overflow: hidden; z-index: 1000;
+        }
+        #progress-fill {
+            width: 100%;
+            background: linear-gradient(180deg, #3b82f6, #2563eb);
+            height: 0%;
+            transition: height 0.15s ease;
+        }
+        #progress-pct {
+            position: fixed; top: 0px; right: 16px;
+            color: #2563eb; font-size: 14px; font-weight: bold;
+            z-index: 1001;
+            text-shadow: 0 1px 2px rgba(255,255,255,0.9);
+            line-height: 20px;
+        }
+
+    </style>
+<link rel="stylesheet" href="assets/chapters.css?v=20260421203847"><script src="assets/chapters.js?v=20260421203847" defer></script>
+</head>
+<body>
+    <div class="container">
+        <div class="content">
+            <div class="chat-message" data-index="13">
+<div class="px-2"><h1>🟢 PROJECT 6: "I Want, I Need, I Can"</h1>
+<h2><em>You're in a hotel — how do you express desires, abilities, needs, and obligations?</em></h2>
+<hr>
+<h1>🎯 THE HYPOTHETICAL PROBLEM</h1>
+<p>→ You've checked into a <strong>small hotel in Montmartre, Paris</strong><br>
+→ Your room has problems — the window doesn't open, the wifi doesn't work, you need extra towels<br>
+→ You want to change rooms, you need to make a phone call, you must leave early tomorrow<br>
+→ The breakfast buffet has options — you want some things, you'd prefer others<br>
+→ You can say who you are (Project 1), what you do (Project 2), identify things (Project 3), ask questions (Project 4), and say no (Project 5)<br>
+→ But you're STUCK because you cannot express:<br>
+→ → <strong>Desire:</strong> "I <strong>want</strong> to change rooms."<br>
+→ → <strong>Ability:</strong> "I <strong>can't</strong> open the window."<br>
+→ → <strong>Obligation:</strong> "I <strong>must</strong> leave at six."<br>
+→ → <strong>Need:</strong> "I <strong>need</strong> help."<br>
+→ → <strong>Permission:</strong> "<strong>Can I</strong> use the phone?"<br>
+→ → <strong>Polite request:</strong> "I <strong>would like</strong> a coffee." (preview of conditionnel — Project 17)<br>
+→ These are <strong>modal structures</strong> — verbs that don't describe actions themselves but describe your <strong>relationship</strong> to an action</p>
+<p><strong>The core realization:</strong><br>
+→ In Projects 1-2, you learned <strong>engine verbs</strong> (être, avoir) and <strong>action verbs</strong> (manger, parler, aller...)<br>
+→ Modal verbs are <strong>control verbs</strong> — they sit BEFORE an action verb and CONTROL it<br>
+→ "I <strong>want</strong> to eat" → vouloir (control) + manger (action)<br>
+→ "I <strong>can</strong> speak" → pouvoir (control) + parler (action)<br>
+→ The action verb stays in <strong>infinitif</strong> (dictionary form) — it does NOT conjugate<br>
+→ ONLY the modal verb conjugates<br>
+→ This is the <strong>first time you'll build two-verb sentences</strong> — a critical structural leap</p>
+<hr>
+<h1>🔍 HOW TO APPROACH IT</h1>
+<p>→ The sentence skeleton expands:</p>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>Previous:    SUBJECT + VERB + object/details
+</span>Now:         SUBJECT + MODAL VERB (conjugated) + ACTION VERB (infinitif) + object/details</code></pre></div>
+<p>→ You need <strong>four modal tools:</strong></p>
+<table><thead><tr><th>Modal Tool</th><th>French</th><th>Core Meaning</th><th>Controls</th></tr></thead><tbody><tr><td><strong>Tool 1</strong></td><td><strong>Vouloir</strong></td><td>To want</td><td>Desire / Wish</td></tr><tr><td><strong>Tool 2</strong></td><td><strong>Pouvoir</strong></td><td>To be able to / Can</td><td>Ability / Permission / Possibility</td></tr><tr><td><strong>Tool 3</strong></td><td><strong>Devoir</strong></td><td>To have to / Must</td><td>Obligation / Duty / Probability</td></tr><tr><td><strong>Tool 4</strong></td><td><strong>Avoir besoin de</strong></td><td>To need</td><td>Need / Necessity</td></tr></tbody></table>
+<p>→ Plus one <strong>bonus tool</strong> that acts like a soft modal:</p>
+<table><thead><tr><th>Bonus Tool</th><th>French</th><th>Core Meaning</th><th>Controls</th></tr></thead><tbody><tr><td><strong>Tool 5</strong></td><td><strong>Il faut</strong></td><td>One must / It is necessary</td><td>Impersonal obligation</td></tr></tbody></table>
+<hr>
+<h1>🔧 HOW CAN WE SOLVE IT</h1>
+<h2>Step 1 — VOULOIR (To Want) — Present Tense Forms</h2>
+<table><thead><tr><th>Subject</th><th>Form</th><th>Pronunciation</th></tr></thead><tbody><tr><td>Je</td><td><strong>veux</strong></td><td>"vuh"</td></tr><tr><td>Tu</td><td><strong>veux</strong></td><td>"vuh"</td></tr><tr><td>Il / Elle / On</td><td><strong>veut</strong></td><td>"vuh"</td></tr><tr><td>Nous</td><td><strong>voulons</strong></td><td>"voo-lon"</td></tr><tr><td>Vous</td><td><strong>voulez</strong></td><td>"voo-lay"</td></tr><tr><td>Ils / Elles</td><td><strong>veulent</strong></td><td>"vuhl"</td></tr></tbody></table>
+<p>→ <strong>Completely irregular</strong> — must memorize<br>
+→ Note: je veux and tu veux are <strong>identical</strong> in sound AND spelling</p>
+<hr>
+<h2>Step 2 — POUVOIR (Can / To Be Able To) — Present Tense Forms</h2>
+<table><thead><tr><th>Subject</th><th>Form</th><th>Pronunciation</th></tr></thead><tbody><tr><td>Je</td><td><strong>peux</strong></td><td>"puh"</td></tr><tr><td>Tu</td><td><strong>peux</strong></td><td>"puh"</td></tr><tr><td>Il / Elle / On</td><td><strong>peut</strong></td><td>"puh"</td></tr><tr><td>Nous</td><td><strong>pouvons</strong></td><td>"poo-von"</td></tr><tr><td>Vous</td><td><strong>pouvez</strong></td><td>"poo-vay"</td></tr><tr><td>Ils / Elles</td><td><strong>peuvent</strong></td><td>"puuv"</td></tr></tbody></table>
+<p>→ Also <strong>completely irregular</strong> — must memorize<br>
+→ Special formal variant: <strong>Puis-je ?</strong> (May I?) — only inversion form with "je" still used today</p>
+<hr>
+<h2>Step 3 — DEVOIR (Must / To Have To) — Present Tense Forms</h2>
+<table><thead><tr><th>Subject</th><th>Form</th><th>Pronunciation</th></tr></thead><tbody><tr><td>Je</td><td><strong>dois</strong></td><td>"dwah"</td></tr><tr><td>Tu</td><td><strong>dois</strong></td><td>"dwah"</td></tr><tr><td>Il / Elle / On</td><td><strong>doit</strong></td><td>"dwah"</td></tr><tr><td>Nous</td><td><strong>devons</strong></td><td>"duh-von"</td></tr><tr><td>Vous</td><td><strong>devez</strong></td><td>"duh-vay"</td></tr><tr><td>Ils / Elles</td><td><strong>doivent</strong></td><td>"dwav"</td></tr></tbody></table>
+<p>→ <strong>Irregular</strong> — same pattern as vouloir/pouvoir (singular forms differ from plural)</p>
+<hr>
+<h2>Step 4 — AVOIR BESOIN DE (To Need)</h2>
+<p>→ Not a single verb — it's a <strong>verbal expression</strong><br>
+→ Uses <strong>avoir</strong> (already learned in Project 1) + <strong>besoin</strong> (need) + <strong>de</strong> (of)<br>
+→ Conjugate <strong>avoir</strong> — the rest stays fixed</p>
+<code>Subject + AVOIR (conjugated) + BESOIN + DE + [noun / infinitif]</code>
+<table><thead><tr><th>Subject</th><th>Form</th></tr></thead><tbody><tr><td>J'</td><td><strong>ai besoin de</strong></td></tr><tr><td>Tu</td><td><strong>as besoin de</strong></td></tr><tr><td>Il / Elle / On</td><td><strong>a besoin de</strong></td></tr><tr><td>Nous</td><td><strong>avons besoin de</strong></td></tr><tr><td>Vous</td><td><strong>avez besoin de</strong></td></tr><tr><td>Ils / Elles</td><td><strong>ont besoin de</strong></td></tr></tbody></table>
+<hr>
+<h2>Step 5 — IL FAUT (One Must / It Is Necessary)</h2>
+<p>→ <strong>Impersonal</strong> — always "il faut" — NEVER changes subject<br>
+→ Like "il y a" (Project 3) — frozen form</p>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>IL FAUT + infinitif       → One must [do something]
+</span>IL FAUT + noun            → One needs [something]
+IL NE FAUT PAS + infinitif → One must not [do something]</code></pre></div>
+<hr>
+<h2>Step 6 — The Two-Verb Structure</h2>
+<p><strong>THE RULE:</strong> When a modal verb is followed by an action, the action stays in <strong>infinitif</strong></p>
+<code>MODAL (conjugated) + ACTION (infinitif)</code>
+<p>→ ✅ Je <strong>veux manger</strong>. (I want to eat.)<br>
+→ ✅ Tu <strong>peux partir</strong>. (You can leave.)<br>
+→ ✅ Il <strong>doit travailler</strong>. (He must work.)<br>
+→ ❌ <del>Je veux mange.</del> (WRONG — action verb must stay infinitif)<br>
+→ ❌ <del>Je veux manges.</del> (WRONG — never conjugate the second verb)</p>
+<hr>
+<h1>✅ WHAT COULD BE DONE — THE 100 SENTENCES</h1>
+<h2>🔹 BLOCK A — VOULOIR: Expressing Desires</h2>
+<p><em>Scenario: At the hotel — you want things, you want to do things</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English Meaning</th><th>Structure Pattern</th></tr></thead><tbody><tr><td>1</td><td>Je veux une chambre.</td><td>I want a room.</td><td>Vouloir + noun</td></tr><tr><td>2</td><td>Je veux un café.</td><td>I want a coffee.</td><td>Vouloir + noun</td></tr><tr><td>3</td><td>Tu veux du sucre ?</td><td>Do you want some sugar?</td><td>Vouloir + partitive + noun + ?</td></tr><tr><td>4</td><td>Il veut partir.</td><td>He wants to leave.</td><td>Vouloir + infinitif</td></tr><tr><td>5</td><td>Elle veut changer de chambre.</td><td>She wants to change rooms.</td><td>Vouloir + infinitif + object</td></tr><tr><td>6</td><td>On veut manger maintenant.</td><td>We want to eat now.</td><td>Vouloir + infinitif + time</td></tr><tr><td>7</td><td>Nous voulons réserver une table.</td><td>We want to reserve a table.</td><td>Vouloir + infinitif + object</td></tr><tr><td>8</td><td>Vous voulez quoi ?</td><td>What do you want?</td><td>Vouloir + quoi + ? (Project 4)</td></tr><tr><td>9</td><td>Ils veulent rester une nuit de plus.</td><td>They want to stay one more night.</td><td>Vouloir + infinitif + duration</td></tr><tr><td>10</td><td>Elles veulent visiter le musée.</td><td>They (f) want to visit the museum.</td><td>Vouloir + infinitif + object</td></tr></tbody></table>
+<p><strong>🧠 Two patterns unlocked:</strong><br>
+→ <strong>Vouloir + NOUN</strong> = wanting a THING → Je veux <strong>un café</strong>.<br>
+→ <strong>Vouloir + INFINITIF</strong> = wanting to DO something → Je veux <strong>partir</strong>.</p>
+<hr>
+<h2>🔹 BLOCK B — VOULOIR: Polite vs. Direct (The "Je voudrais" Preview)</h2>
+<p><em>Scenario: At the front desk — direct "je veux" can sound demanding</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English Meaning</th><th>Register</th></tr></thead><tbody><tr><td>11</td><td>Je veux une serviette.</td><td>I want a towel.</td><td>Direct — can sound rude</td></tr><tr><td>12</td><td>Je voudrais une serviette.</td><td>I would like a towel.</td><td>Polite — conditionnel form</td></tr><tr><td>13</td><td>Je veux parler au directeur.</td><td>I want to speak to the manager.</td><td>Direct — assertive</td></tr><tr><td>14</td><td>Je voudrais parler au directeur.</td><td>I would like to speak to the manager.</td><td>Polite — respectful</td></tr><tr><td>15</td><td>Tu veux un croissant ?</td><td>Do you want a croissant?</td><td>Casual — fine with friends</td></tr><tr><td>16</td><td>Vous voulez du thé ?</td><td>Do you want some tea?</td><td>Standard — fine in most situations</td></tr><tr><td>17</td><td>Qu'est-ce que vous voulez ?</td><td>What do you want?</td><td>Can sound confrontational</td></tr><tr><td>18</td><td>Qu'est-ce que vous voudriez ?</td><td>What would you like?</td><td>Polite alternative</td></tr><tr><td>19</td><td>Je veux bien.</td><td>I'd like that. / Yes please.</td><td>SPECIAL — actually polite!</td></tr><tr><td>20</td><td>Si tu veux.</td><td>If you want. / Sure, whatever you like.</td><td>Casual agreement expression</td></tr></tbody></table>
+<p><strong>🧠 CRITICAL POLITENESS DISCOVERY:</strong></p>
+<table><thead><tr><th>Form</th><th>Register</th><th>Social Impact</th></tr></thead><tbody><tr><td><strong>Je veux</strong></td><td>Direct</td><td>Fine with friends → can sound <strong>demanding</strong> with strangers</td></tr><tr><td><strong>Je voudrais</strong></td><td>Polite</td><td>Safe everywhere → <strong>recommended default</strong> with strangers/staff</td></tr><tr><td><strong>Je veux bien</strong></td><td>Accepting</td><td>NOT demanding → means "<strong>Yes, I'd like that</strong>" → polite acceptance</td></tr></tbody></table>
+<p>→ <strong>"Je veux bien"</strong> is a TRAP for learners:<br>
+→ → You'd think "I want well" = demanding<br>
+→ → Actually it means "Sure, I'd be happy to" / "Yes please"<br>
+→ → Someone offers you coffee → "Je veux bien !" = "Yes please!"</p>
+<p>→ <strong>"Je voudrais"</strong> = conditionnel form of vouloir<br>
+→ → Full exploration in Project 17<br>
+→ → For NOW: just memorize "je voudrais" as the polite version of "je veux"<br>
+→ → It works with the SAME structures: je voudrais + noun / je voudrais + infinitif</p>
+<p><strong>🧠 "Si tu veux" / "Si vous voulez":</strong><br>
+→ Very common expression = "If you want" / "Sure" / "It's up to you"<br>
+→ Used as casual agreement or giving someone freedom to decide</p>
+<hr>
+<h2>🔹 BLOCK C — POUVOIR: Expressing Ability</h2>
+<p><em>Scenario: Things you can and can't do in the hotel</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English Meaning</th><th>Structure Pattern</th></tr></thead><tbody><tr><td>21</td><td>Je peux ouvrir la fenêtre ?</td><td>Can I open the window?</td><td>Pouvoir + infinitif + object + ?</td></tr><tr><td>22</td><td>Tu peux m'aider ?</td><td>Can you help me?</td><td>Pouvoir + infinitif + pronoun</td></tr><tr><td>23</td><td>Il peut parler trois langues.</td><td>He can speak three languages.</td><td>Pouvoir + infinitif + object</td></tr><tr><td>24</td><td>Elle peut venir demain.</td><td>She can come tomorrow.</td><td>Pouvoir + infinitif + time</td></tr><tr><td>25</td><td>On peut manger ici ?</td><td>Can we eat here?</td><td>Pouvoir + infinitif + place + ?</td></tr><tr><td>26</td><td>Nous pouvons régler par carte.</td><td>We can pay by card.</td><td>Pouvoir + infinitif + method</td></tr><tr><td>27</td><td>Vous pouvez répéter ?</td><td>Can you repeat?</td><td>Pouvoir + infinitif + ?</td></tr><tr><td>28</td><td>Ils peuvent rester jusqu'à midi.</td><td>They can stay until noon.</td><td>Pouvoir + infinitif + time limit</td></tr><tr><td>29</td><td>Je ne peux pas dormir.</td><td>I can't sleep.</td><td>Ne + pouvoir + pas + infinitif</td></tr><tr><td>30</td><td>On ne peut pas entrer.</td><td>We can't go in.</td><td>Ne + pouvoir + pas + infinitif</td></tr></tbody></table>
+<p><strong>🧠 Structure unlocked:</strong> <code>Subject + POUVOIR (conjugated) + ACTION (infinitif) + details</code></p>
+<p><strong>🧠 Negation with modals — CRITICAL PLACEMENT:</strong><br>
+→ The negation sandwich wraps around the <strong>MODAL verb</strong> — NOT the action verb</p>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>✅ Je ne PEUX pas dormir.    (ne...pas around PEUX)
+</span>❌ Je peux ne pas dormir.    (different meaning — "I can NOT sleep" = I'm able to not sleep)</code></pre></div>
+<p>→ This placement rule applies to ALL modals: vouloir, pouvoir, devoir<br>
+→ <strong>ne</strong> before the modal → <strong>pas</strong> after the modal → infinitif stays outside the sandwich</p>
+<hr>
+<h2>🔹 BLOCK D — POUVOIR: Permission vs. Ability vs. Possibility</h2>
+<p><em>Scenario: Same verb — three different meanings depending on context</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English Meaning</th><th>Pouvoir Means</th></tr></thead><tbody><tr><td>31</td><td>Je peux nager.</td><td>I can swim. (I know how.)</td><td><strong>Ability</strong> — physical skill</td></tr><tr><td>32</td><td>Je peux utiliser ton téléphone ?</td><td>Can I use your phone?</td><td><strong>Permission</strong> — asking if allowed</td></tr><tr><td>33</td><td>Il peut pleuvoir demain.</td><td>It can rain tomorrow.</td><td><strong>Possibility</strong> — maybe it will happen</td></tr><tr><td>34</td><td>Tu peux entrer.</td><td>You can come in. (You're allowed.)</td><td><strong>Permission</strong> — granting</td></tr><tr><td>35</td><td>Elle peut courir très vite.</td><td>She can run very fast.</td><td><strong>Ability</strong> — capability</td></tr><tr><td>36</td><td>Ça peut arriver.</td><td>That can happen.</td><td><strong>Possibility</strong> — it's possible</td></tr><tr><td>37</td><td>Vous pouvez fumer ici ?</td><td>Can you smoke here? (Is it allowed?)</td><td><strong>Permission</strong> — asking about rules</td></tr><tr><td>38</td><td>On peut se voir demain ?</td><td>Can we see each other tomorrow?</td><td><strong>Possibility</strong> — scheduling</td></tr><tr><td>39</td><td>Puis-je avoir l'addition ?</td><td>May I have the bill?</td><td><strong>Permission</strong> — very formal</td></tr><tr><td>40</td><td>Est-ce que je peux vous aider ?</td><td>Can I help you?</td><td><strong>Permission</strong> — offering help</td></tr></tbody></table>
+<p><strong>🧠 THREE faces of POUVOIR:</strong></p>
+<table><thead><tr><th>Face</th><th>Meaning</th><th>Example</th><th>Context Clue</th></tr></thead><tbody><tr><td><strong>Ability</strong></td><td>I am physically/mentally capable</td><td>Je peux nager.</td><td>Talking about skills</td></tr><tr><td><strong>Permission</strong></td><td>Am I / Are you allowed?</td><td>Je peux entrer ?</td><td>Asking about rules or social norms</td></tr><tr><td><strong>Possibility</strong></td><td>It might happen</td><td>Il peut pleuvoir.</td><td>Talking about future events / chances</td></tr></tbody></table>
+<p>→ Same verb — context tells you which meaning<br>
+→ English uses different words: "can" (ability), "may" (permission), "might" (possibility)<br>
+→ French uses <strong>pouvoir</strong> for ALL THREE</p>
+<p><strong>🧠 Sentence 39 — "Puis-je":</strong><br>
+→ Special formal inversion form of "je peux"<br>
+→ "Puis-je" is the ONLY common surviving "je" inversion in modern French<br>
+→ Used in restaurants, formal settings, customer service<br>
+→ Recall from Project 4: inversion with "je" is normally avoided — this is the exception</p>
+<hr>
+<h2>🔹 BLOCK E — DEVOIR: Expressing Obligation</h2>
+<p><em>Scenario: Things you must do — checkout times, rules, plans you committed to</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English Meaning</th><th>Structure Pattern</th></tr></thead><tbody><tr><td>41</td><td>Je dois partir à six heures.</td><td>I must leave at six o'clock.</td><td>Devoir + infinitif + time</td></tr><tr><td>42</td><td>Tu dois réserver avant.</td><td>You must book in advance.</td><td>Devoir + infinitif + time adverb</td></tr><tr><td>43</td><td>Il doit travailler demain.</td><td>He has to work tomorrow.</td><td>Devoir + infinitif + time</td></tr><tr><td>44</td><td>Elle doit appeler sa mère.</td><td>She has to call her mother.</td><td>Devoir + infinitif + object</td></tr><tr><td>45</td><td>On doit payer maintenant ?</td><td>Do we have to pay now?</td><td>Devoir + infinitif + time + ?</td></tr><tr><td>46</td><td>Nous devons quitter la chambre avant midi.</td><td>We must leave the room before noon.</td><td>Devoir + infinitif + object + time limit</td></tr><tr><td>47</td><td>Vous devez montrer votre passeport.</td><td>You must show your passport.</td><td>Devoir + infinitif + object</td></tr><tr><td>48</td><td>Ils doivent arriver à l'heure.</td><td>They must arrive on time.</td><td>Devoir + infinitif + time expression</td></tr><tr><td>49</td><td>Je ne dois pas oublier.</td><td>I must not forget.</td><td>Ne + devoir + pas + infinitif</td></tr><tr><td>50</td><td>Tu ne dois pas faire ça.</td><td>You must not do that.</td><td>Ne + devoir + pas + infinitif</td></tr></tbody></table>
+<p><strong>🧠 Structure confirmed:</strong> <code>Subject + DEVOIR (conjugated) + ACTION (infinitif) + details</code></p>
+<hr>
+<h2>🔹 BLOCK F — DEVOIR: Obligation vs. Probability</h2>
+<p><em>Scenario: Same verb — but context shifts the meaning</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English Meaning</th><th>Devoir Means</th></tr></thead><tbody><tr><td>51</td><td>Je dois travailler.</td><td>I have to work.</td><td><strong>Obligation</strong> — it's required</td></tr><tr><td>52</td><td>Tu dois être fatigué.</td><td>You must be tired.</td><td><strong>Probability</strong> — I assume so</td></tr><tr><td>53</td><td>Il doit faire froid dehors.</td><td>It must be cold outside.</td><td><strong>Probability</strong> — logical guess</td></tr><tr><td>54</td><td>Elle doit avoir trente ans.</td><td>She must be thirty years old.</td><td><strong>Probability</strong> — estimation</td></tr><tr><td>55</td><td>Ça doit être difficile.</td><td>That must be difficult.</td><td><strong>Probability</strong> — empathy</td></tr><tr><td>56</td><td>Ils doivent être en retard.</td><td>They must be running late.</td><td><strong>Probability</strong> — deduction</td></tr><tr><td>57</td><td>On doit payer avant midi.</td><td>We have to pay before noon.</td><td><strong>Obligation</strong> — rule</td></tr><tr><td>58</td><td>Tu dois avoir raison.</td><td>You must be right.</td><td><strong>Probability</strong> — agreeing tentatively</td></tr><tr><td>59</td><td>Il doit y avoir une erreur.</td><td>There must be a mistake.</td><td><strong>Probability</strong> — suspecting</td></tr><tr><td>60</td><td>Ce doit être ici.</td><td>This must be the place.</td><td><strong>Probability</strong> — guessing</td></tr></tbody></table>
+<p><strong>🧠 TWO faces of DEVOIR:</strong></p>
+<table><thead><tr><th>Face</th><th>Meaning</th><th>Example</th><th>Context Clue</th></tr></thead><tbody><tr><td><strong>Obligation</strong></td><td>I have to / I must (it's required)</td><td>Je dois partir.</td><td>Rules, schedules, duties</td></tr><tr><td><strong>Probability</strong></td><td>It must be / Probably is</td><td>Tu dois être fatigué.</td><td>Guessing, assuming, deducing</td></tr></tbody></table>
+<p>→ When devoir + <strong>action infinitif</strong> → usually <strong>obligation</strong> → Je dois travailler.<br>
+→ When devoir + <strong>être / avoir + description</strong> → usually <strong>probability</strong> → Tu dois être fatigué.<br>
+→ Context is king — same structure, different meaning</p>
+<p><strong>🧠 Compare with POUVOIR (Block D):</strong><br>
+→ Pouvoir = ability / permission / possibility<br>
+→ Devoir = obligation / probability<br>
+→ Both are <strong>context-dependent</strong> — this is a hallmark of French modals</p>
+<hr>
+<h2>🔹 BLOCK G — AVOIR BESOIN DE: Expressing Needs</h2>
+<p><em>Scenario: At the hotel — you need specific things and need to do specific things</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English Meaning</th><th>Structure Pattern</th></tr></thead><tbody><tr><td>61</td><td>J'ai besoin d'aide.</td><td>I need help.</td><td>Avoir besoin + de + noun</td></tr><tr><td>62</td><td>J'ai besoin d'une serviette.</td><td>I need a towel.</td><td>Avoir besoin + de + une + noun</td></tr><tr><td>63</td><td>Tu as besoin de quelque chose ?</td><td>Do you need something?</td><td>Avoir besoin + de + quelque chose + ?</td></tr><tr><td>64</td><td>Il a besoin de dormir.</td><td>He needs to sleep.</td><td>Avoir besoin + de + infinitif</td></tr><tr><td>65</td><td>Elle a besoin de temps.</td><td>She needs time.</td><td>Avoir besoin + de + noun</td></tr><tr><td>66</td><td>On a besoin de parler.</td><td>We need to talk.</td><td>Avoir besoin + de + infinitif</td></tr><tr><td>67</td><td>Nous avons besoin d'informations.</td><td>We need information.</td><td>Avoir besoin + d' + noun</td></tr><tr><td>68</td><td>Vous avez besoin d'un médecin ?</td><td>Do you need a doctor?</td><td>Avoir besoin + d' + un + noun + ?</td></tr><tr><td>69</td><td>Ils ont besoin de repos.</td><td>They need rest.</td><td>Avoir besoin + de + noun</td></tr><tr><td>70</td><td>Je n'ai pas besoin de ça.</td><td>I don't need that.</td><td>Negation: ne + avoir + pas + besoin + de</td></tr></tbody></table>
+<p><strong>🧠 Two patterns:</strong><br>
+→ <strong>Avoir besoin de + NOUN</strong> = needing a THING → J'ai besoin <strong>d'aide</strong>.<br>
+→ <strong>Avoir besoin de + INFINITIF</strong> = needing to DO something → J'ai besoin <strong>de dormir</strong>.</p>
+<p><strong>🧠 Negation placement:</strong><br>
+→ The negation wraps around <strong>avoir</strong> (the conjugated verb):</p>
+<code>Je N'ai PAS besoin de ça.</code>
+<p>→ NOT: <del>Je n'ai besoin pas de ça.</del><br>
+→ Rule from Project 5 confirmed: ne...pas always sandwiches the <strong>conjugated verb</strong></p>
+<p><strong>🧠 Article behavior after "besoin de":</strong><br>
+→ "De" is already part of the expression → articles can merge or simplify:<br>
+→ J'ai besoin <strong>de</strong> + <strong>le</strong> repos → J'ai besoin <strong>du</strong> repos (sometimes)<br>
+→ J'ai besoin <strong>de</strong> + <strong>la</strong> patience → J'ai besoin <strong>de</strong> patience (often drops article with abstract nouns)<br>
+→ J'ai besoin <strong>d'</strong> + <strong>un</strong> médecin → J'ai besoin <strong>d'un</strong> médecin<br>
+→ At this level: don't overthink → follow the examples → the pattern will become natural</p>
+<hr>
+<h2>🔹 BLOCK H — IL FAUT: Impersonal Obligation</h2>
+<p><em>Scenario: General rules, advice, what "one must do" — no specific person mentioned</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English Meaning</th><th>Structure Pattern</th></tr></thead><tbody><tr><td>71</td><td>Il faut réserver.</td><td>One must book. / You have to book.</td><td>Il faut + infinitif</td></tr><tr><td>72</td><td>Il faut payer avant.</td><td>You have to pay first.</td><td>Il faut + infinitif + time</td></tr><tr><td>73</td><td>Il faut montrer le passeport.</td><td>You have to show the passport.</td><td>Il faut + infinitif + object</td></tr><tr><td>74</td><td>Il faut arriver à l'heure.</td><td>You must arrive on time.</td><td>Il faut + infinitif + time expression</td></tr><tr><td>75</td><td>Il faut faire attention.</td><td>You must be careful.</td><td>Il faut + faire + noun (recall Project 2)</td></tr><tr><td>76</td><td>Il faut du temps.</td><td>It takes time. / Time is needed.</td><td>Il faut + partitive + noun</td></tr><tr><td>77</td><td>Il faut de la patience.</td><td>Patience is needed.</td><td>Il faut + partitive + noun</td></tr><tr><td>78</td><td>Il ne faut pas toucher.</td><td>One must not touch.</td><td>Il ne faut pas + infinitif</td></tr><tr><td>79</td><td>Il ne faut pas oublier.</td><td>One must not forget.</td><td>Il ne faut pas + infinitif</td></tr><tr><td>80</td><td>Il ne faut pas être en retard.</td><td>One must not be late.</td><td>Il ne faut pas + être + expression</td></tr></tbody></table>
+<p><strong>🧠 IL FAUT — Two patterns:</strong><br>
+→ <strong>Il faut + infinitif</strong> = one must DO something → Il faut <strong>réserver</strong>.<br>
+→ <strong>Il faut + noun</strong> = something is NEEDED → Il faut <strong>du temps</strong>.</p>
+<p><strong>🧠 IL FAUT vs. DEVOIR — When to use which:</strong></p>
+<table><thead><tr><th>IL FAUT</th><th>DEVOIR</th></tr></thead><tbody><tr><td><strong>Impersonal</strong> — no specific subject</td><td><strong>Personal</strong> — specific person</td></tr><tr><td>Il faut partir. (One must leave / We need to leave.)</td><td><strong>Je</strong> dois partir. (<strong>I</strong> must leave.)</td></tr><tr><td>General rules, advice, universal truths</td><td>Individual obligations, duties</td></tr><tr><td>Very common in spoken French</td><td>Also very common — but more personal</td></tr></tbody></table>
+<p>→ In daily speech, <strong>"il faut"</strong> is used MORE than "on doit" for general obligations<br>
+→ "Il faut manger" = You gotta eat / One must eat (general advice)<br>
+→ "Je dois manger" = I have to eat (my personal obligation)</p>
+<hr>
+<h2>🔹 BLOCK I — Combining Modals with Negation (from Project 5)</h2>
+<p><em>Scenario: Things you can't do, don't want, don't need, mustn't do at the hotel</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English Meaning</th><th>Modal + Negation</th></tr></thead><tbody><tr><td>81</td><td>Je ne veux pas partir.</td><td>I don't want to leave.</td><td>ne + vouloir + pas + infinitif</td></tr><tr><td>82</td><td>Je ne veux plus attendre.</td><td>I don't want to wait anymore.</td><td>ne + vouloir + plus + infinitif</td></tr><tr><td>83</td><td>Je ne peux pas ouvrir la porte.</td><td>I can't open the door.</td><td>ne + pouvoir + pas + infinitif</td></tr><tr><td>84</td><td>On ne peut jamais trouver de parking.</td><td>We can never find parking.</td><td>ne + pouvoir + jamais + infinitif</td></tr><tr><td>85</td><td>Tu ne dois pas faire de bruit.</td><td>You must not make noise.</td><td>ne + devoir + pas + infinitif</td></tr><tr><td>86</td><td>Elle ne veut rien manger.</td><td>She doesn't want to eat anything.</td><td>ne + vouloir + rien + infinitif</td></tr><tr><td>87</td><td>Il ne peut voir personne.</td><td>He can't see anyone.</td><td>ne + pouvoir + infinitif + personne</td></tr><tr><td>88</td><td>Je n'ai pas besoin de changer.</td><td>I don't need to change.</td><td>ne + avoir + pas + besoin + de + infinitif</td></tr><tr><td>89</td><td>Il ne faut pas exagérer.</td><td>One must not exaggerate.</td><td>ne + faut + pas + infinitif</td></tr><tr><td>90</td><td>On ne doit plus attendre.</td><td>We must not wait anymore.</td><td>ne + devoir + plus + infinitif</td></tr></tbody></table>
+<p><strong>🧠 NEGATION PLACEMENT WITH MODALS — THE MASTER RULE:</strong></p>
+<code>Subject + NE + MODAL (conjugated) + PAS/PLUS/JAMAIS + INFINITIF + rest</code>
+<p>→ Negation sandwich ALWAYS wraps the <strong>conjugated verb</strong> (the modal)<br>
+→ The infinitif comes AFTER the sandwich<br>
+→ This rule NEVER changes for standard negation</p>
+<p><strong>🧠 SPECIAL CASE — RIEN and PERSONNE with modals:</strong></p>
+<table><thead><tr><th>Negation Word</th><th>Position</th><th>Example</th></tr></thead><tbody><tr><td><strong>Rien</strong></td><td>Between modal and infinitif</td><td>Elle ne veut <strong>rien</strong> manger.</td></tr><tr><td><strong>Personne</strong></td><td>AFTER the infinitif</td><td>Il ne peut voir <strong>personne</strong>.</td></tr></tbody></table>
+<p>→ <strong>Rien</strong> squeezes INTO the sandwich (before infinitif)<br>
+→ <strong>Personne</strong> stays OUTSIDE (after infinitif)<br>
+→ This is because "rien" is a pronoun-like object / "personne" is heavier and goes at the end<br>
+→ Deep mastery of these placements → Project 39</p>
+<hr>
+<h2>🔹 BLOCK J — Full Hotel Day: All Modals in Real Context</h2>
+<p><em>Scenario: Your complete day at the hotel — from waking up to going to sleep</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>Modal Used</th><th>Situation</th></tr></thead><tbody><tr><td>91</td><td>Je dois me lever tôt demain.</td><td>Devoir — obligation</td><td>Setting alarm</td></tr><tr><td>92</td><td>J'ai besoin d'un réveil.</td><td>Avoir besoin de — need</td><td>Asking front desk</td></tr><tr><td>93</td><td>Je voudrais le petit-déjeuner en chambre.</td><td>Vouloir (polite) — desire</td><td>Room service</td></tr><tr><td>94</td><td>Est-ce que je peux avoir du café ?</td><td>Pouvoir — permission</td><td>At breakfast</td></tr><tr><td>95</td><td>Il faut quitter la chambre avant onze heures.</td><td>Il faut — impersonal rule</td><td>Hotel policy</td></tr><tr><td>96</td><td>Je ne peux pas fermer la fenêtre.</td><td>Pouvoir — inability</td><td>Room problem</td></tr><tr><td>97</td><td>Vous pouvez envoyer quelqu'un ?</td><td>Pouvoir — request</td><td>Asking for help</td></tr><tr><td>98</td><td>Je veux changer de chambre.</td><td>Vouloir — desire</td><td>Complaint</td></tr><tr><td>99</td><td>On doit payer le minibar ?</td><td>Devoir — obligation question</td><td>Checkout</td></tr><tr><td>100</td><td>Je n'ai pas besoin de reçu.</td><td>Avoir besoin de — negated need</td><td>Checkout</td></tr><tr><td>101</td><td>Il ne faut pas oublier le passeport.</td><td>Il faut — negated obligation</td><td>Leaving</td></tr><tr><td>102</td><td>Je dois prendre un taxi pour l'aéroport.</td><td>Devoir — obligation</td><td>Departure plan</td></tr><tr><td>103</td><td>Tu peux appeler un taxi ?</td><td>Pouvoir — request</td><td>Asking front desk</td></tr><tr><td>104</td><td>Je voudrais remercier tout le monde.</td><td>Vouloir (polite) — wish</td><td>Saying goodbye</td></tr></tbody></table>
+<hr>
+<h1>✅ WHAT SHOULD DO</h1>
+<p>→ <strong>Memorize "je voudrais" immediately</strong> — it's your #1 polite tool in France (restaurants, hotels, shops, everywhere)<br>
+→ <strong>Always keep the second verb in infinitif</strong> — this is non-negotiable<br>
+→ <strong>Learn the three faces of pouvoir</strong> (ability, permission, possibility) — context will guide you<br>
+→ <strong>Learn the two faces of devoir</strong> (obligation, probability) — context will guide you<br>
+→ <strong>Use "il faut" for general rules</strong> and <strong>"devoir" for personal obligations</strong><br>
+→ <strong>Practice combining modals with negation</strong> (Block I) — this is the real power of this project<br>
+→ <strong>Connect to Project 5</strong> — negation sandwich wraps the conjugated verb (here: the modal)<br>
+→ <strong>Connect to Project 2</strong> — the infinitifs used after modals are the same verbs you learned (manger, partir, dormir, etc.)</p>
+<hr>
+<h1>❌ WHAT SHOULD NOT DO</h1>
+<p>→ ❌ Do NOT conjugate the second verb → <del>"Je veux mange"</del> → "Je veux <strong>manger</strong>"<br>
+→ ❌ Do NOT say "je veux" to strangers/service staff → use <strong>"je voudrais"</strong> (polite)<br>
+→ ❌ Do NOT put negation around the infinitif → <del>"Je peux ne pas dormir"</del> has a DIFFERENT meaning (= I am capable of not sleeping)<br>
+→ ❌ Do NOT use "il faut" with a subject pronoun → <del>"Je faut partir"</del> → "<strong>Il</strong> faut partir" OR "<strong>Je</strong> dois partir"<br>
+→ ❌ Do NOT confuse "devoir" (obligation/probability) with "avoir besoin de" (need)<br>
+→ → "I must leave" = Je <strong>dois</strong> partir. (obligation — it's required)<br>
+→ → "I need to leave" = J'<strong>ai besoin de</strong> partir. (need — I feel the need)<br>
+→ ❌ Do NOT say <del>"J'ai besoin partir"</del> → always include <strong>de</strong> → "J'ai besoin <strong>de</strong> partir"</p>
+<hr>
+<h1>🔀 WHEN TO USE WHAT</h1>
+<table><thead><tr><th>You Feel...</th><th>Modal to Use</th><th>Example</th></tr></thead><tbody><tr><td><strong>Desire</strong> — I want something</td><td><strong>Vouloir</strong></td><td>Je veux un café. / Je voudrais un café.</td></tr><tr><td><strong>Ability</strong> — I can do it / I know how</td><td><strong>Pouvoir</strong></td><td>Je peux nager.</td></tr><tr><td><strong>Permission</strong> — Am I allowed?</td><td><strong>Pouvoir</strong></td><td>Je peux entrer ?</td></tr><tr><td><strong>Possibility</strong> — It might happen</td><td><strong>Pouvoir</strong></td><td>Il peut pleuvoir.</td></tr><tr><td><strong>Obligation</strong> — I have to / I must</td><td><strong>Devoir</strong></td><td>Je dois travailler.</td></tr><tr><td><strong>Probability</strong> — It probably is</td><td><strong>Devoir</strong></td><td>Tu dois être fatigué.</td></tr><tr><td><strong>Need</strong> — I need (thing or action)</td><td><strong>Avoir besoin de</strong></td><td>J'ai besoin de dormir.</td></tr><tr><td><strong>General rule</strong> — One must / You gotta</td><td><strong>Il faut</strong></td><td>Il faut réserver.</td></tr><tr><td><strong>General need</strong> — Something is needed</td><td><strong>Il faut</strong></td><td>Il faut du temps.</td></tr><tr><td><strong>Polite request</strong> — I would like</td><td><strong>Je voudrais</strong></td><td>Je voudrais une table pour deux.</td></tr></tbody></table>
+<hr>
+<h1>🚫 WHEN NOT TO USE</h1>
+<p>→ Do NOT use <strong>vouloir</strong> when you mean <strong>ability</strong> → "Je veux nager" ≠ "I can swim" → use <strong>pouvoir</strong><br>
+→ Do NOT use <strong>pouvoir</strong> when you mean <strong>obligation</strong> → "Je peux travailler" = "I can work" ≠ "I must work" → use <strong>devoir</strong><br>
+→ Do NOT use <strong>devoir</strong> when you simply <strong>want</strong> something → "Je dois un café" ❌ → "Je veux un café" ✅<br>
+→ Do NOT use <strong>il faut</strong> when the obligation is clearly personal → "Il faut que je parte" (needs subjonctif — Project 31) → at this level, say "<strong>Je dois</strong> partir"<br>
+→ Do NOT use <strong>avoir besoin de</strong> for strong obligations → "I must pay now" ≠ "I need to pay now" (in French, devoir is stronger than besoin for rules)<br>
+→ Do NOT use modals for <strong>past events</strong> yet — "I wanted to" / "I could" / "I had to" require past tenses (Projects 9-11)</p>
+<hr>
+<h1>⚠️ COMMON PITFALLS AND FAILURE MODES</h1>
+<table><thead><tr><th>Pitfall</th><th>What Learners Do Wrong</th><th>Correct Version</th><th>Why</th></tr></thead><tbody><tr><td><strong>Double conjugation</strong></td><td>Je veux mange.</td><td>Je veux <strong>manger</strong>.</td><td>Second verb stays infinitif — always</td></tr><tr><td><strong>Je veux rudeness</strong></td><td>"Je veux un café" to a waiter</td><td>"Je <strong>voudrais</strong> un café"</td><td>Je veux = demanding to strangers</td></tr><tr><td><strong>Je veux bien confusion</strong></td><td>Thinking it means "I really want"</td><td>It means "<strong>Yes please</strong>" / "I'd be happy to"</td><td>Counter-intuitive — memorize as expression</td></tr><tr><td><strong>Negation misplacement</strong></td><td>Je peux pas ne dormir.</td><td>Je <strong>ne</strong> peux <strong>pas</strong> dormir.</td><td>Sandwich wraps the modal only</td></tr><tr><td><strong>Il faut + subject</strong></td><td>Je faut partir.</td><td><strong>Il</strong> faut partir. / <strong>Je</strong> dois partir.</td><td>Il faut is impersonal — no subject change</td></tr><tr><td><strong>Missing "de" in besoin</strong></td><td>J'ai besoin dormir.</td><td>J'ai besoin <strong>de</strong> dormir.</td><td>"De" is mandatory in the expression</td></tr><tr><td><strong>Devoir = debt confusion</strong></td><td>"Je dois" thinking it means "I owe"</td><td>Both are correct — "devoir" also means "to owe"</td><td>Je dois 10 euros = I owe 10 euros / Je dois partir = I must leave</td></tr><tr><td><strong>Pouvoir meaning confusion</strong></td><td>Not knowing if "je peux" means ability or permission</td><td>Check context — skill vs. rules</td><td>Same word — three meanings</td></tr><tr><td><strong>Plus pronunciation</strong></td><td>"Je ne veux plüss attendre"</td><td>"Je ne veux <strong>plü</strong> attendre"</td><td>Negation "plus" = silent s</td></tr><tr><td><strong>Rien placement with modals</strong></td><td>Elle ne veut manger rien.</td><td>Elle ne veut <strong>rien</strong> manger.</td><td>Rien goes BEFORE the infinitif</td></tr></tbody></table>
+<hr>
+<h1>🔑 KEY TAKEAWAY</h1>
+<blockquote>
+<p><strong>Project 1 → You exist and possess. (être / avoir)</strong><br>
+<strong>Project 2 → You act. (action verbs)</strong><br>
+<strong>Project 3 → You identify the world. (c'est / il y a / articles)</strong><br>
+<strong>Project 4 → You ask questions. (3 forms + 8 question words)</strong><br>
+<strong>Project 5 → You deny, refuse, correct. (negation sandwich)</strong><br>
+<strong>Project 6 → You express desire, ability, obligation, and need. (modals)</strong></p>
+<p><strong>The two-verb structure is a MAJOR unlock:</strong></p>
+<code>Subject + MODAL (conjugated) + ACTION (infinitif)</code>
+<p>→ This pattern will appear in EVERY future project<br>
+→ Futur proche (Project 12): aller + infinitif<br>
+→ Conditional wishes (Project 17): voudrais/pourrais/devrais + infinitif<br>
+→ Past regrets (Project 35): aurais dû/pu/voulu + infinitif</p>
+<p><strong>Modals + negation</strong> from Project 5 = powerful combination:<br>
+→ "I don't want to wait anymore" = Je ne veux plus attendre.<br>
+→ "We must not forget" = Il ne faut pas oublier.</p>
+<p><strong>But all your sentences exist in a VACUUM of space.</strong><br>
+→ You can say "I want to go" — but not WHERE specifically<br>
+→ You can say "I must leave" — but not FROM WHERE or TO WHERE<br>
+→ You need <strong>prepositions of place</strong> to anchor your actions in the physical world.</p>
+</blockquote>
+<hr>
+<h1>🌉 BRIDGE TO PROJECT 7</h1>
+<blockquote>
+<p>You can now say <strong>"I want to go"</strong> and <strong>"I must leave"</strong> and <strong>"I need help"</strong><br>
+But someone asks: <strong>"Where do you live? Where are you going? Where are you coming from?"</strong><br>
+→ "I live <strong>in</strong> France" — but is it "à France" or "en France"?<br>
+→ "I'm going <strong>to</strong> the office" — but is it "à le bureau" or "au bureau"?<br>
+→ "I'm coming <strong>from</strong> the market" — but is it "de le marché" or "du marché"?<br>
+→ "I'm staying <strong>at</strong> my friend's place" — how do you say "at someone's place"?<br>
+→ Project 7: <strong>"Here, There, To, From"</strong> unlocks the <strong>preposition system for locations and directions</strong></p>
+</blockquote>
+<hr>
+<h1>✅ PROJECT 6 COMPLETE</h1>
+<blockquote>
+<p><strong>Are you ready for PROJECT 7: "Here, There, To, From"?</strong><br>
+→ ~100 sentences covering prepositions of place and direction<br>
+→ Scenario: You must explain where you live, where you're going, where you come from<br>
+→ Builds on modal structures (Project 6) + all Previous Chapters</p>
+</blockquote>
+</div>
+</div>
+
+<!-- ========== data-index="15" ========== -->
+
+        </div>
+
+        <div class="nav-bar">
+            <a href="project-5.html" class="nav-button prev">← Previous Chapter</a>
+            <div class="page-info">
+                <a href="index.html" class="nav-button home">📚 Table of Contents</a><br>
+                <span style="margin-top:8px;display:block">Chapter 6 of 50</span>
+            </div>
+            <a href="project-7.html" class="nav-button next">Next Chapter →</a>
+        </div>
+    </div>
+
+    
+    <div id="progress-track"><div id="progress-fill"></div></div>
+    <div id="progress-pct">0%</div>
+
+
+    <script>
+    const fill = document.getElementById('progress-fill');
+    const pct  = document.getElementById('progress-pct');
+    function updateProgress() {
+        const scrollTop = window.scrollY;
+        const docHeight = document.body.scrollHeight - window.innerHeight;
+        const scrolled  = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+        fill.style.height = scrolled + '%';
+        pct.textContent   = Math.round(scrolled) + '%';
+    }
+    window.addEventListener('scroll', updateProgress);
+    updateProgress();
+
+    document.addEventListener('keydown', function(e) {
+        if (['INPUT','TEXTAREA'].includes(document.activeElement.tagName)) return;
+        if (e.key === 'ArrowLeft') {
+            const b = document.querySelector('.nav-button.prev');
+            if (b && !b.classList.contains('disabled')) window.location.href = b.href;
+        }
+        if (e.key === 'ArrowRight') {
+            const b = document.querySelector('.nav-button.next');
+            if (b && !b.classList.contains('disabled')) window.location.href = b.href;
+        }
+    });
+    </script>
+
+</body>
+</html>

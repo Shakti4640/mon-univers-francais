@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="images/favicon.png">
+    <title>Project 3: "Pointing at the World" — French Daily Sentences</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.75;
+            color: #1a202c;
+            background-color: #f7fafc;
+        }
+        .container {
+            max-width: 1800px;
+            margin: 0 auto;
+            background: white;
+            min-height: 100vh;
+            box-shadow: 0 0 30px rgba(0,0,0,0.08);
+            padding: 48px 52px;
+        }
+        
+        .content { max-width: 1700px; margin: 0 auto; color: #1a202c; }
+        .content h1 {
+            color: #1a202c; margin: 32px 0 20px;
+            padding-bottom: 12px;
+            border-bottom: 4px solid #3b82f6;
+            font-size: 2.1em;
+            font-weight: 700;
+        }
+        .content h2 {
+            color: #1a202c; margin: 28px 0 16px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #60a5fa;
+            font-size: 1.6em;
+            font-weight: 600;
+        }
+        .content h3 { color: #1a202c; margin: 22px 0 12px; font-size: 1.3em; font-weight: 600; }
+        .content h4 { color: #2d3748; margin: 18px 0 10px; font-size: 1.1em; font-weight: 600; }
+        .content p  { margin-bottom: 16px; line-height: 1.8; color: #1a202c; }
+        .content ul, .content ol { margin: 12px 0 18px 30px; color: #1a202c; }
+        .content li { margin-bottom: 8px; line-height: 1.75; color: #1a202c; }
+        .content hr { border: none; border-top: 2px solid #e2e8f0; margin: 26px 0; }
+        .content pre {
+            background: #f7fafc !important;
+            border: 1px solid #cbd5e0 !important;
+            border-left: 4px solid #3b82f6 !important;
+            padding: 18px !important; overflow-x: auto; margin: 18px 0; border-radius: 6px;
+            font-family: 'Consolas','Monaco','Courier New',monospace !important;
+            font-size: 0.9em !important;
+        }
+        .content pre:not([style*="color"]) { color: #1a202c !important; }
+        .content code {
+            font-family: 'Consolas','Monaco','Courier New',monospace !important;
+            font-size: 0.88em !important;
+        }
+        .content code:not(pre code) {
+            background: #dbeafe !important;
+            color: #1a202c !important;
+            padding: 2px 6px;
+            border-radius: 3px;
+        }
+        .content pre code { background: transparent !important; padding: 0; }
+        .content table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+        .content th {
+            background: linear-gradient(135deg, #3b82f6 0%, #60a5fa 100%);
+            color: white; padding: 12px 16px; text-align: left;
+            font-weight: 600;
+        }
+        .content td { padding: 11px 16px; border: 1px solid #e2e8f0; color: #1a202c; }
+        .content tr:nth-child(even) td { background: #eff6ff; }
+        .content blockquote {
+            border-left: 4px solid #3b82f6; background: #eff6ff;
+            padding: 14px 20px; margin: 18px 0; border-radius: 0 6px 6px 0;
+            color: #1a202c;
+        }
+        .content strong { color: #1a202c; font-weight: 600; }
+        .px-2 { padding: 0; }
+        .chat-message { background: transparent; padding: 0; margin: 0; }
+
+        /* Bottom nav bar only */
+        .nav-bar {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 24px 0;
+            margin-top: 50px;
+            border-top: 3px solid #60a5fa;
+        }
+        .nav-button {
+            display: inline-flex; align-items: center; gap: 8px;
+            padding: 12px 26px;
+            background: linear-gradient(135deg, #3b82f6 0%, #60a5fa 100%);
+            color: white !important; text-decoration: none;
+            border-radius: 8px; font-weight: 600; font-size: 0.95em;
+            transition: all 0.2s;
+            box-shadow: 0 2px 8px rgba(59,130,246,0.35);
+        }
+        .nav-button:hover { transform: translateY(-2px); box-shadow: 0 4px 14px rgba(59,130,246,0.5); }
+        .nav-button.disabled { background: #cbd5e1; box-shadow: none; pointer-events: none; }
+        .nav-button.home {
+            background: linear-gradient(135deg, #ef4444 0%, #f87171 100%);
+            box-shadow: 0 2px 8px rgba(239,68,68,0.35);
+        }
+        .nav-button.home:hover { box-shadow: 0 4px 14px rgba(239,68,68,0.5); }
+        .page-info { color: #718096; font-size: 0.9em; text-align: center; }
+
+        /* Progress bar */
+        #progress-track {
+            position: fixed; top: 20px; right: 20px;
+            width: 10px; height: 150px;
+            background: rgba(59,130,246,0.2);
+            border: 2px solid #3b82f6;
+            border-radius: 6px; overflow: hidden; z-index: 1000;
+        }
+        #progress-fill {
+            width: 100%;
+            background: linear-gradient(180deg, #3b82f6, #2563eb);
+            height: 0%;
+            transition: height 0.15s ease;
+        }
+        #progress-pct {
+            position: fixed; top: 0px; right: 16px;
+            color: #2563eb; font-size: 14px; font-weight: bold;
+            z-index: 1001;
+            text-shadow: 0 1px 2px rgba(255,255,255,0.9);
+            line-height: 20px;
+        }
+
+    </style>
+<link rel="stylesheet" href="assets/chapters.css?v=20260421203847"><script src="assets/chapters.js?v=20260421203847" defer></script>
+</head>
+<body>
+    <div class="container">
+        <div class="content">
+            <div class="chat-message" data-index="7">
+<div class="px-2"><h1>🟢 PROJECT 3: "Pointing at the World"</h1>
+<h2><em>You're at a French market — how do you name, point at, and specify things?</em></h2>
+<hr>
+<h1>🎯 THE HYPOTHETICAL PROBLEM</h1>
+<p>→ Your host family takes you to <strong>Les Halles de Lyon</strong> — a famous indoor food market<br>
+→ You see hundreds of items — cheese, bread, fruit, meat, flowers, clothes<br>
+→ People around you are pointing, naming, describing, asking about things<br>
+→ You can say who you are (Project 1) and what you do (Project 2)<br>
+→ But you CANNOT yet say:<br>
+→ → "<strong>This is</strong> a cheese."<br>
+→ → "<strong>It's</strong> delicious."<br>
+→ → "<strong>These are</strong> French pastries."<br>
+→ → "<strong>There are</strong> many people here."<br>
+→ → "<strong>There is</strong> a bakery on the corner."<br>
+→ You need <strong>three new tools</strong> to point at the world and identify what exists in it</p>
+<p><strong>The core realization:</strong><br>
+→ In English, "it is" / "this is" / "that is" all feel the same<br>
+→ In French, there are <strong>distinct structures</strong> for each function<br>
+→ And the <strong>article system</strong> (a, the, some) works completely differently from English<br>
+→ If you pick the wrong article → you sound like a textbook → not a real speaker</p>
+<hr>
+<h1>🔍 HOW TO APPROACH IT</h1>
+<p>→ You need <strong>three pointing tools:</strong></p>
+<table><thead><tr><th>Tool</th><th>French</th><th>Function</th><th>English Equivalent</th></tr></thead><tbody><tr><td><strong>Tool 1</strong></td><td><strong>C'est / Ce sont</strong></td><td>Identifying or describing a SPECIFIC thing</td><td>This is / That is / It is / These are / Those are</td></tr><tr><td><strong>Tool 2</strong></td><td><strong>Il y a</strong></td><td>Stating that something EXISTS somewhere</td><td>There is / There are</td></tr><tr><td><strong>Tool 3</strong></td><td><strong>Articles</strong></td><td>Specifying HOW you refer to a noun</td><td>a, an, the, some, of the</td></tr></tbody></table>
+<p>→ These three tools combined allow you to <strong>name everything around you</strong><br>
+→ Without them, you can talk about yourself but you cannot talk about <strong>the world</strong></p>
+<hr>
+<h1>🔧 HOW CAN WE SOLVE IT</h1>
+<h2>Step 1 — Understand C'EST vs. CE SONT</h2>
+<table><thead><tr><th>French</th><th>When to Use</th><th>Example</th></tr></thead><tbody><tr><td><strong>C'est</strong></td><td>Before a <strong>singular</strong> noun or adjective</td><td>C'est un fromage. (This is a cheese.)</td></tr><tr><td><strong>Ce sont</strong></td><td>Before a <strong>plural</strong> noun</td><td>Ce sont des croissants. (These are croissants.)</td></tr></tbody></table>
+<p>→ In <strong>spoken French</strong>, many natives use <strong>"c'est"</strong> even for plural → "C'est des croissants"<br>
+→ This is technically informal but extremely common<br>
+→ For learning: know the rule → then know the reality</p>
+<hr>
+<h2>Step 2 — Understand IL Y A</h2>
+<table><thead><tr><th>French</th><th>Function</th><th>Key Feature</th></tr></thead><tbody><tr><td><strong>Il y a</strong></td><td>States existence of something somewhere</td><td>NEVER changes form — singular AND plural</td></tr></tbody></table>
+<p>→ ✅ Il y a <strong>un</strong> chat. (There is <strong>a</strong> cat.)<br>
+→ ✅ Il y a <strong>des</strong> chats. (There are cats.)<br>
+→ Il y a = frozen expression — <strong>always "il y a"</strong> regardless of quantity<br>
+→ Pronounced: "eel-ee-ah" → in fast speech: "ya"</p>
+<hr>
+<h2>Step 3 — The Article System (The Real Challenge)</h2>
+<h3>French has FIVE types of articles — English has basically two (a, the)</h3>
+<table><thead><tr><th>Type</th><th>Masculine</th><th>Feminine</th><th>Plural</th><th>Before Vowel</th><th>English</th></tr></thead><tbody><tr><td><strong>Definite</strong></td><td><strong>le</strong></td><td><strong>la</strong></td><td><strong>les</strong></td><td><strong>l'</strong></td><td>the</td></tr><tr><td><strong>Indefinite</strong></td><td><strong>un</strong></td><td><strong>une</strong></td><td><strong>des</strong></td><td><strong>un/une</strong></td><td>a / an / some</td></tr><tr><td><strong>Partitive</strong></td><td><strong>du</strong></td><td><strong>de la</strong></td><td><strong>des</strong></td><td><strong>de l'</strong></td><td>some (uncountable)</td></tr></tbody></table>
+<h3>When to use which:</h3>
+<table><thead><tr><th>Article Type</th><th>Logic</th><th>Example</th></tr></thead><tbody><tr><td><strong>Le / La / Les</strong></td><td>You're talking about something <strong>specific</strong> or <strong>in general</strong></td><td>J'aime <strong>le</strong> fromage. (I like cheese <strong>in general</strong>.)</td></tr><tr><td><strong>Un / Une / Des</strong></td><td>You're talking about <strong>one of many</strong> or <strong>some (countable)</strong></td><td>C'est <strong>un</strong> fromage. (This is <strong>a</strong> cheese.)</td></tr><tr><td><strong>Du / De la / De l'</strong></td><td>You're talking about <strong>some quantity of uncountable</strong> stuff</td><td>Je veux <strong>du</strong> fromage. (I want <strong>some</strong> cheese.)</td></tr></tbody></table>
+<p><strong>🧠 The critical French rule English doesn't have:</strong><br>
+→ In English: "I like cheese" → no article<br>
+→ In French: "J'aime <strong>le</strong> fromage" → article REQUIRED<br>
+→ <strong>French NEVER leaves a noun naked — every noun needs an article (or possessive/demonstrative)</strong></p>
+<hr>
+<h1>✅ WHAT COULD BE DONE — THE 100 SENTENCES</h1>
+<h2>🔹 BLOCK A — C'EST + Indefinite Article: Identifying Things</h2>
+<p><em>Scenario: You walk through the market — your host points at things — you identify them</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English Meaning</th><th>Structure Pattern</th></tr></thead><tbody><tr><td>1</td><td>C'est un fromage.</td><td>This is a cheese.</td><td>C'est + un + masc noun</td></tr><tr><td>2</td><td>C'est une baguette.</td><td>This is a baguette.</td><td>C'est + une + fem noun</td></tr><tr><td>3</td><td>C'est un croissant.</td><td>This is a croissant.</td><td>C'est + un + masc noun</td></tr><tr><td>4</td><td>C'est une pomme.</td><td>This is an apple.</td><td>C'est + une + fem noun</td></tr><tr><td>5</td><td>C'est un marché.</td><td>This is a market.</td><td>C'est + un + masc noun</td></tr><tr><td>6</td><td>C'est une boulangerie.</td><td>This is a bakery.</td><td>C'est + une + fem noun</td></tr><tr><td>7</td><td>C'est un bon restaurant.</td><td>This is a good restaurant.</td><td>C'est + un + adj + masc noun</td></tr><tr><td>8</td><td>C'est une belle ville.</td><td>This is a beautiful city.</td><td>C'est + une + adj + fem noun</td></tr><tr><td>9</td><td>C'est un ami français.</td><td>This is a French friend.</td><td>C'est + un + noun + adj</td></tr><tr><td>10</td><td>C'est une idée intéressante.</td><td>This is an interesting idea.</td><td>C'est + une + noun + adj</td></tr></tbody></table>
+<p><strong>🧠 Structure unlocked:</strong> <code>C'EST + UN/UNE + (adjective) + NOUN + (adjective)</code></p>
+<p><strong>🧠 Adjective placement preview:</strong><br>
+→ Most adjectives go <strong>AFTER</strong> the noun: une idée <strong>intéressante</strong><br>
+→ Some common short ones go <strong>BEFORE</strong>: un <strong>bon</strong> restaurant, une <strong>belle</strong> ville<br>
+→ (This will deepen in later projects — for now, absorb the pattern)</p>
+<hr>
+<h2>🔹 BLOCK B — CE SONT + Plural: Identifying Groups</h2>
+<p><em>Scenario: You see collections of items — baskets of fruit, groups of people</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English Meaning</th><th>Structure Pattern</th></tr></thead><tbody><tr><td>11</td><td>Ce sont des oranges.</td><td>These are oranges.</td><td>Ce sont + des + plural noun</td></tr><tr><td>12</td><td>Ce sont des fraises.</td><td>These are strawberries.</td><td>Ce sont + des + plural noun</td></tr><tr><td>13</td><td>Ce sont des touristes.</td><td>These are tourists.</td><td>Ce sont + des + plural noun</td></tr><tr><td>14</td><td>Ce sont des amis.</td><td>These are friends.</td><td>Ce sont + des + plural noun</td></tr><tr><td>15</td><td>Ce sont des produits frais.</td><td>These are fresh products.</td><td>Ce sont + des + plural noun + adj</td></tr><tr><td>16</td><td>Ce sont des fleurs magnifiques.</td><td>These are magnificent flowers.</td><td>Ce sont + des + plural noun + adj</td></tr><tr><td>17</td><td>Ce sont des spécialités locales.</td><td>These are local specialties.</td><td>Ce sont + des + plural noun + adj</td></tr><tr><td>18</td><td>Ce sont des légumes bio.</td><td>These are organic vegetables.</td><td>Ce sont + des + plural noun + adj</td></tr><tr><td>19</td><td>Ce sont mes voisins.</td><td>These are my neighbors.</td><td>Ce sont + possessive + plural noun</td></tr><tr><td>20</td><td>Ce sont les meilleurs croissants de Lyon.</td><td>These are the best croissants in Lyon.</td><td>Ce sont + les + superlative + noun + de + place</td></tr></tbody></table>
+<p><strong>🧠 Structure unlocked:</strong> <code>CE SONT + DES/LES/MES + PLURAL NOUN + (adjective)</code></p>
+<p><strong>🧠 Spoken French reality:</strong><br>
+→ In real daily speech, most French people say: <strong>"C'est des oranges"</strong> (not "Ce sont")<br>
+→ You will HEAR "c'est" for everything — singular and plural<br>
+→ Know the correct form → understand the spoken shortcut</p>
+<hr>
+<h2>🔹 BLOCK C — C'EST + Adjective: Describing / Reacting</h2>
+<p><em>Scenario: You taste food, see things, react emotionally</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English Meaning</th><th>Structure Pattern</th></tr></thead><tbody><tr><td>21</td><td>C'est bon.</td><td>It's good / It's tasty.</td><td>C'est + adjective</td></tr><tr><td>22</td><td>C'est très bon.</td><td>It's very good.</td><td>C'est + très + adjective</td></tr><tr><td>23</td><td>C'est délicieux.</td><td>It's delicious.</td><td>C'est + adjective</td></tr><tr><td>24</td><td>C'est cher.</td><td>It's expensive.</td><td>C'est + adjective</td></tr><tr><td>25</td><td>C'est pas cher.</td><td>It's not expensive.</td><td>C'est + pas + adjective (spoken negation)</td></tr><tr><td>26</td><td>C'est beau.</td><td>It's beautiful.</td><td>C'est + adjective</td></tr><tr><td>27</td><td>C'est grand.</td><td>It's big.</td><td>C'est + adjective</td></tr><tr><td>28</td><td>C'est petit.</td><td>It's small.</td><td>C'est + adjective</td></tr><tr><td>29</td><td>C'est facile.</td><td>It's easy.</td><td>C'est + adjective</td></tr><tr><td>30</td><td>C'est difficile.</td><td>It's difficult.</td><td>C'est + adjective</td></tr><tr><td>31</td><td>C'est super.</td><td>It's great.</td><td>C'est + adjective (informal)</td></tr><tr><td>32</td><td>C'est génial.</td><td>It's awesome.</td><td>C'est + adjective</td></tr><tr><td>33</td><td>C'est nul.</td><td>It's rubbish / terrible.</td><td>C'est + adjective (informal negative)</td></tr><tr><td>34</td><td>C'est bizarre.</td><td>It's weird.</td><td>C'est + adjective</td></tr><tr><td>35</td><td>C'est normal.</td><td>It's normal.</td><td>C'est + adjective</td></tr></tbody></table>
+<p><strong>🧠 Structure unlocked:</strong> <code>C'EST + ADJECTIVE</code> = the universal French reaction structure</p>
+<p><strong>🧠 Critical spoken French note on sentence 25:</strong><br>
+→ Written / correct: Ce **n'**est <strong>pas</strong> cher.<br>
+→ Spoken / daily: C'est <strong>pas</strong> cher. (the "ne" is dropped in speech — extremely common)<br>
+→ You will explore this deeply in Project 47 — for now, just notice it exists</p>
+<hr>
+<h2>🔹 BLOCK D — C'EST vs. IL/ELLE EST: The Great Confusion</h2>
+<p><em>Scenario: You describe a person and then describe a thing — the structure CHANGES</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English Meaning</th><th>Why This Form</th></tr></thead><tbody><tr><td>36</td><td>C'est un médecin.</td><td>He/She is a doctor.</td><td>C'est + <strong>article</strong> + noun → IDENTIFICATION</td></tr><tr><td>37</td><td>Il est médecin.</td><td>He is a doctor.</td><td>Il est + profession (no article) → DESCRIPTION</td></tr><tr><td>38</td><td>C'est un bon film.</td><td>It's a good movie.</td><td>C'est + <strong>un</strong> + adj + noun → IDENTIFICATION</td></tr><tr><td>39</td><td>Il est bon, ce film.</td><td>It's good, this movie.</td><td>Il est + adjective → DESCRIPTION of known item</td></tr><tr><td>40</td><td>C'est Marie.</td><td>It's Marie. / This is Marie.</td><td>C'est + proper name → always C'est</td></tr><tr><td>41</td><td>Elle est française.</td><td>She is French.</td><td>Il/Elle est + adjective → DESCRIPTION</td></tr><tr><td>42</td><td>C'est une Française.</td><td>She is a French woman.</td><td>C'est + une + noun → IDENTIFICATION</td></tr><tr><td>43</td><td>C'est intéressant.</td><td>It's interesting. (general)</td><td>C'est + adjective → general comment</td></tr><tr><td>44</td><td>Il est intéressant, ce livre.</td><td>It's interesting, this book.</td><td>Il est + adjective → about specific known item</td></tr><tr><td>45</td><td>C'est mon frère.</td><td>This is my brother.</td><td>C'est + possessive + noun → INTRODUCTION</td></tr></tbody></table>
+<p><strong>🧠 THE RULE THAT SOLVES 90% OF CONFUSION:</strong></p>
+<table><thead><tr><th>Use <strong>C'EST</strong> when...</th><th>Use <strong>IL/ELLE EST</strong> when...</th></tr></thead><tbody><tr><td>Followed by <strong>article + noun</strong> (un, une, le, la, des, mon, cette...)</td><td>Followed by <strong>adjective ALONE</strong></td></tr><tr><td>C'est <strong>un</strong> professeur.</td><td>Il est <strong>grand</strong>.</td></tr><tr><td>C'est <strong>mon</strong> ami.</td><td>Elle est <strong>française</strong>.</td></tr><tr><td>C'est <strong>une</strong> bonne idée.</td><td>Il est <strong>intéressant</strong>.</td></tr><tr><td>Followed by a <strong>proper name</strong></td><td>Followed by <strong>profession (no article)</strong></td></tr><tr><td>C'est <strong>Marie</strong>.</td><td>Elle est <strong>avocate</strong>.</td></tr><tr><td>Making a <strong>general comment</strong></td><td>Describing a <strong>specific known thing</strong></td></tr><tr><td>C'est <strong>difficile</strong>. (Life is difficult.)</td><td>Il est <strong>difficile</strong>, cet examen. (This exam is difficult.)</td></tr></tbody></table>
+<hr>
+<h2>🔹 BLOCK E — IL Y A: Stating What Exists</h2>
+<p><em>Scenario: You look around the market — you notice what's there and what's not</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English Meaning</th><th>Structure Pattern</th></tr></thead><tbody><tr><td>46</td><td>Il y a un marché ici.</td><td>There is a market here.</td><td>Il y a + un + noun + place</td></tr><tr><td>47</td><td>Il y a une boulangerie à côté.</td><td>There is a bakery next door.</td><td>Il y a + une + noun + location</td></tr><tr><td>48</td><td>Il y a des gens partout.</td><td>There are people everywhere.</td><td>Il y a + des + noun + place</td></tr><tr><td>49</td><td>Il y a du soleil aujourd'hui.</td><td>There is sunshine today.</td><td>Il y a + du + uncountable + time</td></tr><tr><td>50</td><td>Il y a de la musique.</td><td>There is music.</td><td>Il y a + de la + uncountable noun</td></tr><tr><td>51</td><td>Il y a beaucoup de monde.</td><td>There are a lot of people.</td><td>Il y a + beaucoup de + noun</td></tr><tr><td>52</td><td>Il y a trop de bruit.</td><td>There is too much noise.</td><td>Il y a + trop de + noun</td></tr><tr><td>53</td><td>Il y a assez de place.</td><td>There is enough room.</td><td>Il y a + assez de + noun</td></tr><tr><td>54</td><td>Il y a combien de fromages ?</td><td>How many cheeses are there?</td><td>Il y a + combien de + noun + ?</td></tr><tr><td>55</td><td>Il y a quelque chose pour toi.</td><td>There is something for you.</td><td>Il y a + quelque chose + pour + person</td></tr></tbody></table>
+<p><strong>🧠 Structure unlocked:</strong> <code>IL Y A + [article/quantity] + NOUN + [place/time]</code></p>
+<hr>
+<h2>🔹 BLOCK F — IL Y A: Negative Form (There Isn't / There Aren't)</h2>
+<p><em>Scenario: You're looking for something at the market — it's not there</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English Meaning</th><th>Structure Pattern</th></tr></thead><tbody><tr><td>56</td><td>Il n'y a pas de lait.</td><td>There is no milk.</td><td>Il n'y a pas + <strong>de</strong> + noun</td></tr><tr><td>57</td><td>Il n'y a pas de pain.</td><td>There is no bread.</td><td>Il n'y a pas + de + noun</td></tr><tr><td>58</td><td>Il n'y a pas de place.</td><td>There is no room / space.</td><td>Il n'y a pas + de + noun</td></tr><tr><td>59</td><td>Il n'y a pas de problème.</td><td>There is no problem.</td><td>Il n'y a pas + de + noun</td></tr><tr><td>60</td><td>Il n'y a plus de fraises.</td><td>There are no more strawberries.</td><td>Il n'y a <strong>plus</strong> de + noun</td></tr><tr><td>61</td><td>Il n'y a rien ici.</td><td>There is nothing here.</td><td>Il n'y a <strong>rien</strong> + place</td></tr><tr><td>62</td><td>Il n'y a personne.</td><td>There is nobody.</td><td>Il n'y a <strong>personne</strong></td></tr><tr><td>63</td><td>Il n'y a pas assez de temps.</td><td>There is not enough time.</td><td>Il n'y a pas + assez de + noun</td></tr><tr><td>64</td><td>Il n'y a pas beaucoup de choix.</td><td>There is not much choice.</td><td>Il n'y a pas + beaucoup de + noun</td></tr><tr><td>65</td><td>Il n'y a jamais de parking.</td><td>There is never any parking.</td><td>Il n'y a <strong>jamais</strong> de + noun</td></tr></tbody></table>
+<p><strong>🧠 CRITICAL RULE UNLOCKED:</strong><br>
+→ After <strong>negation</strong>, the articles <strong>un / une / des / du / de la</strong> ALL become → <strong>DE</strong> (or <strong>D'</strong> before vowel)<br>
+→ ✅ Il y a <strong>du</strong> pain. → Il n'y a pas <strong>de</strong> pain.<br>
+→ ✅ Il y a <strong>des</strong> fraises. → Il n'y a pas <strong>de</strong> fraises.<br>
+→ ✅ Il y a <strong>une</strong> place. → Il n'y a pas <strong>de</strong> place.<br>
+→ This rule applies to ALL negative sentences — not just "il y a"</p>
+<hr>
+<h2>🔹 BLOCK G — Definite Articles (Le, La, Les, L'): The Specific &amp; The General</h2>
+<p><em>Scenario: You talk about preferences, general truths, specific items you can see</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English Meaning</th><th>Article Logic</th></tr></thead><tbody><tr><td>66</td><td>J'aime le fromage.</td><td>I like cheese (in general).</td><td><strong>le</strong> = general category</td></tr><tr><td>67</td><td>J'aime la musique.</td><td>I like music (in general).</td><td><strong>la</strong> = general category</td></tr><tr><td>68</td><td>J'aime les animaux.</td><td>I like animals (in general).</td><td><strong>les</strong> = general plural</td></tr><tr><td>69</td><td>J'aime l'art.</td><td>I like art.</td><td><strong>l'</strong> = before vowel</td></tr><tr><td>70</td><td>Le marché est ouvert.</td><td>The market is open.</td><td><strong>le</strong> = specific known item</td></tr><tr><td>71</td><td>La boulangerie est fermée.</td><td>The bakery is closed.</td><td><strong>la</strong> = specific known item</td></tr><tr><td>72</td><td>Les prix sont élevés.</td><td>The prices are high.</td><td><strong>les</strong> = specific plural</td></tr><tr><td>73</td><td>L'hôtel est près d'ici.</td><td>The hotel is near here.</td><td><strong>l'</strong> = before vowel/h</td></tr><tr><td>74</td><td>Le lundi, je travaille.</td><td>On Mondays, I work.</td><td><strong>le</strong> + day = habitual "every Monday"</td></tr><tr><td>75</td><td>C'est le meilleur fromage.</td><td>It's the best cheese.</td><td><strong>le</strong> = superlative context</td></tr></tbody></table>
+<p><strong>🧠 TWO uses of definite articles in French:</strong></p>
+<table><thead><tr><th>Use</th><th>Example</th><th>English Has Article?</th></tr></thead><tbody><tr><td><strong>Specific item</strong> (the one we both know)</td><td><strong>Le</strong> marché est grand. (The market is big.)</td><td>✅ Yes — "the"</td></tr><tr><td><strong>General category</strong> (all of that thing)</td><td>J'aime <strong>le</strong> fromage. (I like cheese.)</td><td>❌ No — English drops it</td></tr></tbody></table>
+<p>→ This is a <strong>massive difference</strong> from English<br>
+→ English: "I like cheese" (no article)<br>
+→ French: "J'aime <strong>le</strong> fromage" (article required)</p>
+<hr>
+<h2>🔹 BLOCK H — Indefinite Articles (Un, Une, Des): One of Many</h2>
+<p><em>Scenario: You ask for items, mention things for the first time</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English Meaning</th><th>Article Logic</th></tr></thead><tbody><tr><td>76</td><td>Je veux un café.</td><td>I want a coffee.</td><td><strong>un</strong> = one item (masc)</td></tr><tr><td>77</td><td>Je cherche une pharmacie.</td><td>I'm looking for a pharmacy.</td><td><strong>une</strong> = one item (fem)</td></tr><tr><td>78</td><td>Il y a des enfants dans le parc.</td><td>There are children in the park.</td><td><strong>des</strong> = some (plural, countable)</td></tr><tr><td>79</td><td>J'ai un problème.</td><td>I have a problem.</td><td><strong>un</strong> = one (from Project 1)</td></tr><tr><td>80</td><td>C'est une bonne question.</td><td>That's a good question.</td><td><strong>une</strong> = one (from Block A)</td></tr><tr><td>81</td><td>Je vois des oiseaux.</td><td>I see (some) birds.</td><td><strong>des</strong> = unspecified plural</td></tr><tr><td>82</td><td>Tu veux un croissant ?</td><td>Do you want a croissant?</td><td><strong>un</strong> = offering one item</td></tr><tr><td>83</td><td>Il y a des soldes en janvier.</td><td>There are sales in January.</td><td><strong>des</strong> = some (plural)</td></tr><tr><td>84</td><td>J'achète des légumes.</td><td>I buy (some) vegetables.</td><td><strong>des</strong> = some quantity</td></tr><tr><td>85</td><td>C'est un cadeau pour toi.</td><td>It's a gift for you.</td><td><strong>un</strong> = one specific-but-new item</td></tr></tbody></table>
+<p><strong>🧠 KEY DISTINCTION:</strong></p>
+<table><thead><tr><th>I like cheese <strong>in general</strong></th><th>I want <strong>some</strong> cheese right now</th></tr></thead><tbody><tr><td>J'aime <strong>le</strong> fromage.</td><td>Je veux <strong>du</strong> fromage.</td></tr><tr><td>Definite = category / concept</td><td>Partitive = some quantity of</td></tr></tbody></table>
+<hr>
+<h2>🔹 BLOCK I — Partitive Articles (Du, De la, De l', Des): Some of an Uncountable</h2>
+<p><em>Scenario: At a food stall — you want SOME of something you can't count individually</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English Meaning</th><th>Article Logic</th></tr></thead><tbody><tr><td>86</td><td>Je veux du pain.</td><td>I want some bread.</td><td><strong>du</strong> = some (masc uncountable)</td></tr><tr><td>87</td><td>Je prends de la soupe.</td><td>I'll have some soup.</td><td><strong>de la</strong> = some (fem uncountable)</td></tr><tr><td>88</td><td>Tu veux de l'eau ?</td><td>Do you want some water?</td><td><strong>de l'</strong> = some (before vowel)</td></tr><tr><td>89</td><td>Il y a du vent.</td><td>There is (some) wind.</td><td><strong>du</strong> = some (weather)</td></tr><tr><td>90</td><td>Je bois du café le matin.</td><td>I drink coffee in the morning.</td><td><strong>du</strong> = some (habitual consumption)</td></tr><tr><td>91</td><td>Elle mange de la salade.</td><td>She eats salad.</td><td><strong>de la</strong> = some (fem uncountable)</td></tr><tr><td>92</td><td>Nous achetons de la viande.</td><td>We buy (some) meat.</td><td><strong>de la</strong> = some (fem uncountable)</td></tr><tr><td>93</td><td>Vous avez de l'argent ?</td><td>Do you have (some) money?</td><td><strong>de l'</strong> = some (before vowel)</td></tr><tr><td>94</td><td>Il faut du courage.</td><td>It takes (some) courage.</td><td><strong>du</strong> = some (abstract)</td></tr><tr><td>95</td><td>Il y a de la place ici.</td><td>There is (some) room here.</td><td><strong>de la</strong> = some (fem uncountable)</td></tr></tbody></table>
+<p><strong>🧠 WHEN TO USE PARTITIVE vs. DEFINITE vs. INDEFINITE:</strong></p>
+<table><thead><tr><th>Situation</th><th>Article</th><th>Example</th></tr></thead><tbody><tr><td>You like the <strong>concept</strong> of bread</td><td><strong>le</strong></td><td>J'aime <strong>le</strong> pain.</td></tr><tr><td>You want <strong>some</strong> bread right now</td><td><strong>du</strong></td><td>Je veux <strong>du</strong> pain.</td></tr><tr><td>You want <strong>a</strong> bread (one loaf)</td><td><strong>un</strong></td><td>Je veux <strong>un</strong> pain.</td></tr><tr><td>You see <strong>breads</strong> (multiple loaves)</td><td><strong>des</strong></td><td>Il y a <strong>des</strong> pains.</td></tr><tr><td>There is <strong>no</strong> bread</td><td><strong>de</strong></td><td>Il n'y a pas <strong>de</strong> pain.</td></tr></tbody></table>
+<hr>
+<h2>🔹 BLOCK J — Full Market Conversation: Everything Combined</h2>
+<p><em>Scenario: A complete market visit using all tools from this project</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>Tool Used</th><th>Context</th></tr></thead><tbody><tr><td>96</td><td>C'est un grand marché.</td><td>C'est + un + adj + noun</td><td>Arriving at market</td></tr><tr><td>97</td><td>Il y a beaucoup de monde ici.</td><td>Il y a + quantity + noun + place</td><td>Observing the crowd</td></tr><tr><td>98</td><td>Ce sont des produits locaux.</td><td>Ce sont + des + noun + adj</td><td>Seeing the stalls</td></tr><tr><td>99</td><td>C'est combien, le fromage ?</td><td>C'est + combien + le + noun</td><td>Asking a price</td></tr><tr><td>100</td><td>C'est pas cher.</td><td>C'est + pas + adj</td><td>Reacting to price</td></tr><tr><td>101</td><td>Je veux du pain et de la confiture.</td><td>Subject + verb + du + noun + et + de la + noun</td><td>Ordering</td></tr><tr><td>102</td><td>Il y a des fraises aujourd'hui ?</td><td>Il y a + des + noun + time + ?</td><td>Asking about availability</td></tr><tr><td>103</td><td>Il n'y a plus de fraises.</td><td>Il n'y a plus + de + noun</td><td>Vendor's response</td></tr><tr><td>104</td><td>C'est dommage.</td><td>C'est + expression</td><td>Reacting — "That's a shame"</td></tr><tr><td>105</td><td>Il y a une boucherie à côté.</td><td>Il y a + une + noun + location</td><td>Getting directions</td></tr><tr><td>106</td><td>Les tomates sont belles.</td><td>Les + noun + être + adj</td><td>Commenting on specific items</td></tr><tr><td>107</td><td>J'achète des tomates et un melon.</td><td>Subject + verb + des + noun + et + un + noun</td><td>Buying</td></tr><tr><td>108</td><td>C'est tout, merci.</td><td>C'est + tout</td><td>Finishing the transaction</td></tr></tbody></table>
+<hr>
+<h1>✅ WHAT SHOULD DO</h1>
+<p>→ <strong>Train your brain to classify every noun</strong> — masculine or feminine — because the article depends on it<br>
+→ <strong>Memorize the partitive system</strong> (du, de la, de l') — English has no equivalent → this will feel unnatural at first<br>
+→ <strong>Use "C'est + adjective" freely</strong> — it's the #1 reaction structure in spoken French<br>
+→ <strong>Remember the negation rule</strong> — after pas/plus/jamais → all articles become <strong>de</strong><br>
+→ <strong>Always put an article before a noun</strong> — French nouns are never naked<br>
+→ <strong>Connect to Project 1</strong> — être/avoir sentences also use these articles: "J'ai <strong>un</strong> passeport" / "Je suis <strong>un</strong> touriste" — wait, no article with profession after être! (Project 1 rule)</p>
+<hr>
+<h1>❌ WHAT SHOULD NOT DO</h1>
+<p>→ ❌ Do NOT say "J'aime fromage" → must be "J'aime <strong>le</strong> fromage" (general = definite article)<br>
+→ ❌ Do NOT say "Il y a pas <strong>des</strong> fraises" → must be "Il n'y a pas <strong>de</strong> fraises" (negation rule)<br>
+→ ❌ Do NOT say "Il est un médecin" → must be "<strong>C'est</strong> un médecin" (article + noun = c'est)<br>
+→ ❌ Do NOT confuse "c'est" and "il est" — review Block D rules above<br>
+→ ❌ Do NOT use partitive when talking about general likes → "J'aime <strong>du</strong> fromage" ❌ → "J'aime <strong>le</strong> fromage" ✅<br>
+→ ❌ Do NOT forget gender → "du" is masculine, "de la" is feminine — wrong gender = wrong article</p>
+<hr>
+<h1>🔀 WHEN TO USE WHAT</h1>
+<table><thead><tr><th>You Want To...</th><th>Tool</th><th>Example</th></tr></thead><tbody><tr><td><strong>Identify</strong> something for the first time</td><td>C'est + un/une</td><td>C'est un fromage.</td></tr><tr><td><strong>Identify</strong> a group of things</td><td>Ce sont + des</td><td>Ce sont des fraises.</td></tr><tr><td><strong>React / Comment</strong> generally</td><td>C'est + adjective</td><td>C'est délicieux.</td></tr><tr><td><strong>Introduce</strong> a person</td><td>C'est + name / possessive</td><td>C'est Marie. / C'est mon ami.</td></tr><tr><td><strong>State something exists</strong> somewhere</td><td>Il y a + article + noun</td><td>Il y a un café ici.</td></tr><tr><td><strong>State something doesn't exist</strong></td><td>Il n'y a pas de + noun</td><td>Il n'y a pas de café.</td></tr><tr><td><strong>Talk about a general concept</strong></td><td>Le / La / Les + noun</td><td>J'aime <strong>les</strong> chats.</td></tr><tr><td><strong>Talk about one specific item</strong> you both know</td><td>Le / La / Les + noun</td><td><strong>Le</strong> marché est fermé.</td></tr><tr><td><strong>Mention something for the first time</strong> (countable)</td><td>Un / Une / Des + noun</td><td>J'ai <strong>un</strong> chat.</td></tr><tr><td><strong>Talk about SOME of</strong> an uncountable thing</td><td>Du / De la / De l' + noun</td><td>Je veux <strong>du</strong> café.</td></tr><tr><td><strong>Negate any article</strong></td><td>→ De / D'</td><td>Je n'ai pas <strong>de</strong> café.</td></tr></tbody></table>
+<hr>
+<h1>🚫 WHEN NOT TO USE</h1>
+<p>→ Do NOT use <strong>il y a</strong> to describe something → "Il y a beau" ❌ → use "C'est beau" ✅<br>
+→ Do NOT use <strong>c'est</strong> when just a plain adjective describes a known noun → "C'est française, Marie" ❌ → "Elle <strong>est</strong> française" ✅<br>
+→ Do NOT use <strong>du/de la</strong> after "aimer, adorer, détester, préférer" → these verbs express GENERAL feelings → use <strong>le/la/les</strong><br>
+→ → ✅ J'aime <strong>le</strong> chocolat. (I love chocolate — the concept)<br>
+→ → ✅ Je mange <strong>du</strong> chocolat. (I eat some chocolate — a portion)<br>
+→ Do NOT use <strong>des</strong> after a negation → always switches to <strong>de</strong><br>
+→ Do NOT use <strong>il y a</strong> for things that don't involve existence/location — use être or c'est instead</p>
+<hr>
+<h1>⚠️ COMMON PITFALLS AND FAILURE MODES</h1>
+<table><thead><tr><th>Pitfall</th><th>What Learners Do Wrong</th><th>Correct Version</th><th>Why</th></tr></thead><tbody><tr><td><strong>Naked noun</strong></td><td>"J'aime musique"</td><td>J'aime <strong>la</strong> musique</td><td>French requires articles always</td></tr><tr><td><strong>Negation article trap</strong></td><td>Il n'y a pas <strong>des</strong> places</td><td>Il n'y a pas <strong>de</strong> places</td><td>After negation → de</td></tr><tr><td><strong>C'est vs. Il est confusion</strong></td><td>"Il est un bon film"</td><td><strong>C'est</strong> un bon film</td><td>Article + noun → always c'est</td></tr><tr><td><strong>Partitive after aimer</strong></td><td>"J'aime du fromage"</td><td>J'aime <strong>le</strong> fromage</td><td>Aimer = general → definite</td></tr><tr><td><strong>Partitive vs. indefinite</strong></td><td>"Je veux un eau"</td><td>Je veux **de l'**eau</td><td>Water = uncountable → partitive</td></tr><tr><td><strong>Gender mismatch</strong></td><td>"du soupe"</td><td><strong>de la</strong> soupe</td><td>Soupe = feminine</td></tr><tr><td><strong>Forgetting l' before vowel</strong></td><td>"le hôtel" / "la eau"</td><td>**l'**hôtel / **l'**eau</td><td>Vowel → always l'</td></tr><tr><td><strong>Ce sont avoidance</strong></td><td>Never using "ce sont"</td><td>Ce sont <strong>des</strong> amis</td><td>Plural identification → ce sont</td></tr><tr><td><strong>Il y a conjugation attempt</strong></td><td>"Ils y ont" / "Elles y a"</td><td>Always: <strong>Il y a</strong></td><td>Frozen expression — never changes</td></tr><tr><td><strong>C'est for adjective + known noun</strong></td><td>"C'est grande, la maison"</td><td><strong>Elle est</strong> grande, la maison</td><td>Known specific noun → il/elle est</td></tr></tbody></table>
+<hr>
+<h1>🔑 KEY TAKEAWAY</h1>
+<blockquote>
+<p><strong>Project 1 taught you to say WHO you are and WHAT you have.</strong><br>
+<strong>Project 2 taught you to say WHAT you do.</strong><br>
+<strong>Project 3 teaches you to point at the WORLD — naming, identifying, and stating what exists.</strong></p>
+<p>The <strong>article system</strong> is the backbone of every French sentence:<br>
+→ Every noun needs an article<br>
+→ The article changes based on: gender, number, countability, general vs. specific, affirmative vs. negative</p>
+<p><strong>The three tools of this project — C'est / Ce sont / Il y a — combined with the correct articles, allow you to describe EVERYTHING you see around you.</strong></p>
+<p>But you can only <strong>state</strong> things — you cannot yet <strong>ASK</strong> things properly.<br>
+→ "Where is the bakery?" / "How much does this cost?" / "What time is it?"<br>
+→ You need <strong>question structures</strong>.</p>
+</blockquote>
+<hr>
+<h1>🌉 BRIDGE TO PROJECT 4</h1>
+<blockquote>
+<p>You can now say <strong>"This is a cheese"</strong> and <strong>"There is a bakery here"</strong> and <strong>"It's delicious"</strong><br>
+But at the market, someone says something you don't understand<br>
+You need to ask: <strong>"What?"</strong> / <strong>"Where?"</strong> / <strong>"How much?"</strong> / <strong>"Why?"</strong><br>
+→ Project 4 introduces the <strong>3 question forms</strong> in French<br>
+→ From casual (intonation) to standard (est-ce que) to formal (inversion)<br>
+→ You will learn to ask for <strong>any information</strong> in <strong>any register</strong></p>
+</blockquote>
+<hr>
+<h1>✅ PROJECT 3 COMPLETE</h1>
+<blockquote>
+<p><strong>Are you ready for PROJECT 4: "Asking Without Sounding Lost"?</strong><br>
+→ ~100 sentences covering the 3 question forms + question words<br>
+→ Scenario: You need information — directions, prices, times, reasons<br>
+→ Builds on all structures from Projects 1-3</p>
+</blockquote>
+</div>
+</div>
+
+<!-- ========== data-index="9" ========== -->
+
+        </div>
+
+        <div class="nav-bar">
+            <a href="project-2.html" class="nav-button prev">← Previous Chapter</a>
+            <div class="page-info">
+                <a href="index.html" class="nav-button home">📚 Table of Contents</a><br>
+                <span style="margin-top:8px;display:block">Chapter 3 of 50</span>
+            </div>
+            <a href="project-4.html" class="nav-button next">Next Chapter →</a>
+        </div>
+    </div>
+
+    
+    <div id="progress-track"><div id="progress-fill"></div></div>
+    <div id="progress-pct">0%</div>
+
+
+    <script>
+    const fill = document.getElementById('progress-fill');
+    const pct  = document.getElementById('progress-pct');
+    function updateProgress() {
+        const scrollTop = window.scrollY;
+        const docHeight = document.body.scrollHeight - window.innerHeight;
+        const scrolled  = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+        fill.style.height = scrolled + '%';
+        pct.textContent   = Math.round(scrolled) + '%';
+    }
+    window.addEventListener('scroll', updateProgress);
+    updateProgress();
+
+    document.addEventListener('keydown', function(e) {
+        if (['INPUT','TEXTAREA'].includes(document.activeElement.tagName)) return;
+        if (e.key === 'ArrowLeft') {
+            const b = document.querySelector('.nav-button.prev');
+            if (b && !b.classList.contains('disabled')) window.location.href = b.href;
+        }
+        if (e.key === 'ArrowRight') {
+            const b = document.querySelector('.nav-button.next');
+            if (b && !b.classList.contains('disabled')) window.location.href = b.href;
+        }
+    });
+    </script>
+
+</body>
+</html>

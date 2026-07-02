@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="images/favicon.png">
+    <title>Project 21: "The Person Who, The Thing That" — French Daily Sentences</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.75;
+            color: #1a202c;
+            background-color: #f7fafc;
+        }
+        .container {
+            max-width: 1800px;
+            margin: 0 auto;
+            background: white;
+            min-height: 100vh;
+            box-shadow: 0 0 30px rgba(0,0,0,0.08);
+            padding: 48px 52px;
+        }
+        
+        .content { max-width: 1700px; margin: 0 auto; color: #1a202c; }
+        .content h1 {
+            color: #1a202c; margin: 32px 0 20px;
+            padding-bottom: 12px;
+            border-bottom: 4px solid #3b82f6;
+            font-size: 2.1em;
+            font-weight: 700;
+        }
+        .content h2 {
+            color: #1a202c; margin: 28px 0 16px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #60a5fa;
+            font-size: 1.6em;
+            font-weight: 600;
+        }
+        .content h3 { color: #1a202c; margin: 22px 0 12px; font-size: 1.3em; font-weight: 600; }
+        .content h4 { color: #2d3748; margin: 18px 0 10px; font-size: 1.1em; font-weight: 600; }
+        .content p  { margin-bottom: 16px; line-height: 1.8; color: #1a202c; }
+        .content ul, .content ol { margin: 12px 0 18px 30px; color: #1a202c; }
+        .content li { margin-bottom: 8px; line-height: 1.75; color: #1a202c; }
+        .content hr { border: none; border-top: 2px solid #e2e8f0; margin: 26px 0; }
+        .content pre {
+            background: #f7fafc !important;
+            border: 1px solid #cbd5e0 !important;
+            border-left: 4px solid #3b82f6 !important;
+            padding: 18px !important; overflow-x: auto; margin: 18px 0; border-radius: 6px;
+            font-family: 'Consolas','Monaco','Courier New',monospace !important;
+            font-size: 0.9em !important;
+        }
+        .content pre:not([style*="color"]) { color: #1a202c !important; }
+        .content code {
+            font-family: 'Consolas','Monaco','Courier New',monospace !important;
+            font-size: 0.88em !important;
+        }
+        .content code:not(pre code) {
+            background: #dbeafe !important;
+            color: #1a202c !important;
+            padding: 2px 6px;
+            border-radius: 3px;
+        }
+        .content pre code { background: transparent !important; padding: 0; }
+        .content table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+        .content th {
+            background: linear-gradient(135deg, #3b82f6 0%, #60a5fa 100%);
+            color: white; padding: 12px 16px; text-align: left;
+            font-weight: 600;
+        }
+        .content td { padding: 11px 16px; border: 1px solid #e2e8f0; color: #1a202c; }
+        .content tr:nth-child(even) td { background: #eff6ff; }
+        .content blockquote {
+            border-left: 4px solid #3b82f6; background: #eff6ff;
+            padding: 14px 20px; margin: 18px 0; border-radius: 0 6px 6px 0;
+            color: #1a202c;
+        }
+        .content strong { color: #1a202c; font-weight: 600; }
+        .px-2 { padding: 0; }
+        .chat-message { background: transparent; padding: 0; margin: 0; }
+
+        /* Bottom nav bar only */
+        .nav-bar {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 24px 0;
+            margin-top: 50px;
+            border-top: 3px solid #60a5fa;
+        }
+        .nav-button {
+            display: inline-flex; align-items: center; gap: 8px;
+            padding: 12px 26px;
+            background: linear-gradient(135deg, #3b82f6 0%, #60a5fa 100%);
+            color: white !important; text-decoration: none;
+            border-radius: 8px; font-weight: 600; font-size: 0.95em;
+            transition: all 0.2s;
+            box-shadow: 0 2px 8px rgba(59,130,246,0.35);
+        }
+        .nav-button:hover { transform: translateY(-2px); box-shadow: 0 4px 14px rgba(59,130,246,0.5); }
+        .nav-button.disabled { background: #cbd5e1; box-shadow: none; pointer-events: none; }
+        .nav-button.home {
+            background: linear-gradient(135deg, #ef4444 0%, #f87171 100%);
+            box-shadow: 0 2px 8px rgba(239,68,68,0.35);
+        }
+        .nav-button.home:hover { box-shadow: 0 4px 14px rgba(239,68,68,0.5); }
+        .page-info { color: #718096; font-size: 0.9em; text-align: center; }
+
+        /* Progress bar */
+        #progress-track {
+            position: fixed; top: 20px; right: 20px;
+            width: 10px; height: 150px;
+            background: rgba(59,130,246,0.2);
+            border: 2px solid #3b82f6;
+            border-radius: 6px; overflow: hidden; z-index: 1000;
+        }
+        #progress-fill {
+            width: 100%;
+            background: linear-gradient(180deg, #3b82f6, #2563eb);
+            height: 0%;
+            transition: height 0.15s ease;
+        }
+        #progress-pct {
+            position: fixed; top: 0px; right: 16px;
+            color: #2563eb; font-size: 14px; font-weight: bold;
+            z-index: 1001;
+            text-shadow: 0 1px 2px rgba(255,255,255,0.9);
+            line-height: 20px;
+        }
+
+    </style>
+<link rel="stylesheet" href="assets/chapters.css?v=20260421203847"><script src="assets/chapters.js?v=20260421203847" defer></script>
+</head>
+<body>
+    <div class="container">
+        <div class="content">
+            <div class="chat-message" data-index="11">
+<div class="px-2"><h1>🟡 PROJECT 21: "The Person Who, The Thing That"</h1>
+<h2><em>You need to describe someone or something using a sub-sentence inside your main sentence</em></h2>
+<hr>
+<h1>🎯 THE HYPOTHETICAL PROBLEM</h1>
+<p>→ You're at a dinner party in France — people are telling stories, describing friends, recommending places<br>
+→ You listen carefully — their sentences are <strong>long, elegant, layered</strong><br>
+→ They say things like:</p>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>"Le restaurant où on a mangé hier soir était excellent."
+</span>"C'est l'ami dont je t'ai parlé."
+"La fille qui travaille avec moi est très sympa."
+"Le film que j'ai vu ce week-end m'a beaucoup plu."</code></pre></div>
+<p>→ You try to say the same things — but you can only build <strong>short, choppy sentences</strong>:</p>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>❌ J'ai un ami. Il habite à Paris. Il parle trois langues. Il est très drôle.
+</span>❌ J'ai vu un film. Le film était génial. Mon ami m'a recommandé le film.
+❌ Je connais un restaurant. Le restaurant est à Lyon. On mange bien dans ce restaurant.</code></pre></div>
+<p>→ You sound like a <strong>list reader</strong>, not a <strong>storyteller</strong><br>
+→ French adults NEVER speak in disconnected short sentences<br>
+→ They <strong>weave ideas together</strong> using four magic connecting words:</p>
+<table><thead><tr><th>Word</th><th>Role</th></tr></thead><tbody><tr><td><strong>Qui</strong></td><td>The person/thing <strong>WHO/THAT does</strong> something</td></tr><tr><td><strong>Que</strong></td><td>The person/thing <strong>THAT someone does something to</strong></td></tr><tr><td><strong>Où</strong></td><td>The place/time <strong>WHERE/WHEN</strong> something happens</td></tr><tr><td><strong>Dont</strong></td><td>The person/thing <strong>OF WHICH / ABOUT WHICH / WHOSE</strong></td></tr></tbody></table>
+<p>→ These are <strong>relative pronouns</strong> — they create a <strong>sentence inside a sentence</strong><br>
+→ Without them, you speak at a child's level<br>
+→ With them, you speak at an <strong>adult's level</strong></p>
+<p><strong>The core realization:</strong><br>
+→ Projects 19-20 taught you to <strong>compress nouns into tiny pronouns</strong><br>
+→ Project 21 teaches you to <strong>connect entire ideas into one flowing sentence</strong><br>
+→ This is not just grammar — this is <strong>how French people think</strong><br>
+→ They don't think in isolated facts — they think in <strong>connected descriptions</strong></p>
+<hr>
+<h1>🔍 HOW TO APPROACH IT</h1>
+<p>→ Every relative pronoun creates a <strong>main clause</strong> and a <strong>relative clause</strong>:</p>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>MAIN CLAUSE:      J'ai un ami
+</span>RELATIVE CLAUSE:  qui habite à Paris
+COMBINED:         J'ai un ami QUI habite à Paris.</code></pre></div>
+<p>→ The <strong>antecedent</strong> = the noun being described (un ami)<br>
+→ The <strong>relative pronoun</strong> = the connector (qui)<br>
+→ The <strong>relative clause</strong> = the description inserted into the sentence (habite à Paris)</p>
+<p>→ Your job: <strong>Choose the RIGHT connector</strong> based on the role the antecedent plays in the relative clause</p>
+<hr>
+<h1>🔧 HOW CAN WE SOLVE IT</h1>
+<h2>THE FOUR RELATIVE PRONOUNS — Decision Framework</h2>
+<table><thead><tr><th>Pronoun</th><th>When to Use</th><th>The Antecedent Is...</th><th>English Equivalent</th></tr></thead><tbody><tr><td><strong>QUI</strong></td><td>Antecedent = <strong>SUBJECT</strong> of relative clause</td><td>doing the action in the sub-sentence</td><td>who / that / which (subject)</td></tr><tr><td><strong>QUE</strong></td><td>Antecedent = <strong>DIRECT OBJECT</strong> of relative clause</td><td>receiving the action in the sub-sentence</td><td>whom / that / which (object)</td></tr><tr><td><strong>OÙ</strong></td><td>Antecedent = <strong>PLACE or TIME</strong></td><td>the location or moment of the sub-sentence</td><td>where / when</td></tr><tr><td><strong>DONT</strong></td><td>Antecedent = <strong>linked by DE</strong></td><td>connected to a "de" expression in the sub-sentence</td><td>of which / about which / whose</td></tr></tbody></table>
+<h2>THE QUICK TEST — How to Choose</h2>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>Step 1: Look at the relative clause (the description part)
+</span>Step 2: Ask: What role does the described noun play in that clause?
+
+→ It DOES the action?              → QUI
+→ Someone does something TO it?    → QUE
+→ Something happens IN/AT it?      → OÙ
+→ Someone talks ABOUT it / it belongs to someone? → DONT</code></pre></div>
+<hr>
+<h2>CRITICAL GRAMMAR NOTES BEFORE SENTENCES</h2>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>QUI:
+</span>→ NEVER contracts before a vowel → "qui a", "qui est" (NOT qu'i)
+→ Verb after QUI agrees with the ANTECEDENT
+   → C'est moi qui SUIS... (not "qui est")
+   → C'est toi qui AS... (not "qui a")
+
+QUE:
+→ CONTRACTS before a vowel → QU'
+   → Le film qu'elle a vu (NOT "que elle")
+→ In passé composé with avoir: past participle AGREES with antecedent
+   → La robe que j'ai achetéE (fem agreement — like COD in Project 19)
+
+OÙ:
+→ Can mean WHERE or WHEN
+→ "Le jour où..." = The day WHEN... (NOT "le jour quand")
+
+DONT:
+→ Replaces ALL "de" connections — possession, "parler de", "avoir besoin de", etc.
+→ Word order after DONT is ALWAYS: dont + SUBJECT + VERB + (rest)
+   → L'homme dont je connais la femme (NOT "dont la femme je connais")</code></pre></div>
+<hr>
+<h1>✅ WHAT COULD BE DONE — THE 100 SENTENCES</h1>
+<hr>
+<h2>🔹 BLOCK A — QUI: The Antecedent Is the Subject</h2>
+<p><em>Scenario: Describing people and things by what they DO</em></p>
+<table><thead><tr><th>#</th><th>Two Sentences</th><th>Combined with QUI</th><th>English</th></tr></thead><tbody><tr><td>1</td><td>J'ai un ami. Il habite à Paris.</td><td>J'ai un ami <strong>qui</strong> habite à Paris.</td><td>I have a friend who lives in Paris.</td></tr><tr><td>2</td><td>Je connais une fille. Elle parle cinq langues.</td><td>Je connais une fille <strong>qui</strong> parle cinq langues.</td><td>I know a girl who speaks five languages.</td></tr><tr><td>3</td><td>Il y a un bus. Le bus passe toutes les dix minutes.</td><td>Il y a un bus <strong>qui</strong> passe toutes les dix minutes.</td><td>There's a bus that passes every ten minutes.</td></tr><tr><td>4</td><td>C'est le professeur. Le professeur m'a aidé.</td><td>C'est le professeur <strong>qui</strong> m'a aidé.</td><td>That's the teacher who helped me.</td></tr><tr><td>5</td><td>Je cherche quelqu'un. Cette personne peut m'aider.</td><td>Je cherche quelqu'un <strong>qui</strong> peut m'aider.</td><td>I'm looking for someone who can help me.</td></tr><tr><td>6</td><td>Nous avons des voisins. Les voisins font beaucoup de bruit.</td><td>Nous avons des voisins <strong>qui</strong> font beaucoup de bruit.</td><td>We have neighbors who make a lot of noise.</td></tr><tr><td>7</td><td>Elle a un chien. Le chien est très gentil.</td><td>Elle a un chien <strong>qui</strong> est très gentil.</td><td>She has a dog that is very nice.</td></tr><tr><td>8</td><td>C'est une histoire. L'histoire finit bien.</td><td>C'est une histoire <strong>qui</strong> finit bien.</td><td>It's a story that ends well.</td></tr><tr><td>9</td><td>Il y a un train. Le train part à huit heures.</td><td>Il y a un train <strong>qui</strong> part à huit heures.</td><td>There's a train that leaves at eight.</td></tr><tr><td>10</td><td>C'est la seule chose. La chose me fait peur.</td><td>C'est la seule chose <strong>qui</strong> me fait peur.</td><td>It's the only thing that scares me.</td></tr></tbody></table>
+<p><strong>🧠 Structure unlocked:</strong> <code>Antecedent + QUI + verb (conjugated to match antecedent) + rest</code></p>
+<p>→ <strong>QUI = the antecedent is DOING the action</strong> in the relative clause<br>
+→ After QUI, the verb <strong>agrees with the antecedent</strong> — not with "qui" itself<br>
+→ QUI works for <strong>people, animals, things, abstract ideas</strong> — everything</p>
+<hr>
+<h2>🔹 BLOCK B — QUI with C'est...qui (Emphasis Structure)</h2>
+<p><em>Scenario: Emphasizing WHO did something — pointing out, correcting, clarifying</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English</th><th>Why QUI</th></tr></thead><tbody><tr><td>11</td><td>C'est <strong>moi qui</strong> ai fait ça.</td><td>It's ME who did that.</td><td>moi = subject → qui + ai (1st person)</td></tr><tr><td>12</td><td>C'est <strong>toi qui</strong> as commencé.</td><td>It's YOU who started.</td><td>toi = subject → qui + as (2nd person)</td></tr><tr><td>13</td><td>C'est <strong>lui qui</strong> a raison.</td><td>It's HIM who is right.</td><td>lui = subject → qui + a (3rd person)</td></tr><tr><td>14</td><td>C'est <strong>elle qui</strong> m'a appelé.</td><td>It's HER who called me.</td><td>elle = subject → qui + a</td></tr><tr><td>15</td><td>C'est <strong>nous qui</strong> avons décidé.</td><td>It's US who decided.</td><td>nous = subject → qui + avons (1st plural)</td></tr><tr><td>16</td><td>C'est <strong>vous qui</strong> devez choisir.</td><td>It's YOU who must choose.</td><td>vous = subject → qui + devez (2nd plural)</td></tr><tr><td>17</td><td>Ce sont <strong>eux qui</strong> sont arrivés en premier.</td><td>It's THEM who arrived first.</td><td>eux = subject → qui + sont</td></tr><tr><td>18</td><td>C'est <strong>le chat qui</strong> a cassé le vase.</td><td>It's the CAT that broke the vase.</td><td>le chat = subject → qui + a cassé</td></tr><tr><td>19</td><td>C'est <strong>cette décision qui</strong> a tout changé.</td><td>It's THIS DECISION that changed everything.</td><td>la décision = subject → qui + a changé</td></tr><tr><td>20</td><td>C'est <strong>ce restaurant qui</strong> est le meilleur.</td><td>It's THIS RESTAURANT that is the best.</td><td>ce restaurant = subject → qui + est</td></tr></tbody></table>
+<p><strong>🧠 Structure unlocked:</strong> <code>C'est + [stressed noun/pronoun] + QUI + verb (agrees with the noun/pronoun)</code></p>
+<p>→ This structure <strong>emphasizes</strong> who or what did the action<br>
+→ Very common in spoken French — used for blame, credit, clarification, surprise<br>
+→ <strong>Verb agreement is CRITICAL here:</strong><br>
+→ C'est moi qui <strong>ai</strong> (NOT "qui a")<br>
+→ C'est vous qui <strong>avez</strong> (NOT "qui a")</p>
+<hr>
+<h2>🔹 BLOCK C — QUE: The Antecedent Is the Direct Object</h2>
+<p><em>Scenario: Describing things by what someone DOES TO them</em></p>
+<table><thead><tr><th>#</th><th>Two Sentences</th><th>Combined with QUE</th><th>English</th></tr></thead><tbody><tr><td>21</td><td>J'ai vu un film. Le film était génial.</td><td>Le film <strong>que</strong> j'ai vu était génial.</td><td>The film that I saw was great.</td></tr><tr><td>22</td><td>Tu lis un livre. Je t'ai recommandé ce livre.</td><td>Le livre <strong>que</strong> je t'ai recommandé est intéressant.</td><td>The book that I recommended to you is interesting.</td></tr><tr><td>23</td><td>Elle porte une robe. J'adore cette robe.</td><td>La robe <strong>qu'</strong> elle porte est magnifique.</td><td>The dress that she's wearing is beautiful.</td></tr><tr><td>24</td><td>Nous mangeons un plat. Ma mère a préparé ce plat.</td><td>Le plat <strong>que</strong> ma mère a préparé est délicieux.</td><td>The dish that my mother prepared is delicious.</td></tr><tr><td>25</td><td>Il a un problème. Je comprends ce problème.</td><td>Le problème <strong>que</strong> je comprends est simple.</td><td>The problem that I understand is simple.</td></tr><tr><td>26</td><td>Tu as acheté une voiture. Montre-moi cette voiture.</td><td>Montre-moi la voiture <strong>que</strong> tu as achetée.</td><td>Show me the car that you bought.</td></tr><tr><td>27</td><td>Elle a des amis. Je ne connais pas ces amis.</td><td>Les amis <strong>qu'</strong> elle a, je ne les connais pas.</td><td>The friends that she has, I don't know them.</td></tr><tr><td>28</td><td>C'est le cadeau. Mon fils m'a offert ce cadeau.</td><td>C'est le cadeau <strong>que</strong> mon fils m'a offert.</td><td>It's the gift that my son gave me.</td></tr><tr><td>29</td><td>Voici les documents. Vous avez demandé ces documents.</td><td>Voici les documents <strong>que</strong> vous avez demandés.</td><td>Here are the documents that you requested.</td></tr><tr><td>30</td><td>C'est la chanson. On entend cette chanson partout.</td><td>C'est la chanson <strong>qu'</strong> on entend partout.</td><td>It's the song that you hear everywhere.</td></tr></tbody></table>
+<p><strong>🧠 Structure unlocked:</strong> <code>Antecedent + QUE/QU' + subject + verb + rest</code></p>
+<p>→ <strong>QUE = the antecedent is being acted upon</strong> (it's the OBJECT of the relative clause)<br>
+→ After QUE, you always see <strong>a NEW subject</strong> — because the antecedent is NOT the doer<br>
+→ QUE contracts to <strong>QU'</strong> before a vowel: qu'elle, qu'on, qu'il, qu'un</p>
+<p><strong>🧠 CRITICAL AGREEMENT RULE — QUE + PASSÉ COMPOSÉ:</strong></p>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>When QUE refers to a noun that is the COD of a passé composé with avoir:
+</span>→ The past participle AGREES with the antecedent (gender + number)
+
+La robe que j'ai achetéE (fem sing → +e)
+Les documents que vous avez demandéS (masc plural → +s)
+Les fleurs qu'il a apportéES (fem plural → +es)
+
+WHY? → Same rule as Project 19 (COD before avoir → agreement)
+→ QUE acts like a COD pronoun that comes BEFORE avoir</code></pre></div>
+<hr>
+<h2>🔹 BLOCK D — QUI vs. QUE: The Critical Distinction</h2>
+<p><em>Scenario: Same nouns, different roles — choosing the right pronoun</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English</th><th>Why This Pronoun</th></tr></thead><tbody><tr><td>31</td><td>L'homme <strong>qui</strong> parle est mon père.</td><td>The man who is speaking is my father.</td><td>l'homme = SUBJECT (he speaks) → QUI</td></tr><tr><td>32</td><td>L'homme <strong>que</strong> tu vois est mon père.</td><td>The man that you see is my father.</td><td>l'homme = OBJECT (you see HIM) → QUE</td></tr><tr><td>33</td><td>Le gâteau <strong>qui</strong> est sur la table est pour toi.</td><td>The cake that is on the table is for you.</td><td>le gâteau = SUBJECT (it IS on the table) → QUI</td></tr><tr><td>34</td><td>Le gâteau <strong>que</strong> j'ai fait est pour toi.</td><td>The cake that I made is for you.</td><td>le gâteau = OBJECT (I made IT) → QUE</td></tr><tr><td>35</td><td>La femme <strong>qui</strong> travaille ici est ma sœur.</td><td>The woman who works here is my sister.</td><td>la femme = SUBJECT (she works) → QUI</td></tr><tr><td>36</td><td>La femme <strong>que</strong> j'ai rencontrée hier est ma sœur.</td><td>The woman that I met yesterday is my sister.</td><td>la femme = OBJECT (I met HER) → QUE</td></tr><tr><td>37</td><td>Les enfants <strong>qui</strong> jouent dehors sont les miens.</td><td>The kids who are playing outside are mine.</td><td>les enfants = SUBJECT (they play) → QUI</td></tr><tr><td>38</td><td>Les enfants <strong>que</strong> je garde sont adorables.</td><td>The kids that I babysit are adorable.</td><td>les enfants = OBJECT (I babysit THEM) → QUE</td></tr><tr><td>39</td><td>C'est un projet <strong>qui</strong> prend du temps.</td><td>It's a project that takes time.</td><td>le projet = SUBJECT (it takes time) → QUI</td></tr><tr><td>40</td><td>C'est un projet <strong>que</strong> nous devons finir.</td><td>It's a project that we must finish.</td><td>le projet = OBJECT (we finish IT) → QUE</td></tr></tbody></table>
+<p><strong>🧠 THE DEFINITIVE TEST:</strong></p>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>After the relative pronoun, look at what comes NEXT:
+</span>
+QUI + VERB (directly)       → The antecedent IS the subject
+   "L'homme qui PARLE..."
+
+QUE + SUBJECT + VERB        → The antecedent IS the object
+   "L'homme que TU VOIS..."
+
+If a VERB follows immediately → QUI
+If a NEW SUBJECT follows    → QUE</code></pre></div>
+<p>→ This is the <strong>single most reliable shortcut</strong> for choosing between qui and que<br>
+→ Works in <strong>100% of cases</strong></p>
+<hr>
+<h2>🔹 BLOCK E — OÙ: Place and Time Connector</h2>
+<p><em>Scenario: Describing places you've been, moments that happened</em></p>
+<table><thead><tr><th>#</th><th>Two Sentences</th><th>Combined with OÙ</th><th>English</th></tr></thead><tbody><tr><td>41</td><td>Je connais un restaurant. On mange très bien dans ce restaurant.</td><td>Je connais un restaurant <strong>où</strong> on mange très bien.</td><td>I know a restaurant where you eat very well.</td></tr><tr><td>42</td><td>C'est la ville. J'ai grandi dans cette ville.</td><td>C'est la ville <strong>où</strong> j'ai grandi.</td><td>It's the city where I grew up.</td></tr><tr><td>43</td><td>Voici l'hôtel. Nous avons dormi dans cet hôtel.</td><td>Voici l'hôtel <strong>où</strong> nous avons dormi.</td><td>Here's the hotel where we slept.</td></tr><tr><td>44</td><td>C'est le bureau. Je travaille dans ce bureau.</td><td>C'est le bureau <strong>où</strong> je travaille.</td><td>It's the office where I work.</td></tr><tr><td>45</td><td>Il y a un parc. Les enfants jouent dans ce parc.</td><td>Il y a un parc <strong>où</strong> les enfants jouent.</td><td>There's a park where the kids play.</td></tr><tr><td>46</td><td>C'est le magasin. J'ai acheté cette robe dans ce magasin.</td><td>C'est le magasin <strong>où</strong> j'ai acheté cette robe.</td><td>It's the store where I bought this dress.</td></tr><tr><td>47</td><td>C'est le jour. Je suis arrivé en France ce jour-là.</td><td>C'est le jour <strong>où</strong> je suis arrivé en France.</td><td>It's the day when I arrived in France.</td></tr><tr><td>48</td><td>Tu te souviens du moment. On s'est rencontrés à ce moment.</td><td>Tu te souviens du moment <strong>où</strong> on s'est rencontrés ?</td><td>Do you remember the moment when we met?</td></tr><tr><td>49</td><td>C'était l'époque. Tout était plus simple à cette époque.</td><td>C'était l'époque <strong>où</strong> tout était plus simple.</td><td>It was the time when everything was simpler.</td></tr><tr><td>50</td><td>C'est l'année. Elle a obtenu son diplôme cette année-là.</td><td>C'est l'année <strong>où</strong> elle a obtenu son diplôme.</td><td>It's the year when she got her degree.</td></tr></tbody></table>
+<p><strong>🧠 Structure unlocked:</strong> <code>Antecedent (place/time) + OÙ + subject + verb + rest</code></p>
+<p>→ OÙ replaces <strong>place prepositions</strong>: dans, à, sur, en, chez → all absorbed into OÙ<br>
+→ OÙ also replaces <strong>time references</strong>: le jour <strong>où</strong>, le moment <strong>où</strong>, l'époque <strong>où</strong>, l'année <strong>où</strong><br>
+→ <strong>NEVER use "quand" as a relative pronoun</strong> for time:<br>
+→ ❌ <del>Le jour <strong>quand</strong> je suis arrivé</del><br>
+→ ✅ Le jour <strong>où</strong> je suis arrivé</p>
+<hr>
+<h2>🔹 BLOCK F — OÙ with D'OÙ (From Where / Origin)</h2>
+<p><em>Scenario: Describing where something or someone comes from — the origin point</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English</th><th>Structure</th></tr></thead><tbody><tr><td>51</td><td>C'est le pays <strong>d'où</strong> je viens.</td><td>It's the country I come from.</td><td>d'où = from where</td></tr><tr><td>52</td><td>La ville <strong>d'où</strong> il est parti n'existe plus.</td><td>The city he left from no longer exists.</td><td>d'où = from where (past)</td></tr><tr><td>53</td><td>L'école <strong>d'où</strong> elle sort est très connue.</td><td>The school she comes from is well-known.</td><td>d'où = from where</td></tr><tr><td>54</td><td>C'est la fenêtre <strong>d'où</strong> on voit la mer.</td><td>It's the window from where you see the sea.</td><td>d'où = from where (view)</td></tr><tr><td>55</td><td>Le quartier <strong>d'où</strong> je viens est populaire.</td><td>The neighborhood I come from is popular.</td><td>d'où = from where</td></tr></tbody></table>
+<p><strong>🧠 Structure unlocked:</strong> <code>Antecedent + D'OÙ + subject + verb</code></p>
+<p>→ OÙ = going to / being at a place<br>
+→ D'OÙ = coming FROM a place<br>
+→ Same destination/origin split as Y/En from Project 20 — but now for <strong>relative clauses</strong></p>
+<hr>
+<h2>🔹 BLOCK G — DONT: Replacing "DE" Connections</h2>
+<p><em>Scenario: Describing things people talk about, need, are proud of, or that belong to someone</em></p>
+<h3>Part 1 — DONT replacing "parler de, avoir besoin de, avoir peur de, etc."</h3>
+<p><em>Connection to Project 20: These are the same "de" expressions that use EN — but now in relative clauses</em></p>
+<table><thead><tr><th>#</th><th>Two Sentences</th><th>Combined with DONT</th><th>English</th><th>"De" Expression</th></tr></thead><tbody><tr><td>56</td><td>C'est le film. Je t'ai parlé de ce film.</td><td>C'est le film <strong>dont</strong> je t'ai parlé.</td><td>It's the film I told you about.</td><td>parler <strong>de</strong></td></tr><tr><td>57</td><td>Voici le livre. J'ai besoin de ce livre.</td><td>Voici le livre <strong>dont</strong> j'ai besoin.</td><td>Here's the book I need.</td><td>avoir besoin <strong>de</strong></td></tr><tr><td>58</td><td>C'est une chose. J'ai peur de cette chose.</td><td>C'est une chose <strong>dont</strong> j'ai peur.</td><td>It's something I'm afraid of.</td><td>avoir peur <strong>de</strong></td></tr><tr><td>59</td><td>C'est le sujet. Nous avons discuté de ce sujet.</td><td>C'est le sujet <strong>dont</strong> nous avons discuté.</td><td>It's the topic we discussed.</td><td>discuter <strong>de</strong></td></tr><tr><td>60</td><td>C'est le projet. Elle s'occupe de ce projet.</td><td>C'est le projet <strong>dont</strong> elle s'occupe.</td><td>It's the project she's handling.</td><td>s'occuper <strong>de</strong></td></tr><tr><td>61</td><td>C'est une expérience. Je me souviens de cette expérience.</td><td>C'est une expérience <strong>dont</strong> je me souviens.</td><td>It's an experience I remember.</td><td>se souvenir <strong>de</strong></td></tr><tr><td>62</td><td>C'est la raison. Je suis parti pour cette raison.</td><td>C'est la raison <strong>dont</strong> ... → C'est la raison <strong>pour laquelle</strong> je suis parti.</td><td>It's the reason I left.</td><td>⚠️ See note below</td></tr><tr><td>63</td><td>Voici l'outil. Tu as besoin de cet outil.</td><td>Voici l'outil <strong>dont</strong> tu as besoin.</td><td>Here's the tool you need.</td><td>avoir besoin <strong>de</strong></td></tr><tr><td>64</td><td>C'est le problème. On parle de ce problème partout.</td><td>C'est le problème <strong>dont</strong> on parle partout.</td><td>It's the problem everyone talks about.</td><td>parler <strong>de</strong></td></tr><tr><td>65</td><td>C'est la personne. Je t'ai parlé de cette personne.</td><td>C'est la personne <strong>dont</strong> je t'ai parlé.</td><td>It's the person I told you about.</td><td>parler <strong>de</strong></td></tr></tbody></table>
+<p><strong>⚠️ NOTE on Sentence 62:</strong><br>
+→ "La raison" connects with "pour" not "de" → DONT doesn't work here<br>
+→ Use "pour laquelle" instead → this is a <strong>lequel compound</strong> (addressed at end of this project)<br>
+→ DONT only works when the connection is specifically <strong>"de"</strong></p>
+<p><strong>🧠 Rule:</strong> If the expression uses <strong>DE</strong> → DONT works<br>
+→ Cross-reference with Project 20 — every expression that triggers <strong>EN</strong> also triggers <strong>DONT</strong> in relative clauses</p>
+<hr>
+<h3>Part 2 — DONT expressing Possession (Whose)</h3>
+<table><thead><tr><th>#</th><th>Two Sentences</th><th>Combined with DONT</th><th>English</th><th>What DONT Replaces</th></tr></thead><tbody><tr><td>66</td><td>Je connais un homme. Sa femme est médecin.</td><td>Je connais un homme <strong>dont</strong> la femme est médecin.</td><td>I know a man whose wife is a doctor.</td><td>de + possession (sa → la)</td></tr><tr><td>67</td><td>C'est l'auteur. J'adore ses livres.</td><td>C'est l'auteur <strong>dont</strong> j'adore les livres.</td><td>It's the author whose books I love.</td><td>de + possession (ses → les)</td></tr><tr><td>68</td><td>C'est une ville. Son histoire est fascinante.</td><td>C'est une ville <strong>dont</strong> l'histoire est fascinante.</td><td>It's a city whose history is fascinating.</td><td>de + possession (son → l')</td></tr><tr><td>69</td><td>Voici l'élève. Ses résultats sont excellents.</td><td>Voici l'élève <strong>dont</strong> les résultats sont excellents.</td><td>Here's the student whose results are excellent.</td><td>de + possession (ses → les)</td></tr><tr><td>70</td><td>C'est le pays. Sa cuisine est célèbre.</td><td>C'est le pays <strong>dont</strong> la cuisine est célèbre.</td><td>It's the country whose cuisine is famous.</td><td>de + possession (sa → la)</td></tr></tbody></table>
+<p><strong>🧠 CRITICAL RULE — DONT + POSSESSION:</strong></p>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>When DONT expresses "whose":
+</span>→ The possessive adjective (son, sa, ses) changes to DEFINITE ARTICLE (le, la, les)
+
+BEFORE: Je connais un homme. SA femme est médecin.
+AFTER:  Je connais un homme dont LA femme est médecin.
+                                  ↑ sa becomes la
+
+WHY? → "dont" already carries the possessive connection ("of whom")
+→ Adding "sa" would be double possession — redundant
+→ So possessive → definite article</code></pre></div>
+<p>→ ❌ <del>l'homme dont <strong>sa</strong> femme</del> (WRONG — double possession)<br>
+→ ✅ l'homme dont <strong>la</strong> femme (CORRECT)</p>
+<hr>
+<h3>Part 3 — DONT with Adjectives + DE</h3>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English</th><th>Expression</th></tr></thead><tbody><tr><td>71</td><td>C'est un résultat <strong>dont</strong> je suis fier.</td><td>It's a result I'm proud of.</td><td>être fier <strong>de</strong></td></tr><tr><td>72</td><td>C'est une décision <strong>dont</strong> elle est sûre.</td><td>It's a decision she's sure about.</td><td>être sûr <strong>de</strong></td></tr><tr><td>73</td><td>C'est un événement <strong>dont</strong> nous sommes contents.</td><td>It's an event we're happy about.</td><td>être content <strong>de</strong></td></tr><tr><td>74</td><td>C'est une situation <strong>dont</strong> il est responsable.</td><td>It's a situation he's responsible for.</td><td>être responsable <strong>de</strong></td></tr><tr><td>75</td><td>C'est un détail <strong>dont</strong> je suis conscient.</td><td>It's a detail I'm aware of.</td><td>être conscient <strong>de</strong></td></tr></tbody></table>
+<p><strong>🧠 Structure unlocked:</strong> <code>Antecedent + DONT + subject + être + adjective</code><br>
+→ Any adjective that takes <strong>DE</strong> → triggers DONT in relative clauses<br>
+→ fier <strong>de</strong>, sûr <strong>de</strong>, content <strong>de</strong>, responsable <strong>de</strong>, conscient <strong>de</strong>, satisfait <strong>de</strong>, capable <strong>de</strong></p>
+<hr>
+<h2>🔹 BLOCK H — All Four Pronouns in Contrast</h2>
+<p><em>Scenario: Same antecedent — different relative pronoun depending on its role</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>Pronoun</th><th>Why</th></tr></thead><tbody><tr><td>76</td><td>L'homme <strong>qui</strong> travaille ici est sympa.</td><td>QUI</td><td>l'homme = SUBJECT (he works)</td></tr><tr><td>77</td><td>L'homme <strong>que</strong> tu as vu est sympa.</td><td>QUE</td><td>l'homme = OBJECT (you saw him)</td></tr><tr><td>78</td><td>L'endroit <strong>où</strong> il travaille est sympa.</td><td>OÙ</td><td>l'endroit = PLACE (he works there)</td></tr><tr><td>79</td><td>L'homme <strong>dont</strong> je t'ai parlé est sympa.</td><td>DONT</td><td>l'homme = "de" link (I talked about him)</td></tr><tr><td>80</td><td>La maison <strong>qui</strong> est au coin de la rue est à vendre.</td><td>QUI</td><td>la maison = SUBJECT (it IS at the corner)</td></tr><tr><td>81</td><td>La maison <strong>que</strong> nous avons visitée est à vendre.</td><td>QUE</td><td>la maison = OBJECT (we visited IT) + agreement</td></tr><tr><td>82</td><td>La maison <strong>où</strong> j'ai grandi est à vendre.</td><td>OÙ</td><td>la maison = PLACE (I grew up THERE)</td></tr><tr><td>83</td><td>La maison <strong>dont</strong> le jardin est magnifique est à vendre.</td><td>DONT</td><td>la maison = POSSESSION (its garden → whose)</td></tr><tr><td>84</td><td>Le voyage <strong>qui</strong> m'a changé la vie.</td><td>QUI</td><td>le voyage = SUBJECT (it changed my life)</td></tr><tr><td>85</td><td>Le voyage <strong>que</strong> j'ai fait l'été dernier.</td><td>QUE</td><td>le voyage = OBJECT (I took IT)</td></tr><tr><td>86</td><td>Le pays <strong>où</strong> j'ai voyagé.</td><td>OÙ</td><td>le pays = PLACE (I traveled THERE)</td></tr><tr><td>87</td><td>Le voyage <strong>dont</strong> je rêve depuis toujours.</td><td>DONT</td><td>le voyage = "de" link (rêver DE)</td></tr></tbody></table>
+<p><strong>🧠 THE MASTER DECISION TABLE:</strong></p>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>→ Antecedent DOES the action?           → QUI
+</span>→ Antecedent RECEIVES the action?       → QUE
+→ Antecedent is a PLACE or TIME?        → OÙ
+→ Antecedent connects via "DE"?         → DONT</code></pre></div>
+<hr>
+<h2>🔹 BLOCK I — CE QUI, CE QUE, CE DONT, CE À QUOI (What...)</h2>
+<p><em>Scenario: You don't have a specific noun — you're talking about "what" in general</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English</th><th>Structure</th></tr></thead><tbody><tr><td>88</td><td><strong>Ce qui</strong> me plaît, c'est la musique.</td><td>What I like is music.</td><td>Ce qui = "what" as SUBJECT</td></tr><tr><td>89</td><td><strong>Ce qui</strong> est important, c'est la santé.</td><td>What's important is health.</td><td>Ce qui = "what" as SUBJECT</td></tr><tr><td>90</td><td>Je ne comprends pas <strong>ce qui</strong> se passe.</td><td>I don't understand what's happening.</td><td>Ce qui = "what" as SUBJECT</td></tr><tr><td>91</td><td><strong>Ce que</strong> je veux, c'est du repos.</td><td>What I want is rest.</td><td>Ce que = "what" as OBJECT</td></tr><tr><td>92</td><td>Dis-moi <strong>ce que</strong> tu penses.</td><td>Tell me what you think.</td><td>Ce que = "what" as OBJECT</td></tr><tr><td>93</td><td>Je ne sais pas <strong>ce qu'</strong> il veut.</td><td>I don't know what he wants.</td><td>Ce qu' = ce que before vowel</td></tr><tr><td>94</td><td><strong>Ce dont</strong> j'ai besoin, c'est du temps.</td><td>What I need is time.</td><td>Ce dont = "what" linked by "de"</td></tr><tr><td>95</td><td>C'est exactement <strong>ce dont</strong> je parlais.</td><td>That's exactly what I was talking about.</td><td>Ce dont = parler <strong>de</strong></td></tr><tr><td>96</td><td><strong>Ce dont</strong> j'ai peur, c'est l'échec.</td><td>What I'm afraid of is failure.</td><td>Ce dont = avoir peur <strong>de</strong></td></tr><tr><td>97</td><td>Je ne sais pas <strong>ce à quoi</strong> tu penses.</td><td>I don't know what you're thinking about.</td><td>Ce à quoi = penser <strong>à</strong> + thing</td></tr><tr><td>98</td><td><strong>Ce à quoi</strong> je m'attends, c'est une longue journée.</td><td>What I expect is a long day.</td><td>Ce à quoi = s'attendre <strong>à</strong></td></tr></tbody></table>
+<p><strong>🧠 Structure unlocked — The "CE" Versions:</strong></p>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>When there is NO specific antecedent — you mean "WHAT" in general:
+</span>
+CE QUI   = what (subject)     → Ce qui me plaît...
+CE QUE   = what (object)      → Ce que je veux...
+CE DONT  = what (de-linked)   → Ce dont j'ai besoin...
+CE À QUOI = what (à-linked)   → Ce à quoi je pense...</code></pre></div>
+<p>→ These are <strong>extremely common</strong> in spoken French<br>
+→ "Ce que je veux dire, c'est que..." = "What I mean is that..." — used constantly</p>
+<hr>
+<h2>🔹 BLOCK J — Full Conversational Flow with All Relative Pronouns</h2>
+<p><em>Scenario: Natural dialogue where relative pronouns create flowing, adult-level speech</em></p>
+<table><thead><tr><th>#</th><th>Speaker</th><th>French</th><th>English</th><th>Pronoun Used</th></tr></thead><tbody><tr><td>99</td><td>A:</td><td>Tu connais le restaurant <strong>qui</strong> vient d'ouvrir dans la rue <strong>où</strong> j'habite ?</td><td>Do you know the restaurant that just opened on the street where I live?</td><td>QUI + OÙ</td></tr><tr><td>100</td><td>B:</td><td>C'est celui <strong>dont</strong> Marie m'a parlé ? Le restaurant <strong>qu'</strong> elle a trouvé en ligne ?</td><td>Is it the one Marie told me about? The restaurant she found online?</td><td>DONT + QUE</td></tr></tbody></table>
+<hr>
+<h1>✅ WHAT SHOULD DO</h1>
+<p>→ <strong>Use the quick test every time:</strong> After the pronoun → VERB directly = QUI / NEW SUBJECT = QUE<br>
+→ <strong>Practice converting two short sentences into one combined sentence</strong> — this is the core skill<br>
+→ <strong>Memorize the "de" expression list</strong> — every verb/adjective + "de" triggers DONT<br>
+→ <strong>Use "ce qui / ce que / ce dont" immediately</strong> — they appear in every conversation<br>
+→ <strong>Pay attention to agreement</strong> with QUE + passé composé (same rule as COD in Project 19)<br>
+→ <strong>Use OÙ for time</strong> — "le jour où" — never "le jour quand"</p>
+<hr>
+<h1>❌ WHAT SHOULD NOT DO</h1>
+<p>→ ❌ Do NOT use QUE when the antecedent is the SUBJECT</p>
+<table><thead><tr><th>Wrong</th><th>Correct</th><th>Why</th></tr></thead><tbody><tr><td><del>L'homme <strong>que</strong> parle</del></td><td>L'homme <strong>qui</strong> parle</td><td>l'homme = subject → QUI</td></tr></tbody></table>
+<p>→ ❌ Do NOT use QUI when the antecedent is the OBJECT</p>
+<table><thead><tr><th>Wrong</th><th>Correct</th><th>Why</th></tr></thead><tbody><tr><td><del>Le film <strong>qui</strong> j'ai vu</del></td><td>Le film <strong>que</strong> j'ai vu</td><td>le film = object → QUE</td></tr></tbody></table>
+<p>→ ❌ Do NOT use "quand" as a relative pronoun for time</p>
+<table><thead><tr><th>Wrong</th><th>Correct</th></tr></thead><tbody><tr><td><del>Le jour <strong>quand</strong> je suis arrivé</del></td><td>Le jour <strong>où</strong> je suis arrivé</td></tr></tbody></table>
+<p>→ ❌ Do NOT keep possessive adjectives after DONT</p>
+<table><thead><tr><th>Wrong</th><th>Correct</th></tr></thead><tbody><tr><td><del>L'homme dont <strong>sa</strong> femme</del></td><td>L'homme dont <strong>la</strong> femme</td></tr></tbody></table>
+<p>→ ❌ Do NOT forget QUE contracts before vowels</p>
+<table><thead><tr><th>Wrong</th><th>Correct</th></tr></thead><tbody><tr><td><del>Le film <strong>que</strong> elle a vu</del></td><td>Le film <strong>qu'</strong> elle a vu</td></tr></tbody></table>
+<p>→ ❌ Do NOT forget agreement with QUE + passé composé</p>
+<table><thead><tr><th>Wrong</th><th>Correct</th></tr></thead><tbody><tr><td><del>La robe que j'ai acheté</del></td><td>La robe que j'ai acheté<strong>e</strong></td></tr><tr><td><del>Les fleurs qu'il a apporté</del></td><td>Les fleurs qu'il a apporté<strong>es</strong></td></tr></tbody></table>
+<p>→ ❌ Do NOT use DONT when the connection is NOT "de"</p>
+<table><thead><tr><th>Wrong</th><th>Correct</th><th>Why</th></tr></thead><tbody><tr><td><del>La raison dont je suis parti</del></td><td>La raison <strong>pour laquelle</strong> je suis parti</td><td>partir <strong>pour</strong> (not "de")</td></tr><tr><td><del>La personne dont je pense</del></td><td>La personne <strong>à qui</strong> je pense</td><td>penser <strong>à</strong> (not "de")</td></tr></tbody></table>
+<hr>
+<h1>🔀 WHEN TO USE WHAT</h1>
+<table><thead><tr><th>You Want to Say</th><th>Relative Pronoun</th><th>Test</th><th>Example</th></tr></thead><tbody><tr><td>...who/that DOES something</td><td><strong>QUI</strong></td><td>Verb follows directly</td><td>l'homme <strong>qui</strong> parle</td></tr><tr><td>...that someone does something TO</td><td><strong>QUE</strong></td><td>New subject follows</td><td>le film <strong>que</strong> j'ai vu</td></tr><tr><td>...WHERE something happens</td><td><strong>OÙ</strong></td><td>Place antecedent</td><td>la ville <strong>où</strong> j'habite</td></tr><tr><td>...WHEN something happened</td><td><strong>OÙ</strong></td><td>Time antecedent</td><td>le jour <strong>où</strong> je suis arrivé</td></tr><tr><td>...FROM WHERE</td><td><strong>D'OÙ</strong></td><td>Origin place</td><td>le pays <strong>d'où</strong> je viens</td></tr><tr><td>...about which / of which / whose</td><td><strong>DONT</strong></td><td>"De" connection</td><td>le film <strong>dont</strong> je parle</td></tr><tr><td>"WHAT" (no specific noun) + subject</td><td><strong>CE QUI</strong></td><td>Subject of relative</td><td><strong>Ce qui</strong> me plaît...</td></tr><tr><td>"WHAT" (no specific noun) + object</td><td><strong>CE QUE</strong></td><td>Object of relative</td><td><strong>Ce que</strong> je veux...</td></tr><tr><td>"WHAT" (no specific noun) + "de"</td><td><strong>CE DONT</strong></td><td>"De" connection</td><td><strong>Ce dont</strong> j'ai besoin...</td></tr></tbody></table>
+<hr>
+<h1>🚫 WHEN NOT TO USE</h1>
+<table><thead><tr><th>Situation</th><th>Do NOT Use</th><th>Use Instead</th><th>Why</th></tr></thead><tbody><tr><td>Connection is via "à" (not "de")</td><td>DONT</td><td><strong>à qui</strong> (person) / <strong>auquel</strong> (thing)</td><td>DONT only replaces "de"</td></tr><tr><td>Connection is via "pour / avec / sans"</td><td>DONT</td><td><strong>pour qui, avec lequel, sans laquelle</strong></td><td>DONT only replaces "de"</td></tr><tr><td>You're asking a question</td><td>Relative pronouns</td><td>Interrogative pronouns (qui ?, que ?, où ?)</td><td>Different system</td></tr><tr><td>Simple sentence — no description needed</td><td>Relative pronouns</td><td>Keep it simple</td><td>Don't over-complicate</td></tr><tr><td>You're replacing a noun to avoid repetition</td><td>Relative pronouns</td><td>COD/COI/Y/En (Projects 19-20)</td><td>Relative pronouns CONNECT — they don't REPLACE</td></tr></tbody></table>
+<hr>
+<h1>⚠️ COMMON PITFALLS AND FAILURE MODES</h1>
+<table><thead><tr><th>Pitfall</th><th>What Learners Do</th><th>Why It's Wrong</th><th>Fix</th></tr></thead><tbody><tr><td><strong>QUI/QUE confusion</strong></td><td>Random choice between them</td><td>They have completely different roles</td><td>QUI → verb follows / QUE → subject follows</td></tr><tr><td><strong>"Quand" for time</strong></td><td>Le jour quand...</td><td>French uses OÙ for time in relative clauses</td><td>Le jour <strong>où</strong>...</td></tr><tr><td><strong>No contraction of QUE</strong></td><td>que elle, que il</td><td>QUE must contract before vowels</td><td><strong>qu'</strong> elle, <strong>qu'</strong> il</td></tr><tr><td><strong>No agreement with QUE</strong></td><td>La robe que j'ai acheté</td><td>QUE = COD before avoir → agreement</td><td>La robe que j'ai acheté<strong>e</strong></td></tr><tr><td><strong>DONT + possessive</strong></td><td>dont sa femme</td><td>Double possession — redundant</td><td>dont <strong>la</strong> femme</td></tr><tr><td><strong>DONT for "à" verbs</strong></td><td>La chose dont je pense</td><td>Penser <strong>à</strong> — not "de"</td><td>La chose <strong>à laquelle</strong> je pense</td></tr><tr><td><strong>Missing CE before general "what"</strong></td><td>Qui me plaît / Que je veux</td><td>Without a specific antecedent, need CE</td><td><strong>Ce</strong> qui me plaît / <strong>Ce</strong> que je veux</td></tr><tr><td><strong>Overloading one sentence</strong></td><td>Three or four relative clauses chained</td><td>Sounds heavy — natives limit to 1-2 per sentence</td><td>Split into two sentences</td></tr><tr><td><strong>QUI agreement with moi/toi</strong></td><td>C'est moi qui <strong>est</strong></td><td>Verb agrees with the REAL subject (moi = je)</td><td>C'est moi qui <strong>suis</strong></td></tr><tr><td><strong>Translating English "which" literally</strong></td><td>Confusion about when to use lequel</td><td>QUI/QUE/OÙ/DONT cover 95% of cases — lequel is rare</td><td>Master the four basics first</td></tr></tbody></table>
+<hr>
+<h1>🔑 KEY TAKEAWAY</h1>
+<blockquote>
+<p><strong>Relative pronouns transform you from a sentence-by-sentence speaker into a paragraph thinker.</strong></p>
+<p>→ Projects 19-20 gave you <strong>compression tools</strong> — replacing nouns with tiny pronouns<br>
+→ Project 21 gives you <strong>connection tools</strong> — linking entire ideas into single flowing sentences<br>
+→ These are fundamentally different skills:</p>
+<table><thead><tr><th>Skill</th><th>Tool</th><th>Effect</th></tr></thead><tbody><tr><td>Compression</td><td>le, la, lui, y, en (P19-20)</td><td>Shorter sentences — no noun repetition</td></tr><tr><td>Connection</td><td>qui, que, où, dont (P21)</td><td>Longer sentences — ideas woven together</td></tr></tbody></table>
+<p>→ Together, they give you <strong>adult-level French sentence architecture</strong><br>
+→ You can now describe people, things, places, and concepts within a single sentence<br>
+→ The four-pronoun system:<br>
+→ <strong>QUI</strong> = subject / <strong>QUE</strong> = object / <strong>OÙ</strong> = place-time / <strong>DONT</strong> = "de" connection</p>
+<p>→ But you've been <strong>receiving</strong> information — listening, understanding, describing<br>
+→ What about <strong>giving</strong> information — specifically, your <strong>OPINION</strong>?<br>
+→ French has dedicated structures for stating what you think, believe, and feel<br>
+→ And those structures trigger specific grammar (including the subjunctive — preview)</p>
+</blockquote>
+<hr>
+<h1>🌉 BRIDGE TO PROJECT 22</h1>
+<blockquote>
+<p>You can now build rich, descriptive sentences about people, places, and things<br>
+But in a French conversation, people constantly ask: <strong>"Qu'est-ce que tu en penses ?"</strong> (What do you think about it?)</p>
+<p>→ You need structures to <strong>state opinions, agree, disagree, nuance your position</strong><br>
+→ "Je pense que...", "À mon avis...", "Il me semble que...", "Je trouve que..."<br>
+→ Some trigger <strong>indicatif</strong> — some trigger <strong>subjonctif</strong> (first exposure)<br>
+→ Some are formal — some are casual<br>
+→ Choosing the wrong one changes how <strong>intelligent and nuanced</strong> you sound</p>
+<p>→ Project 22: <strong>"Here's What I Think"</strong><br>
+→ The architecture of opinion in French conversation</p>
+</blockquote>
+<hr>
+<h1>✅ PROJECT 21 COMPLETE</h1>
+<blockquote>
+<p><strong>Are you ready for PROJECT 22: "Here's What I Think"?</strong><br>
+→ ~100 sentences covering opinion structures (Je pense que, À mon avis, Il me semble que, etc.)<br>
+→ Scenario: You're in a discussion — you must state opinions, agree, disagree, nuance<br>
+→ Builds on relative pronouns — now you describe AND evaluate in the same breath</p>
+</blockquote>
+</div>
+</div>
+
+<!-- ========== data-index="13" ========== -->
+
+        </div>
+
+        <div class="nav-bar">
+            <a href="project-20.html" class="nav-button prev">← Previous Chapter</a>
+            <div class="page-info">
+                <a href="index.html" class="nav-button home">📚 Table of Contents</a><br>
+                <span style="margin-top:8px;display:block">Chapter 21 of 50</span>
+            </div>
+            <a href="project-22.html" class="nav-button next">Next Chapter →</a>
+        </div>
+    </div>
+
+    
+    <div id="progress-track"><div id="progress-fill"></div></div>
+    <div id="progress-pct">0%</div>
+
+
+    <script>
+    const fill = document.getElementById('progress-fill');
+    const pct  = document.getElementById('progress-pct');
+    function updateProgress() {
+        const scrollTop = window.scrollY;
+        const docHeight = document.body.scrollHeight - window.innerHeight;
+        const scrolled  = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+        fill.style.height = scrolled + '%';
+        pct.textContent   = Math.round(scrolled) + '%';
+    }
+    window.addEventListener('scroll', updateProgress);
+    updateProgress();
+
+    document.addEventListener('keydown', function(e) {
+        if (['INPUT','TEXTAREA'].includes(document.activeElement.tagName)) return;
+        if (e.key === 'ArrowLeft') {
+            const b = document.querySelector('.nav-button.prev');
+            if (b && !b.classList.contains('disabled')) window.location.href = b.href;
+        }
+        if (e.key === 'ArrowRight') {
+            const b = document.querySelector('.nav-button.next');
+            if (b && !b.classList.contains('disabled')) window.location.href = b.href;
+        }
+    });
+    </script>
+
+</body>
+</html>

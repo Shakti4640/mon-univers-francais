@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="images/favicon.png">
+    <title>Project 26: "You Must, You Have To" — French Daily Sentences</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.75;
+            color: #1a202c;
+            background-color: #f7fafc;
+        }
+        .container {
+            max-width: 1800px;
+            margin: 0 auto;
+            background: white;
+            min-height: 100vh;
+            box-shadow: 0 0 30px rgba(0,0,0,0.08);
+            padding: 48px 52px;
+        }
+        
+        .content { max-width: 1700px; margin: 0 auto; color: #1a202c; }
+        .content h1 {
+            color: #1a202c; margin: 32px 0 20px;
+            padding-bottom: 12px;
+            border-bottom: 4px solid #3b82f6;
+            font-size: 2.1em;
+            font-weight: 700;
+        }
+        .content h2 {
+            color: #1a202c; margin: 28px 0 16px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #60a5fa;
+            font-size: 1.6em;
+            font-weight: 600;
+        }
+        .content h3 { color: #1a202c; margin: 22px 0 12px; font-size: 1.3em; font-weight: 600; }
+        .content h4 { color: #2d3748; margin: 18px 0 10px; font-size: 1.1em; font-weight: 600; }
+        .content p  { margin-bottom: 16px; line-height: 1.8; color: #1a202c; }
+        .content ul, .content ol { margin: 12px 0 18px 30px; color: #1a202c; }
+        .content li { margin-bottom: 8px; line-height: 1.75; color: #1a202c; }
+        .content hr { border: none; border-top: 2px solid #e2e8f0; margin: 26px 0; }
+        .content pre {
+            background: #f7fafc !important;
+            border: 1px solid #cbd5e0 !important;
+            border-left: 4px solid #3b82f6 !important;
+            padding: 18px !important; overflow-x: auto; margin: 18px 0; border-radius: 6px;
+            font-family: 'Consolas','Monaco','Courier New',monospace !important;
+            font-size: 0.9em !important;
+        }
+        .content pre:not([style*="color"]) { color: #1a202c !important; }
+        .content code {
+            font-family: 'Consolas','Monaco','Courier New',monospace !important;
+            font-size: 0.88em !important;
+        }
+        .content code:not(pre code) {
+            background: #dbeafe !important;
+            color: #1a202c !important;
+            padding: 2px 6px;
+            border-radius: 3px;
+        }
+        .content pre code { background: transparent !important; padding: 0; }
+        .content table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+        .content th {
+            background: linear-gradient(135deg, #3b82f6 0%, #60a5fa 100%);
+            color: white; padding: 12px 16px; text-align: left;
+            font-weight: 600;
+        }
+        .content td { padding: 11px 16px; border: 1px solid #e2e8f0; color: #1a202c; }
+        .content tr:nth-child(even) td { background: #eff6ff; }
+        .content blockquote {
+            border-left: 4px solid #3b82f6; background: #eff6ff;
+            padding: 14px 20px; margin: 18px 0; border-radius: 0 6px 6px 0;
+            color: #1a202c;
+        }
+        .content strong { color: #1a202c; font-weight: 600; }
+        .px-2 { padding: 0; }
+        .chat-message { background: transparent; padding: 0; margin: 0; }
+
+        /* Bottom nav bar only */
+        .nav-bar {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 24px 0;
+            margin-top: 50px;
+            border-top: 3px solid #60a5fa;
+        }
+        .nav-button {
+            display: inline-flex; align-items: center; gap: 8px;
+            padding: 12px 26px;
+            background: linear-gradient(135deg, #3b82f6 0%, #60a5fa 100%);
+            color: white !important; text-decoration: none;
+            border-radius: 8px; font-weight: 600; font-size: 0.95em;
+            transition: all 0.2s;
+            box-shadow: 0 2px 8px rgba(59,130,246,0.35);
+        }
+        .nav-button:hover { transform: translateY(-2px); box-shadow: 0 4px 14px rgba(59,130,246,0.5); }
+        .nav-button.disabled { background: #cbd5e1; box-shadow: none; pointer-events: none; }
+        .nav-button.home {
+            background: linear-gradient(135deg, #ef4444 0%, #f87171 100%);
+            box-shadow: 0 2px 8px rgba(239,68,68,0.35);
+        }
+        .nav-button.home:hover { box-shadow: 0 4px 14px rgba(239,68,68,0.5); }
+        .page-info { color: #718096; font-size: 0.9em; text-align: center; }
+
+        /* Progress bar */
+        #progress-track {
+            position: fixed; top: 20px; right: 20px;
+            width: 10px; height: 150px;
+            background: rgba(59,130,246,0.2);
+            border: 2px solid #3b82f6;
+            border-radius: 6px; overflow: hidden; z-index: 1000;
+        }
+        #progress-fill {
+            width: 100%;
+            background: linear-gradient(180deg, #3b82f6, #2563eb);
+            height: 0%;
+            transition: height 0.15s ease;
+        }
+        #progress-pct {
+            position: fixed; top: 0px; right: 16px;
+            color: #2563eb; font-size: 14px; font-weight: bold;
+            z-index: 1001;
+            text-shadow: 0 1px 2px rgba(255,255,255,0.9);
+            line-height: 20px;
+        }
+
+    </style>
+<link rel="stylesheet" href="assets/chapters.css?v=20260421203847"><script src="assets/chapters.js?v=20260421203847" defer></script>
+</head>
+<body>
+    <div class="container">
+        <div class="content">
+            <div class="chat-message" data-index="21">
+<div class="px-2"><h1>🟡 PROJECT 26: "You Must, You Have To"</h1>
+<h2><em>You're explaining rules, responsibilities, duties — at work, at home, in society</em></h2>
+<hr>
+<h1>🎯 THE HYPOTHETICAL PROBLEM</h1>
+<p>→ You're working in a French company now — your first real job in France<br>
+→ Every day, you encounter <strong>obligations, rules, duties, prohibitions</strong>:</p>
+<p><strong>Your boss says:</strong></p>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>"Vous devez envoyer le rapport avant vendredi."
+</span>"Il faut que tout le monde soit présent à la réunion."</code></pre></div>
+<p><strong>The building sign says:</strong></p>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>"Il est interdit de fumer dans les locaux."
+</span>"Le port du badge est obligatoire."</code></pre></div>
+<p><strong>Your landlord says:</strong></p>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>"Vous êtes tenu de payer le loyer avant le 5 du mois."
+</span>"Il ne faut pas faire de bruit après 22h."</code></pre></div>
+<p><strong>Your doctor says:</strong></p>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>"Vous devriez arrêter de fumer."
+</span>"Il faudrait que vous fassiez plus de sport."</code></pre></div>
+<p>→ You notice something: <strong>all these sentences express obligation — but at VERY different levels</strong><br>
+→ Some are <strong>absolute rules</strong> (you MUST)<br>
+→ Some are <strong>strong duties</strong> (you HAVE TO)<br>
+→ Some are <strong>recommendations</strong> (you SHOULD)<br>
+→ Some are <strong>prohibitions</strong> (you MUST NOT)<br>
+→ Some are <strong>soft suggestions</strong> (it would be good to)</p>
+<p>→ In English, you switch between "must / have to / should / need to / ought to / are required to"<br>
+→ In French, the obligation system is <strong>even more layered</strong> — and each structure carries a precise <strong>weight</strong></p>
+<p>→ You try to express obligation — but you only know "il faut" and "devoir":</p>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>❌ You use "il faut" for everything — from "you must breathe" to "you should maybe try"
+</span>❌ You use "tu dois" for soft advice — and sound like a dictator</code></pre></div>
+<p><strong>The core realization:</strong><br>
+→ French has <strong>at least 10 distinct obligation structures</strong><br>
+→ Each one occupies a different position on the <strong>obligation strength scale</strong><br>
+→ Choosing the wrong one changes your message — from helpful advice to aggressive command<br>
+→ This project maps the <strong>entire obligation spectrum</strong> from softest suggestion to absolute law</p>
+<hr>
+<h1>🔍 HOW TO APPROACH IT</h1>
+<p>→ Think of obligation in French as a <strong>10-level scale</strong>:</p>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>LEVEL 1  💨  Soft suggestion          "Tu pourrais..."
+</span>LEVEL 2  💨  Gentle advice            "Tu devrais..."
+LEVEL 3  🌤️  Recommendation           "Il faudrait..."
+LEVEL 4  🌤️  Moral/social expectation "Il est important de..."
+LEVEL 5  ☀️  Firm necessity           "Il faut..."
+LEVEL 6  ☀️  Personal duty            "Tu dois..."
+LEVEL 7  🔥  Strong obligation        "Tu es obligé de..."
+LEVEL 8  🔥  Formal requirement       "Vous êtes tenu de..."
+LEVEL 9  ⚡  Prohibition              "Il est interdit de..."
+LEVEL 10 ⚡  Absolute law             "Il est formellement interdit de..."</code></pre></div>
+<p>→ Your job: Learn <strong>every structure</strong> at every level — and know when to use which</p>
+<hr>
+<h1>🔧 HOW CAN WE SOLVE IT</h1>
+<h2>THE COMPLETE OBLIGATION STRUCTURE MAP</h2>
+<h3>POSITIVE OBLIGATION (You MUST / SHOULD do something):</h3>
+<table><thead><tr><th>Structure</th><th>Strength</th><th>Register</th><th>Followed By</th></tr></thead><tbody><tr><td>Tu <strong>pourrais</strong> + infinitif</td><td>💨 Very soft</td><td>Casual</td><td>infinitif</td></tr><tr><td>Tu <strong>devrais</strong> + infinitif</td><td>💨 Soft advice</td><td>Casual/neutral</td><td>infinitif</td></tr><tr><td>Il <strong>faudrait</strong> + infinitif</td><td>🌤️ Recommendation</td><td>Neutral</td><td>infinitif</td></tr><tr><td>Il <strong>faudrait que</strong> + subjonctif</td><td>🌤️ Recommendation (specific person)</td><td>Neutral</td><td>subjonctif</td></tr><tr><td>Il <strong>vaut mieux</strong> + infinitif</td><td>🌤️ "It's better to"</td><td>Neutral</td><td>infinitif</td></tr><tr><td>Il <strong>est important de</strong> + infinitif</td><td>🌤️ Moral weight</td><td>Neutral/formal</td><td>infinitif</td></tr><tr><td>Il <strong>faut</strong> + infinitif</td><td>☀️ Firm necessity</td><td>Universal</td><td>infinitif</td></tr><tr><td>Il <strong>faut que</strong> + subjonctif</td><td>☀️ Firm necessity (specific person)</td><td>Universal</td><td>subjonctif</td></tr><tr><td><strong>Devoir</strong> (présent) + infinitif</td><td>☀️ Personal duty</td><td>Universal</td><td>infinitif</td></tr><tr><td><strong>Avoir à</strong> + infinitif</td><td>☀️ Having to do</td><td>Casual</td><td>infinitif</td></tr><tr><td><strong>Être obligé(e) de</strong> + infinitif</td><td>🔥 Strong constraint</td><td>Neutral</td><td>infinitif</td></tr><tr><td><strong>Être tenu(e) de</strong> + infinitif</td><td>🔥 Formal requirement</td><td>Formal/legal</td><td>infinitif</td></tr><tr><td><strong>Être censé(e)</strong> + infinitif</td><td>☀️ Expected to</td><td>Neutral</td><td>infinitif</td></tr><tr><td><strong>Être dans l'obligation de</strong> + infinitif</td><td>⚡ Absolute</td><td>Very formal/legal</td><td>infinitif</td></tr></tbody></table>
+<h3>NEGATIVE OBLIGATION / PROHIBITION (You MUST NOT):</h3>
+<table><thead><tr><th>Structure</th><th>Strength</th><th>Register</th></tr></thead><tbody><tr><td>Tu <strong>ne devrais pas</strong> + infinitif</td><td>💨 Soft discouragement</td><td>Casual</td></tr><tr><td>Il <strong>ne faut pas</strong> + infinitif</td><td>☀️ Firm prohibition</td><td>Universal</td></tr><tr><td>Tu <strong>ne dois pas</strong> + infinitif</td><td>🔥 Strong personal prohibition</td><td>Universal</td></tr><tr><td>Il <strong>est interdit de</strong> + infinitif</td><td>⚡ Official prohibition</td><td>Formal/signs</td></tr><tr><td>Il <strong>est formellement interdit de</strong> + infinitif</td><td>⚡ Absolute ban</td><td>Legal/official</td></tr><tr><td><strong>Défense de</strong> + infinitif</td><td>⚡ Sign language</td><td>Signs only</td></tr><tr><td><strong>Interdiction de</strong> + infinitif</td><td>⚡ Sign language</td><td>Signs only</td></tr><tr><td>Tu <strong>n'as pas le droit de</strong> + infinitif</td><td>🔥 Rights-based prohibition</td><td>Universal</td></tr><tr><td>Il <strong>est hors de question de</strong> + infinitif</td><td>⚡ Emotional absolute refusal</td><td>Casual/strong</td></tr></tbody></table>
+<hr>
+<h1>✅ WHAT COULD BE DONE — THE 100 SENTENCES</h1>
+<hr>
+<h2>🔹 BLOCK A — "Tu pourrais / Tu devrais" — Soft Suggestions &amp; Gentle Advice</h2>
+<p><em>Scenario: A friend has a problem — you give gentle advice without being pushy</em><br>
+<em>Connection to Project 17: Conditionnel used for politeness — now specifically for soft obligation</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English</th><th>Strength</th><th>Structure</th></tr></thead><tbody><tr><td>1</td><td>Tu <strong>pourrais</strong> essayer ce restaurant.</td><td>You could try this restaurant.</td><td>💨 Very soft</td><td>pouvoir (cond) + inf</td></tr><tr><td>2</td><td>Tu <strong>pourrais</strong> lui envoyer un message.</td><td>You could send him a message.</td><td>💨 Very soft</td><td>pouvoir (cond) + inf</td></tr><tr><td>3</td><td>Vous <strong>pourriez</strong> demander à votre voisin.</td><td>You could ask your neighbor.</td><td>💨 Very soft (formal)</td><td>pouvoir (cond) + inf</td></tr><tr><td>4</td><td>On <strong>pourrait</strong> aller au cinéma ce soir.</td><td>We could go to the movies tonight.</td><td>💨 Very soft (group)</td><td>pouvoir (cond) + inf</td></tr><tr><td>5</td><td>Tu <strong>devrais</strong> te reposer un peu.</td><td>You should rest a bit.</td><td>💨 Soft advice</td><td>devoir (cond) + inf</td></tr><tr><td>6</td><td>Tu <strong>devrais</strong> appeler le médecin.</td><td>You should call the doctor.</td><td>💨 Soft advice</td><td>devoir (cond) + inf</td></tr><tr><td>7</td><td>Vous <strong>devriez</strong> faire attention à votre santé.</td><td>You should pay attention to your health.</td><td>💨 Soft advice (formal)</td><td>devoir (cond) + inf</td></tr><tr><td>8</td><td>Tu <strong>devrais</strong> lui parler directement.</td><td>You should talk to him directly.</td><td>💨 Soft advice</td><td>devoir (cond) + inf</td></tr><tr><td>9</td><td>On <strong>devrait</strong> partir plus tôt demain.</td><td>We should leave earlier tomorrow.</td><td>💨 Soft group advice</td><td>devoir (cond) + inf</td></tr><tr><td>10</td><td>Tu ne <strong>devrais</strong> pas t'inquiéter autant.</td><td>You shouldn't worry so much.</td><td>💨 Soft discouragement</td><td>ne + devoir (cond) + pas + inf</td></tr></tbody></table>
+<p><strong>🧠 KEY DISTINCTION — Pourrais vs. Devrais:</strong></p>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>TU POURRAIS = You COULD (possibility — very light — almost a suggestion)
+</span>→ "Tu pourrais essayer" = Just an idea — no pressure
+→ Weight: ★☆☆☆☆
+
+TU DEVRAIS = You SHOULD (mild moral weight — friendly advice)
+→ "Tu devrais appeler le médecin" = I think it's the right thing to do
+→ Weight: ★★☆☆☆
+
+Both use CONDITIONNEL → softening effect (from Project 17)
+Both are PERSONAL — directed at "tu/vous/on"</code></pre></div>
+<hr>
+<h2>🔹 BLOCK B — "Il faudrait / Il vaut mieux" — Impersonal Recommendations</h2>
+<p><em>Scenario: You're recommending something — but without pointing at a specific person</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English</th><th>Strength</th><th>Structure</th></tr></thead><tbody><tr><td>11</td><td><strong>Il faudrait</strong> réserver à l'avance.</td><td>One should book in advance.</td><td>🌤️ Recommendation</td><td>il faudrait + inf</td></tr><tr><td>12</td><td><strong>Il faudrait</strong> partir avant huit heures.</td><td>We should leave before eight.</td><td>🌤️ Recommendation</td><td>il faudrait + inf</td></tr><tr><td>13</td><td><strong>Il faudrait que</strong> tu <strong>fasses</strong> plus attention.</td><td>You should pay more attention.</td><td>🌤️ Recommendation (personal)</td><td>il faudrait que + subj</td></tr><tr><td>14</td><td>**Il faudrait qu'**on <strong>soit</strong> plus organisé.</td><td>We should be more organized.</td><td>🌤️ Recommendation (group)</td><td>il faudrait que + subj</td></tr><tr><td>15</td><td><strong>Il faudrait que</strong> vous <strong>parliez</strong> au directeur.</td><td>You should speak to the director.</td><td>🌤️ Recommendation (formal)</td><td>il faudrait que + subj</td></tr><tr><td>16</td><td><strong>Il vaut mieux</strong> partir maintenant.</td><td>It's better to leave now.</td><td>🌤️ Recommendation</td><td>il vaut mieux + inf</td></tr><tr><td>17</td><td><strong>Il vaut mieux</strong> ne pas y aller.</td><td>It's better not to go there.</td><td>🌤️ Recommendation (neg)</td><td>il vaut mieux + ne pas + inf</td></tr><tr><td>18</td><td><strong>Il vaut mieux que</strong> tu <strong>sois</strong> honnête.</td><td>It's better that you be honest.</td><td>🌤️ Recommendation (personal)</td><td>il vaut mieux que + subj</td></tr><tr><td>19</td><td><strong>Il vaudrait mieux</strong> attendre un peu.</td><td>It would be better to wait a bit.</td><td>💨 Softer recommendation</td><td>il vaudrait mieux (cond) + inf</td></tr><tr><td>20</td><td><strong>Il vaudrait mieux que</strong> tu ne <strong>dises</strong> rien.</td><td>It would be better if you said nothing.</td><td>💨 Softer (personal)</td><td>il vaudrait mieux que + subj</td></tr></tbody></table>
+<p><strong>🧠 KEY DISTINCTION — Il faudrait vs. Il vaut mieux:</strong></p>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>IL FAUDRAIT = One should / It would be necessary to
+</span>→ Impersonal recommendation — no one is blamed
+→ "Il faudrait réserver" = The wise thing would be to book
+→ + QUE + subjonctif → when specifying WHO should act
+
+IL VAUT MIEUX = It's better to
+→ Comparison implied — this option is BETTER than the alternative
+→ "Il vaut mieux partir" = Leaving is the better option
+→ + QUE + subjonctif → when specifying WHO
+
+IL VAUDRAIT MIEUX = It would be better to (conditionnel → even softer)
+→ Hypothetical softening — extremely polite</code></pre></div>
+<p><strong>🧠 CONNECTION TO PROJECT 23:</strong><br>
+→ "Il faudrait que" and "Il vaut mieux que" both trigger <strong>SUBJONCTIF</strong><br>
+→ Same rule: impersonal judgment + que → subjonctif</p>
+<hr>
+<h2>🔹 BLOCK C — "Il est important de / Il est nécessaire de" — Moral &amp; Social Weight</h2>
+<p><em>Scenario: Expressing values, principles, social expectations — not personal commands</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English</th><th>Strength</th><th>Structure</th></tr></thead><tbody><tr><td>21</td><td><strong>Il est important de</strong> respecter les autres.</td><td>It's important to respect others.</td><td>🌤️ Moral</td><td>il est important de + inf</td></tr><tr><td>22</td><td><strong>Il est important que</strong> les enfants <strong>apprennent</strong> à partager.</td><td>It's important that children learn to share.</td><td>🌤️ Moral (specific)</td><td>il est important que + subj</td></tr><tr><td>23</td><td><strong>Il est nécessaire de</strong> préparer ce dossier.</td><td>It's necessary to prepare this file.</td><td>🌤️ Necessity</td><td>il est nécessaire de + inf</td></tr><tr><td>24</td><td><strong>Il est nécessaire que</strong> vous <strong>soyez</strong> à l'heure.</td><td>It's necessary that you be on time.</td><td>🌤️ Necessity (formal)</td><td>il est nécessaire que + subj</td></tr><tr><td>25</td><td><strong>Il est essentiel de</strong> bien dormir.</td><td>It's essential to sleep well.</td><td>☀️ Stronger</td><td>il est essentiel de + inf</td></tr><tr><td>26</td><td><strong>Il est essentiel que</strong> tout le monde <strong>comprenne</strong> les règles.</td><td>It's essential that everyone understands the rules.</td><td>☀️ Stronger (specific)</td><td>il est essentiel que + subj</td></tr><tr><td>27</td><td><strong>Il est indispensable de</strong> vérifier les données.</td><td>It's indispensable to check the data.</td><td>☀️ Firm</td><td>il est indispensable de + inf</td></tr><tr><td>28</td><td><strong>Il est préférable de</strong> confirmer par écrit.</td><td>It's preferable to confirm in writing.</td><td>🌤️ Softer</td><td>il est préférable de + inf</td></tr><tr><td>29</td><td><strong>Il est recommandé de</strong> porter un casque.</td><td>It's recommended to wear a helmet.</td><td>🌤️ Advisory</td><td>il est recommandé de + inf</td></tr><tr><td>30</td><td><strong>Il est conseillé de</strong> réserver à l'avance.</td><td>It's advised to book in advance.</td><td>🌤️ Advisory</td><td>il est conseillé de + inf</td></tr></tbody></table>
+<p><strong>🧠 Structure unlocked — The "Il est + adjective" obligation family:</strong></p>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>STRENGTH LADDER:
+</span>💨 Il est conseillé de...       (advised)
+💨 Il est recommandé de...      (recommended)
+🌤️ Il est préférable de...      (preferable)
+🌤️ Il est important de...       (important)
+☀️ Il est nécessaire de...      (necessary)
+☀️ Il est essentiel de...       (essential)
+🔥 Il est indispensable de...   (indispensable)
+⚡ Il est impératif de...       (imperative)
+⚡ Il est obligatoire de...     (obligatory/mandatory)
+
+PATTERN:
+→ Il est [adjective] DE + infinitif (general — no specific person)
+→ Il est [adjective] QUE + subjonctif (specific person)</code></pre></div>
+<hr>
+<h2>🔹 BLOCK D — "Il faut" — The Universal Necessity Engine</h2>
+<p><em>Scenario: Firm, clear necessity — the most common obligation structure in French</em><br>
+<em>Connection to Project 23: "Il faut que" triggers subjonctif — now in full obligation context</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English</th><th>Structure</th><th>Specificity</th></tr></thead><tbody><tr><td>31</td><td><strong>Il faut</strong> manger pour vivre.</td><td>You have to eat to live.</td><td>il faut + inf</td><td>General truth</td></tr><tr><td>32</td><td><strong>Il faut</strong> travailler dur.</td><td>You have to work hard.</td><td>il faut + inf</td><td>General principle</td></tr><tr><td>33</td><td><strong>Il faut</strong> réserver une table.</td><td>We need to book a table.</td><td>il faut + inf</td><td>Practical necessity</td></tr><tr><td>34</td><td><strong>Il faut que</strong> je <strong>parte</strong> maintenant.</td><td>I have to leave now.</td><td>il faut que + subj</td><td>Personal — je</td></tr><tr><td>35</td><td><strong>Il faut que</strong> tu <strong>fasses</strong> tes devoirs.</td><td>You have to do your homework.</td><td>il faut que + subj</td><td>Personal — tu</td></tr><tr><td>36</td><td>**Il faut qu'**on <strong>soit</strong> patient.</td><td>We have to be patient.</td><td>il faut que + subj</td><td>Personal — on</td></tr><tr><td>37</td><td><strong>Il faut que</strong> vous <strong>sachiez</strong> la vérité.</td><td>You need to know the truth.</td><td>il faut que + subj</td><td>Personal — vous</td></tr><tr><td>38</td><td><strong>Il faut que</strong> tout le monde <strong>soit</strong> prêt à huit heures.</td><td>Everyone needs to be ready at eight.</td><td>il faut que + subj</td><td>Group</td></tr><tr><td>39</td><td><strong>Il ne faut pas</strong> oublier son passeport.</td><td>You must not forget your passport.</td><td>il ne faut pas + inf</td><td>General prohibition</td></tr><tr><td>40</td><td><strong>Il ne faut pas que</strong> tu <strong>sois</strong> en retard.</td><td>You must not be late.</td><td>il ne faut pas que + subj</td><td>Personal prohibition</td></tr></tbody></table>
+<p><strong>🧠 THE IL FAUT SYSTEM — Complete:</strong></p>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>GENERAL (no specific person):
+</span>→ Il faut + INFINITIF
+→ "Il faut manger" = One must eat / You have to eat
+
+SPECIFIC PERSON:
+→ Il faut que + SUBJECT + SUBJONCTIF
+→ "Il faut que JE parte" = I have to leave
+→ "Il faut que TU fasses" = You have to do
+
+NEGATIVE (prohibition):
+→ Il ne faut pas + INFINITIF
+→ "Il ne faut pas mentir" = You must not lie
+
+→ Il ne faut pas que + SUBJECT + SUBJONCTIF
+→ "Il ne faut pas que tu sois en retard" = You must not be late
+
+SOFTENED (conditionnel):
+→ Il faudrait + INFINITIF (Block B — recommendation level)
+→ Il faudrait que + SUBJECT + SUBJONCTIF
+
+PAST:
+→ Il fallait + INFINITIF = It was necessary to / You had to
+→ Il a fallu + INFINITIF = It was necessary to (completed event)
+→ Il fallait que + SUBJONCTIF = You had to (specific person, past)</code></pre></div>
+<p><strong>🧠 CRITICAL WARNING — "Il ne faut pas" vs. "Il n'est pas nécessaire de":</strong></p>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>IL NE FAUT PAS = You MUST NOT (PROHIBITION — strong)
+</span>→ "Il ne faut pas mentir" = You must not lie (forbidden)
+
+IL N'EST PAS NÉCESSAIRE DE = It's not necessary to (NO OBLIGATION — but allowed)
+→ "Il n'est pas nécessaire de réserver" = You don't need to book (but you can)
+
+English "don't have to" = il n'est pas nécessaire de / ce n'est pas obligatoire
+English "must not" = il ne faut pas
+
+THIS IS A MAJOR TRAP — many learners confuse them:
+❌ "Il ne faut pas réserver" ≠ "You don't have to book"
+✅ "Il ne faut pas réserver" = "You must NOT book" (prohibition!)
+✅ "Ce n'est pas obligatoire de réserver" = "You don't have to book"</code></pre></div>
+<hr>
+<h2>🔹 BLOCK E — "Devoir" — The Personal Duty Verb (All Tenses)</h2>
+<p><em>Scenario: Personal obligations across time — past duties, current duties, future duties</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English</th><th>Tense</th><th>Strength</th></tr></thead><tbody><tr><td>41</td><td>Je <strong>dois</strong> finir ce rapport.</td><td>I must finish this report.</td><td>Présent</td><td>☀️ Firm duty</td></tr><tr><td>42</td><td>Tu <strong>dois</strong> respecter les règles.</td><td>You must respect the rules.</td><td>Présent</td><td>☀️ Firm duty</td></tr><tr><td>43</td><td>Elle <strong>doit</strong> prendre ses médicaments.</td><td>She must take her medication.</td><td>Présent</td><td>☀️ Firm duty</td></tr><tr><td>44</td><td>Nous <strong>devons</strong> partir avant midi.</td><td>We must leave before noon.</td><td>Présent</td><td>☀️ Firm duty</td></tr><tr><td>45</td><td>Vous <strong>devez</strong> signer ici.</td><td>You must sign here.</td><td>Présent</td><td>☀️ Firm duty</td></tr><tr><td>46</td><td>Je <strong>devais</strong> travailler hier soir.</td><td>I had to work last night.</td><td>Imparfait</td><td>Past duty (ongoing)</td></tr><tr><td>47</td><td>J'<strong>ai dû</strong> annuler mon rendez-vous.</td><td>I had to cancel my appointment.</td><td>Passé composé</td><td>Past duty (completed)</td></tr><tr><td>48</td><td>Tu <strong>devras</strong> renouveler ton visa.</td><td>You'll have to renew your visa.</td><td>Futur simple</td><td>Future duty</td></tr><tr><td>49</td><td>On <strong>va devoir</strong> changer de plan.</td><td>We're going to have to change plans.</td><td>Futur proche</td><td>Near-future duty</td></tr><tr><td>50</td><td>Tu <strong>devrais</strong> dormir plus.</td><td>You should sleep more.</td><td>Conditionnel</td><td>💨 Soft advice (see Block A)</td></tr></tbody></table>
+<p><strong>🧠 DEVOIR ACROSS ALL TENSES — Complete Map:</strong></p>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>PRÉSENT:       je dois          = I must / I have to
+</span>IMPARFAIT:     je devais        = I had to (ongoing/habitual past)
+PASSÉ COMPOSÉ: j'ai dû         = I had to (completed — specific event)
+FUTUR SIMPLE:  je devrai        = I will have to
+FUTUR PROCHE:  je vais devoir   = I'm going to have to
+CONDITIONNEL:  je devrais       = I should (soft advice)
+COND. PASSÉ:   j'aurais dû     = I should have (regret — Project 35)
+SUBJONCTIF:    que je doive     = that I must/have to</code></pre></div>
+<p><strong>🧠 CRITICAL DISTINCTION — "Devais" vs. "Ai dû":</strong></p>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>Connection to Project 11 (PC vs. Imparfait):
+</span>
+JE DEVAIS = I had to (BACKGROUND — ongoing situation, not necessarily completed)
+→ "Je devais travailler, mais j'ai décidé de rester." 
+   (I was supposed to work, but I decided to stay — didn't necessarily do it)
+
+J'AI DÛ = I had to (COMPLETED — I actually did it)
+→ "J'ai dû annuler mon rendez-vous."
+   (I had to cancel — and I DID cancel)
+
+Same logic as PC vs. Imparfait in active sentences</code></pre></div>
+<hr>
+<h2>🔹 BLOCK F — "Être obligé de / Être tenu de / Être censé" — Formal Constraints</h2>
+<p><em>Scenario: Legal, professional, administrative contexts — formal obligation language</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English</th><th>Strength</th><th>Register</th></tr></thead><tbody><tr><td>51</td><td>Je <strong>suis obligé de</strong> porter un uniforme au travail.</td><td>I'm required to wear a uniform at work.</td><td>🔥 Strong</td><td>Neutral</td></tr><tr><td>52</td><td>On <strong>est obligé de</strong> montrer une pièce d'identité.</td><td>You're required to show ID.</td><td>🔥 Strong</td><td>Neutral</td></tr><tr><td>53</td><td>Nous <strong>sommes obligés de</strong> respecter le règlement.</td><td>We're required to follow the rules.</td><td>🔥 Strong</td><td>Neutral</td></tr><tr><td>54</td><td>Elle <strong>a été obligée de</strong> démissionner.</td><td>She was forced to resign.</td><td>🔥 Strong (past — passive)</td><td>Neutral</td></tr><tr><td>55</td><td>Tu <strong>n'es pas obligé de</strong> venir.</td><td>You're not required to come.</td><td>Removal of obligation</td><td>Neutral</td></tr><tr><td>56</td><td>Vous <strong>êtes tenu de</strong> déclarer vos revenus.</td><td>You are required to declare your income.</td><td>🔥 Very formal</td><td>Legal/admin</td></tr><tr><td>57</td><td>Les employés <strong>sont tenus de</strong> respecter la confidentialité.</td><td>Employees are required to respect confidentiality.</td><td>🔥 Very formal</td><td>Professional</td></tr><tr><td>58</td><td>Chaque citoyen <strong>est tenu de</strong> payer ses impôts.</td><td>Every citizen is required to pay taxes.</td><td>🔥 Very formal</td><td>Legal</td></tr><tr><td>59</td><td>Tu <strong>es censé</strong> arriver à neuf heures.</td><td>You're supposed to arrive at nine.</td><td>☀️ Expected</td><td>Neutral</td></tr><tr><td>60</td><td>On <strong>est censé</strong> ne pas utiliser son téléphone en réunion.</td><td>You're supposed to not use your phone in meetings.</td><td>☀️ Expected</td><td>Neutral</td></tr></tbody></table>
+<p><strong>🧠 KEY DISTINCTIONS — The Formal Trio:</strong></p>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>ÊTRE OBLIGÉ(E) DE = to be obliged/required to
+</span>→ External constraint — someone or something FORCES you
+→ "Je suis obligé de travailler le samedi" = I'm forced to work Saturdays
+→ Can be physical, legal, or social pressure
+→ NEGATIVE: "Tu n'es pas obligé de..." = You don't HAVE to... (no obligation)
+
+ÊTRE TENU(E) DE = to be required/bound to
+→ LEGAL / OFFICIAL obligation — contracts, laws, rules
+→ "Vous êtes tenu de respecter..." = You are bound to respect...
+→ Much more formal than "être obligé de"
+→ Found in legal documents, contracts, official regulations
+
+ÊTRE CENSÉ(E) + infinitif = to be supposed to / expected to
+→ Social expectation — not necessarily a hard rule
+→ "Tu es censé arriver à 9h" = You're SUPPOSED to arrive at 9
+→ Implies: maybe you don't always do it — but you SHOULD
+→ Very common in daily conversation
+→ NOTE: No "de" — directly followed by infinitif</code></pre></div>
+<hr>
+<h2>🔹 BLOCK G — "Avoir à / Avoir besoin de" — Casual Obligation &amp; Need</h2>
+<p><em>Scenario: Daily life — things you have to do, things you need</em><br>
+<em>Connection to Project 1: "Avoir besoin de" from Block H now in obligation context</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English</th><th>Strength</th><th>Structure</th></tr></thead><tbody><tr><td>61</td><td>J'<strong>ai</strong> beaucoup de choses <strong>à faire</strong>.</td><td>I have a lot of things to do.</td><td>☀️ Neutral</td><td>avoir + à + inf</td></tr><tr><td>62</td><td>Tu <strong>as</strong> quelque chose <strong>à me dire</strong> ?</td><td>Do you have something to tell me?</td><td>☀️ Neutral</td><td>avoir + à + inf</td></tr><tr><td>63</td><td>J'<strong>ai</strong> un email <strong>à envoyer</strong> avant ce soir.</td><td>I have an email to send before tonight.</td><td>☀️ Neutral</td><td>avoir + noun + à + inf</td></tr><tr><td>64</td><td>On <strong>a</strong> du travail <strong>à terminer</strong>.</td><td>We have work to finish.</td><td>☀️ Neutral</td><td>avoir + noun + à + inf</td></tr><tr><td>65</td><td>Vous n'<strong>avez</strong> rien <strong>à craindre</strong>.</td><td>You have nothing to fear.</td><td>☀️ Reassuring</td><td>avoir + rien + à + inf</td></tr><tr><td>66</td><td>J'<strong>ai besoin de</strong> me reposer.</td><td>I need to rest.</td><td>🌤️ Need</td><td>avoir besoin de + inf</td></tr><tr><td>67</td><td>Tu <strong>as besoin de</strong> parler à quelqu'un.</td><td>You need to talk to someone.</td><td>🌤️ Need</td><td>avoir besoin de + inf</td></tr><tr><td>68</td><td>On <strong>a besoin de</strong> plus de temps.</td><td>We need more time.</td><td>🌤️ Need</td><td>avoir besoin de + noun</td></tr><tr><td>69</td><td>Elle **a besoin qu'**on l'<strong>aide</strong>.</td><td>She needs someone to help her.</td><td>🌤️ Need (specific)</td><td>avoir besoin que + subj</td></tr><tr><td>70</td><td>J'<strong>ai besoin que</strong> tu <strong>sois</strong> honnête avec moi.</td><td>I need you to be honest with me.</td><td>🌤️ Need (personal)</td><td>avoir besoin que + subj</td></tr></tbody></table>
+<p><strong>🧠 "AVOIR À" — The Casual Obligation:</strong></p>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>AVOIR À + INFINITIF = to have (something) to do
+</span>→ "J'ai à faire" = I have things to do
+→ Less formal than "devoir" — more conversational
+→ Often used with a NOUN between avoir and à:
+   → "J'ai un rapport à écrire" = I have a report to write
+   → "Tu as des courses à faire" = You have errands to run
+
+AVOIR BESOIN DE + INFINITIF/NOUN = to need to / to need
+→ "J'ai besoin de dormir" = I need to sleep
+→ "J'ai besoin d'aide" = I need help
+
+AVOIR BESOIN QUE + SUBJONCTIF = to need someone to...
+→ "J'ai besoin que tu viennes" = I need you to come
+→ Same subjonctif trigger pattern as Project 23</code></pre></div>
+<hr>
+<h2>🔹 BLOCK H — Prohibitions: "Il ne faut pas / Il est interdit de / Défense de"</h2>
+<p><em>Scenario: Rules, signs, laws — things you MUST NOT do</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English</th><th>Strength</th><th>Context</th></tr></thead><tbody><tr><td>71</td><td><strong>Il ne faut pas</strong> toucher les œuvres.</td><td>You must not touch the artworks.</td><td>☀️ Firm prohibition</td><td>Museum</td></tr><tr><td>72</td><td><strong>Il ne faut pas</strong> mentir.</td><td>You must not lie.</td><td>☀️ Moral prohibition</td><td>General</td></tr><tr><td>73</td><td>Tu <strong>ne dois pas</strong> conduire après avoir bu.</td><td>You must not drive after drinking.</td><td>🔥 Strong personal</td><td>Safety</td></tr><tr><td>74</td><td>Vous <strong>ne devez pas</strong> dépasser la limite de vitesse.</td><td>You must not exceed the speed limit.</td><td>🔥 Strong formal</td><td>Law</td></tr><tr><td>75</td><td><strong>Il est interdit de</strong> fumer dans les lieux publics.</td><td>It is forbidden to smoke in public places.</td><td>⚡ Official</td><td>Legal sign</td></tr><tr><td>76</td><td><strong>Il est interdit de</strong> stationner ici.</td><td>It is forbidden to park here.</td><td>⚡ Official</td><td>Street sign</td></tr><tr><td>77</td><td><strong>Défense de</strong> fumer.</td><td>No smoking.</td><td>⚡ Sign language</td><td>Sign — very short</td></tr><tr><td>78</td><td><strong>Interdiction de</strong> photographier.</td><td>No photography.</td><td>⚡ Sign language</td><td>Sign — very short</td></tr><tr><td>79</td><td>Tu <strong>n'as pas le droit de</strong> faire ça.</td><td>You don't have the right to do that.</td><td>🔥 Rights-based</td><td>Universal</td></tr><tr><td>80</td><td><strong>Il est formellement interdit de</strong> pénétrer dans cette zone.</td><td>It is strictly forbidden to enter this zone.</td><td>⚡ Absolute</td><td>Military/restricted</td></tr></tbody></table>
+<p><strong>🧠 PROHIBITION STRENGTH LADDER:</strong></p>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>💨 Tu ne devrais pas...              (You shouldn't — advice)
+</span>☀️ Il ne faut pas...                 (You must not — firm)
+🔥 Tu ne dois pas...                 (You must not — personal/strong)
+🔥 Tu n'as pas le droit de...        (You have no right to — rights-based)
+⚡ Il est interdit de...             (It is forbidden to — official)
+⚡ Défense de... / Interdiction de... (No [verb]-ing — sign language)
+⚡ Il est formellement interdit de... (Strictly forbidden — absolute)</code></pre></div>
+<p><strong>🧠 SIGN LANGUAGE — Short Prohibition Forms:</strong></p>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>On signs, rules, and notices — French uses ultra-short forms:
+</span>
+DÉFENSE DE + infinitif:
+→ Défense de fumer        (No smoking)
+→ Défense d'entrer        (No entry)
+→ Défense d'afficher      (No posting bills)
+
+INTERDICTION DE + infinitif:
+→ Interdiction de stationner  (No parking)
+→ Interdiction de photographier (No photography)
+
+PRIÈRE DE + infinitif (polite sign — not prohibition):
+→ Prière de fermer la porte   (Please close the door)
+→ Prière de ne pas déranger   (Please do not disturb)</code></pre></div>
+<hr>
+<h2>🔹 BLOCK I — "Il est hors de question / C'est obligatoire" — Emotional &amp; Absolute</h2>
+<p><em>Scenario: Strong emotional reactions about obligation — refusal, insistence, absolute rules</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English</th><th>Strength</th><th>Context</th></tr></thead><tbody><tr><td>81</td><td><strong>Il est hors de question</strong> que je <strong>fasse</strong> ça.</td><td>There's no way I'm doing that.</td><td>⚡ Emotional refusal</td><td>Personal — subjonctif</td></tr><tr><td>82</td><td><strong>Il est hors de question de</strong> partir sans eux.</td><td>There's no way we're leaving without them.</td><td>⚡ Emotional refusal</td><td>Personal — infinitif</td></tr><tr><td>83</td><td><strong>Pas question</strong> de payer autant.</td><td>No way I'm paying that much.</td><td>⚡ Casual refusal</td><td>Very casual</td></tr><tr><td>84</td><td><strong>C'est obligatoire</strong>. Tout le monde <strong>doit</strong> le faire.</td><td>It's mandatory. Everyone has to do it.</td><td>⚡ Absolute</td><td>Official</td></tr><tr><td>85</td><td>Le port du masque <strong>est obligatoire</strong>.</td><td>Wearing a mask is mandatory.</td><td>⚡ Absolute</td><td>Public health</td></tr><tr><td>86</td><td><strong>C'est impératif</strong> que vous <strong>soyez</strong> là à huit heures.</td><td>It's imperative that you be there at eight.</td><td>⚡ Urgent</td><td>Professional</td></tr><tr><td>87</td><td>Tu <strong>es dans l'obligation de</strong> signaler tout incident.</td><td>You are under obligation to report any incident.</td><td>⚡ Legal</td><td>Professional/legal</td></tr><tr><td>88</td><td><strong>On n'a pas le choix</strong>. Il faut y aller.</td><td>We have no choice. We have to go.</td><td>☀️ Resigned necessity</td><td>Casual</td></tr><tr><td>89</td><td>Je <strong>me vois dans l'obligation de</strong> refuser.</td><td>I find myself obliged to refuse.</td><td>⚡ Very formal</td><td>Official letter</td></tr><tr><td>90</td><td><strong>Il n'y a pas d'autre solution</strong>. On doit accepter.</td><td>There's no other solution. We must accept.</td><td>☀️ Resigned</td><td>Neutral</td></tr></tbody></table>
+<p><strong>🧠 EMOTIONAL OBLIGATION — Special Structures:</strong></p>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>IL EST HORS DE QUESTION DE + infinitif = Absolutely no way
+</span>IL EST HORS DE QUESTION QUE + subjonctif = Absolutely no way (specific person)
+→ Very strong EMOTIONAL refusal — not a law, but a personal absolute
+
+PAS QUESTION DE + infinitif = No way (casual shortened version)
+→ "Pas question de travailler le dimanche" = No way I'm working Sunday
+
+ON N'A PAS LE CHOIX = We have no choice
+→ Resigned acceptance of obligation — you don't WANT to but MUST
+
+JE ME VOIS DANS L'OBLIGATION DE = I find myself obliged to
+→ Extremely formal — used in official letters, refusal letters
+→ "Je me vois dans l'obligation de décliner votre offre"</code></pre></div>
+<hr>
+<h2>🔹 BLOCK J — Full Obligation Conversations Across Contexts</h2>
+<p><em>Scenario: Real conversations mixing different obligation levels naturally</em></p>
+<h3>Work Context:</h3>
+<table><thead><tr><th>#</th><th>Speaker</th><th>French</th><th>English</th><th>Structure</th></tr></thead><tbody><tr><td>91</td><td>Boss:</td><td>Vous <strong>devez</strong> envoyer le rapport avant vendredi.</td><td>You must send the report before Friday.</td><td>devoir (présent)</td></tr><tr><td>92</td><td>Boss:</td><td><strong>Il est impératif que</strong> tout <strong>soit</strong> prêt.</td><td>It's imperative everything is ready.</td><td>il est impératif que + subj</td></tr><tr><td>93</td><td>You:</td><td>D'accord, mais <strong>il faudrait que</strong> j'<strong>aie</strong> accès aux données.</td><td>Okay, but I'd need access to the data.</td><td>il faudrait que + subj (softened request)</td></tr><tr><td>94</td><td>Boss:</td><td>Demandez à Pierre. Il <strong>est censé</strong> vous les donner.</td><td>Ask Pierre. He's supposed to give them to you.</td><td>être censé + inf</td></tr><tr><td>95</td><td>You:</td><td>Et <strong>est-ce qu'on est obligé de</strong> suivre le nouveau format ?</td><td>And are we required to follow the new format?</td><td>être obligé de + inf (question)</td></tr><tr><td>96</td><td>Boss:</td><td>Oui, <strong>c'est obligatoire</strong> depuis lundi.</td><td>Yes, it's been mandatory since Monday.</td><td>c'est obligatoire</td></tr></tbody></table>
+<h3>Home / Family Context:</h3>
+<table><thead><tr><th>#</th><th>Speaker</th><th>French</th><th>English</th><th>Structure</th></tr></thead><tbody><tr><td>97</td><td>Parent:</td><td>Tu <strong>dois</strong> ranger ta chambre avant de sortir.</td><td>You must clean your room before going out.</td><td>devoir + inf</td></tr><tr><td>98</td><td>Child:</td><td>Je <strong>suis obligé</strong> ?</td><td>Do I have to?</td><td>être obligé (question)</td></tr><tr><td>99</td><td>Parent:</td><td>Oui, <strong>il faut que</strong> tu le <strong>fasses</strong>. <strong>Il n'est pas question que</strong> tu <strong>sortes</strong> sans ranger.</td><td>Yes, you have to do it. There's no way you're going out without cleaning.</td><td>il faut que + subj / il n'est pas question que + subj</td></tr><tr><td>100</td><td>Child:</td><td>Bon, d'accord. Mais tu <strong>n'es pas obligée de</strong> crier.</td><td>Fine, okay. But you don't have to yell.</td><td>ne pas être obligé de + inf</td></tr></tbody></table>
+<hr>
+<h1>✅ WHAT SHOULD DO</h1>
+<p>→ <strong>Map each obligation structure to its strength level</strong> — before speaking, ask: "How strong do I need to be?"<br>
+→ <strong>Start with "il faut" and "devoir"</strong> — they cover 80% of daily obligation<br>
+→ <strong>Use conditionnel forms for advice</strong> — "tu devrais" is your go-to for friendly suggestions<br>
+→ <strong>Memorize the "il ne faut pas" vs "il n'est pas nécessaire de" distinction</strong> — this is the #1 trap<br>
+→ <strong>Learn the sign language</strong> — "Défense de" and "Interdiction de" — you'll see them everywhere<br>
+→ <strong>Use "être censé" in conversation</strong> — it makes you sound naturally French<br>
+→ <strong>Match register to context</strong> — casual with friends, formal at work, legal in official situations</p>
+<hr>
+<h1>❌ WHAT SHOULD NOT DO</h1>
+<p>→ ❌ Do NOT confuse "il ne faut pas" with "you don't have to"</p>
+<table><thead><tr><th>Wrong Understanding</th><th>Correct</th></tr></thead><tbody><tr><td><del>"Il ne faut pas réserver" = You don't have to book</del></td><td>"Il ne faut pas réserver" = You MUST NOT book</td></tr><tr><td>You don't have to book =</td><td>"Ce n'est pas obligatoire de réserver" / "Tu n'es pas obligé de réserver"</td></tr></tbody></table>
+<p>→ ❌ Do NOT use "devoir" (présent) for gentle advice</p>
+<table><thead><tr><th>Too Strong</th><th>Better</th></tr></thead><tbody><tr><td><del>Tu <strong>dois</strong> te reposer</del> (sounds like an order)</td><td>Tu <strong>devrais</strong> te reposer (sounds like advice)</td></tr></tbody></table>
+<p>→ ❌ Do NOT use "être tenu de" in casual conversation</p>
+<table><thead><tr><th>Wrong Register</th><th>Better</th></tr></thead><tbody><tr><td><del>Tu es tenu de fermer la porte</del> (at home — too legal)</td><td>Tu dois fermer la porte / Ferme la porte</td></tr></tbody></table>
+<p>→ ❌ Do NOT forget subjonctif after "il faut que"</p>
+<table><thead><tr><th>Wrong</th><th>Correct</th></tr></thead><tbody><tr><td><del>Il faut que tu <strong>es</strong> là</del></td><td>Il faut que tu <strong>sois</strong> là</td></tr><tr><td><del>Il faut que je <strong>pars</strong></del></td><td>Il faut que je <strong>parte</strong></td></tr></tbody></table>
+<p>→ ❌ Do NOT use "être censé" for strong obligation</p>
+<table><thead><tr><th>Wrong</th><th>Correct</th></tr></thead><tbody><tr><td><del>Tu es censé payer tes impôts</del> (too weak for a legal duty)</td><td>Tu <strong>dois</strong> payer tes impôts / Tu <strong>es tenu de</strong> payer tes impôts</td></tr></tbody></table>
+<p>→ ❌ Do NOT mix up "devoir" meanings</p>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>DEVOIR has THREE possible meanings depending on context:
+</span>
+1. OBLIGATION:  Je dois partir. = I must leave.
+2. PROBABILITY: Il doit être malade. = He must be sick (probably is).
+3. DEBT:        Je te dois 10 euros. = I owe you 10 euros.
+
+Context makes it clear — but be aware of the ambiguity
+→ "Il doit avoir 50 ans" = He must be 50 (probability — NOT obligation)
+→ This probability use of "devoir" connects to Project 27</code></pre></div>
+<hr>
+<h1>🔀 WHEN TO USE WHAT — THE COMPLETE OBLIGATION MAP</h1>
+<table><thead><tr><th>Situation</th><th>Structure</th><th>Strength</th><th>Example</th></tr></thead><tbody><tr><td>Gentle suggestion to a friend</td><td>Tu <strong>pourrais</strong> + inf</td><td>💨</td><td>Tu pourrais essayer</td></tr><tr><td>Friendly advice</td><td>Tu <strong>devrais</strong> + inf</td><td>💨</td><td>Tu devrais dormir plus</td></tr><tr><td>Impersonal recommendation</td><td><strong>Il faudrait</strong> + inf</td><td>🌤️</td><td>Il faudrait réserver</td></tr><tr><td>Recommendation to specific person</td><td><strong>Il faudrait que</strong> + subj</td><td>🌤️</td><td>Il faudrait que tu partes</td></tr><tr><td>"Better to" comparison</td><td><strong>Il vaut mieux</strong> + inf</td><td>🌤️</td><td>Il vaut mieux attendre</td></tr><tr><td>Social/moral value</td><td><strong>Il est important de</strong> + inf</td><td>🌤️</td><td>Il est important de respecter</td></tr><tr><td>Firm general necessity</td><td><strong>Il faut</strong> + inf</td><td>☀️</td><td>Il faut travailler</td></tr><tr><td>Firm necessity — specific person</td><td><strong>Il faut que</strong> + subj</td><td>☀️</td><td>Il faut que tu viennes</td></tr><tr><td>Personal duty</td><td><strong>Devoir</strong> (présent) + inf</td><td>☀️</td><td>Je dois finir ce rapport</td></tr><tr><td>Social expectation</td><td><strong>Être censé(e)</strong> + inf</td><td>☀️</td><td>Tu es censé arriver à 9h</td></tr><tr><td>External constraint</td><td><strong>Être obligé(e) de</strong> + inf</td><td>🔥</td><td>Je suis obligé de travailler</td></tr><tr><td>No obligation (free)</td><td><strong>Ne pas être obligé de</strong> + inf</td><td>—</td><td>Tu n'es pas obligé de venir</td></tr><tr><td>Legal requirement</td><td><strong>Être tenu(e) de</strong> + inf</td><td>🔥</td><td>Vous êtes tenu de déclarer</td></tr><tr><td>Firm prohibition</td><td><strong>Il ne faut pas</strong> + inf</td><td>☀️</td><td>Il ne faut pas mentir</td></tr><tr><td>Official prohibition</td><td><strong>Il est interdit de</strong> + inf</td><td>⚡</td><td>Il est interdit de fumer</td></tr><tr><td>Sign prohibition</td><td><strong>Défense de</strong> + inf</td><td>⚡</td><td>Défense d'entrer</td></tr><tr><td>Emotional refusal</td><td><strong>Il est hors de question de</strong> + inf</td><td>⚡</td><td>Hors de question de payer</td></tr><tr><td>Absolute legal mandate</td><td><strong>Être dans l'obligation de</strong> + inf</td><td>⚡</td><td>Dans l'obligation de signaler</td></tr></tbody></table>
+<hr>
+<h1>🚫 WHEN NOT TO USE</h1>
+<table><thead><tr><th>Situation</th><th>Do NOT Use</th><th>Use Instead</th><th>Why</th></tr></thead><tbody><tr><td>Friendly advice to a peer</td><td>Devoir (présent)</td><td>Tu devrais (conditionnel)</td><td>Présent sounds like an order</td></tr><tr><td>Casual conversation</td><td>Être tenu de</td><td>Devoir / Il faut</td><td>Être tenu de is legal — too formal</td></tr><tr><td>Giving someone permission NOT to do something</td><td>Il ne faut pas</td><td>Tu n'es pas obligé de</td><td>"Il ne faut pas" = PROHIBITION, not "no need"</td></tr><tr><td>Expressing probability</td><td>Devoir (obligation sense)</td><td>Devoir (probability sense) — context!</td><td>"Il doit être malade" = He's probably sick</td></tr><tr><td>Writing a formal letter of refusal</td><td>Pas question de</td><td>Je me vois dans l'obligation de</td><td>Register mismatch</td></tr><tr><td>Telling a child what to do</td><td>Être dans l'obligation de</td><td>Tu dois / Il faut que tu</td><td>Legal language to a child = absurd</td></tr></tbody></table>
+<hr>
+<h1>⚠️ COMMON PITFALLS AND FAILURE MODES</h1>
+<table><thead><tr><th>Pitfall</th><th>What Learners Do</th><th>Why It's Wrong</th><th>Fix</th></tr></thead><tbody><tr><td><strong>Il ne faut pas = don't have to</strong></td><td>"Il ne faut pas venir" meaning "you don't need to come"</td><td>Il ne faut pas = MUST NOT (prohibition)</td><td>"Tu n'es pas obligé de venir" = you don't have to</td></tr><tr><td><strong>Devoir too strong for advice</strong></td><td>"Tu dois manger des légumes" (to a friend)</td><td>Sounds like a command</td><td>"Tu devrais manger des légumes"</td></tr><tr><td><strong>Être tenu de in casual speech</strong></td><td>"Tu es tenu de faire la vaisselle" (at home)</td><td>Way too formal — legal register</td><td>"Tu dois faire la vaisselle" or "Il faut faire la vaisselle"</td></tr><tr><td><strong>No subjonctif after il faut que</strong></td><td>"Il faut que tu viens"</td><td>Il faut que always triggers subjonctif</td><td>"Il faut que tu <strong>viennes</strong>"</td></tr><tr><td><strong>Confusing devoir meanings</strong></td><td>"Il doit être là" = obligation or probability?</td><td>Context decides — without context, ambiguous</td><td>Add context: "à 9h" (obligation) vs. "probablement" (probability)</td></tr><tr><td><strong>Être censé for hard rules</strong></td><td>"Tu es censé payer avant le 5" (legal context)</td><td>Être censé = supposed to — too weak for legal</td><td>"Vous êtes tenu de payer avant le 5"</td></tr><tr><td><strong>Using obligation for yourself when you mean wish</strong></td><td>"Je dois aller en France" (meaning I want to)</td><td>Devoir = obligation, not desire</td><td>"Je voudrais aller en France" / "J'aimerais..."</td></tr><tr><td><strong>Forgetting conditionnel softening</strong></td><td>"Il faut que tu fasses" (to a stranger)</td><td>Too direct without softening</td><td>"Il faudrait que vous fassiez..."</td></tr><tr><td><strong>Missing "de" after être obligé</strong></td><td>"Je suis obligé travailler"</td><td>Être obligé needs "de"</td><td>"Je suis obligé <strong>de</strong> travailler"</td></tr><tr><td><strong>Missing "de" after il est interdit</strong></td><td>"Il est interdit fumer"</td><td>Il est interdit needs "de"</td><td>"Il est interdit <strong>de</strong> fumer"</td></tr></tbody></table>
+<hr>
+<h1>🔑 KEY TAKEAWAY</h1>
+<blockquote>
+<p><strong>Obligation in French is a spectrum — not a single word.</strong></p>
+<p>→ English speakers tend to use "must" and "have to" for everything<br>
+→ French offers <strong>15+ structures</strong> — each with a precise strength and register</p>
+<p>→ The three pillars of French obligation:</p>
+<table><thead><tr><th>Pillar</th><th>Core Structure</th><th>Range</th></tr></thead><tbody><tr><td><strong>IL FAUT</strong></td><td>Impersonal necessity</td><td>General (+ inf) or specific (+ que + subj)</td></tr><tr><td><strong>DEVOIR</strong></td><td>Personal duty verb</td><td>All tenses — from present duty to past regret</td></tr><tr><td><strong>ÊTRE OBLIGÉ DE</strong></td><td>External constraint</td><td>From social to legal — with formal variants</td></tr></tbody></table>
+<p>→ The <strong>conditionnel</strong> softens everything:<br>
+→ devoir → devrais (should)<br>
+→ il faut → il faudrait (it would be necessary)<br>
+→ il vaut mieux → il vaudrait mieux (it would be better)</p>
+<p>→ The <strong>#1 trap</strong> to avoid forever:<br>
+→ "Il ne faut pas" = MUST NOT (prohibition)<br>
+→ "Tu n'es pas obligé de" = DON'T HAVE TO (no obligation)</p>
+<p>→ Project 23 (subjonctif) connects directly: il faut que, il est important que, il vaut mieux que<br>
+→ Project 17 (conditionnel) connects directly: tu devrais, il faudrait, il vaudrait mieux<br>
+→ Obligation structures USE your entire previous toolkit</p>
+</blockquote>
+<hr>
+<h1>🌉 BRIDGE TO PROJECT 27</h1>
+<blockquote>
+<p>You can now express what people MUST, SHOULD, and MUST NOT do<br>
+But daily life is also full of <strong>uncertainty</strong>:</p>
+<p>→ "He's <strong>probably</strong> at home."<br>
+→ "She <strong>might</strong> come tomorrow."<br>
+→ "<strong>Perhaps</strong> it will rain."<br>
+→ "It's <strong>possible</strong> that they're right."</p>
+<p>→ You've already seen "devoir" can express <strong>probability</strong> ("Il doit être malade")<br>
+→ But French has a <strong>complete system</strong> for expressing possibility and probability<br>
+→ From "maybe" to "definitely" — each word carries a different <strong>certainty level</strong><br>
+→ Choosing wrong makes you sound either <strong>too sure</strong> or <strong>too vague</strong></p>
+<p>→ Project 27: <strong>"Maybe, Probably, Possibly"</strong><br>
+→ The full probability spectrum in French</p>
+</blockquote>
+<hr>
+<h1>✅ PROJECT 26 COMPLETE</h1>
+<blockquote>
+<p><strong>Are you ready for PROJECT 27: "Maybe, Probably, Possibly"?</strong><br>
+→ ~100 sentences covering probability/possibility structures<br>
+→ Scenario: You're not sure about something — expressing likelihood at every level<br>
+→ Builds on conditionnel (P17), obligation (P26), and opinion (P22) structures</p>
+</blockquote>
+</div>
+</div>
+
+<!-- ========== data-index="23" ========== -->
+
+        </div>
+
+        <div class="nav-bar">
+            <a href="project-25.html" class="nav-button prev">← Previous Chapter</a>
+            <div class="page-info">
+                <a href="index.html" class="nav-button home">📚 Table of Contents</a><br>
+                <span style="margin-top:8px;display:block">Chapter 26 of 50</span>
+            </div>
+            <a href="project-27.html" class="nav-button next">Next Chapter →</a>
+        </div>
+    </div>
+
+    
+    <div id="progress-track"><div id="progress-fill"></div></div>
+    <div id="progress-pct">0%</div>
+
+
+    <script>
+    const fill = document.getElementById('progress-fill');
+    const pct  = document.getElementById('progress-pct');
+    function updateProgress() {
+        const scrollTop = window.scrollY;
+        const docHeight = document.body.scrollHeight - window.innerHeight;
+        const scrolled  = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+        fill.style.height = scrolled + '%';
+        pct.textContent   = Math.round(scrolled) + '%';
+    }
+    window.addEventListener('scroll', updateProgress);
+    updateProgress();
+
+    document.addEventListener('keydown', function(e) {
+        if (['INPUT','TEXTAREA'].includes(document.activeElement.tagName)) return;
+        if (e.key === 'ArrowLeft') {
+            const b = document.querySelector('.nav-button.prev');
+            if (b && !b.classList.contains('disabled')) window.location.href = b.href;
+        }
+        if (e.key === 'ArrowRight') {
+            const b = document.querySelector('.nav-button.next');
+            if (b && !b.classList.contains('disabled')) window.location.href = b.href;
+        }
+    });
+    </script>
+
+</body>
+</html>

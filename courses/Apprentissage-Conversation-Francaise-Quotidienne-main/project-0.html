@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="images/favicon.png">
+    <title>Project 0: MASTERING FRENCH SENTENCE STRUCTURES — French Daily Sentences</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.75;
+            color: #1a202c;
+            background-color: #f7fafc;
+        }
+        .container {
+            max-width: 1800px;
+            margin: 0 auto;
+            background: white;
+            min-height: 100vh;
+            box-shadow: 0 0 30px rgba(0,0,0,0.08);
+            padding: 48px 52px;
+        }
+        
+        .content { max-width: 1700px; margin: 0 auto; color: #1a202c; }
+        .content h1 {
+            color: #1a202c; margin: 32px 0 20px;
+            padding-bottom: 12px;
+            border-bottom: 4px solid #3b82f6;
+            font-size: 2.1em;
+            font-weight: 700;
+        }
+        .content h2 {
+            color: #1a202c; margin: 28px 0 16px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #60a5fa;
+            font-size: 1.6em;
+            font-weight: 600;
+        }
+        .content h3 { color: #1a202c; margin: 22px 0 12px; font-size: 1.3em; font-weight: 600; }
+        .content h4 { color: #2d3748; margin: 18px 0 10px; font-size: 1.1em; font-weight: 600; }
+        .content p  { margin-bottom: 16px; line-height: 1.8; color: #1a202c; }
+        .content ul, .content ol { margin: 12px 0 18px 30px; color: #1a202c; }
+        .content li { margin-bottom: 8px; line-height: 1.75; color: #1a202c; }
+        .content hr { border: none; border-top: 2px solid #e2e8f0; margin: 26px 0; }
+        .content pre {
+            background: #f7fafc !important;
+            border: 1px solid #cbd5e0 !important;
+            border-left: 4px solid #3b82f6 !important;
+            padding: 18px !important; overflow-x: auto; margin: 18px 0; border-radius: 6px;
+            font-family: 'Consolas','Monaco','Courier New',monospace !important;
+            font-size: 0.9em !important;
+        }
+        .content pre:not([style*="color"]) { color: #1a202c !important; }
+        .content code {
+            font-family: 'Consolas','Monaco','Courier New',monospace !important;
+            font-size: 0.88em !important;
+        }
+        .content code:not(pre code) {
+            background: #dbeafe !important;
+            color: #1a202c !important;
+            padding: 2px 6px;
+            border-radius: 3px;
+        }
+        .content pre code { background: transparent !important; padding: 0; }
+        .content table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+        .content th {
+            background: linear-gradient(135deg, #3b82f6 0%, #60a5fa 100%);
+            color: white; padding: 12px 16px; text-align: left;
+            font-weight: 600;
+        }
+        .content td { padding: 11px 16px; border: 1px solid #e2e8f0; color: #1a202c; }
+        .content tr:nth-child(even) td { background: #eff6ff; }
+        .content blockquote {
+            border-left: 4px solid #3b82f6; background: #eff6ff;
+            padding: 14px 20px; margin: 18px 0; border-radius: 0 6px 6px 0;
+            color: #1a202c;
+        }
+        .content strong { color: #1a202c; font-weight: 600; }
+        .px-2 { padding: 0; }
+        .chat-message { background: transparent; padding: 0; margin: 0; }
+
+        /* Bottom nav bar only */
+        .nav-bar {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 24px 0;
+            margin-top: 50px;
+            border-top: 3px solid #60a5fa;
+        }
+        .nav-button {
+            display: inline-flex; align-items: center; gap: 8px;
+            padding: 12px 26px;
+            background: linear-gradient(135deg, #3b82f6 0%, #60a5fa 100%);
+            color: white !important; text-decoration: none;
+            border-radius: 8px; font-weight: 600; font-size: 0.95em;
+            transition: all 0.2s;
+            box-shadow: 0 2px 8px rgba(59,130,246,0.35);
+        }
+        .nav-button:hover { transform: translateY(-2px); box-shadow: 0 4px 14px rgba(59,130,246,0.5); }
+        .nav-button.disabled { background: #cbd5e1; box-shadow: none; pointer-events: none; }
+        .nav-button.home {
+            background: linear-gradient(135deg, #ef4444 0%, #f87171 100%);
+            box-shadow: 0 2px 8px rgba(239,68,68,0.35);
+        }
+        .nav-button.home:hover { box-shadow: 0 4px 14px rgba(239,68,68,0.5); }
+        .page-info { color: #718096; font-size: 0.9em; text-align: center; }
+
+        /* Progress bar */
+        #progress-track {
+            position: fixed; top: 20px; right: 20px;
+            width: 10px; height: 150px;
+            background: rgba(59,130,246,0.2);
+            border: 2px solid #3b82f6;
+            border-radius: 6px; overflow: hidden; z-index: 1000;
+        }
+        #progress-fill {
+            width: 100%;
+            background: linear-gradient(180deg, #3b82f6, #2563eb);
+            height: 0%;
+            transition: height 0.15s ease;
+        }
+        #progress-pct {
+            position: fixed; top: 0px; right: 16px;
+            color: #2563eb; font-size: 14px; font-weight: bold;
+            z-index: 1001;
+            text-shadow: 0 1px 2px rgba(255,255,255,0.9);
+            line-height: 20px;
+        }
+
+    </style>
+<link rel="stylesheet" href="assets/chapters.css?v=20260421203847"><script src="assets/chapters.js?v=20260421203847" defer></script>
+</head>
+<body>
+    <div class="container">
+        <div class="content">
+            <div class="chat-message" data-index="1">
+<div class="px-2"><h1>MASTERING FRENCH SENTENCE STRUCTURES</h1>
+<h2><em>A 50 Chapters Progressive Guide to Real-Life French Conversation Patterns</em></h2>
+<hr>
+<h2>📘 WHAT THIS GUIDE IS</h2>
+<p>→ A structure-first approach to French speaking<br>
+→ Not grammar theory — but <strong>how French people actually build sentences</strong> in daily life<br>
+→ Each project = <strong>1 hypothetical real-life problem</strong> solved through ~100 sentence patterns<br>
+→ You read → You absorb the structure → You recognize when/where it appears in real conversations<br>
+→ Vocabulary scales with difficulty — simple words early, advanced vocabulary later<br>
+→ Every tense, mood, register, and conversational context covered across 50 projects</p>
+<hr>
+<h2>📕 WHAT THIS GUIDE IS NOT</h2>
+<p>→ Not a conjugation table reference<br>
+→ Not a grammar textbook<br>
+→ Not translation exercises<br>
+→ Not classroom French — this is <strong>street-to-boardroom French</strong></p>
+<hr>
+<h1>📑 COMPLETE TABLE OF CONTENTS</h1>
+<hr>
+<h2>🟢 PHASE 1 — VERY EASY: FOUNDATION THINKING</h2>
+<h3><em>(Projects 1–8 → ~800 Sentences)</em></h3>
+<p><strong>Goal:</strong> Build the absolute base — how French sentences are born</p>
+<table><thead><tr><th>#</th><th>Project Title</th><th>Core Problem Solved</th><th>Sentence Focus</th></tr></thead><tbody><tr><td><strong>1</strong></td><td><strong>"I Exist, I Have Things"</strong></td><td>You just landed in France — how do you state who you are and what you possess?</td><td>Subject + <strong>Être / Avoir</strong> in present → identity &amp; possession statements</td></tr><tr><td><strong>2</strong></td><td><strong>"My Day in 20 Verbs"</strong></td><td>You need to describe your daily routine to a host family</td><td>Subject + <strong>Présent simple</strong> → daily action sentences with regular/irregular verbs</td></tr><tr><td><strong>3</strong></td><td><strong>"Pointing at the World"</strong></td><td>You're at a market — how do you name, point, and specify things?</td><td><strong>C'est / Ce sont / Il y a</strong> + articles (un, une, le, la, des) → identification structures</td></tr><tr><td><strong>4</strong></td><td><strong>"Asking Without Sounding Lost"</strong></td><td>You need information — directions, prices, times</td><td><strong>3 question forms:</strong> intonation / Est-ce que / inversion → question sentence patterns</td></tr><tr><td><strong>5</strong></td><td><strong>"Saying No in 10 Ways"</strong></td><td>Someone offers you something, assumes something wrong — you must deny, refuse, correct</td><td><strong>Ne...pas</strong> and basic negation placement → negative sentence structures</td></tr><tr><td><strong>6</strong></td><td><strong>"I Want, I Need, I Can"</strong></td><td>You're in a hotel — you need to express desires, needs, and abilities</td><td><strong>Vouloir / Pouvoir / Devoir / Avoir besoin de</strong> + infinitif → modal structures</td></tr><tr><td><strong>7</strong></td><td><strong>"Here, There, To, From"</strong></td><td>You must explain where you live, where you're going, where you come from</td><td><strong>Prepositions of place</strong> (à, en, au, aux, chez, de) → location/direction structures</td></tr><tr><td><strong>8</strong></td><td><strong>"When Things Happen"</strong></td><td>You're scheduling — morning, evening, days, months, seasons</td><td><strong>Time markers</strong> (aujourd'hui, demain, hier, le lundi, en mars, à 8h) → time-anchored sentence structures</td></tr></tbody></table>
+<hr>
+<h2>🔵 PHASE 2 — EASY: CORE PATTERNS</h2>
+<h3><em>(Projects 9–15 → ~700 Sentences)</em></h3>
+<p><strong>Goal:</strong> Unlock the past, the near future, and start sounding like a real speaker</p>
+<table><thead><tr><th>#</th><th>Project Title</th><th>Core Problem Solved</th><th>Sentence Focus</th></tr></thead><tbody><tr><td><strong>9</strong></td><td><strong>"What Happened Yesterday"</strong></td><td>You need to tell a friend what you did last weekend</td><td><strong>Passé composé</strong> (avoir + être auxiliaries) → completed past action sentences</td></tr><tr><td><strong>10</strong></td><td><strong>"How Things Used to Be"</strong></td><td>You're describing your childhood, old habits, or a scene from the past</td><td><strong>Imparfait</strong> → background description, habitual past, emotional state sentences</td></tr><tr><td><strong>11</strong></td><td><strong>"The Story Has Two Layers"</strong></td><td>You're telling a story — some things happened, some things were ongoing</td><td><strong>Passé composé vs. Imparfait</strong> together → narrative structure sentences</td></tr><tr><td><strong>12</strong></td><td><strong>"What's About to Happen"</strong></td><td>You're making plans for tonight, this weekend, right now</td><td><strong>Futur proche</strong> (aller + infinitif) → immediate intention/plan sentences</td></tr><tr><td><strong>13</strong></td><td><strong>"Tell Them What to Do"</strong></td><td>You're cooking with a friend, giving directions, offering advice</td><td><strong>Impératif</strong> → command, suggestion, instruction sentence structures</td></tr><tr><td><strong>14</strong></td><td><strong>"I Wake Up, I Get Ready"</strong></td><td>You're describing your morning routine in detail</td><td><strong>Reflexive verbs</strong> (se lever, se laver, s'habiller) → pronominal verb sentence structures</td></tr><tr><td><strong>15</strong></td><td><strong>"Better, Worse, the Same"</strong></td><td>You're comparing restaurants, cities, people</td><td><strong>Comparatif &amp; Superlatif</strong> (plus...que, moins...que, le meilleur) → comparison sentence structures</td></tr></tbody></table>
+<hr>
+<h2>🟡 PHASE 3 — MEDIUM: PROFESSIONAL TECHNIQUES</h2>
+<h3><em>(Projects 16–30 → ~1500 Sentences)</em></h3>
+<p><strong>Goal:</strong> Build complex, adult-level sentences — opinions, logic, nuance</p>
+<table><thead><tr><th>#</th><th>Project Title</th><th>Core Problem Solved</th><th>Sentence Focus</th></tr></thead><tbody><tr><td><strong>16</strong></td><td><strong>"What Will Happen Someday"</strong></td><td>You're talking about future career plans, predictions, promises</td><td><strong>Futur simple</strong> → formal future sentences, predictions, commitments</td></tr><tr><td><strong>17</strong></td><td><strong>"Could You, Would You"</strong></td><td>You're at a formal dinner — you need to be polite, suggest gently, imagine</td><td><strong>Conditionnel présent</strong> → polite requests, wishes, hypothetical sentences</td></tr><tr><td><strong>18</strong></td><td><strong>"If This, Then That — Part 1"</strong></td><td>Someone asks "What if it rains?" — you answer with a plan</td><td><strong>Si + présent → futur/présent</strong> → basic conditional chain sentences</td></tr><tr><td><strong>19</strong></td><td><strong>"Don't Say the Noun Twice"</strong></td><td>Your speech sounds repetitive — how do natives avoid repeating nouns?</td><td><strong>COD/COI pronouns</strong> (le, la, les, lui, leur) → pronoun-replaced sentence structures</td></tr><tr><td><strong>20</strong></td><td><strong>"The Two Magic Words: Y and En"</strong></td><td>You keep saying the full place or quantity — natives don't</td><td><strong>Y</strong> (replaces place/à + noun) and <strong>En</strong> (replaces de + noun / quantity) → compressed sentence structures</td></tr><tr><td><strong>21</strong></td><td><strong>"The Person Who, The Thing That"</strong></td><td>You need to describe someone or something using a sub-sentence</td><td><strong>Relative pronouns</strong> (qui, que, où, dont) → complex descriptive sentence structures</td></tr><tr><td><strong>22</strong></td><td><strong>"Here's What I Think"</strong></td><td>You're in a discussion — you must state opinions, agree, disagree</td><td><strong>Opinion structures</strong> (Je pense que, À mon avis, Il me semble que, Je trouve que) → opinion sentence patterns</td></tr><tr><td><strong>23</strong></td><td><strong>"I'm Happy That, I'm Afraid That"</strong></td><td>You're reacting emotionally to news — joy, fear, surprise, doubt</td><td><strong>Emotion/Doubt + que + Subjonctif</strong> (introduction only) → emotional reaction sentence structures</td></tr><tr><td><strong>24</strong></td><td><strong>"It Was Done, It Was Built"</strong></td><td>You're at a museum, reading news — things were done by someone</td><td><strong>Voix passive</strong> (être + participe passé + par) → passive voice sentence structures</td></tr><tr><td><strong>25</strong></td><td><strong>"He Said That, She Told Me"</strong></td><td>You're reporting what someone else said to a third person</td><td><strong>Discours indirect</strong> (Il a dit que, Elle m'a demandé si) → reported speech sentence structures</td></tr><tr><td><strong>26</strong></td><td><strong>"You Must, You Have To"</strong></td><td>You're explaining rules, obligations, responsibilities</td><td><strong>Obligation structures</strong> (Il faut, devoir, être obligé de, avoir à) → duty/necessity sentence patterns</td></tr><tr><td><strong>27</strong></td><td><strong>"Maybe, Probably, Possibly"</strong></td><td>You're not sure about something — you need to express probability</td><td><strong>Possibility structures</strong> (Peut-être que, Il se peut que, Il est possible que, sans doute) → probability sentence patterns</td></tr><tr><td><strong>28</strong></td><td><strong>"Because, Therefore, Since"</strong></td><td>You need to explain reasons and consequences logically</td><td><strong>Cause/Consequence connectors</strong> (parce que, car, puisque, donc, alors, c'est pourquoi) → logical chain sentence structures</td></tr><tr><td><strong>29</strong></td><td><strong>"But, However, Even Though"</strong></td><td>You agree partially but want to contrast or oppose</td><td><strong>Concession/Opposition</strong> (mais, pourtant, cependant, bien que, malgré) → contrast sentence structures</td></tr><tr><td><strong>30</strong></td><td><strong>"When, While, As Soon As"</strong></td><td>You're linking events in time — things that happen together or in sequence</td><td><strong>Temporal connectors</strong> (quand, lorsque, pendant que, dès que, avant de, après avoir) → time-linked sentence structures</td></tr></tbody></table>
+<hr>
+<h2>🟠 PHASE 4 — HARD: ADVANCED PATTERNS</h2>
+<h3><em>(Projects 31–40 → ~1000 Sentences)</em></h3>
+<p><strong>Goal:</strong> Master the structures that separate tourists from residents</p>
+<table><thead><tr><th>#</th><th>Project Title</th><th>Core Problem Solved</th><th>Sentence Focus</th></tr></thead><tbody><tr><td><strong>31</strong></td><td><strong>"I Doubt It, I Wish It, I Fear It"</strong></td><td>You need to express subjective reality — wishes, doubts, fears, necessities</td><td><strong>Subjonctif présent in depth</strong> → full subjunctive trigger sentence structures</td></tr><tr><td><strong>32</strong></td><td><strong>"Before That Happened, This Had Already Happened"</strong></td><td>You're telling a complex story — layered past events</td><td><strong>Plus-que-parfait</strong> → past-before-past sentence structures</td></tr><tr><td><strong>33</strong></td><td><strong>"If Things Were Different — Part 2"</strong></td><td>You're imagining an unreal present — "If I were rich..."</td><td><strong>Si + imparfait → conditionnel présent</strong> → unreal present hypothesis sentences</td></tr><tr><td><strong>34</strong></td><td><strong>"If Only I Had Known — Part 3"</strong></td><td>You're expressing regret about the past — "If I had known..."</td><td><strong>Si + plus-que-parfait → conditionnel passé</strong> → unreal past hypothesis sentences</td></tr><tr><td><strong>35</strong></td><td><strong>"I Should Have, I Could Have"</strong></td><td>You're expressing regret, reproach, missed opportunity</td><td><strong>Conditionnel passé</strong> (j'aurais dû, j'aurais pu, j'aurais voulu) → regret/reproach sentence structures</td></tr><tr><td><strong>36</strong></td><td><strong>"Stack the Pronouns"</strong></td><td>You're replacing both the direct AND indirect object — "I gave it to him"</td><td><strong>Double pronoun placement</strong> (Je le lui ai donné) → multi-pronoun sentence structures</td></tr><tr><td><strong>37</strong></td><td><strong>"Make Someone Do Something"</strong></td><td>You didn't do it yourself — you had it done or made someone do it</td><td><strong>Faire causatif</strong> (faire + infinitif) → causative sentence structures</td></tr><tr><td><strong>38</strong></td><td><strong>"While Doing, By Doing"</strong></td><td>You need to express two simultaneous actions or method</td><td><strong>Gérondif</strong> (en + participe présent) → simultaneous/method sentence structures</td></tr><tr><td><strong>39</strong></td><td><strong>"Never, Nothing, Nobody, Only"</strong></td><td>You need advanced negation — beyond simple "ne...pas"</td><td><strong>Advanced negation</strong> (ne...jamais, ne...rien, ne...personne, ne...que, ne...aucun, ne...ni...ni) → complex negative sentence structures</td></tr><tr><td><strong>40</strong></td><td><strong>"Suit Up or Dress Down"</strong></td><td>Same message — but you must switch between formal and casual French</td><td><strong>Register switching</strong> (tu/vous, on/nous, vocabulary shifts, sentence length) → register-adapted sentence structures</td></tr></tbody></table>
+<hr>
+<h2>🔴 PHASE 5 — VERY HARD: MASTERY + BRIDGE</h2>
+<h3><em>(Projects 41–50 → ~1000 Sentences)</em></h3>
+<p><strong>Goal:</strong> Think, argue, joke, and express yourself like a native mind</p>
+<table><thead><tr><th>#</th><th>Project Title</th><th>Core Problem Solved</th><th>Sentence Focus</th></tr></thead><tbody><tr><td><strong>41</strong></td><td><strong>"That He May Have Done It"</strong></td><td>You're reading formal text or expressing complex doubt about past events</td><td><strong>Subjonctif passé + literary tenses</strong> (passé simple awareness) → formal/literary sentence structures</td></tr><tr><td><strong>42</strong></td><td><strong>"It's Raining Cats — French Style"</strong></td><td>You want to sound natural — using expressions natives actually use daily</td><td><strong>Idiomatic expressions</strong> in full sentence contexts → idiom-embedded sentence structures</td></tr><tr><td><strong>43</strong></td><td><strong>"Euh, Bon, Ben, Du coup, Quoi"</strong></td><td>You sound too "textbook" — you need filler words and discourse markers</td><td><strong>Discourse markers &amp; fillers</strong> (bon, ben, du coup, en fait, quoi, genre, bref, enfin) → natural speech flow structures</td></tr><tr><td><strong>44</strong></td><td><strong>"It's Not Bad — Meaning It's Amazing"</strong></td><td>You need to understand and use understatement, irony, litote</td><td><strong>Nuanced expression</strong> (litote: pas mal = great; irony structures; euphemism) → subtlety sentence structures</td></tr><tr><td><strong>45</strong></td><td><strong>"On One Hand, On the Other"</strong></td><td>You're writing an essay or making a structured argument in a debate</td><td><strong>Argumentation structures</strong> (d'une part...d'autre part, non seulement...mais aussi, en revanche) → logical argumentation sentence patterns</td></tr><tr><td><strong>46</strong></td><td><strong>"What If What If What If"</strong></td><td>You're building complex chains of hypotheticals and consequences</td><td><strong>Chained conditionals</strong> (mixed si-clauses, quand bien même, au cas où, à supposer que) → advanced hypothetical sentence structures</td></tr><tr><td><strong>47</strong></td><td><strong>"How They Actually Talk"</strong></td><td>You hear natives and can't understand — they drop sounds, change words</td><td><strong>Spoken French vs. written</strong> (dropping "ne", "on" = nous, "t'as" = tu as, "chuis" = je suis, "y'a") → colloquial sentence structures</td></tr><tr><td><strong>48</strong></td><td><strong>"Read the Room"</strong></td><td>Same situation — but the formality level changes everything you say</td><td><strong>Cultural-context sentences</strong> (politeness rituals, indirectness, softening, professional vs. friend vs. stranger) → culturally calibrated sentence structures</td></tr><tr><td><strong>49</strong></td><td><strong>"As They Say in French"</strong></td><td>You want to drop proverbs and cultural sayings naturally in conversation</td><td><strong>Proverbs, sayings, cultural references</strong> in conversational sentence contexts → wisdom-embedded sentence structures</td></tr><tr><td><strong>50</strong></td><td><strong>"Speak Like You Were Born There"</strong></td><td>You face any situation — you mix everything — you think in French</td><td><strong>Full integration</strong> — mixing all 49 structures fluidly in spontaneous conversation simulations → mastery sentence structures</td></tr></tbody></table>
+<hr>
+<h1>📊 STRUCTURE SUMMARY</h1>
+<table><thead><tr><th>Phase</th><th>Projects</th><th>Difficulty</th><th>Sentences</th><th>What You Unlock</th></tr></thead><tbody><tr><td>🟢 Phase 1</td><td>1–8</td><td>Very Easy</td><td>~800</td><td>Survive — state facts, ask, deny, want, locate, time</td></tr><tr><td>🔵 Phase 2</td><td>9–15</td><td>Easy</td><td>~700</td><td>Tell stories — past, near future, commands, comparisons</td></tr><tr><td>🟡 Phase 3</td><td>16–30</td><td>Medium</td><td>~1500</td><td>Think out loud — opinions, logic, cause, contrast, conditions</td></tr><tr><td>🟠 Phase 4</td><td>31–40</td><td>Hard</td><td>~1000</td><td>Express depth — regret, doubt, nuance, formality</td></tr><tr><td>🔴 Phase 5</td><td>41–50</td><td>Very Hard</td><td>~1000</td><td>Sound native — idioms, irony, fillers, cultural instinct</td></tr></tbody></table>
+<blockquote>
+<p><strong>Total: ~5000+ core sentence structures</strong><br>
+<em>(Each with contextual variations reaching toward 10,000 real-use patterns)</em></p>
+</blockquote>
+<hr>
+<h1>✅ READY TO BEGIN</h1>
+<blockquote>
+<p><strong>Are you ready for PROJECT 1: "I Exist, I Have Things"?</strong></p>
+<p>→ ~100 sentences covering <strong>Être &amp; Avoir in present tense</strong><br>
+→ Real scenario: You just landed in France — stating who you are, what you have, how you feel<br>
+→ Full problem-solving structure as specified</p>
+</blockquote>
+</div>
+</div>
+
+<!-- ========== data-index="3" ========== -->
+
+        </div>
+
+        <div class="nav-bar">
+            <a href="index.html" class="nav-button prev">← 📚 Home</a>
+            <div class="page-info">
+                <a href="index.html" class="nav-button home">📚 Table of Contents</a><br>
+                <span style="margin-top:8px;display:block">Chapter 0 of 50</span>
+            </div>
+            <a href="project-1.html" class="nav-button next">Next Chapter →</a>
+        </div>
+    </div>
+
+    
+    <div id="progress-track"><div id="progress-fill"></div></div>
+    <div id="progress-pct">0%</div>
+
+
+    <script>
+    const fill = document.getElementById('progress-fill');
+    const pct  = document.getElementById('progress-pct');
+    function updateProgress() {
+        const scrollTop = window.scrollY;
+        const docHeight = document.body.scrollHeight - window.innerHeight;
+        const scrolled  = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+        fill.style.height = scrolled + '%';
+        pct.textContent   = Math.round(scrolled) + '%';
+    }
+    window.addEventListener('scroll', updateProgress);
+    updateProgress();
+
+    document.addEventListener('keydown', function(e) {
+        if (['INPUT','TEXTAREA'].includes(document.activeElement.tagName)) return;
+        if (e.key === 'ArrowLeft') {
+            const b = document.querySelector('.nav-button.prev');
+            if (b && !b.classList.contains('disabled')) window.location.href = b.href;
+        }
+        if (e.key === 'ArrowRight') {
+            const b = document.querySelector('.nav-button.next');
+            if (b && !b.classList.contains('disabled')) window.location.href = b.href;
+        }
+    });
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="images/favicon.png">
+    <title>Project 2: "My Day in 20 Verbs" — French Daily Sentences</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.75;
+            color: #1a202c;
+            background-color: #f7fafc;
+        }
+        .container {
+            max-width: 1800px;
+            margin: 0 auto;
+            background: white;
+            min-height: 100vh;
+            box-shadow: 0 0 30px rgba(0,0,0,0.08);
+            padding: 48px 52px;
+        }
+        
+        .content { max-width: 1700px; margin: 0 auto; color: #1a202c; }
+        .content h1 {
+            color: #1a202c; margin: 32px 0 20px;
+            padding-bottom: 12px;
+            border-bottom: 4px solid #3b82f6;
+            font-size: 2.1em;
+            font-weight: 700;
+        }
+        .content h2 {
+            color: #1a202c; margin: 28px 0 16px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #60a5fa;
+            font-size: 1.6em;
+            font-weight: 600;
+        }
+        .content h3 { color: #1a202c; margin: 22px 0 12px; font-size: 1.3em; font-weight: 600; }
+        .content h4 { color: #2d3748; margin: 18px 0 10px; font-size: 1.1em; font-weight: 600; }
+        .content p  { margin-bottom: 16px; line-height: 1.8; color: #1a202c; }
+        .content ul, .content ol { margin: 12px 0 18px 30px; color: #1a202c; }
+        .content li { margin-bottom: 8px; line-height: 1.75; color: #1a202c; }
+        .content hr { border: none; border-top: 2px solid #e2e8f0; margin: 26px 0; }
+        .content pre {
+            background: #f7fafc !important;
+            border: 1px solid #cbd5e0 !important;
+            border-left: 4px solid #3b82f6 !important;
+            padding: 18px !important; overflow-x: auto; margin: 18px 0; border-radius: 6px;
+            font-family: 'Consolas','Monaco','Courier New',monospace !important;
+            font-size: 0.9em !important;
+        }
+        .content pre:not([style*="color"]) { color: #1a202c !important; }
+        .content code {
+            font-family: 'Consolas','Monaco','Courier New',monospace !important;
+            font-size: 0.88em !important;
+        }
+        .content code:not(pre code) {
+            background: #dbeafe !important;
+            color: #1a202c !important;
+            padding: 2px 6px;
+            border-radius: 3px;
+        }
+        .content pre code { background: transparent !important; padding: 0; }
+        .content table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+        .content th {
+            background: linear-gradient(135deg, #3b82f6 0%, #60a5fa 100%);
+            color: white; padding: 12px 16px; text-align: left;
+            font-weight: 600;
+        }
+        .content td { padding: 11px 16px; border: 1px solid #e2e8f0; color: #1a202c; }
+        .content tr:nth-child(even) td { background: #eff6ff; }
+        .content blockquote {
+            border-left: 4px solid #3b82f6; background: #eff6ff;
+            padding: 14px 20px; margin: 18px 0; border-radius: 0 6px 6px 0;
+            color: #1a202c;
+        }
+        .content strong { color: #1a202c; font-weight: 600; }
+        .px-2 { padding: 0; }
+        .chat-message { background: transparent; padding: 0; margin: 0; }
+
+        /* Bottom nav bar only */
+        .nav-bar {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 24px 0;
+            margin-top: 50px;
+            border-top: 3px solid #60a5fa;
+        }
+        .nav-button {
+            display: inline-flex; align-items: center; gap: 8px;
+            padding: 12px 26px;
+            background: linear-gradient(135deg, #3b82f6 0%, #60a5fa 100%);
+            color: white !important; text-decoration: none;
+            border-radius: 8px; font-weight: 600; font-size: 0.95em;
+            transition: all 0.2s;
+            box-shadow: 0 2px 8px rgba(59,130,246,0.35);
+        }
+        .nav-button:hover { transform: translateY(-2px); box-shadow: 0 4px 14px rgba(59,130,246,0.5); }
+        .nav-button.disabled { background: #cbd5e1; box-shadow: none; pointer-events: none; }
+        .nav-button.home {
+            background: linear-gradient(135deg, #ef4444 0%, #f87171 100%);
+            box-shadow: 0 2px 8px rgba(239,68,68,0.35);
+        }
+        .nav-button.home:hover { box-shadow: 0 4px 14px rgba(239,68,68,0.5); }
+        .page-info { color: #718096; font-size: 0.9em; text-align: center; }
+
+        /* Progress bar */
+        #progress-track {
+            position: fixed; top: 20px; right: 20px;
+            width: 10px; height: 150px;
+            background: rgba(59,130,246,0.2);
+            border: 2px solid #3b82f6;
+            border-radius: 6px; overflow: hidden; z-index: 1000;
+        }
+        #progress-fill {
+            width: 100%;
+            background: linear-gradient(180deg, #3b82f6, #2563eb);
+            height: 0%;
+            transition: height 0.15s ease;
+        }
+        #progress-pct {
+            position: fixed; top: 0px; right: 16px;
+            color: #2563eb; font-size: 14px; font-weight: bold;
+            z-index: 1001;
+            text-shadow: 0 1px 2px rgba(255,255,255,0.9);
+            line-height: 20px;
+        }
+
+    </style>
+<link rel="stylesheet" href="assets/chapters.css?v=20260421203847"><script src="assets/chapters.js?v=20260421203847" defer></script>
+</head>
+<body>
+    <div class="container">
+        <div class="content">
+            <div class="chat-message" data-index="5">
+<div class="px-2"><h1>🟢 PROJECT 2: "My Day in 20 Verbs"</h1>
+<h2><em>You need to describe your daily routine to a French host family</em></h2>
+<hr>
+<h1>🎯 THE HYPOTHETICAL PROBLEM</h1>
+<p>→ You're staying with a <strong>French host family</strong> in Lyon for one month<br>
+→ On your first evening, the family asks: <strong>"Alors, c'est quoi ta journée typique ?"</strong> (So, what's your typical day like?)<br>
+→ You already know how to say who you are and what you have (Project 1)<br>
+→ But now you need to describe <strong>what you DO</strong> — eating, working, speaking, going, coming, sleeping<br>
+→ You need <strong>action engines</strong> — verbs that describe movement, activity, routine<br>
+→ French has <strong>3 main verb families</strong> + <strong>key irregular verbs</strong> that don't follow rules<br>
+→ If you don't know which family a verb belongs to → you will conjugate it wrong → your sentence breaks</p>
+<p><strong>The core realization:</strong><br>
+→ Project 1 gave you <strong>2 engines</strong> (être, avoir) for static states<br>
+→ Project 2 gives you <strong>20 new engines</strong> for actions<br>
+→ These 20 verbs cover approximately <strong>70% of daily spoken French</strong></p>
+<hr>
+<h1>🔍 HOW TO APPROACH IT</h1>
+<p>→ French verbs are grouped by their <strong>ending</strong> in the dictionary form (infinitif)<br>
+→ The ending tells you <strong>which conjugation pattern</strong> to follow</p>
+<table><thead><tr><th>Verb Family</th><th>Ending</th><th>Example</th><th>% of French Verbs</th></tr></thead><tbody><tr><td><strong>Family 1</strong></td><td><strong>-ER</strong></td><td>Parler (to speak)</td><td>~90% of all verbs</td></tr><tr><td><strong>Family 2</strong></td><td><strong>-IR</strong></td><td>Finir (to finish)</td><td>~7%</td></tr><tr><td><strong>Family 3</strong></td><td><strong>-RE</strong></td><td>Attendre (to wait)</td><td>~3%</td></tr><tr><td><strong>Rebels</strong></td><td>Various</td><td>Aller, Faire, Venir</td><td>Must memorize individually</td></tr></tbody></table>
+<p>→ Your approach: <strong>Master the -ER pattern first</strong> (it covers almost everything)<br>
+→ Then learn the -IR and -RE patterns<br>
+→ Then handle the rebels (irregulars) one by one</p>
+<hr>
+<h1>🔧 HOW CAN WE SOLVE IT</h1>
+<h2>Step 1 — The -ER Conjugation Engine</h2>
+<p><strong>Rule:</strong> Remove <strong>-er</strong> → Add these endings</p>
+<table><thead><tr><th>Subject</th><th>Ending</th><th>Example: PARLER</th></tr></thead><tbody><tr><td>Je</td><td><strong>-e</strong></td><td>je parl<strong>e</strong></td></tr><tr><td>Tu</td><td><strong>-es</strong></td><td>tu parl<strong>es</strong></td></tr><tr><td>Il / Elle / On</td><td><strong>-e</strong></td><td>il parl<strong>e</strong></td></tr><tr><td>Nous</td><td><strong>-ons</strong></td><td>nous parl<strong>ons</strong></td></tr><tr><td>Vous</td><td><strong>-ez</strong></td><td>vous parl<strong>ez</strong></td></tr><tr><td>Ils / Elles</td><td><strong>-ent</strong></td><td>ils parl<strong>ent</strong></td></tr></tbody></table>
+<p><strong>🔊 Pronunciation secret:</strong> je parle, tu parles, il parle, ils parlent → <strong>ALL SOUND THE SAME</strong> ("parl")<br>
+→ Only <strong>nous parlons</strong> and <strong>vous parlez</strong> sound different<br>
+→ This means in spoken French, you MUST hear the subject to know who is speaking</p>
+<hr>
+<h2>Step 2 — The -IR Conjugation Engine</h2>
+<p><strong>Rule:</strong> Remove <strong>-ir</strong> → Add these endings</p>
+<table><thead><tr><th>Subject</th><th>Ending</th><th>Example: FINIR</th></tr></thead><tbody><tr><td>Je</td><td><strong>-is</strong></td><td>je fin<strong>is</strong></td></tr><tr><td>Tu</td><td><strong>-is</strong></td><td>tu fin<strong>is</strong></td></tr><tr><td>Il / Elle / On</td><td><strong>-it</strong></td><td>il fin<strong>it</strong></td></tr><tr><td>Nous</td><td><strong>-issons</strong></td><td>nous fin<strong>issons</strong></td></tr><tr><td>Vous</td><td><strong>-issez</strong></td><td>vous fin<strong>issez</strong></td></tr><tr><td>Ils / Elles</td><td><strong>-issent</strong></td><td>ils fin<strong>issent</strong></td></tr></tbody></table>
+<hr>
+<h2>Step 3 — The -RE Conjugation Engine</h2>
+<p><strong>Rule:</strong> Remove <strong>-re</strong> → Add these endings</p>
+<table><thead><tr><th>Subject</th><th>Ending</th><th>Example: ATTENDRE</th></tr></thead><tbody><tr><td>Je</td><td><strong>-s</strong></td><td>j'attend<strong>s</strong></td></tr><tr><td>Tu</td><td><strong>-s</strong></td><td>tu attend<strong>s</strong></td></tr><tr><td>Il / Elle / On</td><td><strong>—</strong> (nothing)</td><td>il attend</td></tr><tr><td>Nous</td><td><strong>-ons</strong></td><td>nous attend<strong>ons</strong></td></tr><tr><td>Vous</td><td><strong>-ez</strong></td><td>vous attend<strong>ez</strong></td></tr><tr><td>Ils / Elles</td><td><strong>-ent</strong></td><td>ils attend<strong>ent</strong></td></tr></tbody></table>
+<hr>
+<h2>Step 4 — The 20 Verbs You Need</h2>
+<table><thead><tr><th>#</th><th>French</th><th>English</th><th>Family</th><th>Daily Use</th></tr></thead><tbody><tr><td>1</td><td><strong>Parler</strong></td><td>To speak</td><td>-ER</td><td>Talking to people</td></tr><tr><td>2</td><td><strong>Manger</strong></td><td>To eat</td><td>-ER*</td><td>Meals</td></tr><tr><td>3</td><td><strong>Travailler</strong></td><td>To work</td><td>-ER</td><td>Job/study</td></tr><tr><td>4</td><td><strong>Habiter</strong></td><td>To live (reside)</td><td>-ER</td><td>Where you live</td></tr><tr><td>5</td><td><strong>Regarder</strong></td><td>To watch</td><td>-ER</td><td>TV, screens</td></tr><tr><td>6</td><td><strong>Écouter</strong></td><td>To listen</td><td>-ER</td><td>Music, people</td></tr><tr><td>7</td><td><strong>Aimer</strong></td><td>To like / to love</td><td>-ER</td><td>Preferences</td></tr><tr><td>8</td><td><strong>Acheter</strong></td><td>To buy</td><td>-ER*</td><td>Shopping</td></tr><tr><td>9</td><td><strong>Préparer</strong></td><td>To prepare</td><td>-ER</td><td>Cooking, planning</td></tr><tr><td>10</td><td><strong>Commencer</strong></td><td>To start / begin</td><td>-ER*</td><td>Starting activities</td></tr><tr><td>11</td><td><strong>Finir</strong></td><td>To finish</td><td>-IR</td><td>Ending activities</td></tr><tr><td>12</td><td><strong>Choisir</strong></td><td>To choose</td><td>-IR</td><td>Decisions</td></tr><tr><td>13</td><td><strong>Dormir</strong></td><td>To sleep</td><td>-IR**</td><td>Sleep</td></tr><tr><td>14</td><td><strong>Partir</strong></td><td>To leave</td><td>-IR**</td><td>Departure</td></tr><tr><td>15</td><td><strong>Sortir</strong></td><td>To go out</td><td>-IR**</td><td>Going out</td></tr><tr><td>16</td><td><strong>Attendre</strong></td><td>To wait</td><td>-RE</td><td>Waiting</td></tr><tr><td>17</td><td><strong>Prendre</strong></td><td>To take</td><td>-RE**</td><td>Taking transport, food, decisions</td></tr><tr><td>18</td><td><strong>Aller</strong></td><td>To go</td><td>IRREGULAR</td><td>Movement</td></tr><tr><td>19</td><td><strong>Faire</strong></td><td>To do / to make</td><td>IRREGULAR</td><td>Activities, weather</td></tr><tr><td>20</td><td><strong>Venir</strong></td><td>To come</td><td>IRREGULAR</td><td>Arrival, origin</td></tr></tbody></table>
+<p>*→ minor spelling changes &nbsp;&nbsp; *<em>→ irregular within their family</em></p>
+<hr>
+<h1>✅ WHAT COULD BE DONE — THE 100 SENTENCES</h1>
+<h2>🔹 BLOCK A — -ER Verbs: The Backbone of Daily French</h2>
+<p><em>Scenario: You describe your morning and habits to your host family</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English Meaning</th><th>Structure Pattern</th></tr></thead><tbody><tr><td>1</td><td>Je parle français un peu.</td><td>I speak French a little.</td><td>Subject + -ER verb + object + quantity</td></tr><tr><td>2</td><td>Tu parles anglais ?</td><td>Do you speak English?</td><td>Subject + -ER verb + object + ?</td></tr><tr><td>3</td><td>Il parle trois langues.</td><td>He speaks three languages.</td><td>Subject + -ER verb + number + object</td></tr><tr><td>4</td><td>Nous parlons ensemble le soir.</td><td>We talk together in the evening.</td><td>Subject + -ER verb + manner + time</td></tr><tr><td>5</td><td>Vous parlez très vite.</td><td>You speak very fast.</td><td>Subject + -ER verb + intensifier + adverb</td></tr><tr><td>6</td><td>Elles parlent tout le temps.</td><td>They (f) talk all the time.</td><td>Subject + -ER verb + frequency expression</td></tr><tr><td>7</td><td>Je mange à huit heures.</td><td>I eat at eight o'clock.</td><td>Subject + -ER verb + à + time</td></tr><tr><td>8</td><td>Tu manges quoi le matin ?</td><td>What do you eat in the morning?</td><td>Subject + -ER verb + quoi + time + ?</td></tr><tr><td>9</td><td>On mange ensemble ?</td><td>Shall we eat together?</td><td>On + -ER verb + manner + ? (suggestion)</td></tr><tr><td>10</td><td>Ils mangent au restaurant.</td><td>They eat at the restaurant.</td><td>Subject + -ER verb + au + place</td></tr></tbody></table>
+<p><strong>🧠 Structure unlocked:</strong> <code>Subject + -ER VERB + [object / time / place / manner]</code></p>
+<hr>
+<h2>🔹 BLOCK B — More -ER Verbs: Work, Home, Watching, Listening</h2>
+<p><em>Scenario: You explain what you do during the day and evening</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English Meaning</th><th>Structure Pattern</th></tr></thead><tbody><tr><td>11</td><td>Je travaille à la maison.</td><td>I work at home.</td><td>Subject + verb + à + place</td></tr><tr><td>12</td><td>Tu travailles le samedi ?</td><td>Do you work on Saturdays?</td><td>Subject + verb + le + day + ?</td></tr><tr><td>13</td><td>Elle travaille dans un bureau.</td><td>She works in an office.</td><td>Subject + verb + dans + article + place</td></tr><tr><td>14</td><td>Nous travaillons beaucoup.</td><td>We work a lot.</td><td>Subject + verb + quantity adverb</td></tr><tr><td>15</td><td>J'habite à Lyon.</td><td>I live in Lyon.</td><td>Subject + verb + à + city</td></tr><tr><td>16</td><td>Tu habites où ?</td><td>Where do you live?</td><td>Subject + verb + où + ?</td></tr><tr><td>17</td><td>Ils habitent en France.</td><td>They live in France.</td><td>Subject + verb + en + country</td></tr><tr><td>18</td><td>Je regarde la télé le soir.</td><td>I watch TV in the evening.</td><td>Subject + verb + object + time</td></tr><tr><td>19</td><td>Tu regardes quoi ?</td><td>What are you watching?</td><td>Subject + verb + quoi + ?</td></tr><tr><td>20</td><td>On regarde un film ce soir ?</td><td>Shall we watch a movie tonight?</td><td>On + verb + object + time + ?</td></tr></tbody></table>
+<hr>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English Meaning</th><th>Structure Pattern</th></tr></thead><tbody><tr><td>21</td><td>J'écoute de la musique.</td><td>I listen to music.</td><td>Subject + verb + partitive + noun</td></tr><tr><td>22</td><td>Elle écoute la radio le matin.</td><td>She listens to the radio in the morning.</td><td>Subject + verb + object + time</td></tr><tr><td>23</td><td>Vous écoutez quoi comme musique ?</td><td>What kind of music do you listen to?</td><td>Subject + verb + quoi + comme + noun + ?</td></tr><tr><td>24</td><td>J'aime le café.</td><td>I like coffee.</td><td>Subject + verb + article + noun</td></tr><tr><td>25</td><td>Tu aimes la France ?</td><td>Do you like France?</td><td>Subject + verb + object + ?</td></tr><tr><td>26</td><td>Il aime beaucoup lire.</td><td>He likes reading a lot.</td><td>Subject + verb + adverb + infinitif</td></tr><tr><td>27</td><td>Nous aimons voyager.</td><td>We like to travel.</td><td>Subject + verb + infinitif</td></tr><tr><td>28</td><td>Elles aiment bien cette ville.</td><td>They quite like this city.</td><td>Subject + verb + bien + demonstrative + noun</td></tr><tr><td>29</td><td>J'aime bien ton idée.</td><td>I quite like your idea.</td><td>Subject + verb + bien + possessive + noun</td></tr><tr><td>30</td><td>On aime manger dehors.</td><td>We like to eat outside.</td><td>Subject + verb + infinitif + place adverb</td></tr></tbody></table>
+<p><strong>🧠 Critical pattern unlocked:</strong> <code>AIMER + INFINITIF = liking to DO something</code><br>
+→ ✅ J'aime <strong>voyager</strong>. (I like <strong>to travel</strong>.)<br>
+→ This pattern works with many verbs → "verb + infinitif" = verb + doing something</p>
+<hr>
+<h2>🔹 BLOCK C — -ER Verbs with Spelling Quirks</h2>
+<p><em>Scenario: Shopping, preparing meals, starting your day</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English Meaning</th><th>Spelling Note</th></tr></thead><tbody><tr><td>31</td><td>J'achète du pain.</td><td>I buy bread.</td><td>acheter → <strong>achète</strong> (è before silent ending)</td></tr><tr><td>32</td><td>Tu achètes où ?</td><td>Where do you buy (it)?</td><td>Same è pattern</td></tr><tr><td>33</td><td>Elle achète des fruits au marché.</td><td>She buys fruit at the market.</td><td>Subject + verb + partitive + noun + au + place</td></tr><tr><td>34</td><td>Nous achetons ensemble.</td><td>We buy together.</td><td>Regular -ons → no accent change</td></tr><tr><td>35</td><td>Vous achetez quoi ?</td><td>What are you buying?</td><td>Regular -ez → no accent change</td></tr><tr><td>36</td><td>Je prépare le dîner.</td><td>I prepare dinner.</td><td>Subject + verb + article + meal</td></tr><tr><td>37</td><td>Tu prépares le petit-déjeuner ?</td><td>Are you preparing breakfast?</td><td>Subject + verb + article + meal + ?</td></tr><tr><td>38</td><td>On prépare une surprise.</td><td>We're preparing a surprise.</td><td>On + verb + article + noun</td></tr><tr><td>39</td><td>Je commence à neuf heures.</td><td>I start at nine o'clock.</td><td>commencer → regular but: nous commen<strong>ç</strong>ons (ç before -ons)</td></tr><tr><td>40</td><td>Nous commençons le lundi.</td><td>We start on Monday.</td><td>commen<strong>ç</strong>ons → ç keeps the "s" sound before -ons</td></tr></tbody></table>
+<p><strong>🧠 Spelling rule unlocked:</strong><br>
+→ <strong>Acheter</strong> type → è appears when the ending is silent (je, tu, il, ils forms)<br>
+→ <strong>Commencer</strong> type → ç appears before <strong>-ons</strong> to keep the soft "s" sound<br>
+→ These are NOT irregular — they are <strong>regular verbs with spelling adjustments</strong></p>
+<hr>
+<h2>🔹 BLOCK D — -IR Verbs: Finishing, Choosing</h2>
+<p><em>Scenario: Making decisions, completing tasks, daily closure</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English Meaning</th><th>Structure Pattern</th></tr></thead><tbody><tr><td>41</td><td>Je finis à six heures.</td><td>I finish at six o'clock.</td><td>Subject + -IR verb + à + time</td></tr><tr><td>42</td><td>Tu finis quand ?</td><td>When do you finish?</td><td>Subject + -IR verb + quand + ?</td></tr><tr><td>43</td><td>Il finit son travail tard.</td><td>He finishes his work late.</td><td>Subject + verb + possessive + noun + adverb</td></tr><tr><td>44</td><td>Nous finissons toujours en retard.</td><td>We always finish late.</td><td>Subject + verb + frequency + expression</td></tr><tr><td>45</td><td>Vous finissez à quelle heure ?</td><td>What time do you finish?</td><td>Subject + verb + à quelle heure + ?</td></tr><tr><td>46</td><td>Ils finissent le projet demain.</td><td>They finish the project tomorrow.</td><td>Subject + verb + object + time</td></tr><tr><td>47</td><td>Je choisis le menu du jour.</td><td>I choose the daily menu.</td><td>Subject + verb + object</td></tr><tr><td>48</td><td>Tu choisis quoi ?</td><td>What do you choose?</td><td>Subject + verb + quoi + ?</td></tr><tr><td>49</td><td>Elle choisit toujours la même chose.</td><td>She always chooses the same thing.</td><td>Subject + verb + frequency + object</td></tr><tr><td>50</td><td>On choisit ensemble.</td><td>We choose together.</td><td>On + verb + manner</td></tr></tbody></table>
+<p><strong>🧠 Structure unlocked:</strong> -IR verbs with <strong>-iss-</strong> in plural forms (finissons, finissez, finissent)</p>
+<hr>
+<h2>🔹 BLOCK E — Rebel -IR Verbs: Dormir, Partir, Sortir</h2>
+<p><em>Scenario: Talking about sleep, leaving, going out at night</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English Meaning</th><th>Conjugation Note</th></tr></thead><tbody><tr><td>51</td><td>Je dors huit heures par nuit.</td><td>I sleep eight hours per night.</td><td>dor<strong>s</strong> (no -iss- pattern!)</td></tr><tr><td>52</td><td>Tu dors bien ?</td><td>Do you sleep well?</td><td>Subject + verb + adverb + ?</td></tr><tr><td>53</td><td>Il dort encore.</td><td>He is still sleeping.</td><td>Subject + verb + encore</td></tr><tr><td>54</td><td>Nous dormons peu.</td><td>We sleep little.</td><td>Subject + verb + quantity</td></tr><tr><td>55</td><td>Vous dormez tard le dimanche ?</td><td>Do you sleep late on Sundays?</td><td>Subject + verb + adverb + time + ?</td></tr><tr><td>56</td><td>Ils dorment chez des amis.</td><td>They sleep at friends' houses.</td><td>Subject + verb + chez + noun</td></tr><tr><td>57</td><td>Je pars à sept heures.</td><td>I leave at seven o'clock.</td><td>par<strong>s</strong> (same rebel pattern)</td></tr><tr><td>58</td><td>Tu pars quand ?</td><td>When are you leaving?</td><td>Subject + verb + quand + ?</td></tr><tr><td>59</td><td>Elle part en vacances.</td><td>She is leaving on vacation.</td><td>Subject + verb + en + noun</td></tr><tr><td>60</td><td>On part ensemble demain.</td><td>We leave together tomorrow.</td><td>On + verb + manner + time</td></tr></tbody></table>
+<hr>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English Meaning</th><th>Conjugation Note</th></tr></thead><tbody><tr><td>61</td><td>Je sors ce soir.</td><td>I go out tonight.</td><td>sor<strong>s</strong> (same rebel pattern)</td></tr><tr><td>62</td><td>Tu sors souvent ?</td><td>Do you go out often?</td><td>Subject + verb + frequency + ?</td></tr><tr><td>63</td><td>Il sort avec ses amis.</td><td>He goes out with his friends.</td><td>Subject + verb + avec + possessive + noun</td></tr><tr><td>64</td><td>Nous sortons le vendredi soir.</td><td>We go out on Friday nights.</td><td>Subject + verb + time</td></tr><tr><td>65</td><td>Vous sortez ce week-end ?</td><td>Are you going out this weekend?</td><td>Subject + verb + time + ?</td></tr><tr><td>66</td><td>Elles sortent du bureau à cinq heures.</td><td>They (f) leave the office at five.</td><td>Subject + verb + du + place + à + time</td></tr></tbody></table>
+<p><strong>🧠 Critical distinction unlocked:</strong><br>
+→ <strong>Finir / Choisir</strong> type = add <strong>-iss-</strong> in plural → nous fin<strong>iss</strong>ons<br>
+→ <strong>Dormir / Partir / Sortir</strong> type = <strong>NO -iss-</strong> → nous dorm<strong>ons</strong>, nous part<strong>ons</strong>, nous sort<strong>ons</strong><br>
+→ Singular forms lose the last consonant of the stem: dormir → je dor<strong>s</strong> (the "m" disappears!)</p>
+<hr>
+<h2>🔹 BLOCK F — -RE Verb: Attendre + Rebel Prendre</h2>
+<p><em>Scenario: Waiting for the bus, taking transport, taking meals</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English Meaning</th><th>Structure Pattern</th></tr></thead><tbody><tr><td>67</td><td>J'attends le bus.</td><td>I wait for the bus.</td><td>Subject + -RE verb + article + noun</td></tr><tr><td>68</td><td>Tu attends qui ?</td><td>Who are you waiting for?</td><td>Subject + verb + qui + ?</td></tr><tr><td>69</td><td>Elle attend depuis dix minutes.</td><td>She has been waiting for ten minutes.</td><td>Subject + verb + depuis + duration</td></tr><tr><td>70</td><td>Nous attendons le résultat.</td><td>We are waiting for the result.</td><td>Subject + verb + article + noun</td></tr><tr><td>71</td><td>Vous attendez ici.</td><td>You wait here.</td><td>Subject + verb + place word</td></tr><tr><td>72</td><td>Ils attendent le train.</td><td>They wait for the train.</td><td>Subject + verb + article + noun</td></tr><tr><td>73</td><td>Je prends le métro.</td><td>I take the metro.</td><td>prend<strong>s</strong> (irregular -RE)</td></tr><tr><td>74</td><td>Tu prends quoi au petit-déjeuner ?</td><td>What do you have for breakfast?</td><td>Subject + verb + quoi + au + meal + ?</td></tr><tr><td>75</td><td>Il prend un café.</td><td>He has a coffee.</td><td>Subject + verb + article + noun</td></tr><tr><td>76</td><td>Nous prenons le bus.</td><td>We take the bus.</td><td>pren<strong>ons</strong> (stem change: prend → pren)</td></tr><tr><td>77</td><td>Vous prenez du sucre ?</td><td>Do you take sugar?</td><td>Subject + verb + partitive + noun + ?</td></tr><tr><td>78</td><td>Elles prennent le petit-déjeuner ensemble.</td><td>They (f) have breakfast together.</td><td>prenn<strong>ent</strong> (double n in ils/elles form!)</td></tr></tbody></table>
+<p><strong>🧠 Structure unlocked:</strong> <code>PRENDRE = to take</code> but also <strong>"to have" for food/drinks</strong><br>
+→ ✅ Je prends un café. = I'll have a coffee. (NOT "I take a coffee")<br>
+→ Prendre is one of the most used verbs in daily French</p>
+<hr>
+<h2>🔹 BLOCK G — The Big Three Irregulars: ALLER, FAIRE, VENIR</h2>
+<p><em>Scenario: Going places, doing activities, arriving from somewhere</em></p>
+<h3>ALLER (to go)</h3>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English Meaning</th><th>Conjugation</th></tr></thead><tbody><tr><td>79</td><td>Je vais au travail.</td><td>I go to work.</td><td>je <strong>vais</strong></td></tr><tr><td>80</td><td>Tu vas où ?</td><td>Where are you going?</td><td>tu <strong>vas</strong></td></tr><tr><td>81</td><td>Il va à l'école.</td><td>He goes to school.</td><td>il <strong>va</strong></td></tr><tr><td>82</td><td>Nous allons au cinéma.</td><td>We go to the cinema.</td><td>nous <strong>allons</strong></td></tr><tr><td>83</td><td>Vous allez bien ?</td><td>Are you doing well?</td><td>vous <strong>allez</strong></td></tr><tr><td>84</td><td>Elles vont au marché le samedi.</td><td>They (f) go to the market on Saturdays.</td><td>elles <strong>vont</strong></td></tr></tbody></table>
+<p><strong>🧠 Key insight:</strong> Aller = completely irregular — <strong>vais, vas, va, allons, allez, vont</strong> — must memorize<br>
+→ Also: <strong>"Aller bien"</strong> = to be doing well → Ça va ? / Je vais bien. (most common French greeting)</p>
+<hr>
+<h3>FAIRE (to do / to make)</h3>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English Meaning</th><th>Conjugation</th></tr></thead><tbody><tr><td>85</td><td>Je fais du sport.</td><td>I do sports / exercise.</td><td>je <strong>fais</strong></td></tr><tr><td>86</td><td>Tu fais quoi aujourd'hui ?</td><td>What are you doing today?</td><td>tu <strong>fais</strong></td></tr><tr><td>87</td><td>Elle fait la cuisine.</td><td>She cooks (does the cooking).</td><td>elle <strong>fait</strong></td></tr><tr><td>88</td><td>Nous faisons les courses.</td><td>We do the grocery shopping.</td><td>nous <strong>faisons</strong> (pronounced "feu-zon")</td></tr><tr><td>89</td><td>Vous faites du yoga ?</td><td>Do you do yoga?</td><td>vous <strong>faites</strong></td></tr><tr><td>90</td><td>Ils font du bruit.</td><td>They make noise.</td><td>ils <strong>font</strong></td></tr></tbody></table>
+<p><strong>🧠 Key insight:</strong> FAIRE is the <strong>Swiss Army knife</strong> of French<br>
+→ faire du sport = exercise<br>
+→ faire la cuisine = cook<br>
+→ faire les courses = grocery shop<br>
+→ faire le ménage = clean the house<br>
+→ faire attention = pay attention<br>
+→ faire du + activity = do/practice an activity</p>
+<hr>
+<h3>VENIR (to come)</h3>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English Meaning</th><th>Conjugation</th></tr></thead><tbody><tr><td>91</td><td>Je viens de Paris.</td><td>I come from Paris.</td><td>je <strong>viens</strong></td></tr><tr><td>92</td><td>Tu viens avec nous ?</td><td>Are you coming with us?</td><td>tu <strong>viens</strong></td></tr><tr><td>93</td><td>Il vient demain.</td><td>He comes tomorrow.</td><td>il <strong>vient</strong></td></tr><tr><td>94</td><td>Nous venons le lundi.</td><td>We come on Mondays.</td><td>nous <strong>venons</strong></td></tr><tr><td>95</td><td>Vous venez d'où ?</td><td>Where do you come from?</td><td>vous <strong>venez</strong></td></tr><tr><td>96</td><td>Elles viennent ce soir.</td><td>They (f) are coming tonight.</td><td>elles <strong>viennent</strong></td></tr></tbody></table>
+<p><strong>🧠 Key insight:</strong> <code>VENIR DE + place = to come FROM</code><br>
+→ Also preview: "venir de + infinitif" = just did something (future project)</p>
+<hr>
+<h2>🔹 BLOCK H — Full Daily Routine: Combining Everything</h2>
+<p><em>Scenario: You describe your complete typical day to the host family</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>Engine Used</th><th>Time of Day</th></tr></thead><tbody><tr><td>97</td><td>Je dors jusqu'à sept heures.</td><td>dormir (rebel -IR)</td><td>Morning</td></tr><tr><td>98</td><td>Je prépare le petit-déjeuner.</td><td>préparer (-ER)</td><td>Morning</td></tr><tr><td>99</td><td>Je prends un café avec du lait.</td><td>prendre (rebel -RE)</td><td>Morning</td></tr><tr><td>100</td><td>Je pars à huit heures.</td><td>partir (rebel -IR)</td><td>Morning</td></tr><tr><td>101</td><td>Je prends le métro.</td><td>prendre (rebel -RE)</td><td>Commute</td></tr><tr><td>102</td><td>Je travaille de neuf heures à cinq heures.</td><td>travailler (-ER)</td><td>Day</td></tr><tr><td>103</td><td>Je mange avec mes collègues à midi.</td><td>manger (-ER)</td><td>Lunch</td></tr><tr><td>104</td><td>Je finis le travail à cinq heures.</td><td>finir (-IR)</td><td>Afternoon</td></tr><tr><td>105</td><td>Je fais les courses après le travail.</td><td>faire (irregular)</td><td>Evening</td></tr><tr><td>106</td><td>Je prépare le dîner à la maison.</td><td>préparer (-ER)</td><td>Evening</td></tr><tr><td>107</td><td>Je regarde un film le soir.</td><td>regarder (-ER)</td><td>Night</td></tr><tr><td>108</td><td>J'écoute de la musique avant de dormir.</td><td>écouter (-ER)</td><td>Night</td></tr></tbody></table>
+<p><strong>🧠 Full structure now operational:</strong></p>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>MORNING → COMMUTE → WORK → LUNCH → WORK → EVENING → NIGHT
+</span>Each phase = Subject + ACTION VERB + details (time/place/object)</code></pre></div>
+<hr>
+<h1>✅ WHAT SHOULD DO</h1>
+<p>→ <strong>Learn the -ER pattern COLD</strong> — it covers 90% of verbs you'll ever meet<br>
+→ <strong>Memorize the rebel -IR verbs</strong> (dormir, partir, sortir) as a separate group from regular -IR (finir, choisir)<br>
+→ <strong>Memorize ALLER, FAIRE, VENIR</strong> completely — they appear in almost every conversation<br>
+→ <strong>Practice building sentences</strong> in this order: Subject → Verb → Object → Time/Place<br>
+→ <strong>Use "on"</strong> instead of "nous" in casual speech (as mentioned in Project 1)</p>
+<hr>
+<h1>❌ WHAT SHOULD NOT DO</h1>
+<p>→ ❌ Do NOT apply the -ER pattern to -IR or -RE verbs<br>
+→ ❌ Do NOT add <strong>-iss-</strong> to dormir/partir/sortir → <del>nous dormissons</del> → <strong>nous dormons</strong><br>
+→ ❌ Do NOT conjugate aller like a regular -ER verb → <del>je alle</del> → <strong>je vais</strong><br>
+→ ❌ Do NOT forget that <strong>ils parlent</strong> is SILENT on the "-ent" → pronounced "parl" not "parlent"<br>
+→ ❌ Do NOT say <del>je mange à le restaurant</del> → <strong>au</strong> restaurant (à + le = au, from Project 1)<br>
+→ ❌ Do NOT confuse <strong>habiter</strong> (to live/reside) with <strong>vivre</strong> (to live/exist) — at this level use habiter for "where you live"</p>
+<hr>
+<h1>🔀 WHEN TO USE WHAT</h1>
+<table><thead><tr><th>You Want to Say</th><th>Verb to Use</th><th>Example</th></tr></thead><tbody><tr><td>Where you live</td><td><strong>habiter</strong></td><td>J'habite à Paris.</td></tr><tr><td>Where you're going</td><td><strong>aller</strong></td><td>Je vais au travail.</td></tr><tr><td>Where you come from</td><td><strong>venir de</strong></td><td>Je viens de Lyon.</td></tr><tr><td>What you're eating/drinking</td><td><strong>manger / prendre</strong></td><td>Je prends un café.</td></tr><tr><td>What you're doing (activity)</td><td><strong>faire</strong></td><td>Je fais du sport.</td></tr><tr><td>What you're watching</td><td><strong>regarder</strong></td><td>Je regarde la télé.</td></tr><tr><td>What you're listening to</td><td><strong>écouter</strong></td><td>J'écoute la radio.</td></tr><tr><td>What you like</td><td><strong>aimer</strong></td><td>J'aime la musique.</td></tr><tr><td>When you leave</td><td><strong>partir</strong></td><td>Je pars à huit heures.</td></tr><tr><td>When you go out</td><td><strong>sortir</strong></td><td>Je sors ce soir.</td></tr><tr><td>When you finish</td><td><strong>finir</strong></td><td>Je finis à six heures.</td></tr><tr><td>When you start</td><td><strong>commencer</strong></td><td>Je commence à neuf heures.</td></tr><tr><td>When you sleep</td><td><strong>dormir</strong></td><td>Je dors huit heures.</td></tr><tr><td>When you wait</td><td><strong>attendre</strong></td><td>J'attends le bus.</td></tr><tr><td>When you buy</td><td><strong>acheter</strong></td><td>J'achète du pain.</td></tr><tr><td>When you prepare</td><td><strong>préparer</strong></td><td>Je prépare le dîner.</td></tr></tbody></table>
+<hr>
+<h1>🚫 WHEN NOT TO USE</h1>
+<p>→ Do NOT use <strong>aller</strong> to mean "to be doing well" in a sentence about movement → context matters<br>
+→ → "Je vais <strong>bien</strong>" = I'm doing well (état)<br>
+→ → "Je vais <strong>au bureau</strong>" = I'm going to the office (movement)<br>
+→ Do NOT use <strong>faire</strong> when a specific verb exists<br>
+→ → <del>Je fais de la cuisine</del> is acceptable BUT <strong>je cuisine</strong> is more natural for "I cook"<br>
+→ → <strong>Faire</strong> is for when the activity is expressed as a noun phrase: faire <strong>la cuisine</strong>, faire <strong>les courses</strong>, faire <strong>du sport</strong><br>
+→ Do NOT use present tense for completed past events (that's Project 9)<br>
+→ Do NOT use present tense for distant future plans (that's Project 12 &amp; 16)</p>
+<hr>
+<h1>⚠️ COMMON PITFALLS AND FAILURE MODES</h1>
+<table><thead><tr><th>Pitfall</th><th>What Learners Do Wrong</th><th>Correct Version</th></tr></thead><tbody><tr><td><strong>Silent -ent trap</strong></td><td>Pronouncing "ils parlent" as "parl-ONT"</td><td>Silent → sounds exactly like "il parle"</td></tr><tr><td><strong>Aller conjugation</strong></td><td>Je alle / Je alle / Tu alles</td><td>je <strong>vais</strong>, tu <strong>vas</strong> — totally irregular</td></tr><tr><td><strong>Faire nous form</strong></td><td>Nous faisons pronounced "fay-zon"</td><td>Pronounced "<strong>feu-zon</strong>" — unusual pronunciation</td></tr><tr><td><strong>Prendre ils form</strong></td><td>Ils prendent</td><td>Ils <strong>prennent</strong> — double n</td></tr><tr><td><strong>Dormir -iss trap</strong></td><td>Nous dormissons</td><td>Nous <strong>dormons</strong> — no -iss-</td></tr><tr><td><strong>Manger nous form</strong></td><td>Nous mangons</td><td>Nous mange<strong>ons</strong> — keep the "e" to preserve soft "g"</td></tr><tr><td><strong>Commencer nous form</strong></td><td>Nous commencons</td><td>Nous commen<strong>ç</strong>ons — ç to preserve soft "c"</td></tr><tr><td><strong>Habiter vs. Vivre</strong></td><td>Je vis à Paris (not wrong but too advanced)</td><td>At this level: <strong>J'habite à Paris</strong></td></tr><tr><td><strong>Forgetting à/au/à la</strong></td><td>Je vais le cinéma</td><td>Je vais <strong>au</strong> cinéma (à + le = au, see Project 1)</td></tr><tr><td><strong>Prendre for food confusion</strong></td><td>Using only "manger" for everything</td><td><strong>Prendre</strong> for drinks &amp; light food: Je <strong>prends</strong> un café</td></tr></tbody></table>
+<hr>
+<h1>🔑 KEY TAKEAWAY</h1>
+<blockquote>
+<p><strong>Project 1 gave you the ability to EXIST (être) and POSSESS (avoir).</strong><br>
+<strong>Project 2 gives you the ability to ACT — to describe everything you DO in a day.</strong></p>
+<p>The sentence skeleton has expanded:</p>
+<ul>
+<li>Project 1: <code>Subject + ÊTRE/AVOIR + information</code></li>
+<li>Project 2: <code>Subject + ACTION VERB + object + time/place/manner</code></li>
+</ul>
+<p>With just <strong>être + avoir + 20 action verbs</strong>, you can now describe:<br>
+→ Who you are → What you have → What you do → Where you go → When you do it</p>
+<p><strong>But you can only describe your WORLD — you cannot yet point at THE world.</strong><br>
+→ "This is good" / "There are three" / "It's a restaurant" — you can't say these yet.</p>
+</blockquote>
+<hr>
+<h1>🌉 BRIDGE TO PROJECT 3</h1>
+<blockquote>
+<p>You can now say <strong>"I work"</strong> and <strong>"I eat at noon"</strong> and <strong>"I go to the cinema"</strong><br>
+But you're at the <strong>market</strong> — someone shows you an item<br>
+You need to say <strong>"This is a cheese"</strong> / <strong>"It's expensive"</strong> / <strong>"There are many people"</strong><br>
+→ You need <strong>C'est / Ce sont / Il y a</strong> — the structures for <strong>identifying and pointing at things in the world</strong><br>
+→ Project 3: <strong>"Pointing at the World"</strong> unlocks identification and existence statements</p>
+</blockquote>
+<hr>
+<h1>✅ PROJECT 2 COMPLETE</h1>
+<blockquote>
+<p><strong>Are you ready for PROJECT 3: "Pointing at the World"?</strong><br>
+→ ~100 sentences covering <strong>C'est / Ce sont / Il y a</strong> + articles<br>
+→ Scenario: You're at a French market — naming, pointing, specifying everything around you<br>
+→ Builds directly on Projects 1-2 foundation</p>
+</blockquote>
+</div>
+</div>
+
+<!-- ========== data-index="7" ========== -->
+
+        </div>
+
+        <div class="nav-bar">
+            <a href="project-1.html" class="nav-button prev">← Previous Chapter</a>
+            <div class="page-info">
+                <a href="index.html" class="nav-button home">📚 Table of Contents</a><br>
+                <span style="margin-top:8px;display:block">Chapter 2 of 50</span>
+            </div>
+            <a href="project-3.html" class="nav-button next">Next Chapter →</a>
+        </div>
+    </div>
+
+    
+    <div id="progress-track"><div id="progress-fill"></div></div>
+    <div id="progress-pct">0%</div>
+
+
+    <script>
+    const fill = document.getElementById('progress-fill');
+    const pct  = document.getElementById('progress-pct');
+    function updateProgress() {
+        const scrollTop = window.scrollY;
+        const docHeight = document.body.scrollHeight - window.innerHeight;
+        const scrolled  = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+        fill.style.height = scrolled + '%';
+        pct.textContent   = Math.round(scrolled) + '%';
+    }
+    window.addEventListener('scroll', updateProgress);
+    updateProgress();
+
+    document.addEventListener('keydown', function(e) {
+        if (['INPUT','TEXTAREA'].includes(document.activeElement.tagName)) return;
+        if (e.key === 'ArrowLeft') {
+            const b = document.querySelector('.nav-button.prev');
+            if (b && !b.classList.contains('disabled')) window.location.href = b.href;
+        }
+        if (e.key === 'ArrowRight') {
+            const b = document.querySelector('.nav-button.next');
+            if (b && !b.classList.contains('disabled')) window.location.href = b.href;
+        }
+    });
+    </script>
+
+</body>
+</html>

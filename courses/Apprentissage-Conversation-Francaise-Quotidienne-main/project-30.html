@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="images/favicon.png">
+    <title>Project 30: "When, While, As Soon As" — French Daily Sentences</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.75;
+            color: #1a202c;
+            background-color: #f7fafc;
+        }
+        .container {
+            max-width: 1800px;
+            margin: 0 auto;
+            background: white;
+            min-height: 100vh;
+            box-shadow: 0 0 30px rgba(0,0,0,0.08);
+            padding: 48px 52px;
+        }
+        
+        .content { max-width: 1700px; margin: 0 auto; color: #1a202c; }
+        .content h1 {
+            color: #1a202c; margin: 32px 0 20px;
+            padding-bottom: 12px;
+            border-bottom: 4px solid #3b82f6;
+            font-size: 2.1em;
+            font-weight: 700;
+        }
+        .content h2 {
+            color: #1a202c; margin: 28px 0 16px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #60a5fa;
+            font-size: 1.6em;
+            font-weight: 600;
+        }
+        .content h3 { color: #1a202c; margin: 22px 0 12px; font-size: 1.3em; font-weight: 600; }
+        .content h4 { color: #2d3748; margin: 18px 0 10px; font-size: 1.1em; font-weight: 600; }
+        .content p  { margin-bottom: 16px; line-height: 1.8; color: #1a202c; }
+        .content ul, .content ol { margin: 12px 0 18px 30px; color: #1a202c; }
+        .content li { margin-bottom: 8px; line-height: 1.75; color: #1a202c; }
+        .content hr { border: none; border-top: 2px solid #e2e8f0; margin: 26px 0; }
+        .content pre {
+            background: #f7fafc !important;
+            border: 1px solid #cbd5e0 !important;
+            border-left: 4px solid #3b82f6 !important;
+            padding: 18px !important; overflow-x: auto; margin: 18px 0; border-radius: 6px;
+            font-family: 'Consolas','Monaco','Courier New',monospace !important;
+            font-size: 0.9em !important;
+        }
+        .content pre:not([style*="color"]) { color: #1a202c !important; }
+        .content code {
+            font-family: 'Consolas','Monaco','Courier New',monospace !important;
+            font-size: 0.88em !important;
+        }
+        .content code:not(pre code) {
+            background: #dbeafe !important;
+            color: #1a202c !important;
+            padding: 2px 6px;
+            border-radius: 3px;
+        }
+        .content pre code { background: transparent !important; padding: 0; }
+        .content table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+        .content th {
+            background: linear-gradient(135deg, #3b82f6 0%, #60a5fa 100%);
+            color: white; padding: 12px 16px; text-align: left;
+            font-weight: 600;
+        }
+        .content td { padding: 11px 16px; border: 1px solid #e2e8f0; color: #1a202c; }
+        .content tr:nth-child(even) td { background: #eff6ff; }
+        .content blockquote {
+            border-left: 4px solid #3b82f6; background: #eff6ff;
+            padding: 14px 20px; margin: 18px 0; border-radius: 0 6px 6px 0;
+            color: #1a202c;
+        }
+        .content strong { color: #1a202c; font-weight: 600; }
+        .px-2 { padding: 0; }
+        .chat-message { background: transparent; padding: 0; margin: 0; }
+
+        /* Bottom nav bar only */
+        .nav-bar {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 24px 0;
+            margin-top: 50px;
+            border-top: 3px solid #60a5fa;
+        }
+        .nav-button {
+            display: inline-flex; align-items: center; gap: 8px;
+            padding: 12px 26px;
+            background: linear-gradient(135deg, #3b82f6 0%, #60a5fa 100%);
+            color: white !important; text-decoration: none;
+            border-radius: 8px; font-weight: 600; font-size: 0.95em;
+            transition: all 0.2s;
+            box-shadow: 0 2px 8px rgba(59,130,246,0.35);
+        }
+        .nav-button:hover { transform: translateY(-2px); box-shadow: 0 4px 14px rgba(59,130,246,0.5); }
+        .nav-button.disabled { background: #cbd5e1; box-shadow: none; pointer-events: none; }
+        .nav-button.home {
+            background: linear-gradient(135deg, #ef4444 0%, #f87171 100%);
+            box-shadow: 0 2px 8px rgba(239,68,68,0.35);
+        }
+        .nav-button.home:hover { box-shadow: 0 4px 14px rgba(239,68,68,0.5); }
+        .page-info { color: #718096; font-size: 0.9em; text-align: center; }
+
+        /* Progress bar */
+        #progress-track {
+            position: fixed; top: 20px; right: 20px;
+            width: 10px; height: 150px;
+            background: rgba(59,130,246,0.2);
+            border: 2px solid #3b82f6;
+            border-radius: 6px; overflow: hidden; z-index: 1000;
+        }
+        #progress-fill {
+            width: 100%;
+            background: linear-gradient(180deg, #3b82f6, #2563eb);
+            height: 0%;
+            transition: height 0.15s ease;
+        }
+        #progress-pct {
+            position: fixed; top: 0px; right: 16px;
+            color: #2563eb; font-size: 14px; font-weight: bold;
+            z-index: 1001;
+            text-shadow: 0 1px 2px rgba(255,255,255,0.9);
+            line-height: 20px;
+        }
+
+    </style>
+<link rel="stylesheet" href="assets/chapters.css?v=20260421203847"><script src="assets/chapters.js?v=20260421203847" defer></script>
+</head>
+<body>
+    <div class="container">
+        <div class="content">
+            <div class="chat-message" data-index="29">
+<div class="px-2"><h1>🟡 PROJECT 30: "When, While, As Soon As"</h1>
+<h2><em>Linking events in time — things that happen together, before, after, or in sequence</em></h2>
+<hr>
+<h1>🎯 THE HYPOTHETICAL PROBLEM</h1>
+<p>→ You're telling a French friend about your weekend — a story with multiple events:</p>
+<code>❌ "Je me suis réveillé. J'ai pris le petit déjeuner. Je suis sorti. Il a commencé à pleuvoir. Je suis rentré."</code>
+<p>→ Five disconnected sentences — a robot's report, not a human story<br>
+→ Your French friend tells the same type of story:</p>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>✅ "QUAND je me suis réveillé, il faisait beau."
+</span>✅ "APRÈS AVOIR pris le petit déjeuner, je suis sorti."
+✅ "PENDANT QUE je marchais dans le parc, il a commencé à pleuvoir."
+✅ "DÈS QU'il a commencé à pleuvoir, je suis rentré."
+✅ "AVANT DE rentrer, je me suis arrêté dans un café."</code></pre></div>
+<p>→ Same events — but now they're <strong>connected on a timeline</strong><br>
+→ Each connector places one event <strong>relative to another</strong>: before, during, after, at the exact moment</p>
+<p>→ At work, your boss gives you a sequence of tasks:</p>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>✅ "AVANT QUE le client n'arrive, préparez la salle."
+</span>✅ "PENDANT QUE vous l'attendez, relisez le dossier."
+✅ "DÈS QU'il arrive, prévenez-moi."
+✅ "APRÈS la réunion, envoyez-moi un compte-rendu."
+✅ "TANT QUE le projet n'est pas fini, restez concentrés."</code></pre></div>
+<p>→ Every instruction is <strong>time-anchored</strong> — positioned precisely relative to another event</p>
+<p><strong>The core realization:</strong><br>
+→ Project 28 taught you <strong>cause-consequence</strong> (WHY → WHAT RESULTED)<br>
+→ Project 29 taught you <strong>concession-opposition</strong> (DESPITE → ANYWAY)<br>
+→ Project 30 teaches you <strong>temporal linking</strong> (WHEN / BEFORE / AFTER / WHILE / AS SOON AS)<br>
+→ These three together form the <strong>complete logic system</strong> of French:</p>
+<table><thead><tr><th>Logic Type</th><th>Question</th><th>Connectors</th></tr></thead><tbody><tr><td>Cause-Consequence (P28)</td><td>Why? What resulted?</td><td>parce que, donc, du coup</td></tr><tr><td>Concession-Opposition (P29)</td><td>Despite what? But?</td><td>malgré, pourtant, bien que</td></tr><tr><td><strong>Temporal Linking (P30)</strong></td><td><strong>When? Before? After? During?</strong></td><td><strong>quand, avant de, après, pendant que</strong></td></tr></tbody></table>
+<p>→ Without temporal connectors, you can't tell stories, give instructions, or describe sequences<br>
+→ With them, you <strong>narrate like a native</strong> — events flow naturally on a timeline</p>
+<hr>
+<h1>🔍 HOW TO APPROACH IT</h1>
+<p>→ Think of temporal connectors as <strong>position markers on a timeline</strong>:</p>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>[BEFORE]────────[AT THE SAME TIME]────────[AFTER]
+</span>  avant de           pendant que            après avoir
+  avant que           tandis que            après que
+  jusqu'à ce que      quand / lorsque       dès que
+                      au moment où          une fois que
+                      en même temps que     aussitôt que</code></pre></div>
+<p>→ Every temporal connector answers ONE question:</p>
+<table><thead><tr><th>Position</th><th>Question</th><th>Key Connectors</th></tr></thead><tbody><tr><td><strong>BEFORE</strong></td><td>What happened before?</td><td>avant de, avant que, jusqu'à ce que, en attendant que</td></tr><tr><td><strong>SIMULTANEOUS</strong></td><td>What happened at the same time?</td><td>quand, lorsque, pendant que, tandis que, au moment où, tant que</td></tr><tr><td><strong>AFTER</strong></td><td>What happened after?</td><td>après, après avoir, après que, dès que, aussitôt que, une fois que</td></tr></tbody></table>
+<p>→ Some connectors take <strong>indicatif</strong> — some take <strong>subjonctif</strong> — some take <strong>infinitif</strong><br>
+→ The grammar depends on the connector AND whether the two clauses share the same subject</p>
+<hr>
+<h1>🔧 HOW CAN WE SOLVE IT</h1>
+<h2>THE COMPLETE TEMPORAL CONNECTOR GRAMMAR MAP</h2>
+<h3>BEFORE (Future relative to the event):</h3>
+<table><thead><tr><th>Connector</th><th>Grammar</th><th>Same Subject?</th><th>Register</th></tr></thead><tbody><tr><td><strong>avant de</strong> + infinitif</td><td>INFINITIF</td><td>✅ Same subject</td><td>Universal</td></tr><tr><td><strong>avant que</strong> + subjonctif</td><td><strong>SUBJONCTIF</strong></td><td>❌ Different subjects</td><td>Formal/neutral</td></tr><tr><td><strong>jusqu'à ce que</strong> + subjonctif</td><td><strong>SUBJONCTIF</strong></td><td>Either</td><td>Neutral</td></tr><tr><td><strong>en attendant que</strong> + subjonctif</td><td><strong>SUBJONCTIF</strong></td><td>❌ Different subjects</td><td>Neutral</td></tr><tr><td><strong>en attendant de</strong> + infinitif</td><td>INFINITIF</td><td>✅ Same subject</td><td>Neutral</td></tr><tr><td><strong>d'ici à ce que</strong> + subjonctif</td><td><strong>SUBJONCTIF</strong></td><td>Either</td><td>Formal</td></tr></tbody></table>
+<h3>SIMULTANEOUS (At the same time):</h3>
+<table><thead><tr><th>Connector</th><th>Grammar</th><th>Nuance</th><th>Register</th></tr></thead><tbody><tr><td><strong>quand</strong></td><td>INDICATIF</td><td>When — universal</td><td>Universal</td></tr><tr><td><strong>lorsque</strong></td><td>INDICATIF</td><td>When — more formal</td><td>Formal</td></tr><tr><td><strong>pendant que</strong></td><td>INDICATIF</td><td>While — duration</td><td>Universal</td></tr><tr><td><strong>tandis que</strong></td><td>INDICATIF</td><td>While — can also = contrast (P29)</td><td>Neutral/formal</td></tr><tr><td><strong>alors que</strong></td><td>INDICATIF</td><td>While — can also = contrast (P29)</td><td>Universal</td></tr><tr><td><strong>au moment où</strong></td><td>INDICATIF</td><td>At the exact moment when</td><td>Universal</td></tr><tr><td><strong>tant que</strong></td><td>INDICATIF</td><td>As long as</td><td>Universal</td></tr><tr><td><strong>aussi longtemps que</strong></td><td>INDICATIF</td><td>As long as (emphatic)</td><td>Formal</td></tr><tr><td><strong>chaque fois que</strong></td><td>INDICATIF</td><td>Every time that</td><td>Universal</td></tr><tr><td><strong>en même temps que</strong></td><td>INDICATIF</td><td>At the same time as</td><td>Universal</td></tr></tbody></table>
+<h3>AFTER (Past relative to the event):</h3>
+<table><thead><tr><th>Connector</th><th>Grammar</th><th>Same Subject?</th><th>Register</th></tr></thead><tbody><tr><td><strong>après</strong> + noun</td><td>+ NOUN</td><td>—</td><td>Universal</td></tr><tr><td><strong>après avoir</strong> + PP</td><td>INFINITIF PASSÉ</td><td>✅ Same subject (avoir verbs)</td><td>Universal</td></tr><tr><td><strong>après être</strong> + PP</td><td>INFINITIF PASSÉ</td><td>✅ Same subject (être verbs)</td><td>Universal</td></tr><tr><td><strong>après que</strong> + indicatif</td><td><strong>INDICATIF</strong> (traditionally)</td><td>❌ Different subjects</td><td>Neutral</td></tr><tr><td><strong>dès que</strong></td><td>INDICATIF</td><td>As soon as</td><td>Universal</td></tr><tr><td><strong>aussitôt que</strong></td><td>INDICATIF</td><td>As soon as (slightly formal)</td><td>Formal</td></tr><tr><td><strong>une fois que</strong></td><td>INDICATIF</td><td>Once (completed)</td><td>Universal</td></tr><tr><td><strong>depuis que</strong></td><td>INDICATIF</td><td>Since (starting point)</td><td>Universal</td></tr></tbody></table>
+<hr>
+<h2>THE SAME-SUBJECT RULE (Critical — Connects to Project 23)</h2>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>SAME SUBJECT in both clauses:
+</span>→ Use INFINITIF form of the connector
+→ "AVANT DE partir, j'ai vérifié mes affaires."
+   (I checked before I left — same person doing both)
+
+DIFFERENT SUBJECTS:
+→ Use QUE + conjugated verb (indicatif or subjonctif depending on connector)
+→ "AVANT QUE tu PARTES, dis-moi au revoir."
+   (Before YOU leave, tell ME goodbye — different people)
+
+This rule applies to:
+→ avant de / avant que
+→ après avoir (être) / après que
+→ en attendant de / en attendant que
+→ Same logic as Project 23 (subjonctif same-subject rule)</code></pre></div>
+<hr>
+<h1>✅ WHAT COULD BE DONE — THE 100 SENTENCES</h1>
+<hr>
+<h2>🔹 BLOCK A — "Quand / Lorsque" — The Basic "When"</h2>
+<p><em>Scenario: Telling stories, describing habits, linking events with "when"</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English</th><th>Tense Combination</th><th>Register</th></tr></thead><tbody><tr><td>1</td><td><strong>Quand</strong> je suis arrivé, il était déjà parti.</td><td>When I arrived, he had already left.</td><td>PC + PQP</td><td>Universal</td></tr><tr><td>2</td><td><strong>Quand</strong> il pleut, je prends mon parapluie.</td><td>When it rains, I take my umbrella.</td><td>Présent + présent (habit)</td><td>Universal</td></tr><tr><td>3</td><td><strong>Quand</strong> j'étais petit, j'habitais à la campagne.</td><td>When I was little, I lived in the countryside.</td><td>Imparfait + imparfait (past habit)</td><td>Universal</td></tr><tr><td>4</td><td><strong>Quand</strong> tu auras fini, appelle-moi.</td><td>When you've finished, call me.</td><td><strong>Futur antérieur</strong> + impératif</td><td>Universal</td></tr><tr><td>5</td><td><strong>Quand</strong> je serai grand, je serai astronaute.</td><td>When I'm grown up, I'll be an astronaut.</td><td>Futur + futur</td><td>Universal</td></tr><tr><td>6</td><td><strong>Quand</strong> elle est entrée, tout le monde s'est tu.</td><td>When she entered, everyone went quiet.</td><td>PC + PC (sequence)</td><td>Universal</td></tr><tr><td>7</td><td><strong>Quand</strong> on est fatigué, on fait des erreurs.</td><td>When you're tired, you make mistakes.</td><td>Présent + présent (general truth)</td><td>Universal</td></tr><tr><td>8</td><td><strong>Lorsque</strong> le président est arrivé, la cérémonie a commencé.</td><td>When the president arrived, the ceremony began.</td><td>PC + PC</td><td>Formal</td></tr><tr><td>9</td><td><strong>Lorsque</strong> j'aurai le temps, je te répondrai.</td><td>When I have time, I'll answer you.</td><td>Futur antérieur + futur</td><td>Formal</td></tr><tr><td>10</td><td>**Lorsqu'**il faisait beau, nous allions à la plage.</td><td>When the weather was nice, we used to go to the beach.</td><td>Imparfait + imparfait (habit)</td><td>Formal</td></tr></tbody></table>
+<p><strong>🧠 "QUAND" vs. "LORSQUE" — The Register Difference:</strong></p>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>QUAND = When — UNIVERSAL (spoken + written)
+</span>→ The most common temporal connector in French
+→ Works in ALL contexts, ALL tenses, ALL registers
+
+LORSQUE = When — FORMAL (mainly written)
+→ Exact same meaning and grammar as "quand"
+→ Preferred in formal writing, literature, speeches
+→ Contracts before vowel: lorsqu'il, lorsqu'elle, lorsqu'on
+
+INTERCHANGEABLE in meaning — only register differs:
+→ "Quand je suis arrivé..." = casual/neutral
+→ "Lorsque je suis arrivé..." = formal/elegant</code></pre></div>
+<p><strong>🧠 CRITICAL — TENSE COMBINATIONS WITH QUAND/LORSQUE:</strong></p>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>HABITUAL PRESENT:
+</span>→ Quand il pleut, je reste chez moi. (présent + présent)
+
+PAST NARRATIVE:
+→ Quand je suis arrivé, il était parti. (PC + imparfait/PQP)
+→ Same PC/imparfait layering from Project 11
+
+PAST HABIT:
+→ Quand j'étais jeune, j'aimais jouer dehors. (imparfait + imparfait)
+
+FUTURE:
+→ Quand tu AURAS fini, appelle-moi. (futur antérieur + impératif/futur)
+→ Quand je SERAI grand... (futur simple + futur simple)
+
+⚠️ CRITICAL RULE — FUTURE AFTER QUAND:
+→ In English: "When I AM older..." (present tense)
+→ In French: "Quand je SERAI plus grand..." (FUTUR — not present!)
+
+→ French uses FUTUR after "quand" for future events
+→ English uses PRESENT — this is a major difference
+
+❌ "Quand je SUIS grand, je serai astronaute." (WRONG)
+✅ "Quand je SERAI grand, je serai astronaute." (CORRECT)
+
+→ Same rule applies to: lorsque, dès que, aussitôt que, une fois que, tant que
+→ ALL take FUTUR (not present) for future events
+→ Connection to Project 18: "Si" takes présent for future — "Quand" takes FUTUR
+   → "SI il pleut, je resterai." (si + présent)
+   → "QUAND il pleuvRA, je resterai." (quand + futur)</code></pre></div>
+<hr>
+<h2>🔹 BLOCK B — "Pendant que / En même temps que" — During / At the Same Time</h2>
+<p><em>Scenario: Two events happening simultaneously — parallel actions</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English</th><th>Context</th></tr></thead><tbody><tr><td>11</td><td><strong>Pendant que</strong> je cuisinais, il regardait la télé.</td><td>While I was cooking, he was watching TV.</td><td>Parallel past actions</td></tr><tr><td>12</td><td><strong>Pendant que</strong> tu dormais, j'ai nettoyé la maison.</td><td>While you were sleeping, I cleaned the house.</td><td>Background + event</td></tr><tr><td>13</td><td><strong>Pendant que</strong> les enfants jouent, les parents discutent.</td><td>While the kids play, the parents chat.</td><td>Habitual parallel</td></tr><tr><td>14</td><td><strong>Pendant que</strong> je suis au travail, mon fils est à l'école.</td><td>While I'm at work, my son is at school.</td><td>Present parallel</td></tr><tr><td>15</td><td><strong>Pendant que</strong> vous attendez, je vais vérifier.</td><td>While you wait, I'll check.</td><td>Instruction</td></tr><tr><td>16</td><td>Tu peux lire <strong>pendant que</strong> j'attends mon rendez-vous.</td><td>You can read while I wait for my appointment.</td><td>Suggestion</td></tr><tr><td>17</td><td><strong>Pendant que</strong> j'y pense, tu peux me passer le sel ?</td><td>While I'm thinking about it, can you pass the salt?</td><td>Fixed expression — casual</td></tr><tr><td>18</td><td>Elle écoutait de la musique **pendant qu'**elle travaillait.</td><td>She was listening to music while she was working.</td><td>Parallel past</td></tr><tr><td>19</td><td><strong>En même temps que</strong> tu prépares le dîner, je mets la table.</td><td>At the same time as you prepare dinner, I'll set the table.</td><td>Simultaneous coordination</td></tr><tr><td>20</td><td>Tout le monde parlait <strong>en même temps</strong>.</td><td>Everyone was talking at the same time.</td><td>Standalone — no "que" needed</td></tr></tbody></table>
+<p><strong>🧠 "PENDANT QUE" — Core Rules:</strong></p>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>PENDANT QUE = While / During — two events happening at the SAME TIME
+</span>
+→ Always INDICATIF after "pendant que"
+→ Works with all tenses
+
+COMMON TENSE COMBINATIONS:
+→ Imparfait + imparfait: two ongoing parallel actions
+   "Pendant que je cuisinais, il lisait."
+
+→ Imparfait + passé composé: background + punctual event
+   "Pendant que tu dormais, j'ai reçu un appel."
+   (Connection to Project 11: imparfait = background, PC = event)
+
+→ Présent + présent: current parallel actions
+   "Pendant que tu travailles, je fais les courses."
+
+POSITION: Beginning or middle of sentence
+→ "Pendant que tu dors, je travaille." (beginning)
+→ "Je travaille pendant que tu dors." (middle)
+
+"PENDANT QUE J'Y PENSE" = While I'm thinking about it
+→ Fixed expression — very common in casual conversation
+→ Used to introduce a topic you just remembered
+→ "Pendant que j'y pense, tu as appelé le plombier ?"</code></pre></div>
+<p><strong>🧠 "PENDANT QUE" vs. "TANDIS QUE" vs. "ALORS QUE":</strong></p>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>PENDANT QUE = While — pure SIMULTANEITY (no contrast)
+</span>→ "Pendant que je cuisine, tu mets la table."
+→ Just two things happening at the same time — neutral
+
+TANDIS QUE = While — simultaneity + possible CONTRAST
+→ "Je travaille tandis que tu te reposes."
+→ Can imply contrast: I work BUT you rest
+→ Connection to Project 29: tandis que as contrast connector
+→ Ambiguous: context determines if it's pure time or contrast
+
+ALORS QUE = While — simultaneity + strong CONTRAST
+→ "Il dort alors que tout le monde travaille."
+→ Almost always implies contrast/reproach
+→ Connection to Project 29: alors que as contrast connector
+
+RULE: If you want PURE TIME with no contrast → use "pendant que"
+      If you want TIME + CONTRAST → use "tandis que" or "alors que"</code></pre></div>
+<hr>
+<h2>🔹 BLOCK C — "Avant de / Avant que" — Before (Infinitif &amp; Subjonctif)</h2>
+<p><em>Scenario: Something happens BEFORE something else — preparing, planning, sequencing</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English</th><th>Structure</th><th>Subject</th></tr></thead><tbody><tr><td>21</td><td><strong>Avant de</strong> partir, vérifie tes affaires.</td><td>Before leaving, check your things.</td><td>avant de + infinitif</td><td>Same (tu)</td></tr><tr><td>22</td><td><strong>Avant de</strong> manger, lave-toi les mains.</td><td>Before eating, wash your hands.</td><td>avant de + infinitif</td><td>Same (tu)</td></tr><tr><td>23</td><td>J'ai hésité <strong>avant de</strong> répondre.</td><td>I hesitated before answering.</td><td>avant de + infinitif</td><td>Same (je)</td></tr><tr><td>24</td><td><strong>Avant de</strong> prendre une décision, réfléchis bien.</td><td>Before making a decision, think carefully.</td><td>avant de + infinitif</td><td>Same (tu)</td></tr><tr><td>25</td><td>Il a lu le contrat <strong>avant de</strong> le signer.</td><td>He read the contract before signing it.</td><td>avant de + infinitif</td><td>Same (il)</td></tr><tr><td>26</td><td><strong>Avant de</strong> dormir, je lis toujours un peu.</td><td>Before sleeping, I always read a bit.</td><td>avant de + infinitif</td><td>Same (je) — habit</td></tr><tr><td>27</td><td><strong>Avant que</strong> tu <strong>partes</strong>, j'ai quelque chose à te dire.</td><td>Before you leave, I have something to tell you.</td><td>avant que + <strong>subjonctif</strong></td><td>Different (tu/je)</td></tr><tr><td>28</td><td>Ferme la fenêtre **avant qu'**il ne <strong>fasse</strong> froid.</td><td>Close the window before it gets cold.</td><td>avant que + <strong>subjonctif</strong></td><td>Different (tu/il)</td></tr><tr><td>29</td><td><strong>Avant que</strong> les enfants n'<strong>arrivent</strong>, préparez la salle.</td><td>Before the children arrive, prepare the room.</td><td>avant que + <strong>subjonctif</strong></td><td>Different</td></tr><tr><td>30</td><td>Partons **avant qu'**il ne <strong>soit</strong> trop tard.</td><td>Let's leave before it's too late.</td><td>avant que + <strong>subjonctif</strong></td><td>Different (on/il)</td></tr></tbody></table>
+<p><strong>🧠 "AVANT DE" vs. "AVANT QUE" — The Same-Subject Rule:</strong></p>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>SAME SUBJECT → AVANT DE + INFINITIF:
+</span>→ "Je vérifie AVANT DE partir." (I check before I leave — same person)
+→ "Elle a hésité AVANT DE répondre." (She hesitated before she answered)
+→ Simpler, shorter, more natural
+
+DIFFERENT SUBJECTS → AVANT QUE + SUBJONCTIF:
+→ "Pars AVANT QU'il ne SOIT trop tard." (You leave / it be too late — different)
+→ "Dis-moi AVANT QUE tu PARTES." (Tell me / you leave — different)
+→ ALWAYS subjonctif — no exceptions
+
+❌ NEVER use "avant que" with same subject:
+   ❌ "J'ai vérifié avant que je parte." (WRONG)
+   ✅ "J'ai vérifié avant de partir." (CORRECT)</code></pre></div>
+<p><strong>⚠️ THE "NE EXPLÉTIF" AFTER "AVANT QUE":</strong></p>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>→ "Avant qu'il NE fasse froid..." — that "ne" is EXPLETIVE (not negation)
+</span>→ Same phenomenon as Project 23 (fear verbs)
+→ OPTIONAL in modern French — more common in formal/written style
+→ Does NOT change meaning — purely stylistic
+→ In casual speech → skip it: "Avant qu'il fasse froid..."
+→ In formal writing → include it: "Avant qu'il ne fasse froid..."</code></pre></div>
+<hr>
+<h2>🔹 BLOCK D — "Après avoir / Après être / Après que" — After</h2>
+<p><em>Scenario: Something happens AFTER something else — completed sequences</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English</th><th>Structure</th><th>Verb Type</th></tr></thead><tbody><tr><td>31</td><td><strong>Après avoir</strong> mangé, nous sommes sortis.</td><td>After eating, we went out.</td><td>après avoir + PP</td><td>avoir verb</td></tr><tr><td>32</td><td><strong>Après avoir</strong> fini mes devoirs, j'ai regardé la télé.</td><td>After finishing my homework, I watched TV.</td><td>après avoir + PP</td><td>avoir verb</td></tr><tr><td>33</td><td><strong>Après avoir</strong> travaillé toute la journée, il était épuisé.</td><td>After working all day, he was exhausted.</td><td>après avoir + PP</td><td>avoir verb</td></tr><tr><td>34</td><td><strong>Après avoir</strong> lu le livre, elle a écrit une critique.</td><td>After reading the book, she wrote a review.</td><td>après avoir + PP</td><td>avoir verb</td></tr><tr><td>35</td><td><strong>Après avoir</strong> réfléchi, j'ai accepté l'offre.</td><td>After thinking about it, I accepted the offer.</td><td>après avoir + PP</td><td>avoir verb</td></tr><tr><td>36</td><td><strong>Après être</strong> arrivée à Paris, elle a cherché un hôtel.</td><td>After arriving in Paris, she looked for a hotel.</td><td>après être + PP (agrees)</td><td>être verb</td></tr><tr><td>37</td><td><strong>Après être</strong> sorti du bureau, il a pris le métro.</td><td>After leaving the office, he took the metro.</td><td>après être + PP</td><td>être verb</td></tr><tr><td>38</td><td><strong>Après nous être</strong> promenés, on a pris un café.</td><td>After taking a walk, we had a coffee.</td><td>après + reflexive être + PP</td><td>reflexive verb</td></tr><tr><td>39</td><td><strong>Après m'être</strong> reposé, je me sentais mieux.</td><td>After resting, I felt better.</td><td>après + reflexive être + PP</td><td>reflexive verb</td></tr><tr><td>40</td><td>**Après qu'**il <strong>est</strong> parti, on a commencé la fête.</td><td>After he left, we started the party.</td><td>après que + <strong>indicatif</strong></td><td>Different subjects</td></tr></tbody></table>
+<p><strong>🧠 "APRÈS AVOIR / APRÈS ÊTRE" — The Infinitif Passé:</strong></p>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>This structure is called the INFINITIF PASSÉ:
+</span>→ APRÈS + AVOIR/ÊTRE + PARTICIPE PASSÉ
+
+FOR AVOIR VERBS (majority of verbs):
+→ Après AVOIR mangé = After having eaten / After eating
+→ Après AVOIR fini = After having finished
+→ Après AVOIR lu = After having read
+→ Participe passé does NOT agree (same as avoir verbs in PC)
+
+FOR ÊTRE VERBS (movement/state verbs — Project 9 list):
+→ Après ÊTRE arrivé(e) = After having arrived
+→ Après ÊTRE sorti(e) = After having gone out
+→ Participe passé AGREES with subject (same as être verbs in PC)
+
+FOR REFLEXIVE VERBS:
+→ Après M'ÊTRE reposé(e) = After having rested
+→ Après S'ÊTRE habillé(e) = After having gotten dressed
+→ Après NOUS ÊTRE promenés = After having taken a walk
+→ Reflexive pronoun adjusts to match the subject
+→ Participe passé agrees with subject
+
+SAME-SUBJECT ONLY:
+→ "Après avoir mangé, JE suis sorti." (I ate, I went out — same person)
+→ If different subjects → use "après que":
+→ "Après QU'IL est parti, NOUS avons commencé."</code></pre></div>
+<p><strong>🧠 "APRÈS QUE" — The Grammar Debate:</strong></p>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>TRADITIONAL GRAMMAR: Après que + INDICATIF
+</span>→ "Après qu'il EST parti..." (indicatif — because the action IS completed = real)
+→ Logical: the event HAPPENED → it's real → indicatif
+
+MODERN SPOKEN FRENCH: Many speakers use SUBJONCTIF
+→ "Après qu'il SOIT parti..." (subjonctif — by analogy with "avant que")
+→ Technically "incorrect" according to traditional grammar
+→ But EXTREMELY common in speech
+
+RECOMMENDATION:
+→ Formal writing / exams → use INDICATIF (traditional rule)
+→ Spoken French → either is accepted — most people won't notice
+→ When in doubt → AVOID the debate by using "après avoir/être" instead:
+   → "Après être parti..." (no ambiguity — infinitif passé)</code></pre></div>
+<hr>
+<h2>🔹 BLOCK E — "Dès que / Aussitôt que / Une fois que" — As Soon As / Once</h2>
+<p><em>Scenario: One event triggers another IMMEDIATELY — rapid sequences</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English</th><th>Connector</th><th>Tense</th></tr></thead><tbody><tr><td>41</td><td><strong>Dès que</strong> je suis arrivé, je t'ai appelé.</td><td>As soon as I arrived, I called you.</td><td>dès que</td><td>PC + PC (past)</td></tr><tr><td>42</td><td>**Dès qu'**il pleut, les rues sont vides.</td><td>As soon as it rains, the streets are empty.</td><td>dès que</td><td>Présent + présent (habit)</td></tr><tr><td>43</td><td><strong>Dès que</strong> j'<strong>aurai</strong> fini, je viendrai te voir.</td><td>As soon as I finish, I'll come see you.</td><td>dès que</td><td><strong>Futur antérieur</strong> + futur</td></tr><tr><td>44</td><td><strong>Dès que</strong> tu <strong>seras</strong> prêt, on partira.</td><td>As soon as you're ready, we'll leave.</td><td>dès que</td><td><strong>Futur</strong> + futur</td></tr><tr><td>45</td><td>Appelle-moi <strong>dès que</strong> tu <strong>auras</strong> des nouvelles.</td><td>Call me as soon as you have news.</td><td>dès que</td><td><strong>Futur antérieur</strong> + impératif</td></tr><tr><td>46</td><td><strong>Aussitôt que</strong> la porte s'est ouverte, le chat est sorti.</td><td>As soon as the door opened, the cat went out.</td><td>aussitôt que</td><td>PC + PC (past)</td></tr><tr><td>47</td><td><strong>Aussitôt que</strong> vous <strong>aurez</strong> signé, le contrat sera valide.</td><td>As soon as you sign, the contract will be valid.</td><td>aussitôt que</td><td><strong>Futur antérieur</strong> + futur</td></tr><tr><td>48</td><td><strong>Une fois que</strong> tu <strong>auras</strong> compris, ce sera facile.</td><td>Once you've understood, it'll be easy.</td><td>une fois que</td><td><strong>Futur antérieur</strong> + futur</td></tr><tr><td>49</td><td><strong>Une fois que</strong> la décision <strong>a été</strong> prise, tout est allé vite.</td><td>Once the decision was made, everything went fast.</td><td>une fois que</td><td>PC (passive) + PC</td></tr><tr><td>50</td><td><strong>Une fois que</strong> j'<strong>avais</strong> compris le système, c'était simple.</td><td>Once I had understood the system, it was simple.</td><td>une fois que</td><td>PQP + imparfait</td></tr></tbody></table>
+<p><strong>🧠 "DÈS QUE" vs. "AUSSITÔT QUE" vs. "UNE FOIS QUE":</strong></p>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>DÈS QUE = As soon as — UNIVERSAL
+</span>→ Immediate trigger — event B follows event A with no delay
+→ "Dès que j'arrive, je t'appelle."
+→ Most common of the three — works everywhere
+
+AUSSITÔT QUE = As soon as — SLIGHTLY FORMAL
+→ Same meaning as "dès que" — slightly more elegant
+→ "Aussitôt que la porte s'ouvrit, il entra." (literary)
+→ Preferred in formal/written French
+
+UNE FOIS QUE = Once — COMPLETION EMPHASIS
+→ Emphasizes that event A must be FULLY COMPLETED before B starts
+→ "Une fois que tu auras compris, ce sera facile."
+→ Implies: "when the process is DONE" — not just started
+→ More about completion than speed
+
+ALL THREE take the same tense rules:
+→ Present habit: Dès que/Aussitôt que/Une fois que + présent
+→ Past: + passé composé / plus-que-parfait
+→ Future: + FUTUR (antérieur) — same rule as "quand"</code></pre></div>
+<p><strong>🧠 CRITICAL — FUTUR ANTÉRIEUR AFTER DÈS QUE / AUSSITÔT QUE / UNE FOIS QUE:</strong></p>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>Same rule as "quand" (Block A):
+</span>→ French uses FUTUR after temporal connectors for future events
+→ English uses PRESENT — this is a major trap
+
+❌ "Dès que j'AI fini, je viendrai." (WRONG — present)
+✅ "Dès que j'AURAI fini, je viendrai." (CORRECT — futur antérieur)
+
+❌ "Une fois que tu COMPRENDS, ce sera facile." (WRONG — present)
+✅ "Une fois que tu AURAS compris, ce sera facile." (CORRECT — futur antérieur)
+
+FUTUR ANTÉRIEUR = auxiliary in futur + participe passé
+→ j'aurai fini / tu auras compris / il sera arrivé
+→ This tense has NOT been formally taught yet — Project 32 covers plus-que-parfait
+→ For now: recognize it as "futur of avoir/être + PP"
+→ "J'aurai fini" = "I will have finished"</code></pre></div>
+<hr>
+<h2>🔹 BLOCK F — "Tant que / Aussi longtemps que" — As Long As / Until (Ongoing Duration)</h2>
+<p><em>Scenario: A condition that continues over time — "as long as X, Y continues"</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English</th><th>Connector</th><th>Register</th></tr></thead><tbody><tr><td>51</td><td><strong>Tant que</strong> tu es là, je me sens en sécurité.</td><td>As long as you're here, I feel safe.</td><td>tant que</td><td>Universal</td></tr><tr><td>52</td><td>**Tant qu'**il y a de la vie, il y a de l'espoir.</td><td>As long as there's life, there's hope.</td><td>tant que</td><td>Proverb</td></tr><tr><td>53</td><td><strong>Tant que</strong> le projet n'est pas fini, on continue.</td><td>As long as the project isn't finished, we continue.</td><td>tant que</td><td>Professional</td></tr><tr><td>54</td><td><strong>Tant que</strong> tu ne m'as pas dit la vérité, je ne te parle plus.</td><td>As long as you haven't told me the truth, I'm not talking to you.</td><td>tant que</td><td>Emotional ultimatum</td></tr><tr><td>55</td><td>**Tant qu'**il <strong>fera</strong> beau, on mangera dehors.</td><td>As long as the weather is nice, we'll eat outside.</td><td>tant que</td><td>Futur — future plan</td></tr><tr><td>56</td><td><strong>Aussi longtemps que</strong> je vivrai, je m'en souviendrai.</td><td>As long as I live, I'll remember it.</td><td>aussi longtemps que</td><td>Formal/emphatic</td></tr><tr><td>57</td><td><strong>Aussi longtemps que</strong> les règles ne changent pas, rien ne bougera.</td><td>As long as the rules don't change, nothing will move.</td><td>aussi longtemps que</td><td>Formal</td></tr><tr><td>58</td><td><strong>Tant que</strong> je n'aurai pas la confirmation, je ne réserve rien.</td><td>Until I have the confirmation, I'm not booking anything.</td><td>tant que + ne...pas = until</td><td>Universal</td></tr><tr><td>59</td><td>Tu peux rester <strong>tant que</strong> tu veux.</td><td>You can stay as long as you want.</td><td>tant que</td><td>Casual — duration</td></tr><tr><td>60</td><td>Profite de la vie <strong>tant que</strong> tu es jeune.</td><td>Enjoy life while you're young.</td><td>tant que</td><td>Advice</td></tr></tbody></table>
+<p><strong>🧠 "TANT QUE" — Two Meanings:</strong></p>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>MEANING 1: AS LONG AS (ongoing condition)
+</span>→ "Tant que tu es là, je suis content."
+→ = The condition continues → the result continues
+→ Similar to "as long as" in English
+
+MEANING 2: UNTIL (with negative — "tant que...ne...pas")
+→ "Tant que tu N'AS PAS fini, tu restes ici."
+→ = UNTIL you finish, you stay here
+→ The negative makes it "until" — the condition must CHANGE
+
+GRAMMAR:
+→ Always INDICATIF
+→ For future: FUTUR (same rule as quand, dès que)
+→ "Tant qu'il FERA beau..." (futur — not present)
+
+REGISTER:
+→ TANT QUE = universal (casual + formal)
+→ AUSSI LONGTEMPS QUE = formal/emphatic (same meaning, more weight)</code></pre></div>
+<hr>
+<h2>🔹 BLOCK G — "Jusqu'à ce que / En attendant que" — Until (Subjonctif)</h2>
+<p><em>Scenario: Waiting for something to happen — the endpoint hasn't been reached</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English</th><th>Connector</th><th>Grammar</th></tr></thead><tbody><tr><td>61</td><td>Attends **jusqu'à ce qu'**il <strong>vienne</strong>.</td><td>Wait until he comes.</td><td>jusqu'à ce que</td><td><strong>SUBJONCTIF</strong></td></tr><tr><td>62</td><td>Je resterai <strong>jusqu'à ce que</strong> tu <strong>sois</strong> prêt.</td><td>I'll stay until you're ready.</td><td>jusqu'à ce que</td><td><strong>SUBJONCTIF</strong></td></tr><tr><td>63</td><td>Nous travaillerons <strong>jusqu'à ce que</strong> le projet <strong>soit</strong> terminé.</td><td>We'll work until the project is finished.</td><td>jusqu'à ce que</td><td><strong>SUBJONCTIF</strong></td></tr><tr><td>64</td><td>Il a attendu **jusqu'à ce qu'**elle <strong>revienne</strong>.</td><td>He waited until she came back.</td><td>jusqu'à ce que</td><td><strong>SUBJONCTIF</strong></td></tr><tr><td>65</td><td>Continue <strong>jusqu'à ce que</strong> je te <strong>dise</strong> d'arrêter.</td><td>Continue until I tell you to stop.</td><td>jusqu'à ce que</td><td><strong>SUBJONCTIF</strong></td></tr><tr><td>66</td><td><strong>En attendant que</strong> le médecin <strong>arrive</strong>, asseyez-vous.</td><td>While waiting for the doctor to arrive, sit down.</td><td>en attendant que</td><td><strong>SUBJONCTIF</strong></td></tr><tr><td>67</td><td><strong>En attendant que</strong> la pluie <strong>cesse</strong>, on reste ici.</td><td>While waiting for the rain to stop, we stay here.</td><td>en attendant que</td><td><strong>SUBJONCTIF</strong></td></tr><tr><td>68</td><td><strong>En attendant que</strong> tu <strong>trouves</strong> un travail, je t'aiderai.</td><td>Until you find a job, I'll help you.</td><td>en attendant que</td><td><strong>SUBJONCTIF</strong></td></tr><tr><td>69</td><td>Lisez ce document <strong>en attendant que</strong> je <strong>revienne</strong>.</td><td>Read this document while waiting for me to come back.</td><td>en attendant que</td><td><strong>SUBJONCTIF</strong></td></tr><tr><td>70</td><td><strong>En attendant</strong>, prenez un café.</td><td>In the meantime, have a coffee.</td><td>en attendant (standalone)</td><td>No verb — standalone</td></tr></tbody></table>
+<p><strong>🧠 "JUSQU'À CE QUE" — Core Rules:</strong></p>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>JUSQU'À CE QUE = Until — ALWAYS SUBJONCTIF
+</span>
+→ "Jusqu'à ce qu'il VIENNE" (NOT "vient")
+→ "Jusqu'à ce que tu SOIS prêt" (NOT "es")
+→ "Jusqu'à ce que le projet SOIT fini" (NOT "est")
+
+WHY SUBJONCTIF?
+→ The event hasn't happened yet — it's still anticipated/desired
+→ Same logic as Project 23: non-real → subjonctif
+
+VERSUS "TANT QUE" (indicatif):
+→ "Tant que tu n'es pas prêt, j'attends." (indicatif — ongoing state)
+→ "J'attends jusqu'à ce que tu sois prêt." (subjonctif — anticipated endpoint)
+→ Same meaning, different grammar — "tant que" = indicatif / "jusqu'à ce que" = subjonctif
+
+"JUSQU'À" + NOUN (no subjonctif needed):
+→ "Jusqu'à demain" = Until tomorrow
+→ "Jusqu'à la fin" = Until the end
+→ "Jusqu'à son arrivée" = Until his arrival
+→ When followed by a NOUN → no "ce que" → no subjonctif</code></pre></div>
+<p><strong>🧠 "EN ATTENDANT QUE" vs. "EN ATTENDANT DE" vs. "EN ATTENDANT":</strong></p>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>EN ATTENDANT QUE + subjonctif = While waiting for [someone to do something]
+</span>→ Different subjects: "En attendant que le médecin arrive..."
+→ ALWAYS subjonctif
+
+EN ATTENDANT DE + infinitif = While waiting to [do something yourself]
+→ Same subject: "En attendant de recevoir une réponse, je continue."
+→ Same-subject rule applies
+
+EN ATTENDANT (standalone) = In the meantime
+→ "En attendant, prenez un café."
+→ No verb needed — just a time marker
+→ Very common in conversation</code></pre></div>
+<hr>
+<h2>🔹 BLOCK H — "Depuis que / Chaque fois que / Au moment où" — Starting Points, Repetition, Exact Moments</h2>
+<p><em>Scenario: Marking when something started, patterns, and precise moments</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English</th><th>Connector</th><th>Nuance</th></tr></thead><tbody><tr><td>71</td><td><strong>Depuis que</strong> je suis en France, j'ai appris beaucoup.</td><td>Since I've been in France, I've learned a lot.</td><td>depuis que</td><td>Starting point → ongoing</td></tr><tr><td>72</td><td>**Depuis qu'**il a déménagé, on ne se voit plus.</td><td>Since he moved, we don't see each other anymore.</td><td>depuis que</td><td>Past trigger → current result</td></tr><tr><td>73</td><td><strong>Depuis que</strong> tu m'as dit ça, j'y pense tout le temps.</td><td>Since you told me that, I think about it all the time.</td><td>depuis que</td><td>Past trigger → ongoing thought</td></tr><tr><td>74</td><td>**Depuis qu'**elle travaille ici, l'ambiance a changé.</td><td>Since she's been working here, the atmosphere has changed.</td><td>depuis que</td><td>Starting point → result</td></tr><tr><td>75</td><td><strong>Depuis que</strong> je fais du sport, je me sens mieux.</td><td>Since I've been exercising, I feel better.</td><td>depuis que</td><td>Ongoing habit → result</td></tr><tr><td>76</td><td><strong>Chaque fois que</strong> je le vois, il me fait rire.</td><td>Every time I see him, he makes me laugh.</td><td>chaque fois que</td><td>Repetitive pattern</td></tr><tr><td>77</td><td>**Chaque fois qu'**il pleut, il y a des embouteillages.</td><td>Every time it rains, there are traffic jams.</td><td>chaque fois que</td><td>Habitual cause-effect</td></tr><tr><td>78</td><td><strong>À chaque fois que</strong> j'essaie, j'échoue.</td><td>Every time I try, I fail.</td><td>à chaque fois que</td><td>Frustrating repetition</td></tr><tr><td>79</td><td><strong>Au moment où</strong> je suis sorti, il a commencé à pleuvoir.</td><td>At the moment I went out, it started raining.</td><td>au moment où</td><td>Exact simultaneous moment</td></tr><tr><td>80</td><td><strong>Au moment où</strong> elle allait parler, le téléphone a sonné.</td><td>At the moment she was about to speak, the phone rang.</td><td>au moment où</td><td>Exact interruption point</td></tr></tbody></table>
+<p><strong>🧠 "DEPUIS QUE" — Since (Starting Point):</strong></p>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>DEPUIS QUE = Since [a point in time when something started]
+</span>
+→ Marks the BEGINNING of a situation that is STILL ongoing or has ongoing effects
+→ "Depuis que je suis en France..." = Since I've been in France (I'm still here)
+→ "Depuis qu'il a déménagé..." = Since he moved (the move happened — effects continue)
+
+GRAMMAR: Always INDICATIF
+→ Present or passé composé in the "depuis que" clause
+→ Present or passé composé in the result clause
+
+DO NOT CONFUSE:
+→ DEPUIS QUE + clause (since + verb): "Depuis que je suis arrivé..."
+→ DEPUIS + noun/time (since + date/duration): "Depuis 2020" / "Depuis trois ans"
+   (Connection to Project 8 — time markers)</code></pre></div>
+<p><strong>🧠 "AU MOMENT OÙ" — The Exact-Moment Connector:</strong></p>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>AU MOMENT OÙ = At the (exact) moment when
+</span>
+→ Pinpoints a PRECISE instant — more specific than "quand"
+→ "Au moment où je suis sorti, il a plu." = At the EXACT moment I went out...
+→ Often creates dramatic or surprising timing in narratives
+→ Connection to Project 21: "où" as relative pronoun for time — same word, different structure
+→ Always INDICATIF</code></pre></div>
+<hr>
+<h2>🔹 BLOCK I — Complex Time Structures: Combining Connectors</h2>
+<p><em>Scenario: Real narratives with multiple time references — sequencing a full story</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English</th><th>Connectors Used</th></tr></thead><tbody><tr><td>81</td><td><strong>Avant de</strong> partir, j'ai vérifié la météo. <strong>Comme</strong> il faisait beau, j'ai décidé de marcher.</td><td>Before leaving, I checked the weather. Since it was nice, I decided to walk.</td><td>avant de + comme (P28)</td></tr><tr><td>82</td><td><strong>Dès que</strong> je suis arrivé au bureau, le téléphone a sonné.</td><td>As soon as I arrived at the office, the phone rang.</td><td>dès que</td></tr><tr><td>83</td><td><strong>Pendant que</strong> je parlais au téléphone, mon collègue est entré.</td><td>While I was on the phone, my colleague came in.</td><td>pendant que</td></tr><tr><td>84</td><td>J'ai fini l'appel. <strong>Après avoir</strong> raccroché, je lui ai parlé.</td><td>I finished the call. After hanging up, I talked to him.</td><td>après avoir</td></tr><tr><td>85</td><td>Il m'a expliqué le problème. <strong>Une fois que</strong> j'ai compris, j'ai proposé une solution.</td><td>He explained the problem. Once I understood, I suggested a solution.</td><td>une fois que</td></tr><tr><td>86</td><td><strong>Tant que</strong> le client n'avait pas confirmé, nous ne pouvions rien faire.</td><td>As long as the client hadn't confirmed, we couldn't do anything.</td><td>tant que + ne...pas</td></tr><tr><td>87</td><td>Nous avons attendu **jusqu'à ce qu'**il <strong>réponde</strong>.</td><td>We waited until he answered.</td><td>jusqu'à ce que + subj</td></tr><tr><td>88</td><td>**Dès qu'**il a répondu, tout s'est accéléré.</td><td>As soon as he answered, everything sped up.</td><td>dès que</td></tr><tr><td>89</td><td><strong>Avant que</strong> le directeur n'<strong>arrive</strong>, nous avions déjà tout préparé.</td><td>Before the director arrived, we had already prepared everything.</td><td>avant que + subj</td></tr><tr><td>90</td><td><strong>Depuis ce jour-là</strong>, le projet avance bien.</td><td>Since that day, the project has been going well.</td><td>depuis + noun</td></tr></tbody></table>
+<p><strong>🧠 NARRATIVE SEQUENCING — How to Chain Temporal Connectors:</strong></p>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>A full French narrative uses temporal connectors as its SKELETON:
+</span>
+1. AVANT DE + infinitif (what you did FIRST to prepare)
+2. QUAND / DÈS QUE (the triggering moment)
+3. PENDANT QUE (what was happening in the background)
+4. AU MOMENT OÙ (a precise interruption or coincidence)
+5. APRÈS AVOIR + PP (what happened NEXT)
+6. UNE FOIS QUE (when the process was complete)
+7. DEPUIS (the ongoing result)
+
+EXAMPLE FLOW:
+"Avant de partir, j'ai vérifié mes affaires.
+ Quand je suis sorti, il faisait beau.
+ Pendant que je marchais, j'ai croisé Marie.
+ Au moment où j'allais lui parler, mon téléphone a sonné.
+ Après avoir raccroché, j'ai continué ma route.
+ Une fois que je suis arrivé au bureau, j'ai commencé à travailler.
+ Depuis ce matin, je n'ai pas arrêté."
+
+→ This is how French natives TELL STORIES — connected, flowing, time-anchored</code></pre></div>
+<hr>
+<h2>🔹 BLOCK J — Full Conversational Temporal Flow</h2>
+<p><em>Scenario: Real dialogues using temporal connectors naturally across multiple exchanges</em></p>
+<table><thead><tr><th>#</th><th>Speaker</th><th>French</th><th>English</th><th>Connector</th></tr></thead><tbody><tr><td>91</td><td>A:</td><td>Qu'est-ce que tu as fait ce week-end ?</td><td>What did you do this weekend?</td><td>—</td></tr><tr><td>92</td><td>B:</td><td><strong>Quand</strong> je me suis réveillé samedi, il faisait super beau.</td><td>When I woke up Saturday, the weather was great.</td><td>quand</td></tr><tr><td>93</td><td>B:</td><td><strong>Avant de</strong> sortir, j'ai pris un bon petit déjeuner.</td><td>Before going out, I had a good breakfast.</td><td>avant de</td></tr><tr><td>94</td><td>B:</td><td><strong>Dès que</strong> j'ai fini de manger, j'ai pris mon vélo.</td><td>As soon as I finished eating, I took my bike.</td><td>dès que</td></tr><tr><td>95</td><td>B:</td><td><strong>Pendant que</strong> je roulais, j'ai croisé un ami.</td><td>While I was riding, I ran into a friend.</td><td>pendant que</td></tr><tr><td>96</td><td>B:</td><td>On s'est arrêtés dans un café. <strong>Après avoir</strong> bu un café, on est allés au parc.</td><td>We stopped at a café. After having a coffee, we went to the park.</td><td>après avoir</td></tr><tr><td>97</td><td>A:</td><td>Et tu es resté <strong>jusqu'à</strong> quelle heure ?</td><td>And you stayed until what time?</td><td>jusqu'à + noun</td></tr><tr><td>98</td><td>B:</td><td>On est restés **jusqu'à ce qu'**il <strong>fasse</strong> nuit.</td><td>We stayed until it got dark.</td><td>jusqu'à ce que + subj</td></tr><tr><td>99</td><td>A:</td><td><strong>Depuis que</strong> tu fais du vélo, tu as l'air en forme !</td><td>Since you've been cycling, you look fit!</td><td>depuis que</td></tr><tr><td>100</td><td>B:</td><td>Oui ! <strong>Chaque fois que</strong> je sors, je me sens mieux. <strong>Tant que</strong> le beau temps dure, j'en profite !</td><td>Yes! Every time I go out, I feel better. As long as the nice weather lasts, I'll enjoy it!</td><td>chaque fois que + tant que</td></tr></tbody></table>
+<hr>
+<h1>✅ WHAT SHOULD DO</h1>
+<p>→ <strong>Master the Big 6 daily connectors first:</strong> quand, pendant que, avant de, après avoir, dès que, depuis que<br>
+→ <strong>Memorize the futur rule:</strong> After quand, dès que, une fois que, tant que → use FUTUR for future events (not present)<br>
+→ <strong>Apply the same-subject rule:</strong> Same subject → infinitif (avant de, après avoir) / Different → que + verb<br>
+→ <strong>Know the subjonctif triggers:</strong> avant que, jusqu'à ce que, en attendant que → always subjonctif<br>
+→ <strong>Know the indicatif connectors:</strong> quand, pendant que, dès que, tant que, depuis que → always indicatif<br>
+→ <strong>Practice narrative sequencing</strong> — chain 3-4 temporal connectors in a story for fluency<br>
+→ <strong>Use "pendant que j'y pense"</strong> — it's a native conversation opener you can use immediately</p>
+<hr>
+<h1>❌ WHAT SHOULD NOT DO</h1>
+<p>→ ❌ Do NOT use present tense after "quand" for future events</p>
+<table><thead><tr><th>Wrong</th><th>Correct</th></tr></thead><tbody><tr><td><del>Quand je <strong>suis</strong> grand, je serai astronaute</del></td><td>Quand je <strong>serai</strong> grand, je serai astronaute</td></tr><tr><td><del>Dès que tu <strong>finis</strong>, appelle-moi</del></td><td>Dès que tu <strong>auras fini</strong>, appelle-moi</td></tr><tr><td><del>Tant que le temps <strong>est</strong> beau, on sort</del> (future meaning)</td><td>Tant que le temps <strong>sera</strong> beau, on sortira</td></tr></tbody></table>
+<p>→ ❌ Do NOT use indicatif after "avant que" or "jusqu'à ce que"</p>
+<table><thead><tr><th>Wrong</th><th>Correct</th></tr></thead><tbody><tr><td><del>Avant qu'il <strong>part</strong></del></td><td>Avant qu'il <strong>parte</strong> (subjonctif)</td></tr><tr><td><del>Jusqu'à ce qu'il <strong>vient</strong></del></td><td>Jusqu'à ce qu'il <strong>vienne</strong> (subjonctif)</td></tr></tbody></table>
+<p>→ ❌ Do NOT use "avant que" with same subject</p>
+<table><thead><tr><th>Wrong</th><th>Correct</th></tr></thead><tbody><tr><td><del>J'ai vérifié avant que je parte</del></td><td>J'ai vérifié <strong>avant de</strong> partir</td></tr><tr><td><del>Elle a mangé avant qu'elle sorte</del></td><td>Elle a mangé <strong>avant de</strong> sortir</td></tr></tbody></table>
+<p>→ ❌ Do NOT use "après de" — this form does NOT exist</p>
+<table><thead><tr><th>Wrong</th><th>Correct</th></tr></thead><tbody><tr><td><del>Après de manger</del></td><td><strong>Après avoir</strong> mangé</td></tr><tr><td><del>Après de partir</del></td><td><strong>Après être</strong> parti(e)</td></tr></tbody></table>
+<p>→ ❌ Do NOT forget agreement with "après être"</p>
+<table><thead><tr><th>Wrong</th><th>Correct</th></tr></thead><tbody><tr><td><del>Après être arrivé, <strong>elle</strong> a cherché un hôtel</del></td><td>Après être arrivé<strong>e</strong>, elle a cherché un hôtel</td></tr><tr><td><del>Après être sorti, <strong>elles</strong> ont pris le bus</del></td><td>Après être sorti<strong>es</strong>, elles ont pris le bus</td></tr></tbody></table>
+<p>→ ❌ Do NOT confuse "pendant" (preposition + noun) with "pendant que" (conjunction + clause)</p>
+<table><thead><tr><th>With NOUN</th><th>With CLAUSE</th></tr></thead><tbody><tr><td><strong>Pendant</strong> les vacances (during the vacation)</td><td><strong>Pendant que</strong> je suis en vacances (while I'm on vacation)</td></tr><tr><td><strong>Pendant</strong> le dîner (during dinner)</td><td><strong>Pendant que</strong> nous dînons (while we're having dinner)</td></tr></tbody></table>
+<p>→ ❌ Do NOT confuse "depuis" (preposition) with "depuis que" (conjunction)</p>
+<table><thead><tr><th>With NOUN/TIME</th><th>With CLAUSE</th></tr></thead><tbody><tr><td><strong>Depuis</strong> 2020 / <strong>Depuis</strong> trois ans</td><td><strong>Depuis que</strong> je suis arrivé / **Depuis qu'**il travaille ici</td></tr></tbody></table>
+<hr>
+<h1>🔀 WHEN TO USE WHAT — THE COMPLETE TEMPORAL MAP</h1>
+<h2>BEFORE:</h2>
+<table><thead><tr><th>Situation</th><th>Connector</th><th>Grammar</th><th>Example</th></tr></thead><tbody><tr><td>Before doing X (same subject)</td><td><strong>avant de</strong> + inf</td><td>Infinitif</td><td>Avant de partir, vérifie.</td></tr><tr><td>Before someone does X (diff subject)</td><td><strong>avant que</strong> + subj</td><td>Subjonctif</td><td>Avant qu'il parte, dis-lui.</td></tr><tr><td>Until X happens (endpoint)</td><td><strong>jusqu'à ce que</strong> + subj</td><td>Subjonctif</td><td>Attends jusqu'à ce qu'il vienne.</td></tr><tr><td>Until X (with noun)</td><td><strong>jusqu'à</strong> + noun</td><td>Noun</td><td>Jusqu'à demain.</td></tr><tr><td>While waiting for X (diff subject)</td><td><strong>en attendant que</strong> + subj</td><td>Subjonctif</td><td>En attendant qu'il arrive...</td></tr><tr><td>In the meantime</td><td><strong>en attendant</strong></td><td>Standalone</td><td>En attendant, lis ce livre.</td></tr></tbody></table>
+<h2>SIMULTANEOUS:</h2>
+<table><thead><tr><th>Situation</th><th>Connector</th><th>Grammar</th><th>Example</th></tr></thead><tbody><tr><td>When (universal)</td><td><strong>quand</strong></td><td>Indicatif</td><td>Quand je suis arrivé...</td></tr><tr><td>When (formal)</td><td><strong>lorsque</strong></td><td>Indicatif</td><td>Lorsque le président est arrivé...</td></tr><tr><td>While / During (no contrast)</td><td><strong>pendant que</strong></td><td>Indicatif</td><td>Pendant que je cuisinais...</td></tr><tr><td>While (possible contrast)</td><td><strong>tandis que</strong></td><td>Indicatif</td><td>Tandis que je travaille, tu dors.</td></tr><tr><td>While (strong contrast)</td><td><strong>alors que</strong></td><td>Indicatif</td><td>Il sort alors qu'il pleut.</td></tr><tr><td>At the exact moment</td><td><strong>au moment où</strong></td><td>Indicatif</td><td>Au moment où je sortais...</td></tr><tr><td>As long as (ongoing)</td><td><strong>tant que</strong></td><td>Indicatif</td><td>Tant que tu es là...</td></tr><tr><td>Every time</td><td><strong>chaque fois que</strong></td><td>Indicatif</td><td>Chaque fois que je le vois...</td></tr><tr><td>At the same time as</td><td><strong>en même temps que</strong></td><td>Indicatif</td><td>En même temps que toi.</td></tr></tbody></table>
+<h2>AFTER:</h2>
+<table><thead><tr><th>Situation</th><th>Connector</th><th>Grammar</th><th>Example</th></tr></thead><tbody><tr><td>After doing X — avoir verb (same subj)</td><td><strong>après avoir</strong> + PP</td><td>Infinitif passé</td><td>Après avoir mangé...</td></tr><tr><td>After doing X — être verb (same subj)</td><td><strong>après être</strong> + PP</td><td>Infinitif passé (agrees)</td><td>Après être arrivée...</td></tr><tr><td>After doing X — reflexive (same subj)</td><td><strong>après s'être</strong> + PP</td><td>Infinitif passé (agrees)</td><td>Après m'être reposé...</td></tr><tr><td>After someone does X (diff subject)</td><td><strong>après que</strong> + indic</td><td>Indicatif (traditional)</td><td>Après qu'il est parti...</td></tr><tr><td>After X (noun)</td><td><strong>après</strong> + noun</td><td>Noun</td><td>Après le dîner...</td></tr><tr><td>As soon as (immediate trigger)</td><td><strong>dès que</strong></td><td>Indicatif</td><td>Dès que je suis arrivé...</td></tr><tr><td>As soon as (formal)</td><td><strong>aussitôt que</strong></td><td>Indicatif</td><td>Aussitôt qu'il est entré...</td></tr><tr><td>Once (completion emphasis)</td><td><strong>une fois que</strong></td><td>Indicatif</td><td>Une fois que j'ai compris...</td></tr><tr><td>Since (starting point)</td><td><strong>depuis que</strong></td><td>Indicatif</td><td>Depuis que je suis ici...</td></tr></tbody></table>
+<hr>
+<h1>🚫 WHEN NOT TO USE</h1>
+<table><thead><tr><th>Situation</th><th>Do NOT Use</th><th>Use Instead</th><th>Why</th></tr></thead><tbody><tr><td>Future events after "quand"</td><td>Present tense</td><td><strong>Futur</strong></td><td>French requires futur after temporal connectors for future</td></tr><tr><td>Same subject with "avant que"</td><td>avant que + subj</td><td><strong>avant de</strong> + infinitif</td><td>Same-subject rule</td></tr><tr><td>Same subject with "après que"</td><td>après que + verb</td><td><strong>après avoir/être</strong> + PP</td><td>More natural and avoids the grammar debate</td></tr><tr><td>Pure simultaneity (no contrast)</td><td>alors que / tandis que</td><td><strong>pendant que</strong></td><td>Alors que / tandis que carry contrast — pendant que is neutral</td></tr><tr><td>Casual storytelling</td><td>lorsque / aussitôt que</td><td><strong>quand / dès que</strong></td><td>Lorsque and aussitôt que are formal</td></tr><tr><td>After a NOUN (no clause)</td><td>pendant que / depuis que</td><td><strong>pendant / depuis</strong></td><td>Que-forms need a clause — preposition-only forms take nouns</td></tr><tr><td>Indicating cause</td><td>temporal connectors</td><td>Cause connectors (P28)</td><td>Temporal = when / Cause = why — different logic</td></tr></tbody></table>
+<hr>
+<h1>⚠️ COMMON PITFALLS AND FAILURE MODES</h1>
+<table><thead><tr><th>Pitfall</th><th>What Learners Do</th><th>Why It's Wrong</th><th>Fix</th></tr></thead><tbody><tr><td><strong>Present after quand (future)</strong></td><td>Quand je suis grand...</td><td>French uses futur after quand for future</td><td>Quand je <strong>serai</strong> grand...</td></tr><tr><td><strong>Present after dès que (future)</strong></td><td>Dès que tu finis... (future meaning)</td><td>Same futur rule</td><td>Dès que tu <strong>auras</strong> fini...</td></tr><tr><td><strong>Indicatif after avant que</strong></td><td>Avant qu'il part...</td><td>Avant que always takes subjonctif</td><td>Avant qu'il <strong>parte</strong>...</td></tr><tr><td><strong>Indicatif after jusqu'à ce que</strong></td><td>Jusqu'à ce qu'il vient...</td><td>Jusqu'à ce que always takes subjonctif</td><td>Jusqu'à ce qu'il <strong>vienne</strong>...</td></tr><tr><td><strong>Avant que with same subject</strong></td><td>Avant que je parte... (when I = subject of both)</td><td>Same subject → infinitif</td><td><strong>Avant de</strong> partir...</td></tr><tr><td><strong>"Après de" invention</strong></td><td>Après de manger</td><td>This form doesn't exist</td><td><strong>Après avoir</strong> mangé</td></tr><tr><td><strong>No agreement after "après être"</strong></td><td>Après être arrivé, elle...</td><td>Être verb → PP agrees with subject</td><td>Après être arrivé<strong>e</strong>, elle...</td></tr><tr><td><strong>Pendant vs. pendant que</strong></td><td>Pendant je mange...</td><td>Pendant + noun / Pendant que + clause</td><td><strong>Pendant que</strong> je mange...</td></tr><tr><td><strong>Depuis vs. depuis que</strong></td><td>Depuis je suis ici...</td><td>Depuis + noun-time / Depuis que + clause</td><td><strong>Depuis que</strong> je suis ici...</td></tr><tr><td><strong>Confusing alors (P28) and alors que (P29/30)</strong></td><td>Using them interchangeably</td><td>Alors = so (consequence) / Alors que = while/whereas (contrast/time)</td><td>Check: result → alors / contrast-time → alors que</td></tr><tr><td><strong>Si vs. quand for future</strong></td><td>Mixing up tense rules</td><td>Si + présent (P18) / Quand + futur (P30)</td><td>"Si il pleut..." vs. "Quand il pleuvra..."</td></tr></tbody></table>
+<hr>
+<h1>🔑 KEY TAKEAWAY</h1>
+<blockquote>
+<p><strong>Temporal connectors are the timeline of French storytelling.</strong></p>
+<p>→ Project 28 gave you the <strong>cause axis</strong> (WHY)<br>
+→ Project 29 gave you the <strong>opposition axis</strong> (DESPITE)<br>
+→ Project 30 gives you the <strong>time axis</strong> (WHEN)<br>
+→ Together, these three complete the <strong>logic system</strong> of French:</p>
+<table><thead><tr><th>Axis</th><th>Function</th><th>Key Connectors</th></tr></thead><tbody><tr><td>CAUSE (P28)</td><td>Explains WHY</td><td>parce que, donc, grâce à</td></tr><tr><td>OPPOSITION (P29)</td><td>Expresses DESPITE</td><td>malgré, pourtant, bien que</td></tr><tr><td>TIME (P30)</td><td>Places WHEN</td><td>quand, avant de, après avoir, dès que</td></tr></tbody></table>
+<p>→ Three grammar rules to never forget:</p>
+<table><thead><tr><th>Rule</th><th>Applies To</th></tr></thead><tbody><tr><td><strong>FUTUR after temporal connectors</strong> (not present)</td><td>quand, dès que, une fois que, tant que, aussitôt que, lorsque</td></tr><tr><td><strong>SUBJONCTIF after "before/until" connectors</strong></td><td>avant que, jusqu'à ce que, en attendant que</td></tr><tr><td><strong>INFINITIF for same-subject</strong></td><td>avant de, après avoir/être, en attendant de</td></tr></tbody></table>
+<p>→ The futur-after-quand rule is the <strong>#1 difference</strong> between French and English temporal sentences<br>
+→ The same-subject rule connects to Project 23 (subjonctif) — same logic, different context</p>
+<p>→ <strong>You have now completed Phase 3 — Medium.</strong><br>
+→ You own the complete logic system, opinion architecture, emotional expression, and passive voice<br>
+→ You can reason, argue, concede, sequence, and explain in French</p>
+</blockquote>
+<hr>
+<h1>🌉 BRIDGE TO PHASE 4 — HARD</h1>
+<blockquote>
+<p><strong>Phase 3 COMPLETE (Projects 16-30)</strong></p>
+<p>You now have:<br>
+→ All major tenses (présent, PC, imparfait, futur, conditionnel)<br>
+→ Si-clauses Part 1 (real conditions)<br>
+→ All pronouns (COD, COI, Y, En)<br>
+→ Relative pronouns (qui, que, où, dont)<br>
+→ Opinion, emotion, passive voice, reported speech<br>
+→ Obligation, probability, cause, opposition, time connectors<br>
+→ Introduction to subjonctif (through emotions, opinions, and connectors)</p>
+<p><strong>Phase 4 (Projects 31-40) will take you DEEPER:</strong></p>
+<p>→ Project 31: <strong>Full subjonctif mastery</strong> — all triggers, all forms, past subjonctif<br>
+→ Project 32: <strong>Plus-que-parfait</strong> — the past-before-past tense<br>
+→ Project 33: <strong>Si + imparfait → conditionnel</strong> — imagining an unreal present<br>
+→ Project 34: <strong>Si + PQP → conditionnel passé</strong> — regretting the past<br>
+→ Project 35: <strong>Conditionnel passé</strong> — should have, could have, would have<br>
+→ Project 36: <strong>Double pronoun stacking</strong> — Je le lui ai donné<br>
+→ Project 37: <strong>Faire causatif</strong> — making someone do something<br>
+→ Project 38: <strong>Gérondif</strong> — en + participe présent (while doing, by doing)<br>
+→ Project 39: <strong>Advanced negation</strong> — never, nothing, nobody, only<br>
+→ Project 40: <strong>Register switching</strong> — formal vs. casual in the same message</p>
+<p>These are the structures that <strong>separate tourists from residents</strong><br>
+→ They require everything from Phase 1-3 as foundation<br>
+→ They add <strong>depth, nuance, and precision</strong> that make you sound like you LIVE in France</p>
+</blockquote>
+<hr>
+<h1>✅ PROJECT 30 COMPLETE — PHASE 3 COMPLETE</h1>
+<blockquote>
+<p><strong>Are you ready for PROJECT 31: "I Doubt It, I Wish It, I Fear It"?</strong><br>
+→ ~100 sentences covering full subjonctif mastery — all triggers, all forms, subjonctif passé<br>
+→ Scenario: Expressing complex subjective reality — wishes, doubts, fears, necessities in depth<br>
+→ Builds on the subjonctif introduction from Projects 23, 26, 29, 30 — now COMPLETE mastery<br>
+→ <strong>First project of Phase 4 — HARD</strong></p>
+</blockquote>
+</div>
+</div>
+
+<!-- ========== data-index="31" ========== -->
+
+        </div>
+
+        <div class="nav-bar">
+            <a href="project-29.html" class="nav-button prev">← Previous Chapter</a>
+            <div class="page-info">
+                <a href="index.html" class="nav-button home">📚 Table of Contents</a><br>
+                <span style="margin-top:8px;display:block">Chapter 30 of 50</span>
+            </div>
+            <a href="project-31.html" class="nav-button next">Next Chapter →</a>
+        </div>
+    </div>
+
+    
+    <div id="progress-track"><div id="progress-fill"></div></div>
+    <div id="progress-pct">0%</div>
+
+
+    <script>
+    const fill = document.getElementById('progress-fill');
+    const pct  = document.getElementById('progress-pct');
+    function updateProgress() {
+        const scrollTop = window.scrollY;
+        const docHeight = document.body.scrollHeight - window.innerHeight;
+        const scrolled  = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+        fill.style.height = scrolled + '%';
+        pct.textContent   = Math.round(scrolled) + '%';
+    }
+    window.addEventListener('scroll', updateProgress);
+    updateProgress();
+
+    document.addEventListener('keydown', function(e) {
+        if (['INPUT','TEXTAREA'].includes(document.activeElement.tagName)) return;
+        if (e.key === 'ArrowLeft') {
+            const b = document.querySelector('.nav-button.prev');
+            if (b && !b.classList.contains('disabled')) window.location.href = b.href;
+        }
+        if (e.key === 'ArrowRight') {
+            const b = document.querySelector('.nav-button.next');
+            if (b && !b.classList.contains('disabled')) window.location.href = b.href;
+        }
+    });
+    </script>
+
+</body>
+</html>

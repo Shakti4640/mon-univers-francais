@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="images/favicon.png">
+    <title>Project 1: "I Exist, I Have Things" — French Daily Sentences</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.75;
+            color: #1a202c;
+            background-color: #f7fafc;
+        }
+        .container {
+            max-width: 1800px;
+            margin: 0 auto;
+            background: white;
+            min-height: 100vh;
+            box-shadow: 0 0 30px rgba(0,0,0,0.08);
+            padding: 48px 52px;
+        }
+        
+        .content { max-width: 1700px; margin: 0 auto; color: #1a202c; }
+        .content h1 {
+            color: #1a202c; margin: 32px 0 20px;
+            padding-bottom: 12px;
+            border-bottom: 4px solid #3b82f6;
+            font-size: 2.1em;
+            font-weight: 700;
+        }
+        .content h2 {
+            color: #1a202c; margin: 28px 0 16px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #60a5fa;
+            font-size: 1.6em;
+            font-weight: 600;
+        }
+        .content h3 { color: #1a202c; margin: 22px 0 12px; font-size: 1.3em; font-weight: 600; }
+        .content h4 { color: #2d3748; margin: 18px 0 10px; font-size: 1.1em; font-weight: 600; }
+        .content p  { margin-bottom: 16px; line-height: 1.8; color: #1a202c; }
+        .content ul, .content ol { margin: 12px 0 18px 30px; color: #1a202c; }
+        .content li { margin-bottom: 8px; line-height: 1.75; color: #1a202c; }
+        .content hr { border: none; border-top: 2px solid #e2e8f0; margin: 26px 0; }
+        .content pre {
+            background: #f7fafc !important;
+            border: 1px solid #cbd5e0 !important;
+            border-left: 4px solid #3b82f6 !important;
+            padding: 18px !important; overflow-x: auto; margin: 18px 0; border-radius: 6px;
+            font-family: 'Consolas','Monaco','Courier New',monospace !important;
+            font-size: 0.9em !important;
+        }
+        .content pre:not([style*="color"]) { color: #1a202c !important; }
+        .content code {
+            font-family: 'Consolas','Monaco','Courier New',monospace !important;
+            font-size: 0.88em !important;
+        }
+        .content code:not(pre code) {
+            background: #dbeafe !important;
+            color: #1a202c !important;
+            padding: 2px 6px;
+            border-radius: 3px;
+        }
+        .content pre code { background: transparent !important; padding: 0; }
+        .content table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+        .content th {
+            background: linear-gradient(135deg, #3b82f6 0%, #60a5fa 100%);
+            color: white; padding: 12px 16px; text-align: left;
+            font-weight: 600;
+        }
+        .content td { padding: 11px 16px; border: 1px solid #e2e8f0; color: #1a202c; }
+        .content tr:nth-child(even) td { background: #eff6ff; }
+        .content blockquote {
+            border-left: 4px solid #3b82f6; background: #eff6ff;
+            padding: 14px 20px; margin: 18px 0; border-radius: 0 6px 6px 0;
+            color: #1a202c;
+        }
+        .content strong { color: #1a202c; font-weight: 600; }
+        .px-2 { padding: 0; }
+        .chat-message { background: transparent; padding: 0; margin: 0; }
+
+        /* Bottom nav bar only */
+        .nav-bar {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 24px 0;
+            margin-top: 50px;
+            border-top: 3px solid #60a5fa;
+        }
+        .nav-button {
+            display: inline-flex; align-items: center; gap: 8px;
+            padding: 12px 26px;
+            background: linear-gradient(135deg, #3b82f6 0%, #60a5fa 100%);
+            color: white !important; text-decoration: none;
+            border-radius: 8px; font-weight: 600; font-size: 0.95em;
+            transition: all 0.2s;
+            box-shadow: 0 2px 8px rgba(59,130,246,0.35);
+        }
+        .nav-button:hover { transform: translateY(-2px); box-shadow: 0 4px 14px rgba(59,130,246,0.5); }
+        .nav-button.disabled { background: #cbd5e1; box-shadow: none; pointer-events: none; }
+        .nav-button.home {
+            background: linear-gradient(135deg, #ef4444 0%, #f87171 100%);
+            box-shadow: 0 2px 8px rgba(239,68,68,0.35);
+        }
+        .nav-button.home:hover { box-shadow: 0 4px 14px rgba(239,68,68,0.5); }
+        .page-info { color: #718096; font-size: 0.9em; text-align: center; }
+
+        /* Progress bar */
+        #progress-track {
+            position: fixed; top: 20px; right: 20px;
+            width: 10px; height: 150px;
+            background: rgba(59,130,246,0.2);
+            border: 2px solid #3b82f6;
+            border-radius: 6px; overflow: hidden; z-index: 1000;
+        }
+        #progress-fill {
+            width: 100%;
+            background: linear-gradient(180deg, #3b82f6, #2563eb);
+            height: 0%;
+            transition: height 0.15s ease;
+        }
+        #progress-pct {
+            position: fixed; top: 0px; right: 16px;
+            color: #2563eb; font-size: 14px; font-weight: bold;
+            z-index: 1001;
+            text-shadow: 0 1px 2px rgba(255,255,255,0.9);
+            line-height: 20px;
+        }
+
+    </style>
+<link rel="stylesheet" href="assets/chapters.css?v=20260421203847"><script src="assets/chapters.js?v=20260421203847" defer></script>
+</head>
+<body>
+    <div class="container">
+        <div class="content">
+            <div class="chat-message" data-index="3">
+<div class="px-2"><h1>🟢 PROJECT 1: "I Exist, I Have Things"</h1>
+<h2><em>You just landed in France — how do you state who you are and what you possess?</em></h2>
+<hr>
+<h1>🎯 THE HYPOTHETICAL PROBLEM</h1>
+<p>→ You just stepped off a plane at <strong>Charles de Gaulle Airport, Paris</strong><br>
+→ You have no French friends yet<br>
+→ You must check into a hotel, meet people, fill out forms, introduce yourself<br>
+→ You need to tell people <strong>WHO you are</strong>, <strong>WHAT you are</strong>, <strong>WHERE you are from</strong>, <strong>HOW you feel</strong>, and <strong>WHAT you have</strong><br>
+→ You cannot describe actions yet — you can only <strong>state existence and possession</strong><br>
+→ Every single interaction requires one of two engines: <strong>ÊTRE</strong> (to be) or <strong>AVOIR</strong> (to have)</p>
+<p><strong>The core realization:</strong><br>
+→ In English, you say "I <strong>am</strong> hungry" — in French, you say "I <strong>have</strong> hunger"<br>
+→ In English, you say "I <strong>am</strong> 25 years old" — in French, you say "I <strong>have</strong> 25 years"<br>
+→ If you don't know which engine (être vs. avoir) controls which idea — <strong>every sentence you build will collapse</strong></p>
+<hr>
+<h1>🔍 HOW TO APPROACH IT</h1>
+<p>→ Think of French sentences like a <strong>machine with an engine</strong><br>
+→ Every basic French sentence has this skeleton:</p>
+<code>SUBJECT → ENGINE (verb) → INFORMATION</code>
+<p>→ At this stage, you only have <strong>two engines</strong>:</p>
+<table><thead><tr><th>Engine</th><th>French</th><th>Purpose</th></tr></thead><tbody><tr><td>Engine 1</td><td><strong>ÊTRE</strong></td><td>Identity, state, location, description, profession, nationality, emotion-state</td></tr><tr><td>Engine 2</td><td><strong>AVOIR</strong></td><td>Possession, age, physical sensations, needs</td></tr></tbody></table>
+<p>→ Your job in Project 1: <strong>Learn which engine powers which type of sentence</strong></p>
+<hr>
+<h1>🔧 HOW CAN WE SOLVE IT</h1>
+<h2>Step 1 — Know Your Subjects (Who is speaking / being spoken about)</h2>
+<table><thead><tr><th>French</th><th>English</th><th>When Used</th></tr></thead><tbody><tr><td>Je</td><td>I</td><td>Talking about yourself</td></tr><tr><td>Tu</td><td>You (informal)</td><td>Talking to a friend, child, peer</td></tr><tr><td>Il</td><td>He</td><td>Talking about a male</td></tr><tr><td>Elle</td><td>She</td><td>Talking about a female</td></tr><tr><td>On</td><td>We (casual) / One</td><td>Very common in spoken French — replaces "nous" often</td></tr><tr><td>Nous</td><td>We (formal/written)</td><td>Group including yourself — more formal</td></tr><tr><td>Vous</td><td>You (formal/plural)</td><td>Talking to a stranger, elder, or group</td></tr><tr><td>Ils</td><td>They (masc/mixed)</td><td>Group of males or mixed group</td></tr><tr><td>Elles</td><td>They (fem)</td><td>Group of all females only</td></tr></tbody></table>
+<hr>
+<h2>Step 2 — Engine 1: ÊTRE (To Be) — Present Tense Forms</h2>
+<table><thead><tr><th>Subject</th><th>Être Form</th><th>Pronunciation Hint</th></tr></thead><tbody><tr><td>Je</td><td><strong>suis</strong></td><td>"shwee"</td></tr><tr><td>Tu</td><td><strong>es</strong></td><td>"eh"</td></tr><tr><td>Il / Elle / On</td><td><strong>est</strong></td><td>"eh"</td></tr><tr><td>Nous</td><td><strong>sommes</strong></td><td>"som"</td></tr><tr><td>Vous</td><td><strong>êtes</strong></td><td>"et"</td></tr><tr><td>Ils / Elles</td><td><strong>sont</strong></td><td>"son"</td></tr></tbody></table>
+<hr>
+<h2>Step 3 — Engine 2: AVOIR (To Have) — Present Tense Forms</h2>
+<table><thead><tr><th>Subject</th><th>Avoir Form</th><th>Pronunciation Hint</th></tr></thead><tbody><tr><td>Je / J'</td><td><strong>ai</strong></td><td>"ay"</td></tr><tr><td>Tu</td><td><strong>as</strong></td><td>"ah"</td></tr><tr><td>Il / Elle / On</td><td><strong>a</strong></td><td>"ah"</td></tr><tr><td>Nous</td><td><strong>avons</strong></td><td>"ah-von"</td></tr><tr><td>Vous</td><td><strong>avez</strong></td><td>"ah-vay"</td></tr><tr><td>Ils / Elles</td><td><strong>ont</strong></td><td>"on"</td></tr></tbody></table>
+<hr>
+<h1>✅ WHAT COULD BE DONE — THE 100 SENTENCES</h1>
+<h2>🔹 BLOCK A — ÊTRE: Stating Identity (Who You Are)</h2>
+<p><em>Scenario: You meet someone at the hotel lobby — they ask about you</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English Meaning</th><th>Structure Pattern</th></tr></thead><tbody><tr><td>1</td><td>Je suis Marc.</td><td>I am Marc.</td><td>Subject + être + name</td></tr><tr><td>2</td><td>Je suis Marie.</td><td>I am Marie.</td><td>Subject + être + name</td></tr><tr><td>3</td><td>Tu es Pierre ?</td><td>Are you Pierre?</td><td>Subject + être + name + ?</td></tr><tr><td>4</td><td>Il est mon ami.</td><td>He is my friend.</td><td>Subject + être + possessive + noun</td></tr><tr><td>5</td><td>Elle est ma sœur.</td><td>She is my sister.</td><td>Subject + être + possessive + noun</td></tr><tr><td>6</td><td>Nous sommes des touristes.</td><td>We are tourists.</td><td>Subject + être + article + noun</td></tr><tr><td>7</td><td>Vous êtes le professeur ?</td><td>Are you the teacher?</td><td>Subject + être + article + noun + ?</td></tr><tr><td>8</td><td>Ils sont mes voisins.</td><td>They are my neighbors.</td><td>Subject + être + possessive + noun</td></tr><tr><td>9</td><td>Elles sont mes collègues.</td><td>They (f) are my colleagues.</td><td>Subject + être + possessive + noun</td></tr><tr><td>10</td><td>On est amis.</td><td>We are friends.</td><td>On + être + noun (casual)</td></tr></tbody></table>
+<p><strong>🧠 Structure unlocked:</strong> <code>Subject + ÊTRE + [name / possessive + noun / article + noun]</code></p>
+<hr>
+<h2>🔹 BLOCK B — ÊTRE: Stating Nationality &amp; Origin</h2>
+<p><em>Scenario: People at a café ask where you're from</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English Meaning</th><th>Structure Pattern</th></tr></thead><tbody><tr><td>11</td><td>Je suis américain.</td><td>I am American. (m)</td><td>Subject + être + nationality (adj)</td></tr><tr><td>12</td><td>Je suis américaine.</td><td>I am American. (f)</td><td>Subject + être + nationality (fem adj)</td></tr><tr><td>13</td><td>Tu es français ?</td><td>Are you French? (m)</td><td>Subject + être + nationality + ?</td></tr><tr><td>14</td><td>Elle est japonaise.</td><td>She is Japanese.</td><td>Subject + être + nationality (fem)</td></tr><tr><td>15</td><td>Il est marocain.</td><td>He is Moroccan.</td><td>Subject + être + nationality</td></tr><tr><td>16</td><td>Nous sommes canadiens.</td><td>We are Canadian. (m/mixed)</td><td>Subject + être + nationality (plural)</td></tr><tr><td>17</td><td>Vous êtes espagnol ?</td><td>Are you Spanish?</td><td>Subject + être + nationality + ?</td></tr><tr><td>18</td><td>Ils sont italiens.</td><td>They are Italian.</td><td>Subject + être + nationality (m plural)</td></tr><tr><td>19</td><td>Elles sont brésiliennes.</td><td>They (f) are Brazilian.</td><td>Subject + être + nationality (f plural)</td></tr><tr><td>20</td><td>On est belges.</td><td>We are Belgian.</td><td>On + être + nationality (casual)</td></tr></tbody></table>
+<p><strong>🧠 Structure unlocked:</strong> <code>Subject + ÊTRE + nationality adjective (agrees in gender/number)</code></p>
+<hr>
+<h2>🔹 BLOCK C — ÊTRE: Stating Profession</h2>
+<p><em>Scenario: You're at a networking event — what do you do?</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English Meaning</th><th>Structure Pattern</th></tr></thead><tbody><tr><td>21</td><td>Je suis étudiant.</td><td>I am a student. (m)</td><td>Subject + être + profession (NO article)</td></tr><tr><td>22</td><td>Je suis étudiante.</td><td>I am a student. (f)</td><td>Subject + être + profession (fem)</td></tr><tr><td>23</td><td>Il est médecin.</td><td>He is a doctor.</td><td>Subject + être + profession</td></tr><tr><td>24</td><td>Elle est avocate.</td><td>She is a lawyer.</td><td>Subject + être + profession (fem)</td></tr><tr><td>25</td><td>Tu es professeur ?</td><td>Are you a teacher?</td><td>Subject + être + profession + ?</td></tr><tr><td>26</td><td>Nous sommes ingénieurs.</td><td>We are engineers.</td><td>Subject + être + profession (plural)</td></tr><tr><td>27</td><td>Vous êtes journaliste ?</td><td>Are you a journalist?</td><td>Subject + être + profession + ?</td></tr><tr><td>28</td><td>Ils sont musiciens.</td><td>They are musicians.</td><td>Subject + être + profession (plural)</td></tr><tr><td>29</td><td>Elles sont infirmières.</td><td>They (f) are nurses.</td><td>Subject + être + profession (f plural)</td></tr><tr><td>30</td><td>On est serveurs ici.</td><td>We are waiters here.</td><td>On + être + profession + place marker</td></tr></tbody></table>
+<p><strong>🧠 Critical rule unlocked:</strong> In French, <strong>NO ARTICLE before profession</strong> after être<br>
+→ ✅ Je suis médecin.<br>
+→ ❌ <del>Je suis un médecin.</del> (wrong in standard usage)</p>
+<hr>
+<h2>🔹 BLOCK D — ÊTRE: Describing States &amp; Qualities</h2>
+<p><em>Scenario: Someone asks how you are — or you describe someone</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English Meaning</th><th>Structure Pattern</th></tr></thead><tbody><tr><td>31</td><td>Je suis fatigué.</td><td>I am tired. (m)</td><td>Subject + être + adjective</td></tr><tr><td>32</td><td>Je suis fatiguée.</td><td>I am tired. (f)</td><td>Subject + être + adjective (fem)</td></tr><tr><td>33</td><td>Tu es content ?</td><td>Are you happy? (m)</td><td>Subject + être + adjective + ?</td></tr><tr><td>34</td><td>Elle est très gentille.</td><td>She is very kind.</td><td>Subject + être + intensifier + adjective</td></tr><tr><td>35</td><td>Il est grand.</td><td>He is tall.</td><td>Subject + être + adjective</td></tr><tr><td>36</td><td>Nous sommes prêts.</td><td>We are ready.</td><td>Subject + être + adjective (plural)</td></tr><tr><td>37</td><td>Vous êtes malade ?</td><td>Are you sick?</td><td>Subject + être + adjective + ?</td></tr><tr><td>38</td><td>Ils sont occupés.</td><td>They are busy.</td><td>Subject + être + adjective (m plural)</td></tr><tr><td>39</td><td>Elles sont contentes.</td><td>They (f) are happy.</td><td>Subject + être + adjective (f plural)</td></tr><tr><td>40</td><td>On est triste aujourd'hui.</td><td>We are sad today.</td><td>On + être + adjective + time word</td></tr></tbody></table>
+<p><strong>🧠 Structure unlocked:</strong> <code>Subject + ÊTRE + adjective (must agree in gender &amp; number)</code></p>
+<hr>
+<h2>🔹 BLOCK E — ÊTRE: Stating Location</h2>
+<p><em>Scenario: You're on the phone — someone asks where you are</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English Meaning</th><th>Structure Pattern</th></tr></thead><tbody><tr><td>41</td><td>Je suis à Paris.</td><td>I am in Paris.</td><td>Subject + être + à + city</td></tr><tr><td>42</td><td>Tu es à la maison ?</td><td>Are you at home?</td><td>Subject + être + à + article + place + ?</td></tr><tr><td>43</td><td>Il est au bureau.</td><td>He is at the office.</td><td>Subject + être + au (à+le) + place</td></tr><tr><td>44</td><td>Elle est à l'hôtel.</td><td>She is at the hotel.</td><td>Subject + être + à + l' + place</td></tr><tr><td>45</td><td>Nous sommes en France.</td><td>We are in France.</td><td>Subject + être + en + country (fem)</td></tr><tr><td>46</td><td>Vous êtes au restaurant ?</td><td>Are you at the restaurant?</td><td>Subject + être + au + place + ?</td></tr><tr><td>47</td><td>Ils sont à l'aéroport.</td><td>They are at the airport.</td><td>Subject + être + à + l' + place</td></tr><tr><td>48</td><td>Elles sont en classe.</td><td>They (f) are in class.</td><td>Subject + être + en + place</td></tr><tr><td>49</td><td>On est ici.</td><td>We are here.</td><td>On + être + location word</td></tr><tr><td>50</td><td>Je suis là.</td><td>I am here / I am there.</td><td>Subject + être + là</td></tr></tbody></table>
+<p><strong>🧠 Structure unlocked:</strong> <code>Subject + ÊTRE + preposition + place</code></p>
+<hr>
+<h2>🔹 BLOCK F — AVOIR: Stating Possession</h2>
+<p><em>Scenario: At customs, at the hotel desk, someone asks what you have</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English Meaning</th><th>Structure Pattern</th></tr></thead><tbody><tr><td>51</td><td>J'ai un passeport.</td><td>I have a passport.</td><td>Subject + avoir + article + noun</td></tr><tr><td>52</td><td>Tu as une valise ?</td><td>Do you have a suitcase?</td><td>Subject + avoir + article + noun + ?</td></tr><tr><td>53</td><td>Il a un téléphone.</td><td>He has a phone.</td><td>Subject + avoir + article + noun</td></tr><tr><td>54</td><td>Elle a une voiture.</td><td>She has a car.</td><td>Subject + avoir + article + noun</td></tr><tr><td>55</td><td>Nous avons une réservation.</td><td>We have a reservation.</td><td>Subject + avoir + article + noun</td></tr><tr><td>56</td><td>Vous avez une chambre ?</td><td>Do you have a room?</td><td>Subject + avoir + article + noun + ?</td></tr><tr><td>57</td><td>Ils ont des enfants.</td><td>They have children.</td><td>Subject + avoir + des + noun (plural)</td></tr><tr><td>58</td><td>Elles ont un appartement.</td><td>They (f) have an apartment.</td><td>Subject + avoir + article + noun</td></tr><tr><td>59</td><td>J'ai de l'argent.</td><td>I have (some) money.</td><td>Subject + avoir + partitive + noun</td></tr><tr><td>60</td><td>On a un problème.</td><td>We have a problem.</td><td>On + avoir + article + noun</td></tr></tbody></table>
+<p><strong>🧠 Structure unlocked:</strong> <code>Subject + AVOIR + [un/une/des/de l'] + noun</code></p>
+<hr>
+<h2>🔹 BLOCK G — AVOIR: Stating Age</h2>
+<p><em>Scenario: You fill a form — someone asks your age</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English Meaning</th><th>Structure Pattern</th></tr></thead><tbody><tr><td>61</td><td>J'ai vingt-cinq ans.</td><td>I am 25 years old.</td><td>Subject + avoir + number + ans</td></tr><tr><td>62</td><td>Tu as quel âge ?</td><td>How old are you?</td><td>Subject + avoir + quel âge + ?</td></tr><tr><td>63</td><td>Il a trente ans.</td><td>He is 30 years old.</td><td>Subject + avoir + number + ans</td></tr><tr><td>64</td><td>Elle a dix-huit ans.</td><td>She is 18 years old.</td><td>Subject + avoir + number + ans</td></tr><tr><td>65</td><td>Nous avons le même âge.</td><td>We are the same age.</td><td>Subject + avoir + le même âge</td></tr><tr><td>66</td><td>Vous avez quel âge ?</td><td>How old are you? (formal)</td><td>Subject + avoir + quel âge + ?</td></tr><tr><td>67</td><td>Ils ont quarante ans.</td><td>They are 40 years old.</td><td>Subject + avoir + number + ans</td></tr><tr><td>68</td><td>Mon fils a trois ans.</td><td>My son is 3 years old.</td><td>Possessive + noun + avoir + number + ans</td></tr><tr><td>69</td><td>Ma mère a cinquante ans.</td><td>My mother is 50 years old.</td><td>Possessive + noun + avoir + number + ans</td></tr><tr><td>70</td><td>On a vingt ans.</td><td>We are 20 years old.</td><td>On + avoir + number + ans</td></tr></tbody></table>
+<p><strong>🧠 Critical rule unlocked:</strong> French uses <strong>AVOIR</strong> for age — NEVER être<br>
+→ ✅ J'ai vingt ans.<br>
+→ ❌ <del>Je suis vingt ans.</del> (completely wrong)</p>
+<hr>
+<h2>🔹 BLOCK H — AVOIR: Physical Sensations &amp; Needs</h2>
+<p><em>Scenario: You've been walking all day — you feel things — you express them</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English Meaning</th><th>Structure Pattern</th></tr></thead><tbody><tr><td>71</td><td>J'ai faim.</td><td>I am hungry.</td><td>Subject + avoir + sensation noun</td></tr><tr><td>72</td><td>J'ai soif.</td><td>I am thirsty.</td><td>Subject + avoir + sensation noun</td></tr><tr><td>73</td><td>Tu as froid ?</td><td>Are you cold?</td><td>Subject + avoir + sensation + ?</td></tr><tr><td>74</td><td>Il a chaud.</td><td>He is hot.</td><td>Subject + avoir + sensation</td></tr><tr><td>75</td><td>Elle a sommeil.</td><td>She is sleepy.</td><td>Subject + avoir + sensation</td></tr><tr><td>76</td><td>Nous avons peur.</td><td>We are scared.</td><td>Subject + avoir + sensation</td></tr><tr><td>77</td><td>Vous avez mal ?</td><td>Are you in pain?</td><td>Subject + avoir + mal + ?</td></tr><tr><td>78</td><td>J'ai mal à la tête.</td><td>I have a headache.</td><td>Subject + avoir + mal + à + body part</td></tr><tr><td>79</td><td>Il a mal au ventre.</td><td>He has a stomachache.</td><td>Subject + avoir + mal + au + body part</td></tr><tr><td>80</td><td>On a besoin d'eau.</td><td>We need water.</td><td>Subject + avoir + besoin + de + noun</td></tr></tbody></table>
+<p><strong>🧠 Critical rule unlocked:</strong> In French, sensations use <strong>AVOIR</strong> — not être<br>
+→ ✅ J'ai froid. (I have cold = I am cold)<br>
+→ ❌ <del>Je suis froid.</del> (This means "I am a cold person" = emotionally cold!)</p>
+<hr>
+<h2>🔹 BLOCK I — AVOIR: Idiomatic Expressions</h2>
+<p><em>Scenario: Daily situations where avoir creates meaning English speakers don't expect</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English Meaning</th><th>Structure Pattern</th></tr></thead><tbody><tr><td>81</td><td>J'ai raison.</td><td>I am right.</td><td>Subject + avoir + raison</td></tr><tr><td>82</td><td>Tu as tort.</td><td>You are wrong.</td><td>Subject + avoir + tort</td></tr><tr><td>83</td><td>Elle a de la chance.</td><td>She is lucky.</td><td>Subject + avoir + de la chance</td></tr><tr><td>84</td><td>Il a honte.</td><td>He is ashamed.</td><td>Subject + avoir + honte</td></tr><tr><td>85</td><td>Nous avons envie de manger.</td><td>We feel like eating.</td><td>Subject + avoir + envie + de + infinitif</td></tr><tr><td>86</td><td>Vous avez l'air fatigué.</td><td>You look tired.</td><td>Subject + avoir + l'air + adjective</td></tr><tr><td>87</td><td>J'ai l'habitude.</td><td>I am used to it.</td><td>Subject + avoir + l'habitude</td></tr><tr><td>88</td><td>Ils ont du mal à comprendre.</td><td>They have trouble understanding.</td><td>Subject + avoir + du mal + à + infinitif</td></tr><tr><td>89</td><td>Elle a hâte de partir.</td><td>She can't wait to leave.</td><td>Subject + avoir + hâte + de + infinitif</td></tr><tr><td>90</td><td>On a de la patience.</td><td>We have patience.</td><td>Subject + avoir + de la + noun</td></tr></tbody></table>
+<p><strong>🧠 Structure unlocked:</strong> <code>Subject + AVOIR + [idiomatic noun] + (optional: de/à + infinitif)</code></p>
+<hr>
+<h2>🔹 BLOCK J — Mixed ÊTRE &amp; AVOIR: Real Conversation Flow</h2>
+<p><em>Scenario: Full mini-conversations combining both engines</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English Meaning</th><th>Engine Used</th></tr></thead><tbody><tr><td>91</td><td>Bonjour, je suis Sophie.</td><td>Hello, I am Sophie.</td><td>ÊTRE — identity</td></tr><tr><td>92</td><td>Je suis française.</td><td>I am French.</td><td>ÊTRE — nationality</td></tr><tr><td>93</td><td>Je suis professeur.</td><td>I am a teacher.</td><td>ÊTRE — profession</td></tr><tr><td>94</td><td>J'ai trente-deux ans.</td><td>I am 32 years old.</td><td>AVOIR — age</td></tr><tr><td>95</td><td>Je suis à Lyon.</td><td>I am in Lyon.</td><td>ÊTRE — location</td></tr><tr><td>96</td><td>J'ai deux enfants.</td><td>I have two children.</td><td>AVOIR — possession</td></tr><tr><td>97</td><td>Je suis contente.</td><td>I am happy.</td><td>ÊTRE — emotion-state</td></tr><tr><td>98</td><td>J'ai faim maintenant.</td><td>I am hungry now.</td><td>AVOIR — sensation</td></tr><tr><td>99</td><td>Mon mari est médecin.</td><td>My husband is a doctor.</td><td>ÊTRE — profession</td></tr><tr><td>100</td><td>Il a quarante ans.</td><td>He is 40 years old.</td><td>AVOIR — age</td></tr></tbody></table>
+<hr>
+<h1>✅ WHAT SHOULD DO</h1>
+<p>→ <strong>Read each sentence aloud</strong> — even if pronunciation is imperfect<br>
+→ <strong>Notice the pattern</strong> — not the individual words<br>
+→ <strong>Group by engine</strong> — ask yourself: "Is this an ÊTRE situation or an AVOIR situation?"<br>
+→ <strong>Memorize the sensation/age/idiom list</strong> — these are the ones that TRICK English speakers<br>
+→ <strong>Think in structures</strong> — "Subject + Engine + Information" is your skeleton forever</p>
+<hr>
+<h1>❌ WHAT SHOULD NOT DO</h1>
+<p>→ ❌ Do NOT translate word-by-word from English<br>
+→ ❌ Do NOT say "Je suis faim" (I am hunger) — it's "J'ai faim"<br>
+→ ❌ Do NOT say "Je suis vingt ans" — it's "J'ai vingt ans"<br>
+→ ❌ Do NOT say "Je suis un médecin" — it's "Je suis médecin" (no article)<br>
+→ ❌ Do NOT skip gender agreement on adjectives — "fatiguée" if female, "fatigué" if male<br>
+→ ❌ Do NOT use "nous" in casual speech — use "on" (this is how real French people talk)</p>
+<hr>
+<h1>🔀 WHEN TO USE WHAT</h1>
+<table><thead><tr><th>Situation</th><th>Use ÊTRE</th><th>Use AVOIR</th></tr></thead><tbody><tr><td>Saying your name</td><td>✅ Je suis Marc</td><td>❌</td></tr><tr><td>Saying your nationality</td><td>✅ Je suis français</td><td>❌</td></tr><tr><td>Saying your profession</td><td>✅ Je suis avocat</td><td>❌</td></tr><tr><td>Describing how you look/feel (adjective)</td><td>✅ Je suis fatigué</td><td>❌</td></tr><tr><td>Saying where you are</td><td>✅ Je suis à Paris</td><td>❌</td></tr><tr><td>Saying your age</td><td>❌</td><td>✅ J'ai 25 ans</td></tr><tr><td>Saying you're hungry/thirsty/cold/hot</td><td>❌</td><td>✅ J'ai faim/soif/froid/chaud</td></tr><tr><td>Saying you own something</td><td>❌</td><td>✅ J'ai une voiture</td></tr><tr><td>Saying you're right/wrong</td><td>❌</td><td>✅ J'ai raison / J'ai tort</td></tr><tr><td>Saying you're scared/ashamed</td><td>❌</td><td>✅ J'ai peur / J'ai honte</td></tr><tr><td>Saying you look [adjective]</td><td>❌</td><td>✅ J'ai l'air fatigué</td></tr><tr><td>Saying you need something</td><td>❌</td><td>✅ J'ai besoin de...</td></tr></tbody></table>
+<hr>
+<h1>🚫 WHEN NOT TO USE</h1>
+<p>→ <strong>ÊTRE</strong> is NOT for physical sensations (hunger, thirst, cold, heat, sleep, pain)<br>
+→ <strong>AVOIR</strong> is NOT for descriptions (tall, kind, beautiful, ready, sick)<br>
+→ <strong>ÊTRE</strong> is NOT for age — ever<br>
+→ <strong>AVOIR</strong> is NOT for location — ever<br>
+→ If you're confused → ask: <strong>"In English, does this use 'am/is/are' but describe something you FEEL PHYSICALLY?"</strong><br>
+→ If yes → probably <strong>AVOIR</strong> in French</p>
+<hr>
+<h1>⚠️ COMMON PITFALLS AND FAILURE MODES</h1>
+<table><thead><tr><th>Pitfall</th><th>What Learners Do Wrong</th><th>Correct Version</th></tr></thead><tbody><tr><td><strong>Age trap</strong></td><td>Je suis 25 ans</td><td><strong>J'ai</strong> 25 ans</td></tr><tr><td><strong>Hunger trap</strong></td><td>Je suis faim</td><td><strong>J'ai</strong> faim</td></tr><tr><td><strong>Cold trap</strong></td><td>Je suis froid</td><td><strong>J'ai</strong> froid (Je suis froid = I am an emotionally cold person)</td></tr><tr><td><strong>Hot trap</strong></td><td>Je suis chaud</td><td><strong>J'ai</strong> chaud (Je suis chaud = I am sexually aroused — very embarrassing!)</td></tr><tr><td><strong>Profession article trap</strong></td><td>Je suis <strong>un</strong> professeur</td><td>Je suis professeur (no article)</td></tr><tr><td><strong>Gender agreement skip</strong></td><td>Elle est fatigué</td><td>Elle est fatigué<strong>e</strong></td></tr><tr><td><strong>Plural agreement skip</strong></td><td>Ils sont prêt</td><td>Ils sont prêt<strong>s</strong></td></tr><tr><td><strong>"On" confusion</strong></td><td>Thinking "on" is only "one"</td><td>"On" = "we" in 90% of daily French conversation</td></tr><tr><td><strong>J'ai vs. Je ai</strong></td><td>Writing "Je ai"</td><td>Always contract → <strong>J'ai</strong> (before vowel sound)</td></tr><tr><td><strong>Là vs. Ici confusion</strong></td><td>Thinking "là" only means "there"</td><td>"Là" often means "here" in spoken French — "Je suis là" = "I'm here"</td></tr></tbody></table>
+<hr>
+<h1>🔑 KEY TAKEAWAY</h1>
+<blockquote>
+<p><strong>Every French sentence starts with a SUBJECT and an ENGINE.</strong><br>
+At this level, your only two engines are <strong>ÊTRE</strong> and <strong>AVOIR</strong>.<br>
+Mastering which engine powers which meaning is <strong>the single most important foundation</strong> in French.<br>
+If this is wrong — every future tense, every complex structure, every advanced sentence will be built on a broken foundation.</p>
+</blockquote>
+<p>→ This project gave you <strong>static states</strong> — who you are, what you have, how you feel<br>
+→ But life is not static — <strong>you DO things every day</strong><br>
+→ That requires <strong>new engines</strong> — action verbs in the present tense</p>
+<hr>
+<h1>🌉 BRIDGE TO PROJECT 2</h1>
+<blockquote>
+<p>You can now say <strong>"I am a student"</strong> and <strong>"I have a phone"</strong><br>
+But you cannot yet say <strong>"I eat breakfast"</strong> or <strong>"I speak French"</strong> or <strong>"I live in Paris"</strong><br>
+→ Project 2 introduces <strong>20 essential action verbs in Présent Simple</strong><br>
+→ You will describe your <strong>entire daily routine</strong> — from waking up to sleeping<br>
+→ The structure expands from <code>Subject + être/avoir + info</code> to <code>Subject + ACTION VERB + object/detail</code></p>
+</blockquote>
+<hr>
+<h1>✅ PROJECT 1 COMPLETE</h1>
+<blockquote>
+<p><strong>Are you ready for PROJECT 2: "My Day in 20 Verbs"?</strong><br>
+→ ~100 sentences covering regular &amp; irregular present tense verbs<br>
+→ Scenario: Describing your daily routine to a French host family<br>
+→ Builds directly on the subject + engine structure from Project 1</p>
+</blockquote>
+</div>
+</div>
+
+<!-- ========== data-index="5" ========== -->
+
+        </div>
+
+        <div class="nav-bar">
+            <a href="project-0.html" class="nav-button prev">← Previous Chapter</a>
+            <div class="page-info">
+                <a href="index.html" class="nav-button home">📚 Table of Contents</a><br>
+                <span style="margin-top:8px;display:block">Chapter 1 of 50</span>
+            </div>
+            <a href="project-2.html" class="nav-button next">Next Chapter →</a>
+        </div>
+    </div>
+
+    
+    <div id="progress-track"><div id="progress-fill"></div></div>
+    <div id="progress-pct">0%</div>
+
+
+    <script>
+    const fill = document.getElementById('progress-fill');
+    const pct  = document.getElementById('progress-pct');
+    function updateProgress() {
+        const scrollTop = window.scrollY;
+        const docHeight = document.body.scrollHeight - window.innerHeight;
+        const scrolled  = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+        fill.style.height = scrolled + '%';
+        pct.textContent   = Math.round(scrolled) + '%';
+    }
+    window.addEventListener('scroll', updateProgress);
+    updateProgress();
+
+    document.addEventListener('keydown', function(e) {
+        if (['INPUT','TEXTAREA'].includes(document.activeElement.tagName)) return;
+        if (e.key === 'ArrowLeft') {
+            const b = document.querySelector('.nav-button.prev');
+            if (b && !b.classList.contains('disabled')) window.location.href = b.href;
+        }
+        if (e.key === 'ArrowRight') {
+            const b = document.querySelector('.nav-button.next');
+            if (b && !b.classList.contains('disabled')) window.location.href = b.href;
+        }
+    });
+    </script>
+
+</body>
+</html>

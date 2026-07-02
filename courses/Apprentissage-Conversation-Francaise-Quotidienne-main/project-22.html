@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="images/favicon.png">
+    <title>Project 22: "Here's What I Think" — French Daily Sentences</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.75;
+            color: #1a202c;
+            background-color: #f7fafc;
+        }
+        .container {
+            max-width: 1800px;
+            margin: 0 auto;
+            background: white;
+            min-height: 100vh;
+            box-shadow: 0 0 30px rgba(0,0,0,0.08);
+            padding: 48px 52px;
+        }
+        
+        .content { max-width: 1700px; margin: 0 auto; color: #1a202c; }
+        .content h1 {
+            color: #1a202c; margin: 32px 0 20px;
+            padding-bottom: 12px;
+            border-bottom: 4px solid #3b82f6;
+            font-size: 2.1em;
+            font-weight: 700;
+        }
+        .content h2 {
+            color: #1a202c; margin: 28px 0 16px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #60a5fa;
+            font-size: 1.6em;
+            font-weight: 600;
+        }
+        .content h3 { color: #1a202c; margin: 22px 0 12px; font-size: 1.3em; font-weight: 600; }
+        .content h4 { color: #2d3748; margin: 18px 0 10px; font-size: 1.1em; font-weight: 600; }
+        .content p  { margin-bottom: 16px; line-height: 1.8; color: #1a202c; }
+        .content ul, .content ol { margin: 12px 0 18px 30px; color: #1a202c; }
+        .content li { margin-bottom: 8px; line-height: 1.75; color: #1a202c; }
+        .content hr { border: none; border-top: 2px solid #e2e8f0; margin: 26px 0; }
+        .content pre {
+            background: #f7fafc !important;
+            border: 1px solid #cbd5e0 !important;
+            border-left: 4px solid #3b82f6 !important;
+            padding: 18px !important; overflow-x: auto; margin: 18px 0; border-radius: 6px;
+            font-family: 'Consolas','Monaco','Courier New',monospace !important;
+            font-size: 0.9em !important;
+        }
+        .content pre:not([style*="color"]) { color: #1a202c !important; }
+        .content code {
+            font-family: 'Consolas','Monaco','Courier New',monospace !important;
+            font-size: 0.88em !important;
+        }
+        .content code:not(pre code) {
+            background: #dbeafe !important;
+            color: #1a202c !important;
+            padding: 2px 6px;
+            border-radius: 3px;
+        }
+        .content pre code { background: transparent !important; padding: 0; }
+        .content table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+        .content th {
+            background: linear-gradient(135deg, #3b82f6 0%, #60a5fa 100%);
+            color: white; padding: 12px 16px; text-align: left;
+            font-weight: 600;
+        }
+        .content td { padding: 11px 16px; border: 1px solid #e2e8f0; color: #1a202c; }
+        .content tr:nth-child(even) td { background: #eff6ff; }
+        .content blockquote {
+            border-left: 4px solid #3b82f6; background: #eff6ff;
+            padding: 14px 20px; margin: 18px 0; border-radius: 0 6px 6px 0;
+            color: #1a202c;
+        }
+        .content strong { color: #1a202c; font-weight: 600; }
+        .px-2 { padding: 0; }
+        .chat-message { background: transparent; padding: 0; margin: 0; }
+
+        /* Bottom nav bar only */
+        .nav-bar {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 24px 0;
+            margin-top: 50px;
+            border-top: 3px solid #60a5fa;
+        }
+        .nav-button {
+            display: inline-flex; align-items: center; gap: 8px;
+            padding: 12px 26px;
+            background: linear-gradient(135deg, #3b82f6 0%, #60a5fa 100%);
+            color: white !important; text-decoration: none;
+            border-radius: 8px; font-weight: 600; font-size: 0.95em;
+            transition: all 0.2s;
+            box-shadow: 0 2px 8px rgba(59,130,246,0.35);
+        }
+        .nav-button:hover { transform: translateY(-2px); box-shadow: 0 4px 14px rgba(59,130,246,0.5); }
+        .nav-button.disabled { background: #cbd5e1; box-shadow: none; pointer-events: none; }
+        .nav-button.home {
+            background: linear-gradient(135deg, #ef4444 0%, #f87171 100%);
+            box-shadow: 0 2px 8px rgba(239,68,68,0.35);
+        }
+        .nav-button.home:hover { box-shadow: 0 4px 14px rgba(239,68,68,0.5); }
+        .page-info { color: #718096; font-size: 0.9em; text-align: center; }
+
+        /* Progress bar */
+        #progress-track {
+            position: fixed; top: 20px; right: 20px;
+            width: 10px; height: 150px;
+            background: rgba(59,130,246,0.2);
+            border: 2px solid #3b82f6;
+            border-radius: 6px; overflow: hidden; z-index: 1000;
+        }
+        #progress-fill {
+            width: 100%;
+            background: linear-gradient(180deg, #3b82f6, #2563eb);
+            height: 0%;
+            transition: height 0.15s ease;
+        }
+        #progress-pct {
+            position: fixed; top: 0px; right: 16px;
+            color: #2563eb; font-size: 14px; font-weight: bold;
+            z-index: 1001;
+            text-shadow: 0 1px 2px rgba(255,255,255,0.9);
+            line-height: 20px;
+        }
+
+    </style>
+<link rel="stylesheet" href="assets/chapters.css?v=20260421203847"><script src="assets/chapters.js?v=20260421203847" defer></script>
+</head>
+<body>
+    <div class="container">
+        <div class="content">
+            <div class="chat-message" data-index="13">
+<div class="px-2"><h1>🟡 PROJECT 22: "Here's What I Think"</h1>
+<h2><em>You're in a discussion — you must state opinions, agree, disagree, and nuance your position</em></h2>
+<hr>
+<h1>🎯 THE HYPOTHETICAL PROBLEM</h1>
+<p>→ You're at a dinner party in Lyon — eight French people around the table<br>
+→ The topic shifts to politics, food, movies, travel, education, lifestyle<br>
+→ Everyone is <strong>stating opinions, challenging each other, agreeing passionately, disagreeing politely</strong><br>
+→ You understand the relative clauses (Project 21), the pronouns (Projects 19-20), the tenses (Projects 9-18)<br>
+→ But when someone turns to you and asks:</p>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>"Et toi, qu'est-ce que tu en penses ?"
+</span>(And you, what do you think about it?)</code></pre></div>
+<p>→ You freeze — because you only know how to <strong>describe facts</strong>, not <strong>express judgments</strong><br>
+→ You say something flat like:</p>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>❌ "C'est bien." (It's good.)
+</span>❌ "Oui, je suis d'accord." (Yes, I agree.)
+❌ "Non, je ne suis pas d'accord." (No, I disagree.)</code></pre></div>
+<p>→ Meanwhile, the French people around you are saying:</p>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>✅ "Personnellement, je trouve que c'est exagéré."
+</span>✅ "À mon avis, on devrait changer de système."
+✅ "Il me semble que le problème est ailleurs."
+✅ "Je suis convaincu que ça ne marchera pas."
+✅ "Tu as raison sur ce point, mais en revanche..."
+✅ "Je ne suis pas tout à fait d'accord avec toi."</code></pre></div>
+<p>→ They sound <strong>intelligent, nuanced, layered</strong><br>
+→ You sound <strong>flat, childish, binary</strong><br>
+→ The problem is not vocabulary — it's <strong>opinion architecture</strong><br>
+→ French has a <strong>rich system</strong> of opinion structures — each one carries a different <strong>strength, formality, and nuance</strong></p>
+<p><strong>The core realization:</strong><br>
+→ In French, HOW you introduce your opinion matters as much as WHAT your opinion is<br>
+→ "Je pense que..." is weak and neutral<br>
+→ "Je suis convaincu que..." is strong and committed<br>
+→ "Il me semble que..." is gentle and cautious<br>
+→ Choosing the wrong frame makes you sound either <strong>too aggressive</strong> or <strong>too timid</strong><br>
+→ This project gives you the <strong>full opinion toolkit</strong> — from soft to strong, casual to formal</p>
+<hr>
+<h1>🔍 HOW TO APPROACH IT</h1>
+<p>→ Every opinion sentence in French has this architecture:</p>
+<code>OPINION FRAME + QUE + STATEMENT</code>
+<p>→ The <strong>opinion frame</strong> = the introduction (Je pense, À mon avis, Il me semble, etc.)<br>
+→ <strong>QUE</strong> = the bridge word (that)<br>
+→ The <strong>statement</strong> = what you actually believe</p>
+<p>→ Different frames carry different <strong>weights</strong>:</p>
+<table><thead><tr><th>Weight</th><th>Meaning</th><th>Example Frames</th></tr></thead><tbody><tr><td>💨 Very soft</td><td>I'm not sure but maybe...</td><td>Il me semble que, J'ai l'impression que</td></tr><tr><td>🌤️ Soft</td><td>I think / In my opinion...</td><td>Je pense que, À mon avis, Je trouve que</td></tr><tr><td>☀️ Neutral-firm</td><td>I believe / I consider...</td><td>Je crois que, J'estime que, Je considère que</td></tr><tr><td>🔥 Strong</td><td>I'm sure / I'm convinced...</td><td>Je suis sûr que, Je suis convaincu que</td></tr><tr><td>⚡ Very strong</td><td>It's obvious / There's no doubt...</td><td>Il est évident que, Il est clair que, Sans aucun doute</td></tr></tbody></table>
+<p>→ Your job in Project 22: Master <strong>every level</strong> of opinion strength — plus agreement, disagreement, and nuance</p>
+<hr>
+<h1>🔧 HOW CAN WE SOLVE IT</h1>
+<h2>THE OPINION SYSTEM — Complete Architecture</h2>
+<h3>Category 1: Stating Your Own Opinion</h3>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>PERSONAL FRAMES (subject = "je"):
+</span>→ Je pense que...
+→ Je crois que...
+→ Je trouve que...
+→ J'estime que...
+→ Je considère que...
+→ Je suis sûr/sûre que...
+→ Je suis convaincu(e) que...
+→ Je suis persuadé(e) que...
+→ J'ai l'impression que...
+→ Il me semble que...</code></pre></div>
+<h3>Category 2: Introducing Opinion Without "Je"</h3>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>IMPERSONAL / DISTANCED FRAMES:
+</span>→ À mon avis...
+→ Selon moi...
+→ D'après moi...
+→ Pour moi...
+→ Personnellement...
+→ En ce qui me concerne...
+→ De mon point de vue...</code></pre></div>
+<h3>Category 3: Agreeing</h3>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>→ Je suis d'accord (avec toi/vous)
+</span>→ Tu as raison / Vous avez raison
+→ C'est vrai
+→ Tout à fait
+→ Exactement
+→ Absolument
+→ Effectivement
+→ C'est ce que je pense aussi
+→ Je partage ton/votre avis</code></pre></div>
+<h3>Category 4: Disagreeing</h3>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>→ Je ne suis pas d'accord
+</span>→ Je ne pense pas que... (+subjonctif — preview)
+→ Je ne crois pas que... (+subjonctif — preview)
+→ Ce n'est pas tout à fait vrai
+→ Je vois les choses différemment
+→ Pas forcément
+→ Pas nécessairement
+→ C'est discutable</code></pre></div>
+<h3>Category 5: Nuancing (Partial agreement + contrast)</h3>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>→ Tu as raison, mais...
+</span>→ C'est vrai, mais en même temps...
+→ Je comprends ton point de vue, cependant...
+→ D'un côté... de l'autre...
+→ Certes..., mais...
+→ Je suis d'accord sur ce point, mais pas sur...</code></pre></div>
+<hr>
+<h2>CRITICAL GRAMMAR NOTE — INDICATIF vs. SUBJONCTIF PREVIEW</h2>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>AFFIRMATIVE opinion frames → INDICATIF (normal tenses):
+</span>✅ Je pense QUE c'EST vrai.        (indicatif)
+✅ Je crois QUE tu AS raison.      (indicatif)
+✅ Je suis sûr QUE ça MARCHERA.   (indicatif)
+
+NEGATIVE opinion frames → SUBJONCTIF (Project 23 &amp; 31):
+⚠️ Je ne pense pas QUE ce SOIT vrai.     (subjonctif)
+⚠️ Je ne crois pas QUE tu AIES raison.   (subjonctif)
+
+WHY? → When you DENY your opinion, you introduce DOUBT
+→ Doubt triggers SUBJONCTIF in French
+→ Full subjonctif mastery comes in Projects 23 and 31
+→ For now: RECOGNIZE that negative opinion frames change the grammar
+→ In this project, we focus mainly on AFFIRMATIVE and AGREEMENT/DISAGREEMENT structures</code></pre></div>
+<hr>
+<h1>✅ WHAT COULD BE DONE — THE 100 SENTENCES</h1>
+<hr>
+<h2>🔹 BLOCK A — "Je pense que / Je crois que / Je trouve que" — The Core Three</h2>
+<p><em>Scenario: Casual conversations — giving your basic opinion on everyday topics</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English</th><th>Strength</th><th>Register</th></tr></thead><tbody><tr><td>1</td><td>Je pense que c'est une bonne idée.</td><td>I think it's a good idea.</td><td>🌤️ Soft</td><td>Neutral</td></tr><tr><td>2</td><td>Je pense que tu as raison.</td><td>I think you're right.</td><td>🌤️ Soft</td><td>Neutral</td></tr><tr><td>3</td><td>Je pense que ce n'est pas normal.</td><td>I think that's not normal.</td><td>🌤️ Soft</td><td>Neutral</td></tr><tr><td>4</td><td>Je pense qu'on devrait partir maintenant.</td><td>I think we should leave now.</td><td>🌤️ Soft + suggestion</td><td>Neutral</td></tr><tr><td>5</td><td>Je crois que c'est possible.</td><td>I believe it's possible.</td><td>☀️ Neutral-firm</td><td>Neutral</td></tr><tr><td>6</td><td>Je crois que tu te trompes.</td><td>I believe you're wrong.</td><td>☀️ Neutral-firm</td><td>Neutral</td></tr><tr><td>7</td><td>Je crois que ça va s'arranger.</td><td>I believe it will work out.</td><td>☀️ Neutral-firm</td><td>Optimistic</td></tr><tr><td>8</td><td>Je crois qu'il a déjà compris.</td><td>I believe he already understood.</td><td>☀️ Neutral-firm</td><td>Neutral</td></tr><tr><td>9</td><td>Je trouve que c'est trop cher.</td><td>I find it too expensive.</td><td>🌤️ Soft (personal judgment)</td><td>Casual</td></tr><tr><td>10</td><td>Je trouve que cette ville est magnifique.</td><td>I find this city is beautiful.</td><td>🌤️ Soft</td><td>Casual</td></tr></tbody></table>
+<p><strong>🧠 THE CORE THREE — Key Differences:</strong></p>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>JE PENSE QUE  = I think (rational, head-based)
+</span>   → Most neutral — used for logical opinions
+   → "Je pense que le train est plus rapide."
+
+JE CROIS QUE  = I believe (slightly stronger conviction)
+   → Can also mean "I believe/suppose" (less certain)
+   → Context determines: belief OR supposition
+   → "Je crois que c'est vrai." (I believe it's true — conviction)
+   → "Je crois qu'il est parti." (I think he left — supposition)
+
+JE TROUVE QUE = I find that (personal, subjective, feeling-based)
+   → Used for personal impressions, tastes, judgments
+   → "Je trouve que c'est injuste." (I find it unfair — personal reaction)
+   → More EMOTIONAL than "je pense"</code></pre></div>
+<hr>
+<h2>🔹 BLOCK B — Stronger Opinion Frames: Conviction &amp; Certainty</h2>
+<p><em>Scenario: A debate at work — you need to be firm, assertive, convincing</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English</th><th>Strength</th><th>Register</th></tr></thead><tbody><tr><td>11</td><td>Je suis sûr que c'est la bonne décision.</td><td>I'm sure it's the right decision.</td><td>🔥 Strong</td><td>Firm</td></tr><tr><td>12</td><td>Je suis sûre qu'elle viendra.</td><td>I'm sure she'll come. (fem speaker)</td><td>🔥 Strong</td><td>Firm</td></tr><tr><td>13</td><td>Je suis certain que ça marchera.</td><td>I'm certain it will work.</td><td>🔥 Strong</td><td>Formal-firm</td></tr><tr><td>14</td><td>Je suis certaine que c'est lui.</td><td>I'm certain it's him. (fem speaker)</td><td>🔥 Strong</td><td>Formal-firm</td></tr><tr><td>15</td><td>Je suis convaincu que nous avons raison.</td><td>I'm convinced we're right.</td><td>🔥 Strong</td><td>Committed</td></tr><tr><td>16</td><td>Je suis convaincue qu'il faut agir maintenant.</td><td>I'm convinced we must act now. (fem)</td><td>🔥 Strong</td><td>Committed</td></tr><tr><td>17</td><td>Je suis persuadé que c'est la meilleure solution.</td><td>I'm persuaded it's the best solution.</td><td>🔥 Strong</td><td>Very committed</td></tr><tr><td>18</td><td>J'estime que cette situation est inacceptable.</td><td>I consider this situation unacceptable.</td><td>☀️ Neutral-firm</td><td>Formal</td></tr><tr><td>19</td><td>Je considère que c'est une erreur grave.</td><td>I consider it a serious mistake.</td><td>☀️ Neutral-firm</td><td>Very formal</td></tr><tr><td>20</td><td>Je maintiens que ma position est correcte.</td><td>I maintain that my position is correct.</td><td>⚡ Very strong</td><td>Debate/formal</td></tr></tbody></table>
+<p><strong>🧠 STRENGTH LADDER — From weakest to strongest personal frames:</strong></p>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>💨 J'ai l'impression que...     (I have the impression that...)
+</span>💨 Il me semble que...          (It seems to me that...)
+🌤️ Je pense que...              (I think that...)
+🌤️ Je trouve que...             (I find that...)
+☀️ Je crois que...              (I believe that...)
+☀️ J'estime que...              (I consider that...)
+☀️ Je considère que...          (I consider that...)
+🔥 Je suis sûr(e) que...       (I'm sure that...)
+🔥 Je suis certain(e) que...   (I'm certain that...)
+🔥 Je suis convaincu(e) que... (I'm convinced that...)
+🔥 Je suis persuadé(e) que...  (I'm persuaded that...)
+⚡ Je maintiens que...          (I maintain that...)
+⚡ J'affirme que...             (I affirm that...)</code></pre></div>
+<hr>
+<h2>🔹 BLOCK C — Softer Opinion Frames: Caution &amp; Uncertainty</h2>
+<p><em>Scenario: You're not 100% sure — you want to share an impression without committing fully</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English</th><th>Strength</th><th>Register</th></tr></thead><tbody><tr><td>21</td><td>Il me semble que c'est fermé le lundi.</td><td>It seems to me it's closed on Mondays.</td><td>💨 Very soft</td><td>Polite/cautious</td></tr><tr><td>22</td><td>Il me semble qu'on a déjà discuté de ça.</td><td>It seems to me we already discussed that.</td><td>💨 Very soft</td><td>Gentle reminder</td></tr><tr><td>23</td><td>J'ai l'impression que quelque chose ne va pas.</td><td>I have the impression something's wrong.</td><td>💨 Very soft</td><td>Cautious</td></tr><tr><td>24</td><td>J'ai l'impression qu'il n'est pas content.</td><td>I have the impression he's not happy.</td><td>💨 Very soft</td><td>Observation</td></tr><tr><td>25</td><td>J'ai l'impression que ça va prendre du temps.</td><td>I have the feeling it's going to take time.</td><td>💨 Very soft</td><td>Cautious prediction</td></tr><tr><td>26</td><td>J'ai le sentiment que c'est plus compliqué que ça.</td><td>I have the feeling it's more complicated than that.</td><td>💨 Very soft</td><td>Intuitive</td></tr><tr><td>27</td><td>On dirait que c'est vrai.</td><td>It looks like it's true.</td><td>💨 Very soft</td><td>Casual observation</td></tr><tr><td>28</td><td>On dirait qu'il va pleuvoir.</td><td>It looks like it's going to rain.</td><td>💨 Very soft</td><td>Casual observation</td></tr><tr><td>29</td><td>Il paraît que le restaurant est excellent.</td><td>Apparently the restaurant is excellent.</td><td>💨 Hearsay</td><td>Reporting others' opinion</td></tr><tr><td>30</td><td>Il paraît qu'ils vont déménager.</td><td>Apparently they're going to move.</td><td>💨 Hearsay</td><td>Reporting others' opinion</td></tr></tbody></table>
+<p><strong>🧠 KEY DIFFERENCES — Soft Frames:</strong></p>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>IL ME SEMBLE QUE = It seems to me that...
+</span>→ You have a cautious personal impression
+→ Polite way to correct someone or suggest something
+→ "Il me semble que vous vous trompez." (very polite disagreement)
+
+J'AI L'IMPRESSION QUE = I have the impression that...
+→ Based on observation or intuition — not logic
+→ "J'ai l'impression qu'il ment." (I feel like he's lying)
+
+ON DIRAIT QUE = It looks like / You'd say that...
+→ Based on appearance — what you SEE
+→ Uses conditionnel of "dire" — literally "one would say"
+→ "On dirait qu'il a pleuré." (It looks like he cried)
+
+IL PARAÎT QUE = Apparently / I heard that...
+→ NOT your opinion — you're reporting what OTHERS say
+→ "Il paraît que c'est bon." (People say it's good — I haven't tried)
+→ NEVER use this for your own opinion — it's HEARSAY</code></pre></div>
+<hr>
+<h2>🔹 BLOCK D — Impersonal Opinion Frames: Distanced, Without "Je"</h2>
+<p><em>Scenario: You want to sound more objective — removing yourself from the opinion</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English</th><th>Register</th></tr></thead><tbody><tr><td>31</td><td>À mon avis, c'est trop tôt pour décider.</td><td>In my opinion, it's too early to decide.</td><td>Neutral — very common</td></tr><tr><td>32</td><td>À mon avis, il devrait accepter.</td><td>In my opinion, he should accept.</td><td>Neutral — suggestion</td></tr><tr><td>33</td><td>Selon moi, c'est la meilleure option.</td><td>According to me, it's the best option.</td><td>Slightly formal</td></tr><tr><td>34</td><td>D'après moi, le problème vient de là.</td><td>According to me, the problem comes from there.</td><td>Slightly formal</td></tr><tr><td>35</td><td>Pour moi, c'est clair.</td><td>For me, it's clear.</td><td>Casual — direct</td></tr><tr><td>36</td><td>Pour moi, la famille est le plus important.</td><td>For me, family is the most important.</td><td>Casual — values</td></tr><tr><td>37</td><td>Personnellement, je préfère le train.</td><td>Personally, I prefer the train.</td><td>Casual — personal taste</td></tr><tr><td>38</td><td>Personnellement, ça ne me dérange pas.</td><td>Personally, it doesn't bother me.</td><td>Casual</td></tr><tr><td>39</td><td>En ce qui me concerne, le sujet est clos.</td><td>As far as I'm concerned, the topic is closed.</td><td>Formal — firm</td></tr><tr><td>40</td><td>De mon point de vue, c'est une réussite.</td><td>From my point of view, it's a success.</td><td>Formal — analytical</td></tr></tbody></table>
+<p><strong>🧠 Structure unlocked — Distanced Opinion Frames:</strong></p>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>These frames do NOT use "que" — they stand alone before the statement:
+</span>
+→ À mon avis, [statement].
+→ Selon moi, [statement].
+→ D'après moi, [statement].
+→ Pour moi, [statement].
+→ Personnellement, [statement].
+→ En ce qui me concerne, [statement].
+→ De mon point de vue, [statement].
+
+ADVANTAGE: They sound more OBJECTIVE — you present your view as a perspective
+VERSUS: "Je pense que..." sounds more PERSONAL and subjective</code></pre></div>
+<p>→ <strong>À mon avis</strong> is by far the <strong>most common</strong> in daily speech<br>
+→ <strong>Selon moi / D'après moi</strong> are slightly more formal — used in debates, essays, presentations<br>
+→ <strong>En ce qui me concerne</strong> is formal and firm — used to close a discussion on your end</p>
+<hr>
+<h2>🔹 BLOCK E — Agreeing: From Casual to Formal</h2>
+<p><em>Scenario: Someone states an opinion — you agree — but at different levels of enthusiasm</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English</th><th>Level of Agreement</th><th>Register</th></tr></thead><tbody><tr><td>41</td><td>Oui, c'est vrai.</td><td>Yes, that's true.</td><td>Basic</td><td>Casual</td></tr><tr><td>42</td><td>Tu as raison.</td><td>You're right.</td><td>Basic</td><td>Casual</td></tr><tr><td>43</td><td>Vous avez tout à fait raison.</td><td>You're absolutely right.</td><td>Strong</td><td>Formal</td></tr><tr><td>44</td><td>Je suis d'accord avec toi.</td><td>I agree with you.</td><td>Standard</td><td>Casual</td></tr><tr><td>45</td><td>Je suis entièrement d'accord.</td><td>I entirely agree.</td><td>Strong</td><td>Neutral</td></tr><tr><td>46</td><td>Je suis tout à fait d'accord.</td><td>I completely agree.</td><td>Strong</td><td>Neutral</td></tr><tr><td>47</td><td>Absolument.</td><td>Absolutely.</td><td>Strong</td><td>Any register</td></tr><tr><td>48</td><td>Tout à fait.</td><td>Exactly / Completely.</td><td>Strong</td><td>Slightly formal</td></tr><tr><td>49</td><td>Exactement.</td><td>Exactly.</td><td>Strong</td><td>Any register</td></tr><tr><td>50</td><td>Effectivement.</td><td>Indeed.</td><td>Confirming</td><td>Slightly formal</td></tr><tr><td>51</td><td>C'est ce que je pense aussi.</td><td>That's what I think too.</td><td>Standard</td><td>Casual</td></tr><tr><td>52</td><td>Je partage ton avis.</td><td>I share your opinion.</td><td>Standard</td><td>Slightly formal</td></tr><tr><td>53</td><td>Je partage votre point de vue.</td><td>I share your point of view.</td><td>Standard</td><td>Formal</td></tr><tr><td>54</td><td>C'est exactement ce que j'allais dire.</td><td>That's exactly what I was going to say.</td><td>Enthusiastic</td><td>Casual</td></tr><tr><td>55</td><td>Je ne pourrais pas mieux dire.</td><td>I couldn't have said it better.</td><td>Very strong</td><td>Formal/admiring</td></tr></tbody></table>
+<p><strong>🧠 AGREEMENT STRENGTH LADDER:</strong></p>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>CASUAL / LIGHT:
+</span>→ Oui, c'est vrai.
+→ Tu as raison.
+→ Ouais, je suis d'accord. ("ouais" = casual "oui")
+
+STANDARD:
+→ Je suis d'accord avec toi/vous.
+→ C'est ce que je pense aussi.
+→ Je partage ton/votre avis.
+
+STRONG / ENTHUSIASTIC:
+→ Tout à fait.
+→ Absolument.
+→ Je suis entièrement d'accord.
+→ C'est exactement ce que j'allais dire.
+
+FORMAL / PROFESSIONAL:
+→ Effectivement.
+→ Je partage votre point de vue.
+→ Je ne pourrais pas mieux dire.
+→ Vous avez tout à fait raison.</code></pre></div>
+<hr>
+<h2>🔹 BLOCK F — Disagreeing: From Polite to Direct</h2>
+<p><em>Scenario: Someone says something you disagree with — you must respond appropriately</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English</th><th>Level of Disagreement</th><th>Register</th></tr></thead><tbody><tr><td>56</td><td>Je ne suis pas d'accord.</td><td>I don't agree.</td><td>Standard</td><td>Neutral</td></tr><tr><td>57</td><td>Je ne suis pas tout à fait d'accord.</td><td>I don't quite agree.</td><td>Soft</td><td>Polite</td></tr><tr><td>58</td><td>Je ne suis pas sûr que ce soit vrai.</td><td>I'm not sure that's true.</td><td>Soft</td><td>Cautious ⚠️ subjonctif</td></tr><tr><td>59</td><td>Ce n'est pas tout à fait exact.</td><td>That's not quite accurate.</td><td>Soft</td><td>Polite/formal</td></tr><tr><td>60</td><td>Ce n'est pas faux, mais...</td><td>That's not wrong, but...</td><td>Nuanced</td><td>Diplomatic</td></tr><tr><td>61</td><td>Pas forcément.</td><td>Not necessarily.</td><td>Medium</td><td>Casual</td></tr><tr><td>62</td><td>Pas nécessairement.</td><td>Not necessarily.</td><td>Medium</td><td>Slightly formal</td></tr><tr><td>63</td><td>C'est discutable.</td><td>That's debatable.</td><td>Medium</td><td>Neutral</td></tr><tr><td>64</td><td>Je vois les choses différemment.</td><td>I see things differently.</td><td>Medium</td><td>Polite</td></tr><tr><td>65</td><td>Je ne partage pas ton avis.</td><td>I don't share your opinion.</td><td>Standard</td><td>Neutral-formal</td></tr><tr><td>66</td><td>Je ne pense pas que ce soit une bonne idée.</td><td>I don't think it's a good idea.</td><td>Standard ⚠️ subjonctif</td><td>Neutral</td></tr><tr><td>67</td><td>Je ne crois pas que ça marche.</td><td>I don't think that works.</td><td>Standard ⚠️ subjonctif</td><td>Neutral</td></tr><tr><td>68</td><td>Permettez-moi de ne pas être d'accord.</td><td>Allow me to disagree.</td><td>Formal</td><td>Very polite</td></tr><tr><td>69</td><td>Je suis totalement en désaccord.</td><td>I totally disagree.</td><td>Strong</td><td>Formal/debate</td></tr><tr><td>70</td><td>Non, là je ne suis vraiment pas d'accord.</td><td>No, there I really disagree.</td><td>Strong</td><td>Direct/casual</td></tr></tbody></table>
+<p><strong>🧠 DISAGREEMENT STRENGTH LADDER:</strong></p>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>VERY SOFT (almost apologetic):
+</span>→ Je ne suis pas tout à fait d'accord.
+→ Ce n'est pas tout à fait exact.
+→ Ce n'est pas faux, mais...
+
+SOFT (cautious):
+→ Je ne suis pas sûr que ce soit vrai.
+→ Pas forcément.
+→ C'est discutable.
+
+STANDARD:
+→ Je ne suis pas d'accord.
+→ Je ne partage pas ton avis.
+→ Je vois les choses différemment.
+
+STRONG:
+→ Je suis totalement en désaccord.
+→ Non, là je ne suis vraiment pas d'accord.
+→ C'est faux. (That's false — very blunt)
+
+FORMAL / PROFESSIONAL:
+→ Permettez-moi de ne pas être d'accord.
+→ Je me permets de nuancer votre propos.
+→ Avec tout le respect que je vous dois...</code></pre></div>
+<p><strong>⚠️ SUBJONCTIF ALERT — Sentences 58, 66, 67:</strong></p>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>NEGATIVE "je pense" / "je crois" / "je suis sûr" → triggers SUBJONCTIF
+</span>
+AFFIRMATIVE: Je pense que c'EST vrai.     (indicatif)
+NEGATIVE:    Je ne pense pas que ce SOIT vrai. (subjonctif)
+
+AFFIRMATIVE: Je crois que ça MARCHE.       (indicatif)
+NEGATIVE:    Je ne crois pas que ça MARCHE. (subjonctif)
+
+→ Full subjonctif mastery = Projects 23 and 31
+→ For now: RECOGNIZE the pattern — negative opinion = subjonctif after "que"
+→ Common subjonctif forms to know now:
+   → soit (être), ait (avoir), fasse (faire), puisse (pouvoir), aille (aller)</code></pre></div>
+<hr>
+<h2>🔹 BLOCK G — Nuancing: Partial Agreement + Contrast</h2>
+<p><em>Scenario: You agree with PART of what someone said — but not everything</em><br>
+<em>Connection to Project 29: Full concession/opposition structures come later — this is the opinion-specific version</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English</th><th>Structure</th></tr></thead><tbody><tr><td>71</td><td>Tu as raison, mais il y a un autre aspect.</td><td>You're right, but there's another aspect.</td><td>Agreement + mais</td></tr><tr><td>72</td><td>C'est vrai, mais en même temps, c'est risqué.</td><td>That's true, but at the same time, it's risky.</td><td>Agreement + mais en même temps</td></tr><tr><td>73</td><td>Je comprends ton point de vue, mais je ne suis pas convaincu.</td><td>I understand your point of view, but I'm not convinced.</td><td>Empathy + mais</td></tr><tr><td>74</td><td>Je suis d'accord sur le fond, mais pas sur la méthode.</td><td>I agree in principle, but not on the method.</td><td>Partial agreement</td></tr><tr><td>75</td><td>Certes, c'est possible, mais est-ce souhaitable ?</td><td>Certainly, it's possible, but is it desirable?</td><td>Certes... mais</td></tr><tr><td>76</td><td>D'un côté, tu as raison. De l'autre, c'est compliqué.</td><td>On one hand, you're right. On the other, it's complicated.</td><td>D'un côté... de l'autre</td></tr><tr><td>77</td><td>Je vois ce que tu veux dire, cependant...</td><td>I see what you mean, however...</td><td>Empathy + cependant</td></tr><tr><td>78</td><td>Tu n'as pas tort, mais ce n'est pas si simple.</td><td>You're not wrong, but it's not that simple.</td><td>Litote agreement + mais</td></tr><tr><td>79</td><td>Oui et non. Ça dépend du contexte.</td><td>Yes and no. It depends on the context.</td><td>Balanced nuance</td></tr><tr><td>80</td><td>C'est un bon argument, mais il y en a d'autres.</td><td>That's a good argument, but there are others.</td><td>Acknowledging + but</td></tr></tbody></table>
+<p><strong>🧠 Structure unlocked — The French Nuance Formula:</strong></p>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>STEP 1: ACKNOWLEDGE the other person's point
+</span>   → Tu as raison / C'est vrai / Je comprends / Tu n'as pas tort
+
+STEP 2: BRIDGE WORD
+   → mais / cependant / en même temps / toutefois / pourtant
+
+STEP 3: YOUR CONTRASTING POINT
+   → je ne suis pas convaincu / c'est plus compliqué / il y a un autre aspect
+
+FORMULA: [Acknowledgment] + [Bridge] + [Your point]</code></pre></div>
+<p>→ This formula is <strong>essential for French social culture</strong><br>
+→ French people <strong>almost never disagree directly without first acknowledging</strong><br>
+→ Jumping straight to "Non, tu as tort" sounds <strong>aggressive and rude</strong><br>
+→ The nuance formula makes you sound <strong>intelligent and respectful</strong></p>
+<hr>
+<h2>🔹 BLOCK H — Asking Others' Opinions</h2>
+<p><em>Scenario: You want to know what someone else thinks — inviting their view</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English</th><th>Register</th></tr></thead><tbody><tr><td>81</td><td>Qu'est-ce que tu en penses ?</td><td>What do you think about it?</td><td>Casual — very common</td></tr><tr><td>82</td><td>Qu'est-ce que vous en pensez ?</td><td>What do you think about it?</td><td>Formal</td></tr><tr><td>83</td><td>Tu en penses quoi ?</td><td>What do you think?</td><td>Very casual</td></tr><tr><td>84</td><td>T'en penses quoi ?</td><td>What do you think?</td><td>Very casual (spoken)</td></tr><tr><td>85</td><td>Quel est ton avis ?</td><td>What's your opinion?</td><td>Neutral</td></tr><tr><td>86</td><td>Quel est votre avis sur ce sujet ?</td><td>What's your opinion on this topic?</td><td>Formal</td></tr><tr><td>87</td><td>Tu es d'accord avec moi ?</td><td>Do you agree with me?</td><td>Casual</td></tr><tr><td>88</td><td>Vous êtes d'accord ?</td><td>Do you agree?</td><td>Formal</td></tr><tr><td>89</td><td>Comment tu vois les choses ?</td><td>How do you see things?</td><td>Casual — open</td></tr><tr><td>90</td><td>Qu'est-ce que tu en dis ?</td><td>What do you say about it?</td><td>Casual — inviting</td></tr></tbody></table>
+<p><strong>🧠 KEY PATTERN — "EN" in Opinion Questions:</strong></p>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>"Qu'est-ce que tu EN penses ?"
+</span>                    ↑
+→ EN here replaces the topic being discussed (de + topic)
+→ Connection to Project 20: EN replaces "de + noun"
+→ "penser de quelque chose" = to think ABOUT something
+→ "Qu'est-ce que tu penses DE CE FILM ?" → "Qu'est-ce que tu EN penses ?"
+
+Do NOT confuse:
+→ penser DE = what you think ABOUT something → uses EN → opinion
+→ penser À = what you're thinking OF → uses Y → thought direction
+   "À quoi tu penses ?" = What are you thinking about? (daydreaming)
+   "Qu'est-ce que tu en penses ?" = What's your opinion? (judgment)</code></pre></div>
+<hr>
+<h2>🔹 BLOCK I — Reporting Others' Opinions</h2>
+<p><em>Scenario: You're telling someone what a third person thinks</em><br>
+<em>Connection to Project 25: Full reported speech comes later — this is the opinion-specific version</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English</th><th>Structure</th></tr></thead><tbody><tr><td>91</td><td>Selon lui, c'est une erreur.</td><td>According to him, it's a mistake.</td><td>Selon + stress pronoun</td></tr><tr><td>92</td><td>D'après elle, on devrait attendre.</td><td>According to her, we should wait.</td><td>D'après + stress pronoun</td></tr><tr><td>93</td><td>D'après les experts, c'est normal.</td><td>According to experts, it's normal.</td><td>D'après + noun</td></tr><tr><td>94</td><td>Il pense que c'est trop tard.</td><td>He thinks it's too late.</td><td>3rd person opinion frame</td></tr><tr><td>95</td><td>Elle trouve que c'est injuste.</td><td>She finds it unfair.</td><td>3rd person opinion frame</td></tr><tr><td>96</td><td>Tout le monde pense que c'est une bonne idée.</td><td>Everyone thinks it's a good idea.</td><td>Tout le monde + opinion</td></tr><tr><td>97</td><td>Certains pensent que oui, d'autres pensent que non.</td><td>Some think yes, others think no.</td><td>Balanced report</td></tr><tr><td>98</td><td>Beaucoup de gens croient que c'est vrai.</td><td>Many people believe it's true.</td><td>Quantity + opinion</td></tr><tr><td>99</td><td>La plupart des gens estiment que c'est nécessaire.</td><td>Most people consider it necessary.</td><td>La plupart + opinion</td></tr><tr><td>100</td><td>Personne ne pense que c'est possible.</td><td>Nobody thinks it's possible.</td><td>Personne ne + opinion</td></tr></tbody></table>
+<p><strong>🧠 Structure unlocked — Reporting Others' Opinions:</strong></p>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>NAMED PERSON:
+</span>→ Marie pense que...
+→ Mon père croit que...
+→ Le professeur estime que...
+
+DISTANCED (according to):
+→ Selon [person/source], [statement].
+→ D'après [person/source], [statement].
+
+GROUPS:
+→ Tout le monde pense que...
+→ La plupart des gens trouvent que...
+→ Certains croient que... d'autres estiment que...
+→ Personne ne pense que... (⚠️ triggers subjonctif)</code></pre></div>
+<hr>
+<h1>✅ WHAT SHOULD DO</h1>
+<p>→ <strong>Build an opinion strength habit</strong> — before speaking, decide: Am I soft, neutral, or strong?<br>
+→ <strong>Always acknowledge before disagreeing</strong> — use the nuance formula (Block G)<br>
+→ <strong>Start with "À mon avis" and "Je trouve que"</strong> — these are the most natural in casual conversation<br>
+→ <strong>Use "Qu'est-ce que tu en penses ?"</strong> — it's the universal way to invite someone's opinion<br>
+→ <strong>Match your frame to the context</strong> — casual dinner vs. work meeting vs. debate<br>
+→ <strong>Practice the soft frames</strong> — "Il me semble que" and "J'ai l'impression que" — they make you sound sophisticated<br>
+→ <strong>Recognize subjonctif triggers</strong> — when you say "Je ne pense pas que...", the verb after que changes form</p>
+<hr>
+<h1>❌ WHAT SHOULD NOT DO</h1>
+<p>→ ❌ Do NOT use only "Je pense que" for everything — it becomes monotonous</p>
+<table><thead><tr><th>Monotonous</th><th>Varied</th></tr></thead><tbody><tr><td>Je pense que c'est bien. Je pense que c'est vrai. Je pense qu'on devrait...</td><td><strong>À mon avis</strong>, c'est bien. <strong>Je trouve que</strong> c'est vrai. <strong>Il me semble qu'</strong> on devrait...</td></tr></tbody></table>
+<p>→ ❌ Do NOT disagree directly without acknowledging first</p>
+<table><thead><tr><th>Rude</th><th>Polite</th></tr></thead><tbody><tr><td>Non, tu as tort.</td><td><strong>Je comprends ton point de vue, mais</strong> je vois les choses différemment.</td></tr></tbody></table>
+<p>→ ❌ Do NOT use "il paraît que" for your OWN opinion</p>
+<table><thead><tr><th>Wrong</th><th>Correct</th></tr></thead><tbody><tr><td><del>Il paraît que c'est une bonne idée.</del> (as YOUR opinion)</td><td><strong>Je pense que</strong> c'est une bonne idée.</td></tr><tr><td>Il paraît que c'est une bonne idée. (reporting OTHERS)</td><td>✅ Correct as hearsay</td></tr></tbody></table>
+<p>→ ❌ Do NOT use indicatif after negative opinion frames (at advanced level)</p>
+<table><thead><tr><th>Incorrect (strict grammar)</th><th>Correct</th></tr></thead><tbody><tr><td><del>Je ne pense pas que c'<strong>est</strong> vrai.</del></td><td>Je ne pense pas que ce <strong>soit</strong> vrai.</td></tr><tr><td><del>Je ne crois pas qu'il <strong>a</strong> raison.</del></td><td>Je ne crois pas qu'il <strong>ait</strong> raison.</td></tr></tbody></table>
+<p>→ Note: In casual spoken French, some speakers DO use indicatif after negative opinion frames — but subjonctif is the <strong>correct and expected</strong> form</p>
+<p>→ ❌ Do NOT confuse "penser DE" and "penser À"</p>
+<table><thead><tr><th>Situation</th><th>Preposition</th><th>Pronoun</th><th>Example</th></tr></thead><tbody><tr><td>Asking someone's OPINION</td><td>penser <strong>de</strong></td><td><strong>en</strong></td><td>Qu'est-ce que tu <strong>en</strong> penses ?</td></tr><tr><td>Asking what someone is THINKING ABOUT</td><td>penser <strong>à</strong></td><td><strong>y</strong> / <strong>à + stress</strong></td><td>À quoi tu penses ? / Tu penses <strong>à lui</strong> ?</td></tr></tbody></table>
+<p>→ ❌ Do NOT overuse "Absolument" and "Exactement" — they lose impact if repeated</p>
+<hr>
+<h1>🔀 WHEN TO USE WHAT</h1>
+<table><thead><tr><th>Context</th><th>Best Frames</th><th>Why</th></tr></thead><tbody><tr><td>Casual conversation with friends</td><td>Je pense que, Je trouve que, À mon avis</td><td>Natural, not too strong</td></tr><tr><td>You're not sure</td><td>Il me semble que, J'ai l'impression que</td><td>Cautious — leaves room for error</td></tr><tr><td>Reporting what you heard</td><td>Il paraît que, Selon [source], D'après [source]</td><td>Distances you from the claim</td></tr><tr><td>Professional meeting</td><td>J'estime que, Je considère que, De mon point de vue</td><td>Formal, measured</td></tr><tr><td>Strong conviction</td><td>Je suis convaincu que, Je suis certain que</td><td>Shows commitment</td></tr><tr><td>Polite disagreement</td><td>Je ne suis pas tout à fait d'accord, Ce n'est pas faux mais...</td><td>Softened — respects the other</td></tr><tr><td>Enthusiastic agreement</td><td>Tout à fait, Absolument, C'est exactement ce que je pense</td><td>Shows alignment</td></tr><tr><td>Nuanced position</td><td>Certes... mais, D'un côté... de l'autre</td><td>Shows intellectual depth</td></tr><tr><td>Inviting someone's opinion</td><td>Qu'est-ce que tu en penses ? Quel est ton avis ?</td><td>Opens dialogue</td></tr><tr><td>Observation-based impression</td><td>On dirait que</td><td>Based on what you SEE — not logic</td></tr></tbody></table>
+<hr>
+<h1>🚫 WHEN NOT TO USE</h1>
+<table><thead><tr><th>Situation</th><th>Do NOT Use</th><th>Use Instead</th><th>Why</th></tr></thead><tbody><tr><td>Stating a <strong>fact</strong> (not opinion)</td><td>Je pense que / À mon avis</td><td>Direct statement</td><td>"Paris est en France" — no opinion frame needed</td></tr><tr><td>You're <strong>certain</strong> and want to sound it</td><td>Il me semble que, J'ai l'impression que</td><td>Je suis sûr que, Je suis convaincu que</td><td>Soft frames undermine certainty</td></tr><tr><td>Reporting <strong>your own</strong> opinion</td><td>Il paraît que, Selon les gens</td><td>Je pense que, À mon avis</td><td>Il paraît que = others' opinions, not yours</td></tr><tr><td><strong>Formal writing</strong> (essay, letter)</td><td>Je trouve que (too casual)</td><td>J'estime que, Je considère que, Il convient de noter que</td><td>Register mismatch</td></tr><tr><td><strong>Casual chat</strong> with friends</td><td>Je considère que, En ce qui me concerne</td><td>Je pense que, Moi je trouve que</td><td>Too formal — sounds stiff</td></tr></tbody></table>
+<hr>
+<h1>⚠️ COMMON PITFALLS AND FAILURE MODES</h1>
+<table><thead><tr><th>Pitfall</th><th>What Learners Do</th><th>Why It's Wrong</th><th>Fix</th></tr></thead><tbody><tr><td><strong>One-frame syndrome</strong></td><td>Only use "Je pense que" for every opinion</td><td>Sounds robotic and unnatural</td><td>Rotate: pense / trouve / crois / à mon avis</td></tr><tr><td><strong>Direct disagreement</strong></td><td>"Non, c'est faux." without softening</td><td>Culturally rude in French — too aggressive</td><td>"Ce n'est pas faux, mais..." or "Je vois les choses différemment"</td></tr><tr><td><strong>Il paraît que = my opinion</strong></td><td>Using "il paraît" when stating YOUR view</td><td>Il paraît = hearsay, not personal opinion</td><td>Use "Je pense que" for your own view</td></tr><tr><td><strong>Penser de vs. penser à</strong></td><td>"Qu'est-ce que tu y penses ?" for opinion</td><td>Penser DE = opinion (en) / Penser À = thinking about (y)</td><td>"Qu'est-ce que tu <strong>en</strong> penses ?"</td></tr><tr><td><strong>No subjonctif after negative</strong></td><td>"Je ne pense pas que c'est vrai"</td><td>Negative opinion frames trigger subjonctif</td><td>"Je ne pense pas que ce <strong>soit</strong> vrai"</td></tr><tr><td><strong>Overusing strong frames</strong></td><td>"Je suis convaincu que..." for every small opinion</td><td>Sounds arrogant and disproportionate</td><td>Reserve strong frames for important convictions</td></tr><tr><td><strong>Skipping acknowledgment</strong></td><td>Disagreeing without "Je comprends, mais..."</td><td>French culture values diplomatic exchange</td><td>Always acknowledge first, then contrast</td></tr><tr><td><strong>Wrong register</strong></td><td>"En ce qui me concerne" at a barbecue</td><td>Way too formal for casual context</td><td>"Pour moi..." or "Moi je trouve que..."</td></tr><tr><td><strong>Forgetting "que"</strong></td><td>"Je pense c'est bien"</td><td>Opinion frames need QUE before the statement</td><td>"Je pense <strong>que</strong> c'est bien"</td></tr><tr><td><strong>"Moi je" confusion</strong></td><td>Not knowing when to use "Moi, je pense..."</td><td>"Moi, je" = emphasis — "ME, I think..." — used to contrast your view with someone else's</td><td>Natural in French — not redundant</td></tr></tbody></table>
+<hr>
+<h1>🔑 KEY TAKEAWAY</h1>
+<blockquote>
+<p><strong>Opinions in French are not just WHAT you say — they're HOW you frame it.</strong></p>
+<p>→ Project 21 gave you the ability to <strong>describe</strong> in complex sentences<br>
+→ Project 22 gives you the ability to <strong>evaluate</strong> — to share what you think, believe, and feel<br>
+→ The opinion frame you choose sends <strong>three signals</strong>:</p>
+<table><thead><tr><th>Signal</th><th>Controlled By</th></tr></thead><tbody><tr><td><strong>Strength</strong> — how certain are you?</td><td>Soft frames (il me semble) vs. Strong frames (je suis convaincu)</td></tr><tr><td><strong>Register</strong> — how formal is the context?</td><td>Casual (je trouve) vs. Formal (j'estime, je considère)</td></tr><tr><td><strong>Social grace</strong> — how respectful are you?</td><td>Acknowledging before disagreeing — the nuance formula</td></tr></tbody></table>
+<p>→ You now have the <strong>full architecture</strong> for expressing opinions<br>
+→ But notice: when you said "Je ne pense pas que ce <strong>soit</strong> vrai" — that verb form (<strong>soit</strong>) was new<br>
+→ That's the <strong>SUBJONCTIF</strong> — a special mood triggered by emotion, doubt, wish, necessity<br>
+→ You've seen it peeking through in this project<br>
+→ Project 23 will formally introduce it through <strong>emotional reactions</strong></p>
+</blockquote>
+<hr>
+<h1>🌉 BRIDGE TO PROJECT 23</h1>
+<blockquote>
+<p>You can now state opinions, agree, disagree, and nuance<br>
+But what happens when someone tells you surprising, exciting, or sad news?</p>
+<p>→ "Je suis content que tu <strong>sois</strong> là." (I'm happy that you're here.)<br>
+→ "J'ai peur qu'il <strong>fasse</strong> froid." (I'm afraid it might be cold.)<br>
+→ "C'est dommage qu'elle ne <strong>puisse</strong> pas venir." (It's a shame she can't come.)</p>
+<p>→ These are <strong>emotional reactions</strong> — and they ALL trigger the <strong>SUBJONCTIF</strong><br>
+→ The subjonctif is not a tense — it's a <strong>MOOD</strong> — it expresses subjective reality<br>
+→ When you react with emotion (joy, fear, surprise, sadness, doubt) → the verb after "que" shifts form</p>
+<p>→ Project 23: <strong>"I'm Happy That, I'm Afraid That"</strong><br>
+→ Your first full introduction to the subjonctif through emotional reaction structures</p>
+</blockquote>
+<hr>
+<h1>✅ PROJECT 22 COMPLETE</h1>
+<blockquote>
+<p><strong>Are you ready for PROJECT 23: "I'm Happy That, I'm Afraid That"?</strong><br>
+→ ~100 sentences covering emotion + que + subjonctif structures<br>
+→ Scenario: You're reacting to news — joy, fear, surprise, doubt, regret<br>
+→ Builds directly on opinion structures — now the EMOTIONAL side of subjective expression</p>
+</blockquote>
+</div>
+</div>
+
+<!-- ========== data-index="15" ========== -->
+
+        </div>
+
+        <div class="nav-bar">
+            <a href="project-21.html" class="nav-button prev">← Previous Chapter</a>
+            <div class="page-info">
+                <a href="index.html" class="nav-button home">📚 Table of Contents</a><br>
+                <span style="margin-top:8px;display:block">Chapter 22 of 50</span>
+            </div>
+            <a href="project-23.html" class="nav-button next">Next Chapter →</a>
+        </div>
+    </div>
+
+    
+    <div id="progress-track"><div id="progress-fill"></div></div>
+    <div id="progress-pct">0%</div>
+
+
+    <script>
+    const fill = document.getElementById('progress-fill');
+    const pct  = document.getElementById('progress-pct');
+    function updateProgress() {
+        const scrollTop = window.scrollY;
+        const docHeight = document.body.scrollHeight - window.innerHeight;
+        const scrolled  = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+        fill.style.height = scrolled + '%';
+        pct.textContent   = Math.round(scrolled) + '%';
+    }
+    window.addEventListener('scroll', updateProgress);
+    updateProgress();
+
+    document.addEventListener('keydown', function(e) {
+        if (['INPUT','TEXTAREA'].includes(document.activeElement.tagName)) return;
+        if (e.key === 'ArrowLeft') {
+            const b = document.querySelector('.nav-button.prev');
+            if (b && !b.classList.contains('disabled')) window.location.href = b.href;
+        }
+        if (e.key === 'ArrowRight') {
+            const b = document.querySelector('.nav-button.next');
+            if (b && !b.classList.contains('disabled')) window.location.href = b.href;
+        }
+    });
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="images/favicon.png">
+    <title>Project 8: "When Things Happen" — French Daily Sentences</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.75;
+            color: #1a202c;
+            background-color: #f7fafc;
+        }
+        .container {
+            max-width: 1800px;
+            margin: 0 auto;
+            background: white;
+            min-height: 100vh;
+            box-shadow: 0 0 30px rgba(0,0,0,0.08);
+            padding: 48px 52px;
+        }
+        
+        .content { max-width: 1700px; margin: 0 auto; color: #1a202c; }
+        .content h1 {
+            color: #1a202c; margin: 32px 0 20px;
+            padding-bottom: 12px;
+            border-bottom: 4px solid #3b82f6;
+            font-size: 2.1em;
+            font-weight: 700;
+        }
+        .content h2 {
+            color: #1a202c; margin: 28px 0 16px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #60a5fa;
+            font-size: 1.6em;
+            font-weight: 600;
+        }
+        .content h3 { color: #1a202c; margin: 22px 0 12px; font-size: 1.3em; font-weight: 600; }
+        .content h4 { color: #2d3748; margin: 18px 0 10px; font-size: 1.1em; font-weight: 600; }
+        .content p  { margin-bottom: 16px; line-height: 1.8; color: #1a202c; }
+        .content ul, .content ol { margin: 12px 0 18px 30px; color: #1a202c; }
+        .content li { margin-bottom: 8px; line-height: 1.75; color: #1a202c; }
+        .content hr { border: none; border-top: 2px solid #e2e8f0; margin: 26px 0; }
+        .content pre {
+            background: #f7fafc !important;
+            border: 1px solid #cbd5e0 !important;
+            border-left: 4px solid #3b82f6 !important;
+            padding: 18px !important; overflow-x: auto; margin: 18px 0; border-radius: 6px;
+            font-family: 'Consolas','Monaco','Courier New',monospace !important;
+            font-size: 0.9em !important;
+        }
+        .content pre:not([style*="color"]) { color: #1a202c !important; }
+        .content code {
+            font-family: 'Consolas','Monaco','Courier New',monospace !important;
+            font-size: 0.88em !important;
+        }
+        .content code:not(pre code) {
+            background: #dbeafe !important;
+            color: #1a202c !important;
+            padding: 2px 6px;
+            border-radius: 3px;
+        }
+        .content pre code { background: transparent !important; padding: 0; }
+        .content table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+        .content th {
+            background: linear-gradient(135deg, #3b82f6 0%, #60a5fa 100%);
+            color: white; padding: 12px 16px; text-align: left;
+            font-weight: 600;
+        }
+        .content td { padding: 11px 16px; border: 1px solid #e2e8f0; color: #1a202c; }
+        .content tr:nth-child(even) td { background: #eff6ff; }
+        .content blockquote {
+            border-left: 4px solid #3b82f6; background: #eff6ff;
+            padding: 14px 20px; margin: 18px 0; border-radius: 0 6px 6px 0;
+            color: #1a202c;
+        }
+        .content strong { color: #1a202c; font-weight: 600; }
+        .px-2 { padding: 0; }
+        .chat-message { background: transparent; padding: 0; margin: 0; }
+
+        /* Bottom nav bar only */
+        .nav-bar {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 24px 0;
+            margin-top: 50px;
+            border-top: 3px solid #60a5fa;
+        }
+        .nav-button {
+            display: inline-flex; align-items: center; gap: 8px;
+            padding: 12px 26px;
+            background: linear-gradient(135deg, #3b82f6 0%, #60a5fa 100%);
+            color: white !important; text-decoration: none;
+            border-radius: 8px; font-weight: 600; font-size: 0.95em;
+            transition: all 0.2s;
+            box-shadow: 0 2px 8px rgba(59,130,246,0.35);
+        }
+        .nav-button:hover { transform: translateY(-2px); box-shadow: 0 4px 14px rgba(59,130,246,0.5); }
+        .nav-button.disabled { background: #cbd5e1; box-shadow: none; pointer-events: none; }
+        .nav-button.home {
+            background: linear-gradient(135deg, #ef4444 0%, #f87171 100%);
+            box-shadow: 0 2px 8px rgba(239,68,68,0.35);
+        }
+        .nav-button.home:hover { box-shadow: 0 4px 14px rgba(239,68,68,0.5); }
+        .page-info { color: #718096; font-size: 0.9em; text-align: center; }
+
+        /* Progress bar */
+        #progress-track {
+            position: fixed; top: 20px; right: 20px;
+            width: 10px; height: 150px;
+            background: rgba(59,130,246,0.2);
+            border: 2px solid #3b82f6;
+            border-radius: 6px; overflow: hidden; z-index: 1000;
+        }
+        #progress-fill {
+            width: 100%;
+            background: linear-gradient(180deg, #3b82f6, #2563eb);
+            height: 0%;
+            transition: height 0.15s ease;
+        }
+        #progress-pct {
+            position: fixed; top: 0px; right: 16px;
+            color: #2563eb; font-size: 14px; font-weight: bold;
+            z-index: 1001;
+            text-shadow: 0 1px 2px rgba(255,255,255,0.9);
+            line-height: 20px;
+        }
+
+    </style>
+<link rel="stylesheet" href="assets/chapters.css?v=20260421203847"><script src="assets/chapters.js?v=20260421203847" defer></script>
+</head>
+<body>
+    <div class="container">
+        <div class="content">
+            <div class="chat-message" data-index="17">
+<div class="px-2"><h1>🟢 PROJECT 8: "When Things Happen"</h1>
+<h2><em>You're scheduling your life — how do you express hours, days, months, seasons, and frequency?</em></h2>
+<hr>
+<h1>🎯 THE HYPOTHETICAL PROBLEM</h1>
+<p>→ You've enrolled in a <strong>French language school</strong> in Paris — classes start next week<br>
+→ The school sends you a schedule — you need to understand it and discuss it<br>
+→ Your host family asks about your weekly routine — <strong>when</strong> you have class, <strong>when</strong> you're free<br>
+→ You want to make plans with new friends — "Let's meet <strong>on Saturday</strong>" / "I'm free <strong>in the afternoon</strong>"<br>
+→ You need to book a doctor's appointment — "Is <strong>Tuesday at 3 PM</strong> available?"<br>
+→ You can now say who you are (P1), what you do (P2), identify things (P3), ask questions (P4), say no (P5), express wants/needs (P6), and locate yourself in space (P7)<br>
+→ But EVERY sentence is stuck in a timeless void<br>
+→ You cannot say:<br>
+→ → "I work <strong>on Mondays</strong>."<br>
+→ → "My class starts <strong>at 9 o'clock</strong>."<br>
+→ → "I arrived <strong>in September</strong>."<br>
+→ → "I <strong>always</strong> eat breakfast."<br>
+→ → "I <strong>sometimes</strong> go to the cinema."<br>
+→ → "It's cold <strong>in winter</strong>."<br>
+→ → "<strong>Today</strong> is Friday."<br>
+→ → "I'm busy <strong>this week</strong>."</p>
+<p><strong>The core realization:</strong><br>
+→ English time markers are chaotic — "<strong>in</strong> March" but "<strong>on</strong> Monday" but "<strong>at</strong> 3 PM"<br>
+→ French time markers follow <strong>clearer patterns</strong> — but they're DIFFERENT patterns from English<br>
+→ The prepositions for time are NOT the same as prepositions for place (Project 7)<br>
+→ <strong>"En"</strong> for place = in a feminine country → <strong>"En"</strong> for time = in a month/season<br>
+→ <strong>"À"</strong> for place = in a city → <strong>"À"</strong> for time = at a specific hour<br>
+→ <strong>"Le"</strong> for time = on a recurring day → English doesn't use "the" for days<br>
+→ If you confuse place prepositions with time prepositions → your sentences collapse</p>
+<hr>
+<h1>🔍 HOW TO APPROACH IT</h1>
+<p>→ Time in French is organized into <strong>5 layers:</strong></p>
+<table><thead><tr><th>Layer</th><th>What It Covers</th><th>Key Markers</th></tr></thead><tbody><tr><td><strong>Layer 1</strong></td><td>Clock time (hours, minutes)</td><td>à, heure(s), et quart, et demie, moins</td></tr><tr><td><strong>Layer 2</strong></td><td>Parts of the day</td><td>le matin, l'après-midi, le soir, la nuit</td></tr><tr><td><strong>Layer 3</strong></td><td>Days of the week</td><td>lundi, mardi... + le for recurring</td></tr><tr><td><strong>Layer 4</strong></td><td>Months, seasons, years</td><td>en, au, months, seasons</td></tr><tr><td><strong>Layer 5</strong></td><td>Frequency &amp; relative time</td><td>toujours, souvent, parfois, jamais, aujourd'hui, demain, hier</td></tr></tbody></table>
+<p>→ Each layer has its own preposition rules<br>
+→ You also need to know <strong>how to tell time</strong> — French uses a 24-hour clock AND a 12-hour conversational style</p>
+<hr>
+<h1>🔧 HOW CAN WE SOLVE IT</h1>
+<h2>Step 1 — Telling Time: The Clock</h2>
+<h3>Basic structure:</h3>
+<code>Il est + NUMBER + heure(s) + (minutes)</code>
+<table><thead><tr><th>Time</th><th>French</th><th>Notes</th></tr></thead><tbody><tr><td>1:00</td><td>Il est <strong>une</strong> heure.</td><td>"une" not "un" — heure is feminine</td></tr><tr><td>2:00</td><td>Il est <strong>deux</strong> heures.</td><td>Plural: heure<strong>s</strong></td></tr><tr><td>3:15</td><td>Il est trois heures <strong>et quart</strong>.</td><td>et quart = and a quarter</td></tr><tr><td>4:30</td><td>Il est quatre heures <strong>et demie</strong>.</td><td>et demie = and half</td></tr><tr><td>4:45</td><td>Il est cinq heures <strong>moins le quart</strong>.</td><td>moins le quart = minus a quarter (= 4:45)</td></tr><tr><td>5:10</td><td>Il est cinq heures <strong>dix</strong>.</td><td>Just add minutes after heures</td></tr><tr><td>5:50</td><td>Il est six heures <strong>moins dix</strong>.</td><td>moins dix = minus ten (= 5:50)</td></tr><tr><td>12:00 (noon)</td><td>Il est <strong>midi</strong>.</td><td>NOT "douze heures" in conversation</td></tr><tr><td>00:00 (midnight)</td><td>Il est <strong>minuit</strong>.</td><td>NOT "zéro heure" in conversation</td></tr></tbody></table>
+<h3>24-hour vs. 12-hour:</h3>
+<table><thead><tr><th>Context</th><th>System</th><th>Example: 3 PM</th></tr></thead><tbody><tr><td><strong>Formal</strong> (schedules, trains, official)</td><td>24-hour</td><td>Il est <strong>quinze</strong> heures.</td></tr><tr><td><strong>Casual</strong> (conversation)</td><td>12-hour + context</td><td>Il est <strong>trois</strong> heures <strong>(de l'après-midi)</strong>.</td></tr></tbody></table>
+<p>→ French people use BOTH systems interchangeably<br>
+→ Schedules/TV/trains → 24-hour (quinze heures, vingt heures)<br>
+→ Conversation → 12-hour with context (trois heures de l'après-midi)</p>
+<hr>
+<h2>Step 2 — "At" a Time: À + heure</h2>
+<code>EVENT + à + TIME</code>
+<p>→ Je commence <strong>à</strong> neuf heures. (I start <strong>at</strong> nine o'clock.)<br>
+→ Le train part <strong>à</strong> midi. (The train leaves <strong>at</strong> noon.)<br>
+→ On se retrouve <strong>à</strong> huit heures et demie. (We meet <strong>at</strong> 8:30.)</p>
+<p>→ <strong>"À"</strong> for time = "at" — same preposition as "à" for cities (Project 7) but different function<br>
+→ Context always makes it clear: <strong>à Paris</strong> (place) vs. <strong>à huit heures</strong> (time)</p>
+<hr>
+<h2>Step 3 — Parts of the Day</h2>
+<table><thead><tr><th>French</th><th>English</th><th>Time Range</th></tr></thead><tbody><tr><td><strong>le matin</strong></td><td>the morning / in the morning</td><td>~6:00–12:00</td></tr><tr><td><strong>l'après-midi</strong></td><td>the afternoon</td><td>~12:00–18:00</td></tr><tr><td><strong>le soir</strong></td><td>the evening</td><td>~18:00–22:00</td></tr><tr><td><strong>la nuit</strong></td><td>the night / at night</td><td>~22:00–6:00</td></tr></tbody></table>
+<p>→ These are used <strong>with or without "le"</strong> depending on context:<br>
+→ → <strong>Le matin</strong>, je travaille. (In the morning, I work.) — general habit<br>
+→ → <strong>Ce matin</strong>, je travaille. (This morning, I'm working.) — specific today<br>
+→ → <strong>Demain matin</strong>, je travaille. (Tomorrow morning, I'm working.) — specific future</p>
+<hr>
+<h2>Step 4 — Days of the Week</h2>
+<table><thead><tr><th>French</th><th>English</th></tr></thead><tbody><tr><td><strong>lundi</strong></td><td>Monday</td></tr><tr><td><strong>mardi</strong></td><td>Tuesday</td></tr><tr><td><strong>mercredi</strong></td><td>Wednesday</td></tr><tr><td><strong>jeudi</strong></td><td>Thursday</td></tr><tr><td><strong>vendredi</strong></td><td>Friday</td></tr><tr><td><strong>samedi</strong></td><td>Saturday</td></tr><tr><td><strong>dimanche</strong></td><td>Sunday</td></tr></tbody></table>
+<p><strong>🧠 CRITICAL: French days are NOT capitalized</strong> (unlike English)</p>
+<h3>Using days — the LE rule:</h3>
+<table><thead><tr><th>Structure</th><th>Meaning</th><th>Example</th></tr></thead><tbody><tr><td><strong>lundi</strong> (no article)</td><td><strong>This</strong> Monday / <strong>On</strong> Monday (one time)</td><td>Je travaille <strong>lundi</strong>. = I work (this) Monday.</td></tr><tr><td><strong>le lundi</strong> (with le)</td><td><strong>Every</strong> Monday / <strong>On Mondays</strong> (recurring)</td><td>Je travaille <strong>le lundi</strong>. = I work on Mondays.</td></tr></tbody></table>
+<p>→ This is a <strong>massive difference</strong> — one tiny "le" changes the meaning from one-time to habitual<br>
+→ English: "I work Monday" (one time) vs. "I work <strong>on</strong> Mondays" (every week)<br>
+→ French: "Je travaille <strong>lundi</strong>" (one time) vs. "Je travaille <strong>le</strong> lundi" (every week)</p>
+<hr>
+<h2>Step 5 — Months of the Year</h2>
+<table><thead><tr><th>French</th><th>English</th></tr></thead><tbody><tr><td><strong>janvier</strong></td><td>January</td></tr><tr><td><strong>février</strong></td><td>February</td></tr><tr><td><strong>mars</strong></td><td>March</td></tr><tr><td><strong>avril</strong></td><td>April</td></tr><tr><td><strong>mai</strong></td><td>May</td></tr><tr><td><strong>juin</strong></td><td>June</td></tr><tr><td><strong>juillet</strong></td><td>July</td></tr><tr><td><strong>août</strong></td><td>August</td></tr><tr><td><strong>septembre</strong></td><td>September</td></tr><tr><td><strong>octobre</strong></td><td>October</td></tr><tr><td><strong>novembre</strong></td><td>November</td></tr><tr><td><strong>décembre</strong></td><td>December</td></tr></tbody></table>
+<p><strong>🧠 Also NOT capitalized in French</strong></p>
+<h3>Preposition for months: EN</h3>
+<code>en + month (no article)</code>
+<p>→ Je suis arrivé <strong>en</strong> septembre. (I arrived <strong>in</strong> September.)<br>
+→ Il fait froid <strong>en</strong> janvier. (It's cold <strong>in</strong> January.)<br>
+→ NOT <del>"dans septembre"</del> or <del>"à septembre"</del></p>
+<hr>
+<h2>Step 6 — Seasons</h2>
+<table><thead><tr><th>French</th><th>English</th><th>Preposition</th></tr></thead><tbody><tr><td><strong>le printemps</strong></td><td>spring</td><td><strong>au</strong> printemps</td></tr><tr><td><strong>l'été</strong></td><td>summer</td><td><strong>en</strong> été</td></tr><tr><td><strong>l'automne</strong></td><td>autumn/fall</td><td><strong>en</strong> automne</td></tr><tr><td><strong>l'hiver</strong></td><td>winter</td><td><strong>en</strong> hiver</td></tr></tbody></table>
+<p><strong>🧠 WHY is spring different?</strong><br>
+→ Printemps starts with a consonant and is masculine → <strong>au</strong> printemps<br>
+→ Été, automne, hiver all start with vowels → <strong>en</strong> (same rule as masculine vowel-start countries from Project 7!)<br>
+→ This is the SAME sound-flow logic: French avoids "au" before vowels</p>
+<hr>
+<h2>Step 7 — Frequency Words</h2>
+<table><thead><tr><th>French</th><th>English</th><th>Frequency Level</th></tr></thead><tbody><tr><td><strong>toujours</strong></td><td>always</td><td>100%</td></tr><tr><td><strong>souvent</strong></td><td>often</td><td>~75%</td></tr><tr><td><strong>parfois / quelquefois</strong></td><td>sometimes</td><td>~50%</td></tr><tr><td><strong>rarement</strong></td><td>rarely</td><td>~15%</td></tr><tr><td><strong>jamais</strong></td><td>never</td><td>0% (with ne — recall Project 5)</td></tr></tbody></table>
+<h3>Placement rule:</h3>
+<p>→ Frequency words go <strong>AFTER the conjugated verb</strong> in French</p>
+<code>Subject + VERB + FREQUENCY + rest</code>
+<p>→ Je mange <strong>toujours</strong> à midi. (I always eat at noon.)<br>
+→ Il sort <strong>souvent</strong> le soir. (He often goes out in the evening.)<br>
+→ On va <strong>parfois</strong> au cinéma. (We sometimes go to the cinema.)<br>
+→ Elle arrive <strong>rarement</strong> en retard. (She rarely arrives late.)<br>
+→ Je ne dors <strong>jamais</strong> avant minuit. (I never sleep before midnight.)</p>
+<p>→ In English, frequency words often go BEFORE the verb → "I <strong>always</strong> eat"<br>
+→ In French, they go AFTER → "Je mange <strong>toujours</strong>"<br>
+→ This word order difference is a common error for English speakers</p>
+<hr>
+<h1>✅ WHAT COULD BE DONE — THE 100 SENTENCES</h1>
+<h2>🔹 BLOCK A — Telling Time: What Time Is It?</h2>
+<p><em>Scenario: You look at clocks, ask the time, discuss schedules</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English Meaning</th><th>Time Concept</th></tr></thead><tbody><tr><td>1</td><td>Quelle heure il est ?</td><td>What time is it?</td><td>Asking time (casual — Project 4)</td></tr><tr><td>2</td><td>Il est huit heures.</td><td>It's eight o'clock.</td><td>Full hour</td></tr><tr><td>3</td><td>Il est huit heures dix.</td><td>It's 8:10.</td><td>Hour + minutes</td></tr><tr><td>4</td><td>Il est huit heures et quart.</td><td>It's 8:15.</td><td>Quarter past</td></tr><tr><td>5</td><td>Il est huit heures et demie.</td><td>It's 8:30.</td><td>Half past</td></tr><tr><td>6</td><td>Il est neuf heures moins le quart.</td><td>It's 8:45.</td><td>Quarter to</td></tr><tr><td>7</td><td>Il est neuf heures moins dix.</td><td>It's 8:50.</td><td>Minutes to</td></tr><tr><td>8</td><td>Il est midi.</td><td>It's noon.</td><td>Noon — special word</td></tr><tr><td>9</td><td>Il est minuit.</td><td>It's midnight.</td><td>Midnight — special word</td></tr><tr><td>10</td><td>Il est une heure du matin.</td><td>It's 1 AM.</td><td>AM specification</td></tr></tbody></table>
+<p><strong>🧠 Structure unlocked:</strong> <code>Il est + number + heure(s) + (minutes / et quart / et demie / moins...)</code></p>
+<p><strong>🧠 The "moins" system:</strong><br>
+→ French thinks of time BEFORE the next hour:<br>
+→ 8:45 = "nine o'clock <strong>minus</strong> a quarter" = neuf heures <strong>moins le quart</strong><br>
+→ 8:50 = "nine o'clock <strong>minus</strong> ten" = neuf heures <strong>moins dix</strong><br>
+→ 8:40 = "nine o'clock <strong>minus</strong> twenty" = neuf heures <strong>moins vingt</strong><br>
+→ Generally, "moins" is used for the <strong>last 15-20 minutes</strong> before the next hour<br>
+→ After the half hour → start thinking toward the NEXT hour</p>
+<hr>
+<h2>🔹 BLOCK B — "At" What Time: Scheduling Events</h2>
+<p><em>Scenario: Discussing your class schedule, appointments, plans</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English Meaning</th><th>Structure</th></tr></thead><tbody><tr><td>11</td><td>Mon cours commence à neuf heures.</td><td>My class starts at nine o'clock.</td><td>Event + à + time</td></tr><tr><td>12</td><td>Le cours finit à midi.</td><td>The class finishes at noon.</td><td>Event + à + time</td></tr><tr><td>13</td><td>On mange à quelle heure ?</td><td>What time do we eat?</td><td>à + quelle heure + ?</td></tr><tr><td>14</td><td>Le train part à quatorze heures trente.</td><td>The train leaves at 2:30 PM.</td><td>24-hour formal</td></tr><tr><td>15</td><td>J'ai rendez-vous à trois heures.</td><td>I have an appointment at three.</td><td>Event + à + time</td></tr><tr><td>16</td><td>Le magasin ouvre à dix heures.</td><td>The store opens at ten.</td><td>Event + à + time</td></tr><tr><td>17</td><td>Le magasin ferme à vingt heures.</td><td>The store closes at 8 PM.</td><td>24-hour formal</td></tr><tr><td>18</td><td>Le film commence à huit heures et quart.</td><td>The movie starts at 8:15.</td><td>Event + à + time</td></tr><tr><td>19</td><td>On se retrouve à sept heures et demie ?</td><td>Shall we meet at 7:30?</td><td>Suggestion + à + time</td></tr><tr><td>20</td><td>Je me lève à six heures du matin.</td><td>I get up at 6 AM.</td><td>Action + à + time + part of day</td></tr></tbody></table>
+<p><strong>🧠 Key expression — Sentence 15:</strong><br>
+→ <strong>"J'ai rendez-vous"</strong> = I have an appointment / I have a date<br>
+→ No article before rendez-vous in this expression: <del>"J'ai un rendez-vous"</del> (less natural)<br>
+→ "J'ai rendez-vous <strong>à</strong> trois heures" = appointment at 3<br>
+→ "J'ai rendez-vous <strong>chez</strong> le médecin" = appointment at the doctor's (Project 7)<br>
+→ "J'ai rendez-vous <strong>avec</strong> Pierre" = meeting with Pierre</p>
+<p><strong>🧠 Key question — Sentence 13:</strong><br>
+→ <strong>"À quelle heure"</strong> = "At what time" — the standard way to ask about time of events<br>
+→ Recall from Project 4: <strong>quel/quelle</strong> = which/what (specifying a noun)<br>
+→ "Quelle heure <strong>il est</strong> ?" = What time <strong>is it</strong>? (current time)<br>
+→ "<strong>À quelle heure</strong> tu pars ?" = <strong>At what time</strong> are you leaving? (scheduled event)</p>
+<hr>
+<h2>🔹 BLOCK C — Parts of the Day: Morning, Afternoon, Evening, Night</h2>
+<p><em>Scenario: Describing your daily rhythm and making plans for different parts of the day</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English Meaning</th><th>Part of Day</th></tr></thead><tbody><tr><td>21</td><td>Le matin, je prends un café.</td><td>In the morning, I have a coffee.</td><td>le matin — habitual</td></tr><tr><td>22</td><td>Ce matin, j'ai cours.</td><td>This morning, I have class.</td><td>ce matin — specific today</td></tr><tr><td>23</td><td>Demain matin, je suis libre.</td><td>Tomorrow morning, I'm free.</td><td>demain matin — specific future</td></tr><tr><td>24</td><td>L'après-midi, je travaille.</td><td>In the afternoon, I work.</td><td>l'après-midi — habitual</td></tr><tr><td>25</td><td>Cet après-midi, on va au parc ?</td><td>This afternoon, shall we go to the park?</td><td>cet après-midi — specific today</td></tr><tr><td>26</td><td>Le soir, je regarde la télé.</td><td>In the evening, I watch TV.</td><td>le soir — habitual</td></tr><tr><td>27</td><td>Ce soir, je sors avec des amis.</td><td>Tonight, I'm going out with friends.</td><td>ce soir — specific today</td></tr><tr><td>28</td><td>Demain soir, je mange chez Pierre.</td><td>Tomorrow evening, I eat at Pierre's.</td><td>demain soir — specific future</td></tr><tr><td>29</td><td>La nuit, il fait froid.</td><td>At night, it's cold.</td><td>la nuit — general</td></tr><tr><td>30</td><td>Cette nuit, je n'ai pas bien dormi.</td><td>Last night, I didn't sleep well.</td><td>cette nuit — specific past</td></tr></tbody></table>
+<p><strong>🧠 The CE/CET/CETTE system for "this":</strong></p>
+<table><thead><tr><th>Noun Gender</th><th>Demonstrative</th><th>Example</th></tr></thead><tbody><tr><td>Masculine (consonant start)</td><td><strong>ce</strong></td><td><strong>ce</strong> matin, <strong>ce</strong> soir</td></tr><tr><td>Masculine (vowel start)</td><td><strong>cet</strong></td><td><strong>cet</strong> après-midi, <strong>cet</strong> été</td></tr><tr><td>Feminine</td><td><strong>cette</strong></td><td><strong>cette</strong> nuit, <strong>cette</strong> semaine</td></tr></tbody></table>
+<p>→ You're seeing <strong>demonstrative adjectives</strong> for the first time<br>
+→ They mean "this" / "that" and agree in gender with the noun<br>
+→ Full mastery in later projects — for now, absorb the time-related ones</p>
+<p><strong>🧠 Sentence 30 — TRICKY:</strong><br>
+→ <strong>"Cette nuit"</strong> can mean "last night" (past) OR "tonight" (future) depending on context<br>
+→ If it already happened → "Cette nuit, je n'ai pas dormi" = Last night, I didn't sleep<br>
+→ If it hasn't happened → "Cette nuit, il va pleuvoir" = Tonight, it will rain<br>
+→ Context (verb tense) tells you which meaning</p>
+<hr>
+<h2>🔹 BLOCK D — Days of the Week: One-Time vs. Recurring</h2>
+<p><em>Scenario: Planning your week — which days you do what</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English Meaning</th><th>One-Time or Recurring</th></tr></thead><tbody><tr><td>31</td><td>Lundi, j'ai cours.</td><td>(This) Monday, I have class.</td><td>One-time — no article</td></tr><tr><td>32</td><td>Le lundi, j'ai toujours cours.</td><td>On Mondays, I always have class.</td><td>Recurring — le + day</td></tr><tr><td>33</td><td>Mardi, on va au musée.</td><td>(This) Tuesday, we're going to the museum.</td><td>One-time</td></tr><tr><td>34</td><td>Le mardi et le jeudi, je fais du sport.</td><td>On Tuesdays and Thursdays, I do sports.</td><td>Recurring</td></tr><tr><td>35</td><td>Mercredi, je suis libre.</td><td>(This) Wednesday, I'm free.</td><td>One-time</td></tr><tr><td>36</td><td>Le mercredi, les enfants n'ont pas école.</td><td>On Wednesdays, children don't have school.</td><td>Recurring — cultural fact</td></tr><tr><td>37</td><td>Vendredi soir, on sort ?</td><td>Friday evening, shall we go out?</td><td>One-time + part of day</td></tr><tr><td>38</td><td>Le vendredi soir, on sort souvent.</td><td>On Friday evenings, we often go out.</td><td>Recurring + frequency</td></tr><tr><td>39</td><td>Samedi, je travaille pas.</td><td>(This) Saturday, I'm not working.</td><td>One-time (spoken — ne dropped)</td></tr><tr><td>40</td><td>Le dimanche, je dors jusqu'à midi.</td><td>On Sundays, I sleep until noon.</td><td>Recurring — habit</td></tr></tbody></table>
+<p><strong>🧠 THE GOLDEN RULE CONFIRMED:</strong></p>
+<table><thead><tr><th>Without LE</th><th>With LE</th></tr></thead><tbody><tr><td><strong>This specific</strong> Monday</td><td><strong>Every</strong> Monday</td></tr><tr><td>Lundi, j'ai cours.</td><td><strong>Le</strong> lundi, j'ai cours.</td></tr><tr><td>One event</td><td>Habitual pattern</td></tr></tbody></table>
+<p><strong>🧠 Sentence 36 — Cultural note:</strong><br>
+→ In France, <strong>Wednesday</strong> is historically the day children have no school (or only half-day)<br>
+→ "Le mercredi" is associated with children's activities<br>
+→ This is a real cultural marker — knowing it shows you understand French life</p>
+<hr>
+<h2>🔹 BLOCK E — Months and Dates</h2>
+<p><em>Scenario: Talking about birthdays, arrivals, events throughout the year</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English Meaning</th><th>Structure</th></tr></thead><tbody><tr><td>41</td><td>Mon anniversaire est en mars.</td><td>My birthday is in March.</td><td>en + month</td></tr><tr><td>42</td><td>Je suis arrivé en septembre.</td><td>I arrived in September.</td><td>en + month</td></tr><tr><td>43</td><td>En juillet, il fait très chaud.</td><td>In July, it's very hot.</td><td>en + month + weather</td></tr><tr><td>44</td><td>En décembre, c'est Noël.</td><td>In December, it's Christmas.</td><td>en + month + event</td></tr><tr><td>45</td><td>Les cours commencent en octobre.</td><td>Classes start in October.</td><td>en + month</td></tr><tr><td>46</td><td>Nous sommes le quinze mars.</td><td>It's March 15th.</td><td>nous sommes + le + number + month</td></tr><tr><td>47</td><td>Mon anniversaire, c'est le trois mai.</td><td>My birthday is May 3rd.</td><td>c'est + le + number + month</td></tr><tr><td>48</td><td>Aujourd'hui, on est le vingt novembre.</td><td>Today is November 20th.</td><td>on est + le + number + month</td></tr><tr><td>49</td><td>La fête nationale, c'est le quatorze juillet.</td><td>National Day is July 14th.</td><td>le + number + month</td></tr><tr><td>50</td><td>Je pars le premier juin.</td><td>I leave June 1st.</td><td>le + premier + month</td></tr></tbody></table>
+<p><strong>🧠 How to say DATES in French:</strong></p>
+<code>LE + NUMBER + MONTH</code>
+<p>→ Le trois mai = May 3rd<br>
+→ Le vingt novembre = November 20th<br>
+→ Le quatorze juillet = July 14th</p>
+<p><strong>🧠 EXCEPTION — The 1st of any month:</strong><br>
+→ Use <strong>premier</strong> (first) NOT "un"<br>
+→ Le <strong>premier</strong> janvier = January 1st<br>
+→ Le <strong>premier</strong> juin = June 1st<br>
+→ All other dates use cardinal numbers: le deux, le trois, le quatre...<br>
+→ NOT ordinal: <del>le deuxième, le troisième</del> (only "premier" is ordinal for dates)</p>
+<p><strong>🧠 Asking today's date:</strong><br>
+→ "Quelle est la date aujourd'hui ?" = What is today's date?<br>
+→ "On est le combien ?" = What date is it? (very casual — combien from Project 4)<br>
+→ Answer: "On est le quinze." / "Nous sommes le quinze mars."</p>
+<p><strong>🧠 Saying the YEAR:</strong></p>
+<table><thead><tr><th>Year</th><th>French</th><th>How to Say</th></tr></thead><tbody><tr><td>2024</td><td><strong>deux mille vingt-quatre</strong></td><td>Full number</td></tr><tr><td>1999</td><td><strong>mille neuf cent quatre-vingt-dix-neuf</strong></td><td>Full number (complex!)</td></tr></tbody></table>
+<p>→ Years use <strong>en</strong> → "<strong>En</strong> 2024" = In 2024<br>
+→ For now, focus on months and dates — years are straightforward but long</p>
+<hr>
+<h2>🔹 BLOCK F — Seasons and Weather Connection</h2>
+<p><em>Scenario: Discussing what happens in each season — weather, activities, plans</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English Meaning</th><th>Season + Preposition</th></tr></thead><tbody><tr><td>51</td><td>Au printemps, il fait beau.</td><td>In spring, the weather is nice.</td><td>au + printemps</td></tr><tr><td>52</td><td>En été, il fait chaud.</td><td>In summer, it's hot.</td><td>en + été</td></tr><tr><td>53</td><td>En automne, il pleut souvent.</td><td>In autumn, it often rains.</td><td>en + automne</td></tr><tr><td>54</td><td>En hiver, il fait froid.</td><td>In winter, it's cold.</td><td>en + hiver</td></tr><tr><td>55</td><td>Au printemps, les fleurs poussent.</td><td>In spring, flowers grow.</td><td>au + printemps</td></tr><tr><td>56</td><td>En été, on va à la plage.</td><td>In summer, we go to the beach.</td><td>en + été + place (Project 7)</td></tr><tr><td>57</td><td>En automne, les feuilles tombent.</td><td>In autumn, the leaves fall.</td><td>en + automne</td></tr><tr><td>58</td><td>En hiver, on fait du ski.</td><td>In winter, we go skiing.</td><td>en + hiver + activity (Project 2)</td></tr><tr><td>59</td><td>J'aime le printemps.</td><td>I like spring.</td><td>aimer + le + season (general — Project 3)</td></tr><tr><td>60</td><td>Je préfère l'été.</td><td>I prefer summer.</td><td>préférer + l' + season</td></tr></tbody></table>
+<p><strong>🧠 Weather expressions with FAIRE — preview:</strong><br>
+→ <strong>Il fait</strong> + adjective = weather expression (impersonal — "il" = "it")</p>
+<table><thead><tr><th>French</th><th>English</th></tr></thead><tbody><tr><td>Il fait <strong>beau</strong>.</td><td>The weather is nice.</td></tr><tr><td>Il fait <strong>chaud</strong>.</td><td>It's hot.</td></tr><tr><td>Il fait <strong>froid</strong>.</td><td>It's cold.</td></tr><tr><td>Il fait <strong>mauvais</strong>.</td><td>The weather is bad.</td></tr><tr><td>Il <strong>pleut</strong>.</td><td>It rains / It's raining. (not "il fait")</td></tr><tr><td>Il <strong>neige</strong>.</td><td>It snows / It's snowing. (not "il fait")</td></tr></tbody></table>
+<p>→ <strong>"Il fait"</strong> uses FAIRE (Project 2) in an impersonal way<br>
+→ <strong>"Il pleut" / "Il neige"</strong> are their own verbs — not "il fait pluie" ❌</p>
+<hr>
+<h2>🔹 BLOCK G — Frequency Words: How Often</h2>
+<p><em>Scenario: Describing your habits — always, often, sometimes, rarely, never</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English Meaning</th><th>Frequency</th></tr></thead><tbody><tr><td>61</td><td>Je prends toujours le métro.</td><td>I always take the metro.</td><td>toujours = always</td></tr><tr><td>62</td><td>Tu manges toujours à midi ?</td><td>Do you always eat at noon?</td><td>toujours</td></tr><tr><td>63</td><td>Il sort souvent le soir.</td><td>He often goes out in the evening.</td><td>souvent = often</td></tr><tr><td>64</td><td>On va souvent au restaurant.</td><td>We often go to the restaurant.</td><td>souvent</td></tr><tr><td>65</td><td>Elle mange parfois au bureau.</td><td>She sometimes eats at the office.</td><td>parfois = sometimes</td></tr><tr><td>66</td><td>Je fais quelquefois du yoga.</td><td>I sometimes do yoga.</td><td>quelquefois = sometimes</td></tr><tr><td>67</td><td>Il dort rarement avant minuit.</td><td>He rarely sleeps before midnight.</td><td>rarement = rarely</td></tr><tr><td>68</td><td>On va rarement au théâtre.</td><td>We rarely go to the theater.</td><td>rarement</td></tr><tr><td>69</td><td>Je ne sors jamais le lundi.</td><td>I never go out on Mondays.</td><td>ne...jamais = never (Project 5)</td></tr><tr><td>70</td><td>Elle n'est jamais en retard.</td><td>She is never late.</td><td>ne...jamais</td></tr></tbody></table>
+<p><strong>🧠 FREQUENCY WORD PLACEMENT — confirmed rule:</strong></p>
+<code>Subject + VERB + FREQUENCY WORD + rest</code>
+<p>→ ✅ Je mange <strong>toujours</strong> à midi.<br>
+→ ❌ <del>Je toujours mange à midi.</del> (English order — wrong in French)</p>
+<p>→ Exception: <strong>jamais</strong> is part of the negation sandwich (Project 5):<br>
+→ Je <strong>ne</strong> sors <strong>jamais</strong> le lundi. (ne before verb, jamais after verb)</p>
+<p><strong>🧠 Additional frequency expressions:</strong></p>
+<table><thead><tr><th>French</th><th>English</th><th>Position in Sentence</th></tr></thead><tbody><tr><td><strong>tous les jours</strong></td><td>every day</td><td>End of sentence</td></tr><tr><td><strong>toutes les semaines</strong></td><td>every week</td><td>End of sentence</td></tr><tr><td><strong>tous les mois</strong></td><td>every month</td><td>End of sentence</td></tr><tr><td><strong>une fois par semaine</strong></td><td>once a week</td><td>End of sentence</td></tr><tr><td><strong>deux fois par mois</strong></td><td>twice a month</td><td>End of sentence</td></tr><tr><td><strong>de temps en temps</strong></td><td>from time to time</td><td>Start or end</td></tr></tbody></table>
+<p>→ These longer expressions typically go at the <strong>end</strong> of the sentence:<br>
+→ Je fais du sport <strong>trois fois par semaine</strong>. (I exercise three times a week.)</p>
+<hr>
+<h2>🔹 BLOCK H — Relative Time: Today, Tomorrow, Yesterday + This/Next/Last</h2>
+<p><em>Scenario: Talking about the immediate past, present, and future</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English Meaning</th><th>Time Reference</th></tr></thead><tbody><tr><td>71</td><td>Aujourd'hui, c'est vendredi.</td><td>Today is Friday.</td><td>aujourd'hui = today</td></tr><tr><td>72</td><td>Demain, c'est samedi.</td><td>Tomorrow is Saturday.</td><td>demain = tomorrow</td></tr><tr><td>73</td><td>Hier, c'était jeudi.</td><td>Yesterday was Thursday.</td><td>hier = yesterday</td></tr><tr><td>74</td><td>Aujourd'hui, je suis libre.</td><td>Today, I'm free.</td><td>aujourd'hui</td></tr><tr><td>75</td><td>Demain, j'ai cours.</td><td>Tomorrow, I have class.</td><td>demain</td></tr><tr><td>76</td><td>Après-demain, on va au musée.</td><td>The day after tomorrow, we go to the museum.</td><td>après-demain</td></tr><tr><td>77</td><td>Avant-hier, il a plu.</td><td>The day before yesterday, it rained.</td><td>avant-hier</td></tr><tr><td>78</td><td>Cette semaine, je suis très occupé.</td><td>This week, I'm very busy.</td><td>cette semaine</td></tr><tr><td>79</td><td>La semaine prochaine, j'ai un examen.</td><td>Next week, I have an exam.</td><td>la semaine prochaine</td></tr><tr><td>80</td><td>La semaine dernière, j'ai visité Lyon.</td><td>Last week, I visited Lyon.</td><td>la semaine dernière</td></tr></tbody></table>
+<p><strong>🧠 THIS / NEXT / LAST pattern:</strong></p>
+<table><thead><tr><th>Concept</th><th>Masculine</th><th>Feminine</th><th>Example</th></tr></thead><tbody><tr><td><strong>This</strong></td><td>ce / cet</td><td>cette</td><td><strong>ce</strong> mois / <strong>cette</strong> semaine</td></tr><tr><td><strong>Next</strong></td><td>prochain</td><td>prochaine</td><td>le mois <strong>prochain</strong> / la semaine <strong>prochaine</strong></td></tr><tr><td><strong>Last</strong></td><td>dernier</td><td>dernière</td><td>le mois <strong>dernier</strong> / la semaine <strong>dernière</strong></td></tr></tbody></table>
+<p>→ <strong>"This"</strong> goes BEFORE the noun: <strong>cette</strong> semaine<br>
+→ <strong>"Next"</strong> and <strong>"Last"</strong> go AFTER the noun: la semaine <strong>prochaine</strong> / la semaine <strong>dernière</strong><br>
+→ This is a key word order difference — adjective placement matters</p>
+<p><strong>🧠 Sentence 73 and 77 — preview of past tense:</strong><br>
+→ "c'<strong>était</strong>" = it was (imparfait — Project 10)<br>
+→ "il <strong>a</strong> plu" = it rained (passé composé — Project 9)<br>
+→ "j'<strong>ai</strong> visité" = I visited (passé composé — Project 9)<br>
+→ You'll learn these forms in Phase 2 — for now, just recognize them in context</p>
+<hr>
+<h2>🔹 BLOCK I — Duration and Time Spans</h2>
+<p><em>Scenario: How long something takes, how long you've been somewhere</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English Meaning</th><th>Duration Marker</th></tr></thead><tbody><tr><td>81</td><td>J'habite à Paris depuis six mois.</td><td>I've been living in Paris for six months.</td><td>depuis = since / for (ongoing)</td></tr><tr><td>82</td><td>J'étudie le français depuis septembre.</td><td>I've been studying French since September.</td><td>depuis + starting point</td></tr><tr><td>83</td><td>Je suis ici depuis lundi.</td><td>I've been here since Monday.</td><td>depuis + day</td></tr><tr><td>84</td><td>J'attends depuis vingt minutes.</td><td>I've been waiting for twenty minutes.</td><td>depuis + duration</td></tr><tr><td>85</td><td>Le cours dure deux heures.</td><td>The class lasts two hours.</td><td>durer = to last</td></tr><tr><td>86</td><td>Je travaille de neuf heures à cinq heures.</td><td>I work from 9 to 5.</td><td>de...à = from...to</td></tr><tr><td>87</td><td>Le magasin est ouvert de huit heures à vingt heures.</td><td>The store is open from 8 AM to 8 PM.</td><td>de...à</td></tr><tr><td>88</td><td>Je suis en France pour trois mois.</td><td>I'm in France for three months.</td><td>pour = for (planned duration)</td></tr><tr><td>89</td><td>Il faut une heure pour aller à l'aéroport.</td><td>It takes one hour to get to the airport.</td><td>pour = for (required time)</td></tr><tr><td>90</td><td>Je fais du sport pendant une heure.</td><td>I exercise for one hour.</td><td>pendant = for / during</td></tr></tbody></table>
+<p><strong>🧠 CRITICAL: DEPUIS vs. POUR vs. PENDANT</strong></p>
+<table><thead><tr><th>Word</th><th>Meaning</th><th>When to Use</th><th>Tense Used</th></tr></thead><tbody><tr><td><strong>Depuis</strong></td><td>Since / For</td><td>Action <strong>started in past</strong> and <strong>still continuing</strong> NOW</td><td><strong>Present tense</strong> in French!</td></tr><tr><td><strong>Pour</strong></td><td>For</td><td><strong>Planned</strong> future duration</td><td>Present or future</td></tr><tr><td><strong>Pendant</strong></td><td>For / During</td><td><strong>Completed</strong> duration or general duration</td><td>Any tense</td></tr></tbody></table>
+<p>→ <strong>The DEPUIS trap:</strong><br>
+→ English: "I <strong>have been</strong> living here <strong>for</strong> six months." (present perfect)<br>
+→ French: "J'<strong>habite</strong> ici <strong>depuis</strong> six mois." (<strong>present tense!</strong>)<br>
+→ French uses <strong>PRESENT TENSE with depuis</strong> when the action is STILL happening<br>
+→ This is a MAJOR difference from English — one of the hardest adjustments</p>
+<table><thead><tr><th>English (present perfect)</th><th>French (present + depuis)</th></tr></thead><tbody><tr><td>I <strong>have been waiting</strong> for 20 minutes.</td><td>J'<strong>attends</strong> depuis 20 minutes.</td></tr><tr><td>She <strong>has been living</strong> here since 2020.</td><td>Elle <strong>habite</strong> ici depuis 2020.</td></tr><tr><td>We <strong>have been studying</strong> French for a year.</td><td>On <strong>étudie</strong> le français depuis un an.</td></tr></tbody></table>
+<p>→ Do NOT use past tense with depuis (at this level) → <del>"J'ai habité depuis six mois"</del> ❌<br>
+→ Use PRESENT tense → "J'habite depuis six mois" ✅</p>
+<hr>
+<h2>🔹 BLOCK J — Full Week Schedule: Everything Combined</h2>
+<p><em>Scenario: You describe your complete weekly schedule to a friend — all time layers active</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>Time Layer(s) Used</th><th>Context</th></tr></thead><tbody><tr><td>91</td><td>Le lundi, j'ai cours à neuf heures du matin.</td><td>Day (recurring) + clock + part of day</td><td>Monday schedule</td></tr><tr><td>92</td><td>Le cours dure trois heures.</td><td>Duration</td><td>Class length</td></tr><tr><td>93</td><td>À midi, je mange toujours à la cantine.</td><td>Clock + frequency + place</td><td>Lunch habit</td></tr><tr><td>94</td><td>L'après-midi, je travaille au bureau.</td><td>Part of day + place</td><td>Afternoon routine</td></tr><tr><td>95</td><td>Le mardi et le jeudi, je fais du sport le soir.</td><td>Days (recurring) + part of day</td><td>Exercise days</td></tr><tr><td>96</td><td>Je vais à la salle de sport de six heures à huit heures.</td><td>Place + de...à (time span)</td><td>Gym hours</td></tr><tr><td>97</td><td>Le mercredi, je suis libre l'après-midi.</td><td>Day (recurring) + part of day</td><td>Free time</td></tr><tr><td>98</td><td>Le vendredi soir, on sort souvent.</td><td>Day + part of day + frequency</td><td>Weekend start</td></tr><tr><td>99</td><td>Le samedi matin, je dors jusqu'à dix heures.</td><td>Day + part of day + jusqu'à (until)</td><td>Weekend sleep</td></tr><tr><td>100</td><td>Le dimanche, je ne fais jamais rien.</td><td>Day + frequency + negation</td><td>Rest day</td></tr><tr><td>101</td><td>Cette semaine, j'ai un examen mercredi.</td><td>This week + specific day</td><td>This week's event</td></tr><tr><td>102</td><td>La semaine prochaine, je pars en vacances.</td><td>Next week + future plan</td><td>Next week</td></tr><tr><td>103</td><td>J'étudie le français depuis trois mois.</td><td>Depuis + duration</td><td>Ongoing action</td></tr><tr><td>104</td><td>En été, je vais en Espagne pour deux semaines.</td><td>Season + country + pour + duration</td><td>Summer plans</td></tr></tbody></table>
+<hr>
+<h1>✅ WHAT SHOULD DO</h1>
+<p>→ <strong>Master "à + time"</strong> — you will use it in every scheduling conversation<br>
+→ <strong>Memorize the LE + day = recurring</strong> rule — this tiny article changes meaning completely<br>
+→ <strong>Learn "en + month"</strong> and the season prepositions (<strong>au</strong> printemps, <strong>en</strong> for the rest)<br>
+→ <strong>Internalize frequency word placement</strong> — AFTER the verb in French, not before like English<br>
+→ <strong>Practice "depuis + present tense"</strong> — this is one of the hardest habits to build for English speakers<br>
+→ <strong>Know the difference between depuis / pour / pendant</strong> — they all translate to "for" but function differently<br>
+→ <strong>Connect to Project 7</strong> — preposition logic carries over: "en" for countries AND months, "à" for cities AND clock times<br>
+→ <strong>Connect to Project 4</strong> — "À quelle heure ?" / "Quel jour ?" / "C'est quand ?" are your time questions<br>
+→ <strong>Connect to Project 2</strong> — your daily routine verbs now get time anchors: "Je <strong>mange</strong> (P2) <strong>à midi</strong> (P8)"</p>
+<hr>
+<h1>❌ WHAT SHOULD NOT DO</h1>
+<p>→ ❌ Do NOT say <del>"dans mars"</del> or <del>"à mars"</del> → "<strong>en</strong> mars"<br>
+→ ❌ Do NOT say <del>"en printemps"</del> → "<strong>au</strong> printemps" (only season with au)<br>
+→ ❌ Do NOT say <del>"à le lundi"</del> → just "<strong>le</strong> lundi" (no preposition needed for days!)<br>
+→ ❌ Do NOT put frequency words before the verb → <del>"Je toujours mange"</del> → "Je mange <strong>toujours</strong>"<br>
+→ ❌ Do NOT use past tense with "depuis" for ongoing actions → <del>"J'ai habité depuis six mois"</del> → "J'<strong>habite</strong> depuis six mois"<br>
+→ ❌ Do NOT capitalize days or months → <del>"Lundi"</del> → "<strong>l</strong>undi" / <del>"Mars"</del> → "<strong>m</strong>ars"<br>
+→ ❌ Do NOT say <del>"le deuxième mars"</del> for dates → "le <strong>deux</strong> mars" (cardinal numbers for dates)<br>
+→ ❌ Do NOT say <del>"douze heures"</del> for noon in conversation → "<strong>midi</strong>"<br>
+→ ❌ Do NOT confuse "ce matin" (this morning) with "le matin" (mornings in general / every morning)<br>
+→ ❌ Do NOT say <del>"pour six mois"</del> when the action is still happening → use "<strong>depuis</strong> six mois"</p>
+<hr>
+<h1>🔀 WHEN TO USE WHAT</h1>
+<h2>Time Preposition Master Table</h2>
+<table><thead><tr><th>Time Element</th><th>Preposition / Marker</th><th>Example</th></tr></thead><tbody><tr><td><strong>Clock time</strong></td><td><strong>à</strong></td><td>à huit heures</td></tr><tr><td><strong>Part of day (habitual)</strong></td><td><strong>le</strong></td><td>le matin, le soir</td></tr><tr><td><strong>Part of day (specific)</strong></td><td><strong>ce / cet / cette</strong></td><td>ce matin, ce soir, cet après-midi</td></tr><tr><td><strong>Day (one-time)</strong></td><td><strong>no article</strong></td><td>lundi, mardi</td></tr><tr><td><strong>Day (recurring)</strong></td><td><strong>le</strong></td><td>le lundi, le mardi</td></tr><tr><td><strong>Month</strong></td><td><strong>en</strong></td><td>en mars, en septembre</td></tr><tr><td><strong>Season (spring)</strong></td><td><strong>au</strong></td><td>au printemps</td></tr><tr><td><strong>Season (others)</strong></td><td><strong>en</strong></td><td>en été, en automne, en hiver</td></tr><tr><td><strong>Year</strong></td><td><strong>en</strong></td><td>en 2024</td></tr><tr><td><strong>Date</strong></td><td><strong>le + number + month</strong></td><td>le trois mai</td></tr><tr><td><strong>Ongoing duration</strong></td><td><strong>depuis</strong></td><td>depuis six mois</td></tr><tr><td><strong>Planned duration</strong></td><td><strong>pour</strong></td><td>pour deux semaines</td></tr><tr><td><strong>Completed duration</strong></td><td><strong>pendant</strong></td><td>pendant une heure</td></tr><tr><td><strong>From...to</strong></td><td><strong>de...à</strong></td><td>de neuf heures à cinq heures</td></tr><tr><td><strong>Until</strong></td><td><strong>jusqu'à</strong></td><td>jusqu'à midi</td></tr></tbody></table>
+<h2>Frequency Placement</h2>
+<table><thead><tr><th>Type</th><th>Position</th><th>Example</th></tr></thead><tbody><tr><td>Single word (toujours, souvent...)</td><td><strong>After</strong> conjugated verb</td><td>Je mange <strong>toujours</strong> à midi.</td></tr><tr><td>Expression (tous les jours...)</td><td><strong>End</strong> of sentence</td><td>Je fais du sport <strong>tous les jours</strong>.</td></tr><tr><td>Ne...jamais</td><td>Sandwich around verb</td><td>Je <strong>ne</strong> sors <strong>jamais</strong> le lundi.</td></tr></tbody></table>
+<hr>
+<h1>🚫 WHEN NOT TO USE</h1>
+<p>→ Do NOT use <strong>à</strong> for months → à = clock time and cities only → use <strong>en</strong> for months<br>
+→ Do NOT use <strong>en</strong> for clock time → <del>"en huit heures"</del> means "in eight hours" (duration!) not "at eight o'clock"<br>
+→ Do NOT use <strong>dans</strong> for months or seasons → dans = physical containment or future duration ("dans deux jours" = in two days — different!)<br>
+→ Do NOT use <strong>le</strong> before "aujourd'hui, demain, hier" → these are standalone time words → <del>"le aujourd'hui"</del> ❌<br>
+→ Do NOT use <strong>depuis</strong> for actions that have STOPPED → use <strong>pendant</strong> → "J'ai travaillé <strong>pendant</strong> deux ans" (I worked for two years — finished)<br>
+→ Do NOT use <strong>pour</strong> for actions still in progress → use <strong>depuis</strong> → "Je suis ici <strong>depuis</strong> trois jours" (I've been here for three days — still here)</p>
+<hr>
+<h1>⚠️ COMMON PITFALLS AND FAILURE MODES</h1>
+<table><thead><tr><th>Pitfall</th><th>What Learners Do Wrong</th><th>Correct Version</th><th>Why</th></tr></thead><tbody><tr><td><strong>Depuis + past tense</strong></td><td>J'ai habité ici depuis six mois.</td><td>J'<strong>habite</strong> ici depuis six mois.</td><td>Depuis + ongoing = present tense in French</td></tr><tr><td><strong>Frequency word order</strong></td><td>Je souvent mange dehors.</td><td>Je mange <strong>souvent</strong> dehors.</td><td>Frequency goes AFTER verb in French</td></tr><tr><td><strong>Le + day confusion</strong></td><td>"Le lundi" thinking it means "this Monday"</td><td>Le lundi = <strong>every</strong> Monday</td><td>No article = this Monday / le = every</td></tr><tr><td><strong>En printemps</strong></td><td>En printemps, il fait beau.</td><td><strong>Au</strong> printemps, il fait beau.</td><td>Printemps = masculine consonant start → au</td></tr><tr><td><strong>Noon/Midnight</strong></td><td>Il est douze heures.</td><td>Il est <strong>midi</strong>.</td><td>Use midi/minuit in conversation</td></tr><tr><td><strong>Date ordinal</strong></td><td>Le deuxième mars.</td><td>Le <strong>deux</strong> mars.</td><td>Cardinal numbers for dates (except premier)</td></tr><tr><td><strong>Capital days/months</strong></td><td>Lundi, Mars</td><td><strong>l</strong>undi, <strong>m</strong>ars</td><td>Not capitalized in French</td></tr><tr><td><strong>Depuis vs. pendant</strong></td><td>Je suis ici pendant trois jours (but still here).</td><td>Je suis ici <strong>depuis</strong> trois jours.</td><td>Still here = depuis / finished = pendant</td></tr><tr><td><strong>Missing "le" for recurring</strong></td><td>Lundi, je travaille (meaning every Monday).</td><td><strong>Le</strong> lundi, je travaille.</td><td>Need "le" for habitual meaning</td></tr><tr><td><strong>Ce soir vs. le soir</strong></td><td>Using them interchangeably</td><td><strong>Ce</strong> soir = tonight / <strong>Le</strong> soir = evenings in general</td><td>Different meanings</td></tr><tr><td><strong>Heure agreement</strong></td><td>Il est un heure.</td><td>Il est <strong>une</strong> heure.</td><td>Heure is feminine → une</td></tr></tbody></table>
+<hr>
+<h1>🔑 KEY TAKEAWAY</h1>
+<blockquote>
+<p><strong>Project 1 → You exist and possess.</strong><br>
+<strong>Project 2 → You act.</strong><br>
+<strong>Project 3 → You identify the world.</strong><br>
+<strong>Project 4 → You ask questions.</strong><br>
+<strong>Project 5 → You deny and refuse.</strong><br>
+<strong>Project 6 → You express desire, ability, obligation, need.</strong><br>
+<strong>Project 7 → You locate yourself in SPACE.</strong><br>
+<strong>Project 8 → You locate yourself in TIME.</strong></p>
+<p><strong>🎉 PHASE 1 IS COMPLETE — YOUR FOUNDATION IS BUILT.</strong></p>
+<p>You now have <strong>ALL the tools</strong> for basic French interaction:<br>
+→ Identity + Possession + Actions + Identification + Questions + Negation + Modals + Space + Time</p>
+<p>Your sentence skeleton has grown from:</p>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>P1: Subject + être/avoir + info
+</span>P2: Subject + verb + object
+P3: C'est / Il y a + article + noun
+P4: Question word + question form
+P5: Subject + ne + verb + pas + rest
+P6: Subject + modal + infinitif
+P7: Subject + verb + preposition + place
+P8: Subject + verb + time marker</code></pre></div>
+<p><strong>Combined:</strong> "Le lundi, je ne veux pas aller au bureau à huit heures du matin."<br>
+(On Mondays, I don't want to go to the office at 8 AM.)<br>
+→ This single sentence uses structures from ALL 8 projects!</p>
+<p><strong>But everything you say is locked in the PRESENT.</strong><br>
+→ You cannot talk about what HAPPENED yesterday.<br>
+→ You cannot tell STORIES about the past.<br>
+→ Phase 2 unlocks the <strong>past tenses</strong> — starting with the passé composé.</p>
+</blockquote>
+<hr>
+<h1>🌉 BRIDGE TO PHASE 2</h1>
+<blockquote>
+<p><strong>Phase 1 gave you the PRESENT — who you are, what you do, where, when, and how.</strong><br>
+<strong>Phase 2 gives you the PAST and NEAR FUTURE — what happened, what used to be, what's about to happen.</strong></p>
+<p>→ Project 9: <strong>"What Happened Yesterday"</strong> — Passé composé<br>
+→ You'll learn to say "I ate" / "I went" / "I saw" / "She left" / "We arrived"<br>
+→ The passé composé uses <strong>avoir or être + past participle</strong> — a completely new sentence structure<br>
+→ It's the most important past tense in French conversation<br>
+→ It builds DIRECTLY on être/avoir (Project 1) and the action verbs (Project 2)</p>
+</blockquote>
+<hr>
+<h1>✅ PROJECT 8 COMPLETE — PHASE 1 COMPLETE</h1>
+<blockquote>
+<p><strong>🟢 PHASE 1 SUMMARY:</strong></p>
+<table><thead><tr><th>Project</th><th>Title</th><th>Core Unlock</th></tr></thead><tbody><tr><td>1</td><td>I Exist, I Have Things</td><td>Être / Avoir — identity, possession, states</td></tr><tr><td>2</td><td>My Day in 20 Verbs</td><td>Present tense action verbs — routines</td></tr><tr><td>3</td><td>Pointing at the World</td><td>C'est / Il y a / Articles — identification</td></tr><tr><td>4</td><td>Asking Without Sounding Lost</td><td>3 question forms + 8 question words</td></tr><tr><td>5</td><td>Saying No in 10 Ways</td><td>Negation sandwich — pas, plus, jamais, rien, personne</td></tr><tr><td>6</td><td>I Want, I Need, I Can</td><td>Modal verbs — vouloir, pouvoir, devoir + infinitif</td></tr><tr><td>7</td><td>Here, There, To, From</td><td>Prepositions of place — à, en, au, chez, dans</td></tr><tr><td>8</td><td>When Things Happen</td><td>Time markers — hours, days, months, seasons, frequency, duration</td></tr></tbody></table>
+<p><strong>Total Phase 1 sentences: ~800+</strong><br>
+<strong>You are now ready for Phase 2: EASY — Core Patterns</strong></p>
+</blockquote>
+<hr>
+<blockquote>
+<p><strong>Are you ready for PROJECT 9: "What Happened Yesterday"?</strong><br>
+→ First project of Phase 2 (Easy)<br>
+→ ~100 sentences covering the <strong>passé composé</strong><br>
+→ Scenario: You need to tell a friend what you did last weekend<br>
+→ Introduces the <strong>auxiliary + past participle</strong> structure — the first compound tense</p>
+</blockquote>
+</div>
+</div>
+
+<!-- ========== data-index="19" ========== -->
+
+        </div>
+
+        <div class="nav-bar">
+            <a href="project-7.html" class="nav-button prev">← Previous Chapter</a>
+            <div class="page-info">
+                <a href="index.html" class="nav-button home">📚 Table of Contents</a><br>
+                <span style="margin-top:8px;display:block">Chapter 8 of 50</span>
+            </div>
+            <a href="project-9.html" class="nav-button next">Next Chapter →</a>
+        </div>
+    </div>
+
+    
+    <div id="progress-track"><div id="progress-fill"></div></div>
+    <div id="progress-pct">0%</div>
+
+
+    <script>
+    const fill = document.getElementById('progress-fill');
+    const pct  = document.getElementById('progress-pct');
+    function updateProgress() {
+        const scrollTop = window.scrollY;
+        const docHeight = document.body.scrollHeight - window.innerHeight;
+        const scrolled  = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+        fill.style.height = scrolled + '%';
+        pct.textContent   = Math.round(scrolled) + '%';
+    }
+    window.addEventListener('scroll', updateProgress);
+    updateProgress();
+
+    document.addEventListener('keydown', function(e) {
+        if (['INPUT','TEXTAREA'].includes(document.activeElement.tagName)) return;
+        if (e.key === 'ArrowLeft') {
+            const b = document.querySelector('.nav-button.prev');
+            if (b && !b.classList.contains('disabled')) window.location.href = b.href;
+        }
+        if (e.key === 'ArrowRight') {
+            const b = document.querySelector('.nav-button.next');
+            if (b && !b.classList.contains('disabled')) window.location.href = b.href;
+        }
+    });
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="images/favicon.png">
+    <title>Project 39: "Never, Nothing, Nobody, Only" — French Daily Sentences</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.75;
+            color: #1a202c;
+            background-color: #f7fafc;
+        }
+        .container {
+            max-width: 1800px;
+            margin: 0 auto;
+            background: white;
+            min-height: 100vh;
+            box-shadow: 0 0 30px rgba(0,0,0,0.08);
+            padding: 48px 52px;
+        }
+        
+        .content { max-width: 1700px; margin: 0 auto; color: #1a202c; }
+        .content h1 {
+            color: #1a202c; margin: 32px 0 20px;
+            padding-bottom: 12px;
+            border-bottom: 4px solid #3b82f6;
+            font-size: 2.1em;
+            font-weight: 700;
+        }
+        .content h2 {
+            color: #1a202c; margin: 28px 0 16px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #60a5fa;
+            font-size: 1.6em;
+            font-weight: 600;
+        }
+        .content h3 { color: #1a202c; margin: 22px 0 12px; font-size: 1.3em; font-weight: 600; }
+        .content h4 { color: #2d3748; margin: 18px 0 10px; font-size: 1.1em; font-weight: 600; }
+        .content p  { margin-bottom: 16px; line-height: 1.8; color: #1a202c; }
+        .content ul, .content ol { margin: 12px 0 18px 30px; color: #1a202c; }
+        .content li { margin-bottom: 8px; line-height: 1.75; color: #1a202c; }
+        .content hr { border: none; border-top: 2px solid #e2e8f0; margin: 26px 0; }
+        .content pre {
+            background: #f7fafc !important;
+            border: 1px solid #cbd5e0 !important;
+            border-left: 4px solid #3b82f6 !important;
+            padding: 18px !important; overflow-x: auto; margin: 18px 0; border-radius: 6px;
+            font-family: 'Consolas','Monaco','Courier New',monospace !important;
+            font-size: 0.9em !important;
+        }
+        .content pre:not([style*="color"]) { color: #1a202c !important; }
+        .content code {
+            font-family: 'Consolas','Monaco','Courier New',monospace !important;
+            font-size: 0.88em !important;
+        }
+        .content code:not(pre code) {
+            background: #dbeafe !important;
+            color: #1a202c !important;
+            padding: 2px 6px;
+            border-radius: 3px;
+        }
+        .content pre code { background: transparent !important; padding: 0; }
+        .content table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+        .content th {
+            background: linear-gradient(135deg, #3b82f6 0%, #60a5fa 100%);
+            color: white; padding: 12px 16px; text-align: left;
+            font-weight: 600;
+        }
+        .content td { padding: 11px 16px; border: 1px solid #e2e8f0; color: #1a202c; }
+        .content tr:nth-child(even) td { background: #eff6ff; }
+        .content blockquote {
+            border-left: 4px solid #3b82f6; background: #eff6ff;
+            padding: 14px 20px; margin: 18px 0; border-radius: 0 6px 6px 0;
+            color: #1a202c;
+        }
+        .content strong { color: #1a202c; font-weight: 600; }
+        .px-2 { padding: 0; }
+        .chat-message { background: transparent; padding: 0; margin: 0; }
+
+        /* Bottom nav bar only */
+        .nav-bar {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 24px 0;
+            margin-top: 50px;
+            border-top: 3px solid #60a5fa;
+        }
+        .nav-button {
+            display: inline-flex; align-items: center; gap: 8px;
+            padding: 12px 26px;
+            background: linear-gradient(135deg, #3b82f6 0%, #60a5fa 100%);
+            color: white !important; text-decoration: none;
+            border-radius: 8px; font-weight: 600; font-size: 0.95em;
+            transition: all 0.2s;
+            box-shadow: 0 2px 8px rgba(59,130,246,0.35);
+        }
+        .nav-button:hover { transform: translateY(-2px); box-shadow: 0 4px 14px rgba(59,130,246,0.5); }
+        .nav-button.disabled { background: #cbd5e1; box-shadow: none; pointer-events: none; }
+        .nav-button.home {
+            background: linear-gradient(135deg, #ef4444 0%, #f87171 100%);
+            box-shadow: 0 2px 8px rgba(239,68,68,0.35);
+        }
+        .nav-button.home:hover { box-shadow: 0 4px 14px rgba(239,68,68,0.5); }
+        .page-info { color: #718096; font-size: 0.9em; text-align: center; }
+
+        /* Progress bar */
+        #progress-track {
+            position: fixed; top: 20px; right: 20px;
+            width: 10px; height: 150px;
+            background: rgba(59,130,246,0.2);
+            border: 2px solid #3b82f6;
+            border-radius: 6px; overflow: hidden; z-index: 1000;
+        }
+        #progress-fill {
+            width: 100%;
+            background: linear-gradient(180deg, #3b82f6, #2563eb);
+            height: 0%;
+            transition: height 0.15s ease;
+        }
+        #progress-pct {
+            position: fixed; top: 0px; right: 16px;
+            color: #2563eb; font-size: 14px; font-weight: bold;
+            z-index: 1001;
+            text-shadow: 0 1px 2px rgba(255,255,255,0.9);
+            line-height: 20px;
+        }
+
+    </style>
+<link rel="stylesheet" href="assets/chapters.css?v=20260421203847"><script src="assets/chapters.js?v=20260421203847" defer></script>
+</head>
+<body>
+    <div class="container">
+        <div class="content">
+            <div class="chat-message" data-index="17">
+<div class="px-2"><h1>🟠 PROJECT 39: "Never, Nothing, Nobody, Only"</h1>
+<h2><em>A detective investigating a case where everyone denies everything</em></h2>
+<hr>
+<h1>🎯 THE HYPOTHETICAL PROBLEM</h1>
+<p>→ You are a detective working on a case in Marseille<br>
+→ A valuable painting has disappeared from a private gallery<br>
+→ You interrogate witnesses, suspects, staff — and EVERYONE denies EVERYTHING<br>
+→ "I <strong>never</strong> went there." "I saw <strong>nothing</strong>." "<strong>Nobody</strong> told me anything." "I have <strong>no</strong> idea."<br>
+→ "I spoke to <strong>neither</strong> the owner <strong>nor</strong> the guard." "I <strong>only</strong> came to see the exhibition."<br>
+→ "I <strong>no longer</strong> work there." "<strong>Not one</strong> person saw anything." "<strong>None</strong> of the cameras were working."<br>
+→ You try to write your report in French using only "ne...pas" for every negation<br>
+→ Your French colleague reads it and says: "This sounds like a child wrote it — there are TEN ways to say no in French, and you're using only one."<br>
+→ You realize: P5 gave you <strong>ne...pas</strong> — the basic "not"<br>
+→ But real French negation is a <strong>rich system</strong> with at least 8 distinct negative structures<br>
+→ Each one has different placement rules, different interactions with tenses, and different emotional weight<br>
+→ Without them, you can deny — but you can't deny with <strong>precision, emphasis, or nuance</strong></p>
+<p><strong>The core realization:</strong><br>
+→ P5 taught you: ne...pas = not (the default negation)<br>
+→ P39 teaches you the ENTIRE negative system — every way French says "no"<br>
+→ These negations interact with EVERY structure you've learned: compound tenses, pronouns, infinitives, gérondif, faire causatif, si-clauses<br>
+→ Mastering negation = mastering the ability to <strong>set boundaries, deny accusations, express absence, and be precise</strong></p>
+<hr>
+<h1>🔍 HOW TO APPROACH IT</h1>
+<p>→ Think of French negation as a <strong>sandwich</strong> — NE is always the first slice, and the second slice changes meaning</p>
+<h2>The Complete Negation Map</h2>
+<table><thead><tr><th>Structure</th><th>Second Element</th><th>Meaning</th><th>Frequency</th></tr></thead><tbody><tr><td>ne...<strong>pas</strong></td><td>pas</td><td>not</td><td>⭐⭐⭐⭐⭐ most common</td></tr><tr><td>ne...<strong>plus</strong></td><td>plus</td><td>no longer / no more / not anymore</td><td>⭐⭐⭐⭐ very common</td></tr><tr><td>ne...<strong>jamais</strong></td><td>jamais</td><td>never</td><td>⭐⭐⭐⭐ very common</td></tr><tr><td>ne...<strong>rien</strong></td><td>rien</td><td>nothing / not anything</td><td>⭐⭐⭐⭐ very common</td></tr><tr><td>ne...<strong>personne</strong></td><td>personne</td><td>nobody / not anyone</td><td>⭐⭐⭐ common</td></tr><tr><td>ne...<strong>que</strong></td><td>que</td><td>only / nothing but</td><td>⭐⭐⭐ common</td></tr><tr><td>ne...<strong>aucun(e)</strong></td><td>aucun(e)</td><td>not a single / no [noun]</td><td>⭐⭐ formal/emphatic</td></tr><tr><td>ne...<strong>ni...ni</strong></td><td>ni...ni</td><td>neither...nor</td><td>⭐⭐ formal/emphatic</td></tr><tr><td>ne...<strong>nulle part</strong></td><td>nulle part</td><td>nowhere</td><td>⭐ less common</td></tr><tr><td>ne...<strong>guère</strong></td><td>guère</td><td>hardly / scarcely</td><td>⭐ literary/formal</td></tr></tbody></table>
+<p>→ All share the NE — but placement of the second element VARIES depending on the negation<br>
+→ This is what makes advanced negation tricky: <strong>some go where "pas" goes, some don't</strong></p>
+<hr>
+<h1>🔧 HOW CAN WE SOLVE IT</h1>
+<h2>The Universal Placement Rule for Simple Tenses</h2>
+<code>SUBJECT + NE + VERB + [second element]</code>
+<p>→ Je <strong>ne</strong> mange <strong>pas</strong> / <strong>plus</strong> / <strong>jamais</strong> / <strong>rien</strong> / <strong>que</strong> du pain</p>
+<h2>The Placement Rule for Compound Tenses — HERE'S WHERE IT SPLITS</h2>
+<h3>Group 1 — Second element goes BETWEEN auxiliary and past participle (same position as "pas")</h3>
+<table><thead><tr><th>Negation</th><th>Compound Tense Placement</th><th>Example</th></tr></thead><tbody><tr><td>ne...pas</td><td>ne + aux + <strong>pas</strong> + pp</td><td>Je n'ai <strong>pas</strong> mangé</td></tr><tr><td>ne...plus</td><td>ne + aux + <strong>plus</strong> + pp</td><td>Je n'ai <strong>plus</strong> mangé</td></tr><tr><td>ne...jamais</td><td>ne + aux + <strong>jamais</strong> + pp</td><td>Je n'ai <strong>jamais</strong> mangé</td></tr><tr><td>ne...rien</td><td>ne + aux + <strong>rien</strong> + pp</td><td>Je n'ai <strong>rien</strong> mangé</td></tr></tbody></table>
+<h3>Group 2 — Second element goes AFTER the past participle</h3>
+<table><thead><tr><th>Negation</th><th>Compound Tense Placement</th><th>Example</th></tr></thead><tbody><tr><td>ne...personne</td><td>ne + aux + pp + <strong>personne</strong></td><td>Je n'ai vu <strong>personne</strong></td></tr><tr><td>ne...que</td><td>ne + aux + pp + <strong>que</strong> + noun</td><td>Je n'ai mangé <strong>que</strong> du pain</td></tr><tr><td>ne...aucun(e)</td><td>ne + aux + pp + <strong>aucun(e)</strong> + noun</td><td>Je n'ai trouvé <strong>aucune</strong> preuve</td></tr><tr><td>ne...nulle part</td><td>ne + aux + pp + <strong>nulle part</strong></td><td>Je ne suis allé <strong>nulle part</strong></td></tr></tbody></table>
+<p><strong>🧠 The critical split:</strong><br>
+→ <strong>Short words</strong> (pas, plus, jamais, rien) → go BEFORE past participle<br>
+→ <strong>Long words / phrases</strong> (personne, que+noun, aucun+noun, nulle part) → go AFTER past participle<br>
+→ This is THE most important rule in advanced negation</p>
+<hr>
+<h1>✅ WHAT COULD BE DONE — THE 100 SENTENCES</h1>
+<h2>🔹 BLOCK A — NE...PLUS: "No Longer / Not Anymore"</h2>
+<p><em>Scenario: Interrogating a former employee of the gallery — everything has changed</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English Meaning</th><th>Tense</th></tr></thead><tbody><tr><td>1</td><td>Je ne travaille plus ici.</td><td>I no longer work here.</td><td>Présent</td></tr><tr><td>2</td><td>Il n'habite plus à Marseille.</td><td>He doesn't live in Marseille anymore.</td><td>Présent</td></tr><tr><td>3</td><td>Elle ne vient plus au bureau depuis mars.</td><td>She hasn't been coming to the office since March.</td><td>Présent</td></tr><tr><td>4</td><td>On ne se parle plus.</td><td>We don't speak to each other anymore.</td><td>Présent — reflexive (P14)</td></tr><tr><td>5</td><td>Je n'ai plus confiance en lui.</td><td>I no longer trust him.</td><td>Présent — avoir confiance</td></tr><tr><td>6</td><td>Nous n'avons plus accès au bâtiment.</td><td>We no longer have access to the building.</td><td>Présent</td></tr><tr><td>7</td><td>Il n'y a plus de caméras dans cette salle.</td><td>There are no more cameras in this room.</td><td>Présent — il y a (P3)</td></tr><tr><td>8</td><td>Je ne l'ai plus revu après cette date.</td><td>I didn't see him again after that date.</td><td>Passé composé — pronoun (P19)</td></tr><tr><td>9</td><td>Elle n'avait plus les clés quand elle est partie.</td><td>She no longer had the keys when she left.</td><td>Imparfait (P10) + passé composé (P9)</td></tr><tr><td>10</td><td>Si je ne travaillais plus là, je ne pourrais plus vous aider.</td><td>If I no longer worked there, I wouldn't be able to help you anymore.</td><td>Si-clause (P33) — ne...plus in BOTH clauses</td></tr></tbody></table>
+<p><strong>🧠 Structure unlocked:</strong> <code>NE + verb + PLUS = no longer / not anymore</code><br>
+→ In compound tenses: ne + aux + <strong>plus</strong> + pp → "Je n'ai <strong>plus</strong> travaillé"<br>
+→ "Plus" here is pronounced "plü" (silent S) — NOT "plüss" (which means "more")<br>
+→ Can combine with il y a: "Il n'y a plus de..." = there is no more...<br>
+→ Emotional weight: signals <strong>change</strong> — something was true before but ISN'T anymore</p>
+<hr>
+<h2>🔹 BLOCK B — NE...JAMAIS: "Never"</h2>
+<p><em>Scenario: Suspects swearing they never did anything, never went anywhere, never saw anyone</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English Meaning</th><th>Tense</th></tr></thead><tbody><tr><td>11</td><td>Je ne vais jamais dans ce quartier.</td><td>I never go to that neighborhood.</td><td>Présent — habitual</td></tr><tr><td>12</td><td>Tu ne m'as jamais parlé de ce tableau.</td><td>You never told me about that painting.</td><td>Passé composé — pronoun (P19)</td></tr><tr><td>13</td><td>Il ne boit jamais d'alcool.</td><td>He never drinks alcohol.</td><td>Présent — de replaces article after negation</td></tr><tr><td>14</td><td>Elle n'a jamais mis les pieds dans cette galerie.</td><td>She has never set foot in that gallery.</td><td>Passé composé</td></tr><tr><td>15</td><td>On n'avait jamais eu de problème avant.</td><td>We had never had a problem before.</td><td>Plus-que-parfait (P32)</td></tr><tr><td>16</td><td>Je ne ferais jamais une chose pareille.</td><td>I would never do such a thing.</td><td>Conditionnel (P17)</td></tr><tr><td>17</td><td>Nous n'aurions jamais accepté cette proposition.</td><td>We would never have accepted that proposal.</td><td>Conditionnel passé (P35)</td></tr><tr><td>18</td><td>Il n'a jamais rien dit à personne.</td><td>He never said anything to anyone.</td><td>⚠️ TRIPLE negation — jamais + rien + personne</td></tr><tr><td>19</td><td>Je n'avais jamais vu un tel chef-d'œuvre.</td><td>I had never seen such a masterpiece.</td><td>Plus-que-parfait (P32)</td></tr><tr><td>20</td><td>Si j'avais su, je ne lui aurais jamais fait confiance.</td><td>If I had known, I would never have trusted him.</td><td>Si-clause (P34) + cond.passé + jamais</td></tr></tbody></table>
+<p><strong>🧠 Structure unlocked:</strong> <code>NE + verb + JAMAIS = never</code><br>
+→ In compound tenses: ne + aux + <strong>jamais</strong> + pp → "Je n'ai <strong>jamais</strong> vu"<br>
+→ Sentence 18: <strong>stacking negations</strong> — French CAN combine jamais + rien + personne in one sentence<br>
+→ English would say "He never said anything to anyone" — French mirrors this: "Il n'a <strong>jamais rien</strong> dit <strong>à personne</strong>"<br>
+→ Order when stacking: jamais → rien → personne (short words first, long words after pp)</p>
+<hr>
+<h2>🔹 BLOCK C — NE...RIEN: "Nothing / Not Anything"</h2>
+<p><em>Scenario: Witnesses claim they saw nothing, heard nothing, know nothing</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English Meaning</th><th>Tense</th></tr></thead><tbody><tr><td>21</td><td>Je ne sais rien.</td><td>I know nothing.</td><td>Présent</td></tr><tr><td>22</td><td>Tu ne comprends rien à cette affaire.</td><td>You understand nothing about this case.</td><td>Présent</td></tr><tr><td>23</td><td>Il n'a rien vu.</td><td>He saw nothing.</td><td>Passé composé — rien BEFORE pp</td></tr><tr><td>24</td><td>Elle n'a rien entendu cette nuit-là.</td><td>She heard nothing that night.</td><td>Passé composé</td></tr><tr><td>25</td><td>On ne peut rien faire.</td><td>We can't do anything.</td><td>Présent — modal + inf: rien before infinitif</td></tr><tr><td>26</td><td>Rien ne s'est passé.</td><td>Nothing happened.</td><td>⚠️ RIEN as SUBJECT — goes BEFORE ne</td></tr><tr><td>27</td><td>Rien ne prouve sa culpabilité.</td><td>Nothing proves his guilt.</td><td>Rien as subject</td></tr><tr><td>28</td><td>Je n'ai rien à vous dire.</td><td>I have nothing to tell you.</td><td>Présent — rien + à + infinitif</td></tr><tr><td>29</td><td>Il ne veut rien avouer.</td><td>He doesn't want to confess anything.</td><td>Présent — modal: rien before infinitif</td></tr><tr><td>30</td><td>Rien n'aurait pu empêcher ce vol.</td><td>Nothing could have prevented this theft.</td><td>Cond.passé (P35) — rien as subject</td></tr></tbody></table>
+<p><strong>🧠 Structure unlocked:</strong> <code>NE + verb + RIEN = nothing / not anything</code></p>
+<p><strong>Two positions for RIEN:</strong></p>
+<table><thead><tr><th>Role</th><th>Position</th><th>Example</th></tr></thead><tbody><tr><td>RIEN as object</td><td>After verb / between aux and pp</td><td>Je n'ai <strong>rien</strong> vu</td></tr><tr><td>RIEN as subject</td><td>Before NE — at the start</td><td><strong>Rien</strong> ne s'est passé</td></tr></tbody></table>
+<p>→ When rien is the SUBJECT → "Rien ne..." starts the sentence — ne stays, but there's no "pas"<br>
+→ With modals (pouvoir, vouloir, devoir + inf): rien goes before the infinitif → "Je ne peux <strong>rien</strong> faire"<br>
+→ Compare with P5: "Je ne fais <strong>pas</strong>" → P39: "Je ne fais <strong>rien</strong>" — rien REPLACES pas, never used together</p>
+<hr>
+<h2>🔹 BLOCK D — NE...PERSONNE: "Nobody / Not Anyone"</h2>
+<p><em>Scenario: Nobody was there, nobody saw anything, nobody is talking</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English Meaning</th><th>Tense &amp; Position</th></tr></thead><tbody><tr><td>31</td><td>Je ne connais personne ici.</td><td>I don't know anyone here.</td><td>Présent — personne after verb</td></tr><tr><td>32</td><td>Tu n'as accusé personne.</td><td>You haven't accused anyone.</td><td>Passé composé — personne AFTER pp</td></tr><tr><td>33</td><td>Il n'a parlé à personne.</td><td>He spoke to no one.</td><td>Passé composé — à personne after pp</td></tr><tr><td>34</td><td>Elle ne fait confiance à personne.</td><td>She doesn't trust anyone.</td><td>Présent — à personne</td></tr><tr><td>35</td><td>On n'a trouvé personne dans le bâtiment.</td><td>We found nobody in the building.</td><td>Passé composé — personne after pp</td></tr><tr><td>36</td><td>Personne n'a rien vu.</td><td>Nobody saw anything.</td><td>⚠️ Personne as SUBJECT + rien as object</td></tr><tr><td>37</td><td>Personne ne sait ce qui s'est passé.</td><td>Nobody knows what happened.</td><td>Personne as subject</td></tr><tr><td>38</td><td>Personne n'est entré par cette porte.</td><td>Nobody entered through this door.</td><td>Personne as subject + être verb — agreement? See below</td></tr><tr><td>39</td><td>Je ne veux voir personne.</td><td>I don't want to see anyone.</td><td>Modal + inf — personne after infinitif</td></tr><tr><td>40</td><td>Personne n'aurait pu faire ça seul.</td><td>Nobody could have done that alone.</td><td>Cond.passé (P35) — personne as subject</td></tr></tbody></table>
+<p><strong>🧠 Structure unlocked:</strong> <code>NE + verb + PERSONNE = nobody / not anyone</code></p>
+<p><strong>Two positions for PERSONNE:</strong></p>
+<table><thead><tr><th>Role</th><th>Position</th><th>Example</th></tr></thead><tbody><tr><td>PERSONNE as object</td><td>AFTER past participle / AFTER infinitive</td><td>Je n'ai vu <strong>personne</strong> / Je ne veux voir <strong>personne</strong></td></tr><tr><td>PERSONNE as subject</td><td>BEFORE ne — at the start</td><td><strong>Personne</strong> ne sait</td></tr></tbody></table>
+<p>→ <strong>Critical difference from rien:</strong> PERSONNE always goes AFTER the past participle<br>
+→ ✅ Je n'ai vu <strong>personne</strong> (personne after pp)<br>
+→ ✅ Je n'ai <strong>rien</strong> vu (rien before pp)<br>
+→ This is the #1 placement error with advanced negation</p>
+<p>→ Sentence 36: <strong>Personne + rien combined</strong> → "Personne n'a rien vu" = Nobody saw anything<br>
+→ Sentence 38: <strong>Agreement question</strong> — "Personne n'est entré" — personne is grammatically masculine singular → past participle stays masculine singular even if referring to a group that might include women</p>
+<hr>
+<h2>🔹 BLOCK E — NE...QUE: "Only / Nothing But"</h2>
+<p><em>Scenario: Narrowing down facts — limiting, specifying, isolating the one thing that matters</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English Meaning</th><th>Tense &amp; Position</th></tr></thead><tbody><tr><td>41</td><td>Je n'ai que cinq minutes.</td><td>I only have five minutes.</td><td>Présent — que before the limited element</td></tr><tr><td>42</td><td>Il ne parle que français.</td><td>He only speaks French.</td><td>Présent</td></tr><tr><td>43</td><td>Elle n'a visité que deux salles.</td><td>She only visited two rooms.</td><td>Passé composé — que AFTER pp</td></tr><tr><td>44</td><td>On n'a trouvé qu'une seule empreinte.</td><td>We only found a single fingerprint.</td><td>Passé composé — qu' before vowel</td></tr><tr><td>45</td><td>Je ne fais que mon travail.</td><td>I'm only doing my job.</td><td>Présent</td></tr><tr><td>46</td><td>Tu n'as qu'à demander.</td><td>You only have to ask.</td><td>⚠️ Fixed expression — "You just need to"</td></tr><tr><td>47</td><td>Il n'y avait que trois personnes dans la galerie.</td><td>There were only three people in the gallery.</td><td>Imparfait — il y avait (P3)</td></tr><tr><td>48</td><td>Nous n'avons eu qu'une heure pour tout examiner.</td><td>We only had an hour to examine everything.</td><td>Passé composé</td></tr><tr><td>49</td><td>Ce n'est qu'une hypothèse.</td><td>It's only a hypothesis.</td><td>Présent — c'est...que</td></tr><tr><td>50</td><td>Je ne cherche que la vérité.</td><td>I'm only looking for the truth.</td><td>Présent — dramatic detective statement</td></tr></tbody></table>
+<p><strong>🧠 Structure unlocked:</strong> <code>NE + verb + QUE + [the only thing] = only / nothing but</code></p>
+<p><strong>Critical placement rule:</strong> QUE goes directly BEFORE the element being limited</p>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>Je ne mange QUE du pain.     (I only eat bread — bread is the limited element)
+</span>Je n'ai mangé QUE du pain.   (I only ate bread — que AFTER pp, before limited element)</code></pre></div>
+<p>→ QUE is NOT a true negation — it's a <strong>restriction</strong><br>
+→ It doesn't negate the action — it limits WHAT the action applies to<br>
+→ Sentence 46: "Tu n'as <strong>qu'à</strong> demander" = You just have to ask — extremely common fixed expression<br>
+→ Sentence 49: "Ce **n'est qu'**une hypothèse" = It's only a hypothesis — another very common pattern</p>
+<p>→ <strong>NE...QUE vs. SEULEMENT:</strong></p>
+<ul>
+<li>"Je ne mange <strong>que</strong> du pain" = "Je mange <strong>seulement</strong> du pain" — same meaning</li>
+<li>NE...QUE is more elegant / seulement is more casual</li>
+<li>Both are correct — ne...que is more "French-sounding"</li>
+</ul>
+<hr>
+<h2>🔹 BLOCK F — NE...AUCUN(E): "Not a Single / No [noun]"</h2>
+<p><em>Scenario: Emphatic denial — not a single piece of evidence, no trace, zero leads</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English Meaning</th><th>Gender Agreement</th></tr></thead><tbody><tr><td>51</td><td>Je n'ai aucune idée.</td><td>I have no idea.</td><td>aucune = feminine (idée is fem)</td></tr><tr><td>52</td><td>Il n'y a aucune preuve.</td><td>There is no evidence.</td><td>aucune = feminine (preuve is fem)</td></tr><tr><td>53</td><td>Elle n'a aucun alibi.</td><td>She has no alibi.</td><td>aucun = masculine (alibi is masc)</td></tr><tr><td>54</td><td>On n'a trouvé aucune trace de lutte.</td><td>We found no trace of struggle.</td><td>Passé composé — aucune AFTER pp</td></tr><tr><td>55</td><td>Il n'a montré aucun signe de nervosité.</td><td>He showed no sign of nervousness.</td><td>Passé composé — aucun after pp</td></tr><tr><td>56</td><td>Aucun témoin n'a vu quoi que ce soit.</td><td>Not a single witness saw anything.</td><td>⚠️ Aucun as SUBJECT — before ne</td></tr><tr><td>57</td><td>Aucune caméra ne fonctionnait cette nuit-là.</td><td>Not a single camera was working that night.</td><td>Aucune as subject — imparfait (P10)</td></tr><tr><td>58</td><td>Je n'ai eu aucun contact avec cet homme.</td><td>I had no contact with that man.</td><td>Passé composé</td></tr><tr><td>59</td><td>Il n'existe aucune raison de me soupçonner.</td><td>There is no reason to suspect me.</td><td>Présent — formal register</td></tr><tr><td>60</td><td>Aucun des suspects n'a avoué.</td><td>None of the suspects confessed.</td><td>Aucun as subject — partitive: aucun <strong>des</strong></td></tr></tbody></table>
+<p><strong>🧠 Structure unlocked:</strong> <code>NE + verb + AUCUN(E) + noun = not a single / no [noun]</code></p>
+<p><strong>Two positions for AUCUN(E):</strong></p>
+<table><thead><tr><th>Role</th><th>Position</th><th>Example</th></tr></thead><tbody><tr><td>AUCUN(E) as object complement</td><td>AFTER past participle + before noun</td><td>Je n'ai trouvé <strong>aucune</strong> preuve</td></tr><tr><td>AUCUN(E) as subject</td><td>BEFORE ne — at the start + before noun</td><td><strong>Aucun</strong> témoin ne...</td></tr></tbody></table>
+<p>→ <strong>AUCUN agrees in gender</strong> with the noun it modifies — aucun (masc) / aucune (fem)<br>
+→ <strong>AUCUN is always SINGULAR</strong> — it emphasizes "not even ONE"<br>
+→ ❌ <del>aucuns témoins</del> → ✅ <strong>aucun</strong> témoin (singular — not a single witness)<br>
+→ More emphatic than ne...pas de: "Je n'ai <strong>pas de</strong> preuve" (neutral) vs. "Je n'ai <strong>aucune</strong> preuve" (emphatic — NOT A SINGLE piece)</p>
+<hr>
+<h2>🔹 BLOCK G — NE...NI...NI: "Neither...Nor"</h2>
+<p><em>Scenario: Ruling out multiple options — the suspect had neither motive nor opportunity</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English Meaning</th><th>Structure</th></tr></thead><tbody><tr><td>61</td><td>Il n'a ni mobile ni occasion.</td><td>He has neither motive nor opportunity.</td><td>ne + verb + ni + noun + ni + noun</td></tr><tr><td>62</td><td>Je ne connais ni le propriétaire ni le gardien.</td><td>I know neither the owner nor the guard.</td><td>ne + verb + ni + noun + ni + noun</td></tr><tr><td>63</td><td>Elle n'a ni confirmé ni nié les accusations.</td><td>She neither confirmed nor denied the accusations.</td><td>ne + aux + ni + pp + ni + pp</td></tr><tr><td>64</td><td>On n'a trouvé ni empreintes ni ADN.</td><td>We found neither fingerprints nor DNA.</td><td>Passé composé — ni...ni after pp</td></tr><tr><td>65</td><td>Il ne boit ni café ni thé.</td><td>He drinks neither coffee nor tea.</td><td>Présent — ⚠️ articles DROP after ni</td></tr><tr><td>66</td><td>Ce n'est ni vrai ni faux.</td><td>It's neither true nor false.</td><td>Présent — adjectives</td></tr><tr><td>67</td><td>Ni lui ni moi ne savons ce qui s'est passé.</td><td>Neither he nor I know what happened.</td><td>⚠️ Ni...ni as compound SUBJECT</td></tr><tr><td>68</td><td>Ni le directeur ni les employés n'étaient au courant.</td><td>Neither the director nor the employees were aware.</td><td>Ni...ni as subject — imparfait</td></tr><tr><td>69</td><td>Je n'ai ni le temps ni l'envie de discuter.</td><td>I have neither the time nor the desire to discuss.</td><td>Présent</td></tr><tr><td>70</td><td>Il ne veut ni parler ni coopérer.</td><td>He wants neither to speak nor to cooperate.</td><td>Modal + ni + inf + ni + inf</td></tr></tbody></table>
+<p><strong>🧠 Structure unlocked:</strong> <code>NE + verb + NI + element + NI + element = neither...nor</code></p>
+<p><strong>Critical rules:</strong></p>
+<p>→ <strong>Articles DROP after NI</strong> (in most cases):</p>
+<ul>
+<li>✅ Il ne boit ni <strong>Ø</strong> café ni <strong>Ø</strong> thé (no articles)</li>
+<li>❌ <del>Il ne boit ni du café ni du thé</del></li>
+<li>EXCEPTION: definite articles sometimes kept when specific: "ni <strong>le</strong> propriétaire <strong>ni le</strong> gardien" (specific people)</li>
+</ul>
+<p>→ <strong>NI...NI as subject:</strong> Both elements come before NE → "<strong>Ni</strong> lui <strong>ni</strong> moi <strong>ne</strong> savons"<br>
+→ <strong>Verb agreement with ni...ni subject:</strong> traditionally singular (the idea is "not one, not the other"), but plural is increasingly accepted in spoken French<br>
+→ Sentence 63: NI can separate two past participles → "n'a <strong>ni</strong> confirmé <strong>ni</strong> nié"<br>
+→ Sentence 70: NI can separate two infinitives → "ne veut <strong>ni</strong> parler <strong>ni</strong> coopérer"</p>
+<hr>
+<h2>🔹 BLOCK H — NE...NULLE PART: "Nowhere" + Less Common Negations</h2>
+<p><em>Scenario: The painting is nowhere, the suspect went nowhere, and the evidence is hardly convincing</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English Meaning</th><th>Negation Type</th></tr></thead><tbody><tr><td>71</td><td>Le tableau n'est nulle part.</td><td>The painting is nowhere.</td><td>ne...nulle part</td></tr><tr><td>72</td><td>Il n'est allé nulle part ce soir-là.</td><td>He went nowhere that evening.</td><td>Passé composé — nulle part AFTER pp</td></tr><tr><td>73</td><td>On ne trouve cette signature nulle part.</td><td>This signature is found nowhere.</td><td>Présent</td></tr><tr><td>74</td><td>Je ne l'ai vu nulle part dans le bâtiment.</td><td>I didn't see him anywhere in the building.</td><td>Passé composé + pronoun (P19)</td></tr><tr><td>75</td><td>Nulle part il n'y a de trace de cette personne.</td><td>Nowhere is there a trace of this person.</td><td>⚠️ Nulle part as sentence opener — literary</td></tr><tr><td>76</td><td>Cette preuve ne vaut guère.</td><td>This evidence is hardly worth anything.</td><td>ne...guère = hardly / scarcely — literary</td></tr><tr><td>77</td><td>Je ne le connais guère.</td><td>I hardly know him.</td><td>ne...guère — formal register</td></tr><tr><td>78</td><td>Il ne reste guère de temps.</td><td>There's hardly any time left.</td><td>ne...guère — impersonal</td></tr><tr><td>79</td><td>Ce témoignage n'est guère convaincant.</td><td>This testimony is hardly convincing.</td><td>ne...guère — formal evaluation</td></tr><tr><td>80</td><td>On ne saurait trop insister sur l'importance de cette preuve.</td><td>One cannot insist too much on the importance of this evidence.</td><td>⚠️ ne...saurait = literary "cannot" — conditionnel of savoir</td></tr></tbody></table>
+<p><strong>🧠 Structure unlocked:</strong></p>
+<table><thead><tr><th>Negation</th><th>Meaning</th><th>Register</th><th>Compound Tense Position</th></tr></thead><tbody><tr><td>ne...nulle part</td><td>nowhere</td><td>Standard</td><td>AFTER past participle</td></tr><tr><td>ne...guère</td><td>hardly / scarcely</td><td>Literary/Formal</td><td>BEFORE past participle (like pas)</td></tr><tr><td>ne...point</td><td>not (archaic "pas")</td><td>Very literary/archaic</td><td>Same as pas</td></tr><tr><td>ne...saurait</td><td>cannot (literary)</td><td>Very formal</td><td>Conditionnel of savoir — no second element</td></tr></tbody></table>
+<p>→ <strong>Nulle part</strong> behaves like <strong>personne</strong> — goes AFTER the past participle<br>
+→ <strong>Guère</strong> behaves like <strong>pas</strong> — goes BEFORE the past participle<br>
+→ Sentence 80: "On ne saurait..." = formal/literary way to say "one cannot" — very elegant in written French</p>
+<hr>
+<h2>🔹 BLOCK I — Combining Multiple Negations &amp; Negation in Complex Structures</h2>
+<p><em>Scenario: Writing the detective report — combining negations with structures from P34-P38</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English Meaning</th><th>Structures Combined</th></tr></thead><tbody><tr><td>81</td><td>Il n'a jamais rien dit à personne.</td><td>He never said anything to anyone.</td><td>jamais + rien + personne — triple negation</td></tr><tr><td>82</td><td>Personne n'a jamais rien trouvé.</td><td>Nobody ever found anything.</td><td>personne(subj) + jamais + rien</td></tr><tr><td>83</td><td>Je ne le lui ai jamais dit.</td><td>I never told it to him/her.</td><td>Double pronoun (P36) + jamais</td></tr><tr><td>84</td><td>Elle ne s'est plus jamais manifestée.</td><td>She never showed up again.</td><td>plus + jamais combined — "never again"</td></tr><tr><td>85</td><td>On ne l'a ni vu ni entendu depuis.</td><td>We neither saw nor heard him since.</td><td>Pronoun (P19) + ni...ni</td></tr><tr><td>86</td><td>En ne disant rien, il s'est rendu suspect.</td><td>By saying nothing, he made himself look suspicious.</td><td>Gérondif (P38) + rien</td></tr><tr><td>87</td><td>Je ne lui ai rien fait dire.</td><td>I didn't make him say anything.</td><td>Faire causatif (P37) + rien + pronoun</td></tr><tr><td>88</td><td>Il n'aurait jamais dû quitter la ville.</td><td>He should never have left town.</td><td>Cond.passé (P35) + jamais</td></tr><tr><td>89</td><td>Si personne n'avait rien touché, les preuves seraient intactes.</td><td>If nobody had touched anything, the evidence would be intact.</td><td>Si-clause (P34) + personne + rien</td></tr><tr><td>90</td><td>Rien de ce qu'il a dit ne correspond à la réalité.</td><td>Nothing he said matches reality.</td><td>Rien as subject + relative clause (P21)</td></tr></tbody></table>
+<p><strong>🧠 Structure unlocked:</strong> Negation stacking and interaction rules</p>
+<p><strong>Stacking Order in Compound Tenses:</strong></p>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>ne + aux + [JAMAIS] + [PLUS] + [RIEN] + pp + [PERSONNE] + [QUE] + [AUCUN] + [NULLE PART]
+</span>              │          │        │                │          │        │           │
+         before pp   before pp  before pp     after pp    after pp  after pp   after pp</code></pre></div>
+<p><strong>Compatible Combinations:</strong></p>
+<table><thead><tr><th>Combo</th><th>Example</th><th>Meaning</th></tr></thead><tbody><tr><td>jamais + rien</td><td>n'a <strong>jamais rien</strong> dit</td><td>never said anything</td></tr><tr><td>jamais + personne</td><td>n'a <strong>jamais</strong> vu <strong>personne</strong></td><td>never saw anyone</td></tr><tr><td>plus + rien</td><td>ne veut <strong>plus rien</strong></td><td>doesn't want anything anymore</td></tr><tr><td>plus + jamais</td><td>ne... <strong>plus jamais</strong></td><td>never again</td></tr><tr><td>plus + personne</td><td>ne voit <strong>plus personne</strong></td><td>doesn't see anyone anymore</td></tr><tr><td>jamais + rien + personne</td><td>n'a <strong>jamais rien</strong> dit à <strong>personne</strong></td><td>never said anything to anyone</td></tr></tbody></table>
+<p><strong>Incompatible Combinations:</strong></p>
+<table><thead><tr><th>❌ Cannot Combine</th><th>Why</th></tr></thead><tbody><tr><td>pas + jamais</td><td>Both are "primary" negations — contradictory</td></tr><tr><td>pas + rien</td><td>Same — use one or the other</td></tr><tr><td>pas + personne</td><td>Same — choose pas OR personne</td></tr><tr><td>pas + plus</td><td>Same — choose pas OR plus</td></tr><tr><td>rien + personne as BOTH objects</td><td>Rien = thing, personne = person — only combine if different roles</td></tr></tbody></table>
+<p>→ <strong>Rule:</strong> PAS never combines with any other negation word — it's replaced by them</p>
+<hr>
+<h2>🔹 BLOCK J — Full Conversational Flow: The Interrogation Report</h2>
+<p><em>Scenario: The detective's full report — using every negation type in a coherent narrative</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English Meaning</th><th>Negation Type</th></tr></thead><tbody><tr><td>91</td><td>L'enquête n'a donné aucun résultat concret.</td><td>The investigation produced no concrete result.</td><td>aucun</td></tr><tr><td>92</td><td>Personne n'a été en mesure de fournir un alibi vérifiable.</td><td>Nobody was able to provide a verifiable alibi.</td><td>personne (subject)</td></tr><tr><td>93</td><td>Le gardien affirme qu'il n'a rien entendu d'anormal.</td><td>The guard claims he heard nothing unusual.</td><td>rien + indirect speech (P25)</td></tr><tr><td>94</td><td>La propriétaire ne se souvient plus de la dernière fois qu'elle a vérifié l'alarme.</td><td>The owner no longer remembers the last time she checked the alarm.</td><td>plus — reflexive (P14)</td></tr><tr><td>95</td><td>Nous n'avons trouvé ni empreintes ni traces d'effraction.</td><td>We found neither fingerprints nor signs of break-in.</td><td>ni...ni</td></tr><tr><td>96</td><td>Le tableau n'apparaît nulle part sur les enregistrements vidéo.</td><td>The painting appears nowhere on the video recordings.</td><td>nulle part</td></tr><tr><td>97</td><td>Aucun des employés n'a jamais eu accès au code du coffre-fort.</td><td>Not a single employee ever had access to the safe code.</td><td>aucun (subject) + jamais</td></tr><tr><td>98</td><td>Il ne s'agit que d'hypothèses pour l'instant — nous ne pouvons rien confirmer.</td><td>These are only hypotheses for now — we can't confirm anything.</td><td>que + rien</td></tr><tr><td>99</td><td>Je n'ai jamais vu une affaire où il n'y avait ni suspect ni mobile ni preuve.</td><td>I've never seen a case where there was no suspect, no motive, and no evidence.</td><td>jamais + ni...ni...ni (triple ni)</td></tr><tr><td>100</td><td>Mais une chose est sûre : ce tableau n'a pas disparu tout seul — quelqu'un, quelque part, sait quelque chose, et ce n'est plus qu'une question de temps.</td><td>But one thing is certain: this painting didn't disappear by itself — someone, somewhere, knows something, and it's now only a matter of time.</td><td>pas + ne...plus...que (combined restriction)</td></tr></tbody></table>
+<hr>
+<h3>⚠️ Sentence 100 — The Return to Positive Through Negation</h3>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>ce n'est plus qu'une question de temps
+</span>         │      │
+      ne...plus  ne...que
+      (no longer)  (only)</code></pre></div>
+<p>→ "Ne...plus...que" = "now only" — combining "no longer" + "only"<br>
+→ "Ce n'est plus qu'une question de temps" = It's now only a matter of time<br>
+→ This combination is <strong>very common</strong> and creates a sense of narrowing down, closing in<br>
+→ The negations don't cancel each other — they STACK meaning</p>
+<hr>
+<h1>✅ WHAT SHOULD DO</h1>
+<p>→ <strong>Memorize the two groups</strong> — this is the foundation of all placement:</p>
+<ul>
+<li><strong>Before pp:</strong> pas, plus, jamais, rien (short words)</li>
+<li><strong>After pp:</strong> personne, que+noun, aucun+noun, nulle part (long elements)</li>
+</ul>
+<p>→ <strong>Practice replacing PAS with each negation one at a time:</strong></p>
+<ul>
+<li>Je n'ai <strong>pas</strong> mangé → Je n'ai <strong>plus</strong> mangé → Je n'ai <strong>jamais</strong> mangé → Je n'ai <strong>rien</strong> mangé</li>
+<li>Je n'ai vu <strong>pas</strong> <del>→</del> Je n'ai vu <strong>personne</strong> → Je n'ai trouvé <strong>aucune</strong> preuve</li>
+</ul>
+<p>→ <strong>Master subject-position negations:</strong></p>
+<ul>
+<li><strong>Rien</strong> ne... / <strong>Personne</strong> ne... / <strong>Aucun(e)</strong> [noun] ne... / <strong>Ni</strong>...ni ne...</li>
+<li>These START the sentence and take NE after them — no "pas" anywhere</li>
+</ul>
+<p>→ <strong>Practice stacking:</strong> jamais + rien, plus + personne, jamais + rien + personne<br>
+→ <strong>Remember:</strong> PAS never combines with other negation words — it's replaced by them<br>
+→ <strong>Connect to P5</strong> — basic ne...pas → now you have the FULL system<br>
+→ <strong>Connect to P36</strong> — double pronouns interact with negation: "Je ne <strong>le lui</strong> ai <strong>jamais</strong> dit"<br>
+→ <strong>Connect to P38</strong> — gérondif negation: "En <strong>ne</strong> disant <strong>rien</strong>..."</p>
+<hr>
+<h1>❌ WHAT SHOULD NOT DO</h1>
+<p>→ ❌ <strong>NEVER combine PAS with another negation word:</strong></p>
+<ul>
+<li>❌ <del>Je n'ai pas jamais vu</del> → ✅ Je n'ai <strong>jamais</strong> vu</li>
+<li>❌ <del>Je n'ai pas rien dit</del> → ✅ Je n'ai <strong>rien</strong> dit</li>
+<li>❌ <del>Je n'ai pas vu personne</del> → ✅ Je n'ai vu <strong>personne</strong></li>
+<li>PAS disappears when replaced by a more specific negation</li>
+</ul>
+<p>→ ❌ <strong>NEVER put PERSONNE before the past participle:</strong></p>
+<ul>
+<li>❌ <del>Je n'ai personne vu</del> → ✅ Je n'ai vu <strong>personne</strong></li>
+<li>Personne ALWAYS goes AFTER the pp (unlike rien which goes before)</li>
+</ul>
+<p>→ ❌ <strong>NEVER put RIEN after the past participle:</strong></p>
+<ul>
+<li>❌ <del>Je n'ai vu rien</del> → ✅ Je n'ai <strong>rien</strong> vu</li>
+<li>Rien ALWAYS goes BEFORE the pp (unlike personne which goes after)</li>
+</ul>
+<p>→ ❌ <strong>NEVER forget to drop articles after NI:</strong></p>
+<ul>
+<li>❌ <del>Il ne boit ni du café ni du thé</del> → ✅ Il ne boit ni café ni thé</li>
+<li>Articles disappear after ni (except definite articles for specific items)</li>
+</ul>
+<p>→ ❌ <strong>NEVER make AUCUN plural:</strong></p>
+<ul>
+<li>❌ <del>aucuns témoins</del> → ✅ <strong>aucun</strong> témoin (always singular)</li>
+<li>The whole point of aucun is "not a SINGLE one"</li>
+</ul>
+<p>→ ❌ <strong>NEVER forget NE in written French</strong> (even though spoken French drops it):</p>
+<ul>
+<li>Written: Je **n'**ai <strong>rien</strong> vu ✅</li>
+<li>Spoken: J'ai rien vu ✅ (casual — NE dropped — discussed in P47)</li>
+<li>But in your report, exam, email → ALWAYS include NE</li>
+</ul>
+<p>→ ❌ <strong>NEVER confuse QUE (only) with QUE (that/which):</strong></p>
+<ul>
+<li>"Je <strong>ne</strong> mange <strong>que</strong> du pain" = I only eat bread (restriction — ne...que)</li>
+<li>"Je sais <strong>que</strong> tu manges du pain" = I know that you eat bread (conjunction — P22)</li>
+<li>The NE tells you it's the restriction meaning</li>
+</ul>
+<hr>
+<h1>🔀 WHEN TO USE WHAT</h1>
+<table><thead><tr><th>What You Want to Express</th><th>Structure</th><th>Example</th></tr></thead><tbody><tr><td>Simple denial</td><td>ne...pas</td><td>Je <strong>ne</strong> sais <strong>pas</strong></td></tr><tr><td>No longer / not anymore</td><td>ne...plus</td><td>Je <strong>ne</strong> travaille <strong>plus</strong> ici</td></tr><tr><td>Never</td><td>ne...jamais</td><td>Je **n'**ai <strong>jamais</strong> vu ça</td></tr><tr><td>Nothing / not anything</td><td>ne...rien</td><td>Je <strong>ne</strong> sais <strong>rien</strong></td></tr><tr><td>Nobody / not anyone</td><td>ne...personne</td><td>Je <strong>ne</strong> connais <strong>personne</strong></td></tr><tr><td>Only / nothing but</td><td>ne...que</td><td>Je **n'**ai <strong>que</strong> cinq minutes</td></tr><tr><td>Not a single / no [noun]</td><td>ne...aucun(e)</td><td>Il **n'**y a <strong>aucune</strong> preuve</td></tr><tr><td>Neither...nor</td><td>ne...ni...ni</td><td>Il <strong>ne</strong> boit <strong>ni</strong> café <strong>ni</strong> thé</td></tr><tr><td>Nowhere</td><td>ne...nulle part</td><td>Il **n'**est <strong>nulle part</strong></td></tr><tr><td>Hardly / scarcely</td><td>ne...guère</td><td>Je <strong>ne</strong> le connais <strong>guère</strong></td></tr><tr><td>Never again</td><td>ne...plus jamais</td><td>Il <strong>ne</strong> reviendra <strong>plus jamais</strong></td></tr><tr><td>No longer anything</td><td>ne...plus rien</td><td>Je <strong>ne</strong> veux <strong>plus rien</strong></td></tr><tr><td>No longer anyone</td><td>ne...plus personne</td><td>Il <strong>ne</strong> voit <strong>plus personne</strong></td></tr><tr><td>Now only</td><td>ne...plus que</td><td>Ce **n'**est **plus qu'**une question de temps</td></tr></tbody></table>
+<hr>
+<h1>🚫 WHEN NOT TO USE</h1>
+<p>→ <strong>When you want a POSITIVE statement</strong> — don't accidentally negate</p>
+<ul>
+<li>"Quelqu'un" (someone) is the positive of "personne" (nobody)</li>
+<li>"Quelque chose" (something) is the positive of "rien" (nothing)</li>
+<li>"Toujours" (always) is the positive of "jamais" (never)</li>
+<li>"Encore" (still) is the positive of "plus" (no longer)</li>
+<li>"Partout" (everywhere) is the positive of "nulle part" (nowhere)</li>
+</ul>
+<p>→ <strong>When NE...QUE would sound too literary</strong> → use "seulement" instead</p>
+<ul>
+<li>"Je n'ai que cinq minutes" (elegant) = "J'ai seulement cinq minutes" (casual)</li>
+</ul>
+<p>→ <strong>When NE...GUÈRE would sound too old-fashioned</strong> → use "ne...pas vraiment" or "à peine"</p>
+<ul>
+<li>"Je ne le connais guère" (literary) = "Je ne le connais pas vraiment" (modern)</li>
+</ul>
+<p>→ <strong>When stacking would create confusion</strong> → simplify</p>
+<ul>
+<li>"Il n'a jamais rien dit à personne nulle part" — technically possible but overwhelming</li>
+<li>Better: split into two sentences for clarity</li>
+</ul>
+<hr>
+<h1>⚠️ COMMON PITFALLS AND FAILURE MODES</h1>
+<table><thead><tr><th>Pitfall</th><th>What Learners Do Wrong</th><th>Why It Fails</th><th>Correct Version</th></tr></thead><tbody><tr><td><strong>PAS + other negation</strong></td><td>Je n'ai pas rien vu</td><td>PAS never combines — it's replaced</td><td>Je n'ai <strong>rien</strong> vu</td></tr><tr><td><strong>PERSONNE placement</strong></td><td>Je n'ai personne vu</td><td>Personne goes AFTER pp</td><td>Je n'ai vu <strong>personne</strong></td></tr><tr><td><strong>RIEN placement</strong></td><td>Je n'ai vu rien</td><td>Rien goes BEFORE pp</td><td>Je n'ai <strong>rien</strong> vu</td></tr><tr><td><strong>AUCUN plural</strong></td><td>Aucuns témoins</td><td>Aucun is always singular</td><td><strong>Aucun</strong> témoin</td></tr><tr><td><strong>AUCUN gender</strong></td><td>Aucun preuve</td><td>Preuve is feminine</td><td><strong>Aucune</strong> preuve</td></tr><tr><td><strong>NI article retention</strong></td><td>Ni du café ni du thé</td><td>Articles drop after ni (usually)</td><td>Ni café ni thé</td></tr><tr><td><strong>Forgetting NE</strong></td><td>J'ai rien vu (in writing)</td><td>Acceptable in speech — not in writing</td><td>Je **n'**ai rien vu</td></tr><tr><td><strong>QUE placement</strong></td><td>Je ne que mange du pain</td><td>QUE goes directly before limited element</td><td>Je ne mange <strong>que</strong> du pain</td></tr><tr><td><strong>Subject negation word order</strong></td><td>Personne a vu → missing NE</td><td>Subject negations still need NE</td><td>**Personne n'**a vu</td></tr><tr><td><strong>Plus pronunciation</strong></td><td>Saying "plüss" for ne...plus</td><td>ne...plus = "plü" (no more) / "plüss" = more</td><td>Silent S in negation</td></tr></tbody></table>
+<hr>
+<h1>🔑 KEY TAKEAWAY</h1>
+<blockquote>
+<p><strong>P5 gave you one tool: ne...pas — the basic "not."</strong><br>
+<strong>P39 gives you the COMPLETE negation toolkit — 10+ ways to deny, limit, exclude, and specify absence.</strong></p>
+<p>The two-group placement system is everything:</p>
+<ul>
+<li><strong>Short words BEFORE past participle:</strong> pas, plus, jamais, rien</li>
+<li><strong>Long elements AFTER past participle:</strong> personne, que, aucun, nulle part</li>
+</ul>
+<p>Negations can STACK (jamais + rien + personne) but NEVER with PAS.<br>
+Negation words can be SUBJECTS (Rien ne..., Personne ne..., Aucun ne...).<br>
+NE...QUE is not true negation — it's restriction ("only").</p>
+<p>These negations interact with EVERY structure you've learned:</p>
+<ul>
+<li>Double pronouns (P36): "Je ne <strong>le lui</strong> ai <strong>jamais</strong> dit"</li>
+<li>Faire causatif (P37): "Il ne **m'**a <strong>rien</strong> fait faire"</li>
+<li>Gérondif (P38): "En <strong>ne</strong> disant <strong>rien</strong>..."</li>
+<li>Si-clauses (P34): "Si <strong>personne</strong> n'avait <strong>rien</strong> touché..."</li>
+<li>Conditionnel passé (P35): "Il n'<strong>aurait jamais dû</strong>..."</li>
+</ul>
+<p>You now have complete control over French denial, absence, and restriction.<br>
+But there's one final skill in this phase: adapting EVERYTHING you've learned to different social contexts.</p>
+</blockquote>
+<hr>
+<h1>🌉 BRIDGE TO PROJECT 40</h1>
+<blockquote>
+<p>You can now build complex sentences with pronouns, causation, simultaneous actions, and rich negation<br>
+But HOW you say something changes dramatically based on WHO you're talking to</p>
+<p>→ To your boss: "Pourriez-vous me transmettre le dossier ?" (formal vous, conditionnel, full sentence)<br>
+→ To your friend: "Tu m'passes le truc ?" (casual tu, shortened verb, slang)<br>
+→ Same request — completely different French</p>
+<p>→ In a job interview: "Je n'ai aucune expérience dans ce domaine" (full negation, formal vocabulary)<br>
+→ With friends: "J'ai zéro expérience là-dedans" (no NE, slang, casual)</p>
+<p>Project 40 unlocks: <strong>Register switching</strong> — adapting tu/vous, vocabulary, sentence length, and formality level<br>
+→ The same message delivered in formal, standard, casual, and slang registers<br>
+→ The social skill that makes your French appropriate for ANY situation</p>
+</blockquote>
+<hr>
+<h1>✅ PROJECT 39 COMPLETE</h1>
+<blockquote>
+<p><strong>Are you ready for PROJECT 40: "Suit Up or Dress Down"?</strong><br>
+→ ~100 sentences covering register switching — formal to casual to slang<br>
+→ Scenario: The same day lived twice — once as a corporate executive, once as a student<br>
+→ Builds on ALL Previous Chapters — applying every structure through the lens of social register</p>
+</blockquote>
+</div>
+</div>
+
+<!-- ========== data-index="19" ========== -->
+
+        </div>
+
+        <div class="nav-bar">
+            <a href="project-38.html" class="nav-button prev">← Previous Chapter</a>
+            <div class="page-info">
+                <a href="index.html" class="nav-button home">📚 Table of Contents</a><br>
+                <span style="margin-top:8px;display:block">Chapter 39 of 50</span>
+            </div>
+            <a href="project-40.html" class="nav-button next">Next Chapter →</a>
+        </div>
+    </div>
+
+    
+    <div id="progress-track"><div id="progress-fill"></div></div>
+    <div id="progress-pct">0%</div>
+
+
+    <script>
+    const fill = document.getElementById('progress-fill');
+    const pct  = document.getElementById('progress-pct');
+    function updateProgress() {
+        const scrollTop = window.scrollY;
+        const docHeight = document.body.scrollHeight - window.innerHeight;
+        const scrolled  = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+        fill.style.height = scrolled + '%';
+        pct.textContent   = Math.round(scrolled) + '%';
+    }
+    window.addEventListener('scroll', updateProgress);
+    updateProgress();
+
+    document.addEventListener('keydown', function(e) {
+        if (['INPUT','TEXTAREA'].includes(document.activeElement.tagName)) return;
+        if (e.key === 'ArrowLeft') {
+            const b = document.querySelector('.nav-button.prev');
+            if (b && !b.classList.contains('disabled')) window.location.href = b.href;
+        }
+        if (e.key === 'ArrowRight') {
+            const b = document.querySelector('.nav-button.next');
+            if (b && !b.classList.contains('disabled')) window.location.href = b.href;
+        }
+    });
+    </script>
+
+</body>
+</html>

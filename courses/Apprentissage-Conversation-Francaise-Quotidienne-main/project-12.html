@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="images/favicon.png">
+    <title>Project 12: "What's About to Happen" — French Daily Sentences</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.75;
+            color: #1a202c;
+            background-color: #f7fafc;
+        }
+        .container {
+            max-width: 1800px;
+            margin: 0 auto;
+            background: white;
+            min-height: 100vh;
+            box-shadow: 0 0 30px rgba(0,0,0,0.08);
+            padding: 48px 52px;
+        }
+        
+        .content { max-width: 1700px; margin: 0 auto; color: #1a202c; }
+        .content h1 {
+            color: #1a202c; margin: 32px 0 20px;
+            padding-bottom: 12px;
+            border-bottom: 4px solid #3b82f6;
+            font-size: 2.1em;
+            font-weight: 700;
+        }
+        .content h2 {
+            color: #1a202c; margin: 28px 0 16px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #60a5fa;
+            font-size: 1.6em;
+            font-weight: 600;
+        }
+        .content h3 { color: #1a202c; margin: 22px 0 12px; font-size: 1.3em; font-weight: 600; }
+        .content h4 { color: #2d3748; margin: 18px 0 10px; font-size: 1.1em; font-weight: 600; }
+        .content p  { margin-bottom: 16px; line-height: 1.8; color: #1a202c; }
+        .content ul, .content ol { margin: 12px 0 18px 30px; color: #1a202c; }
+        .content li { margin-bottom: 8px; line-height: 1.75; color: #1a202c; }
+        .content hr { border: none; border-top: 2px solid #e2e8f0; margin: 26px 0; }
+        .content pre {
+            background: #f7fafc !important;
+            border: 1px solid #cbd5e0 !important;
+            border-left: 4px solid #3b82f6 !important;
+            padding: 18px !important; overflow-x: auto; margin: 18px 0; border-radius: 6px;
+            font-family: 'Consolas','Monaco','Courier New',monospace !important;
+            font-size: 0.9em !important;
+        }
+        .content pre:not([style*="color"]) { color: #1a202c !important; }
+        .content code {
+            font-family: 'Consolas','Monaco','Courier New',monospace !important;
+            font-size: 0.88em !important;
+        }
+        .content code:not(pre code) {
+            background: #dbeafe !important;
+            color: #1a202c !important;
+            padding: 2px 6px;
+            border-radius: 3px;
+        }
+        .content pre code { background: transparent !important; padding: 0; }
+        .content table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+        .content th {
+            background: linear-gradient(135deg, #3b82f6 0%, #60a5fa 100%);
+            color: white; padding: 12px 16px; text-align: left;
+            font-weight: 600;
+        }
+        .content td { padding: 11px 16px; border: 1px solid #e2e8f0; color: #1a202c; }
+        .content tr:nth-child(even) td { background: #eff6ff; }
+        .content blockquote {
+            border-left: 4px solid #3b82f6; background: #eff6ff;
+            padding: 14px 20px; margin: 18px 0; border-radius: 0 6px 6px 0;
+            color: #1a202c;
+        }
+        .content strong { color: #1a202c; font-weight: 600; }
+        .px-2 { padding: 0; }
+        .chat-message { background: transparent; padding: 0; margin: 0; }
+
+        /* Bottom nav bar only */
+        .nav-bar {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 24px 0;
+            margin-top: 50px;
+            border-top: 3px solid #60a5fa;
+        }
+        .nav-button {
+            display: inline-flex; align-items: center; gap: 8px;
+            padding: 12px 26px;
+            background: linear-gradient(135deg, #3b82f6 0%, #60a5fa 100%);
+            color: white !important; text-decoration: none;
+            border-radius: 8px; font-weight: 600; font-size: 0.95em;
+            transition: all 0.2s;
+            box-shadow: 0 2px 8px rgba(59,130,246,0.35);
+        }
+        .nav-button:hover { transform: translateY(-2px); box-shadow: 0 4px 14px rgba(59,130,246,0.5); }
+        .nav-button.disabled { background: #cbd5e1; box-shadow: none; pointer-events: none; }
+        .nav-button.home {
+            background: linear-gradient(135deg, #ef4444 0%, #f87171 100%);
+            box-shadow: 0 2px 8px rgba(239,68,68,0.35);
+        }
+        .nav-button.home:hover { box-shadow: 0 4px 14px rgba(239,68,68,0.5); }
+        .page-info { color: #718096; font-size: 0.9em; text-align: center; }
+
+        /* Progress bar */
+        #progress-track {
+            position: fixed; top: 20px; right: 20px;
+            width: 10px; height: 150px;
+            background: rgba(59,130,246,0.2);
+            border: 2px solid #3b82f6;
+            border-radius: 6px; overflow: hidden; z-index: 1000;
+        }
+        #progress-fill {
+            width: 100%;
+            background: linear-gradient(180deg, #3b82f6, #2563eb);
+            height: 0%;
+            transition: height 0.15s ease;
+        }
+        #progress-pct {
+            position: fixed; top: 0px; right: 16px;
+            color: #2563eb; font-size: 14px; font-weight: bold;
+            z-index: 1001;
+            text-shadow: 0 1px 2px rgba(255,255,255,0.9);
+            line-height: 20px;
+        }
+
+    </style>
+<link rel="stylesheet" href="assets/chapters.css?v=20260421203847"><script src="assets/chapters.js?v=20260421203847" defer></script>
+</head>
+<body>
+    <div class="container">
+        <div class="content">
+            <div class="chat-message" data-index="25">
+<div class="px-2"><h1>🔵 PROJECT 12: "What's About to Happen"</h1>
+<h2><em>You're making plans for tonight, this weekend, right now</em></h2>
+<hr>
+<h1>🎯 THE HYPOTHETICAL PROBLEM</h1>
+<p>→ It's <strong>Friday afternoon</strong> at the language school — the last class of the week just ended<br>
+→ Everyone is excited — the weekend is here<br>
+→ Your classmates start asking each other:<br>
+→ → <strong>"Tu vas faire quoi ce soir ?"</strong> (What are you going to do tonight?)<br>
+→ → <strong>"On va manger où demain ?"</strong> (Where are we going to eat tomorrow?)<br>
+→ → <strong>"Vous allez sortir ce week-end ?"</strong> (Are you going to go out this weekend?)<br>
+→ You understand every question — but you can only answer in present tense<br>
+→ "Ce soir, je mange chez moi." — This works, but sounds like you're describing a habit, not a plan<br>
+→ "Demain, je visite le Louvre." — Technically understandable, but missing the <strong>intention</strong><br>
+→ You need to express:<br>
+→ → "I'm <strong>going to</strong> eat at home tonight."<br>
+→ → "I'm <strong>going to</strong> visit the Louvre tomorrow."<br>
+→ → "We're <strong>going to</strong> meet at 8."<br>
+→ → "She's <strong>about to</strong> leave."<br>
+→ → "It's <strong>going to</strong> rain."<br>
+→ → "I'm <strong>not going to</strong> work this weekend."</p>
+<p><strong>The core realization:</strong><br>
+→ French has TWO future tenses:<br>
+→ → <strong>Futur proche</strong> (near future) = aller + infinitif → "I'm going to..."<br>
+→ → <strong>Futur simple</strong> (simple future) = special verb endings → "I will..." (Project 16)<br>
+→ In <strong>daily spoken French</strong>, the futur proche is used <strong>far more often</strong> than the futur simple<br>
+→ It covers plans, intentions, predictions, things about to happen, and even some distant future events in casual speech<br>
+→ And the best news: <strong>you already know everything you need to build it</strong></p>
+<hr>
+<h1>🔍 HOW TO APPROACH IT</h1>
+<p>→ The futur proche structure:</p>
+<code>SUBJECT + ALLER (present tense) + INFINITIF + rest</code>
+<p>→ You already know:<br>
+→ → <strong>Aller in present tense</strong> (Project 2): je vais, tu vas, il va, nous allons, vous allez, ils vont<br>
+→ → <strong>Infinitif</strong> (Project 6): the dictionary form of the verb — manger, partir, dormir, faire...<br>
+→ → <strong>The modal pattern</strong> (Project 6): conjugated verb + infinitif → je veux manger, je peux partir<br>
+→ The futur proche follows the <strong>exact same pattern</strong> as modals — just replace the modal with aller</p>
+<table><thead><tr><th>Modal (Project 6)</th><th>Futur Proche (Project 12)</th></tr></thead><tbody><tr><td>Je <strong>veux</strong> manger. (I want to eat.)</td><td>Je <strong>vais</strong> manger. (I'm going to eat.)</td></tr><tr><td>Je <strong>peux</strong> partir. (I can leave.)</td><td>Je <strong>vais</strong> partir. (I'm going to leave.)</td></tr><tr><td>Je <strong>dois</strong> travailler. (I must work.)</td><td>Je <strong>vais</strong> travailler. (I'm going to work.)</td></tr></tbody></table>
+<p>→ Same skeleton — different control verb<br>
+→ If you mastered Project 6 → Project 12 is almost free</p>
+<hr>
+<h1>🔧 HOW CAN WE SOLVE IT</h1>
+<h2>Step 1 — Recall ALLER in Present Tense (Project 2)</h2>
+<table><thead><tr><th>Subject</th><th>Aller Form</th></tr></thead><tbody><tr><td>Je</td><td><strong>vais</strong></td></tr><tr><td>Tu</td><td><strong>vas</strong></td></tr><tr><td>Il / Elle / On</td><td><strong>va</strong></td></tr><tr><td>Nous</td><td><strong>allons</strong></td></tr><tr><td>Vous</td><td><strong>allez</strong></td></tr><tr><td>Ils / Elles</td><td><strong>vont</strong></td></tr></tbody></table>
+<p>→ Already memorized from Project 2<br>
+→ In Project 2/7, aller was used for MOVEMENT: "Je vais <strong>au bureau</strong>" (I go to the office)<br>
+→ In Project 12, aller is used for FUTURE: "Je vais <strong>manger</strong>" (I'm going to eat)<br>
+→ The difference: what follows aller<br>
+→ → Aller + <strong>PLACE</strong> = movement (going somewhere)<br>
+→ → Aller + <strong>INFINITIF</strong> = future (going to do something)</p>
+<hr>
+<h2>Step 2 — The Complete Futur Proche Formula</h2>
+<code>SUBJECT + ALLER (conjugated) + VERB (infinitif) + rest of sentence</code>
+<p>→ ONLY aller conjugates — the action verb stays in infinitif<br>
+→ Same rule as modals (Project 6): <strong>never conjugate the second verb</strong><br>
+→ ✅ Je <strong>vais</strong> manger. (correct)<br>
+→ ❌ <del>Je vais mange.</del> (wrong — must be infinitif)<br>
+→ ❌ <del>Je vais mangé.</del> (wrong — that's a past participle, not infinitif)</p>
+<p><strong>🧠 CRITICAL CONFUSION TO AVOID:</strong><br>
+→ "Mangé" (past participle — Project 9) looks similar to "manger" (infinitif)<br>
+→ In speech, they sound IDENTICAL: "man-zhay"<br>
+→ In writing:<br>
+→ → J'ai <strong>mangé</strong> = passé composé (I ate)<br>
+→ → Je vais <strong>manger</strong> = futur proche (I'm going to eat)<br>
+→ → The spelling difference matters in writing!</p>
+<hr>
+<h2>Step 3 — Negation in Futur Proche</h2>
+<code>SUBJECT + NE + VAIS/VAS/VA... + PAS + INFINITIF + rest</code>
+<p>→ Same rule as all negation with conjugated verbs (Project 5, Project 6):<br>
+→ The negation sandwich wraps around the <strong>conjugated verb</strong> (aller)<br>
+→ The infinitif stays OUTSIDE the sandwich</p>
+<p>→ ✅ Je <strong>ne vais pas</strong> manger. (I'm not going to eat.)<br>
+→ ❌ <del>Je vais ne pas manger.</del> (different meaning — "I'm going to not eat" — intentional non-eating)</p>
+<p>→ Spoken French (Project 5 reminder): drop "ne"<br>
+→ Written: Je <strong>ne</strong> vais <strong>pas</strong> manger.<br>
+→ Spoken: Je vais <strong>pas</strong> manger.</p>
+<hr>
+<h2>Step 4 — When to Use Futur Proche</h2>
+<table><thead><tr><th>Situation</th><th>Example</th><th>Time Frame</th></tr></thead><tbody><tr><td><strong>Immediate plans</strong> — about to happen NOW</td><td>Je vais partir. (I'm about to leave.)</td><td>Seconds/minutes</td></tr><tr><td><strong>Tonight's plans</strong></td><td>On va manger au restaurant ce soir.</td><td>Hours</td></tr><tr><td><strong>Weekend plans</strong></td><td>Je vais visiter le Louvre samedi.</td><td>Days</td></tr><tr><td><strong>Near future intentions</strong></td><td>Je vais chercher un appartement.</td><td>Weeks</td></tr><tr><td><strong>Predictions based on evidence</strong></td><td>Il va pleuvoir. (Look at those clouds!)</td><td>Variable</td></tr><tr><td><strong>Casual distant future</strong> (spoken French)</td><td>On va se marier l'année prochaine.</td><td>Months/years</td></tr><tr><td><strong>Warnings</strong></td><td>Tu vas tomber ! (You're going to fall!)</td><td>Immediate</td></tr><tr><td><strong>Promises</strong> (casual)</td><td>Je vais t'appeler demain.</td><td>Soon</td></tr></tbody></table>
+<p>→ In spoken French, futur proche is used for <strong>almost ALL future events</strong> — near and far<br>
+→ Futur simple (Project 16) is more formal/written/distant<br>
+→ At this level: <strong>futur proche is your default future tense</strong></p>
+<hr>
+<h1>✅ WHAT COULD BE DONE — THE 100 SENTENCES</h1>
+<h2>🔹 BLOCK A — Immediate Plans: What's Happening Right Now / Very Soon</h2>
+<p><em>Scenario: You're at school, things are about to happen in the next minutes</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English Meaning</th><th>Time Frame</th></tr></thead><tbody><tr><td>1</td><td>Je vais partir.</td><td>I'm going to leave. / I'm about to leave.</td><td>Now</td></tr><tr><td>2</td><td>Tu vas manger ?</td><td>Are you going to eat?</td><td>Very soon</td></tr><tr><td>3</td><td>Il va arriver.</td><td>He's going to arrive. / He's about to arrive.</td><td>Minutes</td></tr><tr><td>4</td><td>Elle va commencer.</td><td>She's going to start.</td><td>Imminent</td></tr><tr><td>5</td><td>On va y aller.</td><td>We're going to go. / Let's go.</td><td>Now</td></tr><tr><td>6</td><td>Le cours va finir dans cinq minutes.</td><td>The class is going to finish in five minutes.</td><td>Minutes</td></tr><tr><td>7</td><td>Attention, tu vas tomber !</td><td>Careful, you're going to fall!</td><td>Immediate warning</td></tr><tr><td>8</td><td>Le bus va partir sans nous !</td><td>The bus is going to leave without us!</td><td>Immediate warning</td></tr><tr><td>9</td><td>Ça va être bien.</td><td>It's going to be good.</td><td>Anticipation</td></tr><tr><td>10</td><td>Ça va aller.</td><td>It's going to be okay.</td><td>Reassurance</td></tr></tbody></table>
+<p><strong>🧠 Key expressions discovered:</strong></p>
+<table><thead><tr><th>Expression</th><th>Meaning</th><th>Usage</th></tr></thead><tbody><tr><td><strong>On va y aller.</strong></td><td>We're going to go. / Let's get going.</td><td>Very common way to signal departure</td></tr><tr><td><strong>Ça va être + adj.</strong></td><td>It's going to be [adjective].</td><td>Prediction / anticipation</td></tr><tr><td><strong>Ça va aller.</strong></td><td>It's going to be okay. / It'll be fine.</td><td>Reassurance — extremely common</td></tr></tbody></table>
+<p><strong>🧠 Sentence 5 — "On va Y aller":</strong><br>
+→ <strong>"Y"</strong> = there (replaces a place already mentioned)<br>
+→ Full exploration in Project 20 — for now, just know "y aller" = "to go (there)"<br>
+→ "On y va !" = "Let's go!" (one of the most common French expressions)<br>
+→ "On va y aller" = "We're going to go" (slightly less immediate than "On y va")</p>
+<hr>
+<h2>🔹 BLOCK B — Tonight's Plans: What's Happening This Evening</h2>
+<p><em>Scenario: Friday evening — everyone discusses their plans</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English Meaning</th><th>Structure</th></tr></thead><tbody><tr><td>11</td><td>Ce soir, je vais manger chez moi.</td><td>Tonight, I'm going to eat at home.</td><td>Time + futur proche + place (P7)</td></tr><tr><td>12</td><td>Tu vas sortir ce soir ?</td><td>Are you going to go out tonight?</td><td>Futur proche + question (P4)</td></tr><tr><td>13</td><td>Il va regarder un film.</td><td>He's going to watch a movie.</td><td>Basic futur proche</td></tr><tr><td>14</td><td>Elle va préparer le dîner.</td><td>She's going to prepare dinner.</td><td>Basic futur proche</td></tr><tr><td>15</td><td>On va manger au restaurant japonais.</td><td>We're going to eat at the Japanese restaurant.</td><td>Futur proche + place</td></tr><tr><td>16</td><td>Nous allons inviter des amis.</td><td>We're going to invite friends.</td><td>Futur proche (formal nous)</td></tr><tr><td>17</td><td>Vous allez faire quoi ce soir ?</td><td>What are you going to do tonight?</td><td>Question (P4) + futur proche</td></tr><tr><td>18</td><td>Ils vont aller au cinéma.</td><td>They're going to go to the cinema.</td><td>Aller + aller (double aller!)</td></tr><tr><td>19</td><td>Elles vont danser en boîte.</td><td>They (f) are going to dance at a club.</td><td>Futur proche + place</td></tr><tr><td>20</td><td>On va bien s'amuser !</td><td>We're going to have a great time!</td><td>Futur proche + reflexive (preview)</td></tr></tbody></table>
+<p><strong>🧠 Sentence 18 — "Ils vont ALLER au cinéma":</strong><br>
+→ Yes — you CAN use aller + aller<br>
+→ First "vont" = auxiliary for futur proche (conjugated)<br>
+→ Second "aller" = infinitif (the action of going)<br>
+→ "Ils <strong>vont aller</strong>" = They are going <strong>to go</strong><br>
+→ This sounds redundant but is <strong>completely correct and natural</strong><br>
+→ In very casual speech, some people shorten to: "Ils vont au cinéma" (using present for near future — acceptable in spoken French)</p>
+<hr>
+<h2>🔹 BLOCK C — Weekend Plans: What's Happening in Coming Days</h2>
+<p><em>Scenario: Planning the weekend — Saturday and Sunday activities</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English Meaning</th><th>Time Marker (P8)</th></tr></thead><tbody><tr><td>21</td><td>Samedi, je vais visiter le Louvre.</td><td>Saturday, I'm going to visit the Louvre.</td><td>samedi (one-time — P8)</td></tr><tr><td>22</td><td>Samedi matin, on va faire les courses.</td><td>Saturday morning, we're going to do the shopping.</td><td>samedi matin</td></tr><tr><td>23</td><td>L'après-midi, je vais me reposer.</td><td>In the afternoon, I'm going to rest.</td><td>l'après-midi</td></tr><tr><td>24</td><td>Samedi soir, on va dîner en ville.</td><td>Saturday evening, we're going to dine in town.</td><td>samedi soir</td></tr><tr><td>25</td><td>Dimanche, je vais dormir tard.</td><td>Sunday, I'm going to sleep late.</td><td>dimanche</td></tr><tr><td>26</td><td>Dimanche matin, on va prendre le brunch.</td><td>Sunday morning, we're going to have brunch.</td><td>dimanche matin</td></tr><tr><td>27</td><td>L'après-midi, on va se promener au parc.</td><td>In the afternoon, we're going to take a walk in the park.</td><td>l'après-midi</td></tr><tr><td>28</td><td>Dimanche soir, je vais préparer la semaine.</td><td>Sunday evening, I'm going to prepare for the week.</td><td>dimanche soir</td></tr><tr><td>29</td><td>Ce week-end, on va bien profiter.</td><td>This weekend, we're going to enjoy ourselves.</td><td>ce week-end</td></tr><tr><td>30</td><td>Le week-end prochain, on va aller à la plage.</td><td>Next weekend, we're going to go to the beach.</td><td>le week-end prochain</td></tr></tbody></table>
+<p><strong>🧠 TIME MARKERS + FUTUR PROCHE — natural combinations:</strong></p>
+<table><thead><tr><th>Time Marker (from Project 8)</th><th>Example with Futur Proche</th></tr></thead><tbody><tr><td><strong>Ce soir</strong> (tonight)</td><td>Ce soir, je vais sortir.</td></tr><tr><td><strong>Demain</strong> (tomorrow)</td><td>Demain, on va travailler.</td></tr><tr><td><strong>Demain matin</strong> (tomorrow morning)</td><td>Demain matin, je vais me lever tôt.</td></tr><tr><td><strong>Samedi</strong> (this Saturday)</td><td>Samedi, on va faire la fête.</td></tr><tr><td><strong>Ce week-end</strong> (this weekend)</td><td>Ce week-end, je vais me reposer.</td></tr><tr><td><strong>La semaine prochaine</strong> (next week)</td><td>La semaine prochaine, je vais commencer un nouveau cours.</td></tr><tr><td><strong>Le mois prochain</strong> (next month)</td><td>Le mois prochain, on va déménager.</td></tr><tr><td><strong>Bientôt</strong> (soon)</td><td>Je vais bientôt partir.</td></tr><tr><td><strong>Dans + duration</strong> (in X time)</td><td>Je vais partir dans dix minutes.</td></tr><tr><td><strong>Après</strong> (after / afterwards)</td><td>Après, on va manger.</td></tr><tr><td><strong>Tout à l'heure</strong> (later today / a moment ago)</td><td>Je vais t'appeler tout à l'heure.</td></tr></tbody></table>
+<p><strong>🧠 NEW TIME MARKER: "DANS + duration" = "in X time from now"</strong></p>
+<table><thead><tr><th>French</th><th>English</th><th>Meaning</th></tr></thead><tbody><tr><td><strong>dans</strong> cinq minutes</td><td><strong>in</strong> five minutes</td><td>5 minutes from now</td></tr><tr><td><strong>dans</strong> une heure</td><td><strong>in</strong> an hour</td><td>1 hour from now</td></tr><tr><td><strong>dans</strong> deux jours</td><td><strong>in</strong> two days</td><td>2 days from now</td></tr><tr><td><strong>dans</strong> une semaine</td><td><strong>in</strong> a week</td><td>1 week from now</td></tr></tbody></table>
+<p>→ Do NOT confuse with "dans" = inside (Project 7): "dans le sac" (in the bag)<br>
+→ "Dans" + duration = future time reference → "Le train part <strong>dans</strong> dix minutes"<br>
+→ Compare with "il y a" + duration = past time (Project 9): "Il y a deux jours" (two days ago)</p>
+<table><thead><tr><th>Past</th><th>Future</th></tr></thead><tbody><tr><td><strong>Il y a</strong> deux jours (two days <strong>ago</strong>)</td><td><strong>Dans</strong> deux jours (in two days / two days <strong>from now</strong>)</td></tr></tbody></table>
+<hr>
+<h2>🔹 BLOCK D — Predictions: What's Going to Happen (Based on Evidence)</h2>
+<p><em>Scenario: You see signs of what's coming — weather, outcomes, consequences</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English Meaning</th><th>Prediction Type</th></tr></thead><tbody><tr><td>31</td><td>Il va pleuvoir.</td><td>It's going to rain.</td><td>Weather — see the clouds</td></tr><tr><td>32</td><td>Il va faire froid demain.</td><td>It's going to be cold tomorrow.</td><td>Weather forecast</td></tr><tr><td>33</td><td>Ça va être difficile.</td><td>It's going to be difficult.</td><td>Assessment of situation</td></tr><tr><td>34</td><td>Tu vas aimer ce film.</td><td>You're going to like this movie.</td><td>Confident prediction</td></tr><tr><td>35</td><td>Il va être en retard, comme d'habitude.</td><td>He's going to be late, as usual.</td><td>Prediction based on pattern</td></tr><tr><td>36</td><td>Elle va réussir son examen.</td><td>She's going to pass her exam.</td><td>Confident prediction</td></tr><tr><td>37</td><td>On va avoir un problème.</td><td>We're going to have a problem.</td><td>Warning / anticipation</td></tr><tr><td>38</td><td>Ça va prendre du temps.</td><td>It's going to take time.</td><td>Assessment</td></tr><tr><td>39</td><td>Les prix vont augmenter.</td><td>Prices are going to increase.</td><td>Prediction</td></tr><tr><td>40</td><td>La situation va s'améliorer.</td><td>The situation is going to improve.</td><td>Optimistic prediction</td></tr></tbody></table>
+<p><strong>🧠 FUTUR PROCHE FOR PREDICTIONS:</strong><br>
+→ When you have <strong>evidence or strong reason</strong> to believe something → futur proche<br>
+→ "Il va pleuvoir" = you see dark clouds → strong evidence → futur proche<br>
+→ "Il pleuvra peut-être" = you're not sure → futur simple (Project 16) → more distant/uncertain<br>
+→ In daily speech, futur proche is used for BOTH certain and uncertain predictions<br>
+→ Futur simple for predictions is more formal/literary</p>
+<p><strong>🧠 "ÇA VA + INFINITIF" — extremely common pattern:</strong><br>
+→ Ça va être bien. (It's going to be good.)<br>
+→ Ça va aller. (It'll be okay.)<br>
+→ Ça va prendre du temps. (It's going to take time.)<br>
+→ Ça va marcher. (It's going to work.)<br>
+→ Ça va changer. (It's going to change.)<br>
+→ <strong>"Ça"</strong> = informal "it" / "that" → "Ça va + infinitif" = one of the most frequent spoken patterns</p>
+<hr>
+<h2>🔹 BLOCK E — Warnings and Urgent Futures: Watch Out!</h2>
+<p><em>Scenario: Something is about to go wrong — you need to warn someone</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English Meaning</th><th>Urgency</th></tr></thead><tbody><tr><td>41</td><td>Attention, tu vas tomber !</td><td>Watch out, you're going to fall!</td><td>Immediate</td></tr><tr><td>42</td><td>Fais attention, tu vas te brûler !</td><td>Be careful, you're going to burn yourself!</td><td>Immediate</td></tr><tr><td>43</td><td>Dépêche-toi, on va être en retard !</td><td>Hurry up, we're going to be late!</td><td>Minutes</td></tr><tr><td>44</td><td>Si tu ne manges pas, tu vas avoir faim.</td><td>If you don't eat, you're going to be hungry.</td><td>Consequence</td></tr><tr><td>45</td><td>Ne fais pas ça, tu vas te faire mal !</td><td>Don't do that, you're going to hurt yourself!</td><td>Warning</td></tr><tr><td>46</td><td>Le verre va tomber !</td><td>The glass is going to fall!</td><td>Immediate</td></tr><tr><td>47</td><td>Si tu continues, tu vas avoir des problèmes.</td><td>If you keep going, you're going to have problems.</td><td>Consequence</td></tr><tr><td>48</td><td>On va manquer le train !</td><td>We're going to miss the train!</td><td>Urgent</td></tr><tr><td>49</td><td>Il va se fâcher si tu dis ça.</td><td>He's going to get angry if you say that.</td><td>Consequence</td></tr><tr><td>50</td><td>Ça va mal finir.</td><td>It's going to end badly.</td><td>Prediction / warning</td></tr></tbody></table>
+<p><strong>🧠 FUTUR PROCHE FOR WARNINGS — very natural in French:</strong><br>
+→ Warnings about IMMINENT events almost always use futur proche (not futur simple)<br>
+→ The urgency is built into the structure — "aller" implies it's ABOUT TO happen<br>
+→ Often combined with <strong>impératif</strong> (Project 13 preview):<br>
+→ → "<strong>Fais</strong> attention !" (imperative) + "tu <strong>vas</strong> tomber !" (futur proche)<br>
+→ → Command + consequence warning</p>
+<p><strong>🧠 Sentences 44, 47, 49 — "SI + present → futur proche":</strong><br>
+→ You're seeing a <strong>conditional structure</strong> for the first time:<br>
+→ → <strong>Si</strong> tu ne manges pas (present) → tu <strong>vas</strong> avoir faim (futur proche)<br>
+→ → <strong>If</strong> you don't eat → you're <strong>going to</strong> be hungry<br>
+→ This is the simplest form of conditional: <strong>si + present → futur</strong><br>
+→ Full exploration in Project 18 — for now, just absorb the pattern<br>
+→ Notice: the "si" clause uses PRESENT tense — NOT futur proche<br>
+→ → ✅ <strong>Si</strong> tu <strong>continues</strong>... (present after si)<br>
+→ → ❌ <del>Si tu <strong>vas</strong> continuer...</del> (NEVER put futur after si)</p>
+<hr>
+<h2>🔹 BLOCK F — Negation: Things You're NOT Going to Do</h2>
+<p><em>Scenario: People invite you to things — you decline using futur proche negation</em></p>
+<table><thead><tr><th>#</th><th>French Sentence (Written)</th><th>Spoken Version</th><th>English</th></tr></thead><tbody><tr><td>51</td><td>Je ne vais pas sortir ce soir.</td><td>Je vais pas sortir ce soir.</td><td>I'm not going to go out tonight.</td></tr><tr><td>52</td><td>Tu ne vas pas travailler demain ?</td><td>Tu vas pas travailler demain ?</td><td>You're not going to work tomorrow?</td></tr><tr><td>53</td><td>Il ne va pas venir.</td><td>Il va pas venir.</td><td>He's not going to come.</td></tr><tr><td>54</td><td>Elle ne va pas aimer ça.</td><td>Elle va pas aimer ça.</td><td>She's not going to like that.</td></tr><tr><td>55</td><td>On ne va pas rester longtemps.</td><td>On va pas rester longtemps.</td><td>We're not going to stay long.</td></tr><tr><td>56</td><td>Nous n'allons pas accepter.</td><td>On va pas accepter.</td><td>We're not going to accept.</td></tr><tr><td>57</td><td>Vous n'allez pas le croire !</td><td>Vous allez pas le croire !</td><td>You're not going to believe it!</td></tr><tr><td>58</td><td>Ils ne vont pas être contents.</td><td>Ils vont pas être contents.</td><td>They're not going to be happy.</td></tr><tr><td>59</td><td>Je ne vais plus manger de sucre.</td><td>Je vais plus manger de sucre.</td><td>I'm not going to eat sugar anymore.</td></tr><tr><td>60</td><td>On ne va jamais finir à temps.</td><td>On va jamais finir à temps.</td><td>We're never going to finish on time.</td></tr></tbody></table>
+<p><strong>🧠 NEGATION IN FUTUR PROCHE — confirmed pattern:</strong></p>
+<code>Subject + NE + ALLER (conjugated) + PAS/PLUS/JAMAIS + INFINITIF + rest</code>
+<p>→ Same rule as modals (Project 6) and passé composé (Project 9)<br>
+→ Sandwich wraps the <strong>conjugated verb</strong> (aller)<br>
+→ Infinitif stays outside the sandwich</p>
+<table><thead><tr><th>Tense</th><th>Negation Pattern</th></tr></thead><tbody><tr><td><strong>Present</strong> (P5)</td><td>Je <strong>ne</strong> mange <strong>pas</strong>.</td></tr><tr><td><strong>Modal</strong> (P6)</td><td>Je <strong>ne</strong> veux <strong>pas</strong> manger.</td></tr><tr><td><strong>Passé composé</strong> (P9)</td><td>Je **n'**ai <strong>pas</strong> mangé.</td></tr><tr><td><strong>Futur proche</strong> (P12)</td><td>Je <strong>ne</strong> vais <strong>pas</strong> manger.</td></tr></tbody></table>
+<p>→ The pattern is <strong>always the same</strong>: ne + conjugated verb + pas + rest<br>
+→ What changes is WHICH verb is conjugated (the main verb, the modal, the auxiliary, or aller)</p>
+<p><strong>🧠 Sentence 57 — "Vous n'allez pas le croire !":</strong><br>
+→ = "You're not going to believe it!" — very common exclamatory expression<br>
+→ <strong>"Le"</strong> before "croire" = pronoun "it" (replacing what you're about to tell them)<br>
+→ Full pronoun exploration in Project 19 — for now, just absorb the expression</p>
+<hr>
+<h2>🔹 BLOCK G — Questions in Futur Proche</h2>
+<p><em>Scenario: Asking about plans — tonight, tomorrow, the weekend</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English Meaning</th><th>Question Form (P4)</th></tr></thead><tbody><tr><td>61</td><td>Tu vas faire quoi ce soir ?</td><td>What are you going to do tonight?</td><td>Casual — quoi at end</td></tr><tr><td>62</td><td>Qu'est-ce que tu vas faire ?</td><td>What are you going to do?</td><td>Standard — est-ce que</td></tr><tr><td>63</td><td>Tu vas sortir ?</td><td>Are you going to go out?</td><td>Casual — intonation</td></tr><tr><td>64</td><td>Est-ce que vous allez venir ?</td><td>Are you going to come?</td><td>Standard — est-ce que</td></tr><tr><td>65</td><td>Où est-ce qu'on va manger ?</td><td>Where are we going to eat?</td><td>Standard — où</td></tr><tr><td>66</td><td>On va manger où ?</td><td>Where are we going to eat?</td><td>Casual — où at end</td></tr><tr><td>67</td><td>Tu vas inviter qui ?</td><td>Who are you going to invite?</td><td>Casual — qui at end</td></tr><tr><td>68</td><td>Quand est-ce que tu vas partir ?</td><td>When are you going to leave?</td><td>Standard — quand</td></tr><tr><td>69</td><td>Comment on va faire ?</td><td>How are we going to do it?</td><td>Casual — comment</td></tr><tr><td>70</td><td>Ça va durer combien de temps ?</td><td>How long is it going to last?</td><td>Casual — combien</td></tr></tbody></table>
+<p><strong>🧠 QUESTIONS IN FUTUR PROCHE — same Project 4 rules:</strong><br>
+→ The futur proche unit (aller + infinitif) stays together<br>
+→ Question words follow the same placement rules (casual: end / standard: beginning)</p>
+<table><thead><tr><th>Casual</th><th>Standard</th></tr></thead><tbody><tr><td>Tu vas faire <strong>quoi</strong> ?</td><td><strong>Qu'est-ce que</strong> tu vas faire ?</td></tr><tr><td>On va manger <strong>où</strong> ?</td><td><strong>Où</strong> est-ce qu'on va manger ?</td></tr><tr><td>Tu vas partir <strong>quand</strong> ?</td><td><strong>Quand</strong> est-ce que tu vas partir ?</td></tr></tbody></table>
+<p>→ Nothing new to learn — just apply Project 4 patterns to futur proche sentences</p>
+<hr>
+<h2>🔹 BLOCK H — Futur Proche vs. Present Tense for Future Events</h2>
+<p><em>Scenario: Understanding when French uses present vs. futur proche for future meaning</em></p>
+<table><thead><tr><th>#</th><th>Present Tense (Future Meaning)</th><th>Futur Proche</th><th>Which Sounds More Natural</th></tr></thead><tbody><tr><td>71a</td><td>Je pars demain.</td><td>71b</td><td>Je vais partir demain.</td></tr><tr><td></td><td>I leave tomorrow.</td><td></td><td>I'm going to leave tomorrow.</td></tr><tr><td></td><td>→ Sounds <strong>decided, scheduled</strong></td><td></td><td>→ Sounds <strong>planned, intentional</strong></td></tr><tr><td>72a</td><td>Le train arrive à midi.</td><td>72b</td><td>Le train va arriver à midi.</td></tr><tr><td></td><td>The train arrives at noon.</td><td></td><td>The train is going to arrive at noon.</td></tr><tr><td></td><td>→ Sounds like a <strong>schedule/timetable</strong></td><td></td><td>→ Sounds like a <strong>prediction/update</strong></td></tr><tr><td>73a</td><td>On mange chez Pierre ce soir.</td><td>73b</td><td>On va manger chez Pierre ce soir.</td></tr><tr><td></td><td>We eat at Pierre's tonight.</td><td></td><td>We're going to eat at Pierre's tonight.</td></tr><tr><td></td><td>→ Sounds <strong>already arranged</strong></td><td></td><td>→ Sounds like a <strong>plan being stated</strong></td></tr><tr><td>74a</td><td>Demain, il pleut.</td><td>74b</td><td>Demain, il va pleuvoir.</td></tr><tr><td></td><td>Tomorrow, it rains.</td><td></td><td>Tomorrow, it's going to rain.</td></tr><tr><td></td><td>→ Sounds <strong>very casual / weather report</strong></td><td></td><td>→ Sounds <strong>natural prediction</strong></td></tr><tr><td>75a</td><td>Je fais quoi ce soir ?</td><td>75b</td><td>Je vais faire quoi ce soir ?</td></tr><tr><td></td><td>What do I do tonight?</td><td></td><td>What am I going to do tonight?</td></tr><tr><td></td><td>→ Sounds like asking for <strong>instructions</strong></td><td></td><td>→ Sounds like <strong>wondering about plans</strong></td></tr></tbody></table>
+<p><strong>🧠 PRESENT vs. FUTUR PROCHE for future events:</strong></p>
+<table><thead><tr><th>Use PRESENT for Future When...</th><th>Use FUTUR PROCHE When...</th></tr></thead><tbody><tr><td>It's a <strong>fixed schedule</strong> (trains, classes, TV)</td><td>It's a <strong>personal plan or intention</strong></td></tr><tr><td>It's <strong>already decided and certain</strong></td><td>You're <strong>announcing or discussing</strong> a plan</td></tr><tr><td>Very casual / informal</td><td>Standard / most common</td></tr><tr><td>Short, snappy statements</td><td>More explicit about futurity</td></tr></tbody></table>
+<p>→ In real spoken French, BOTH are used for near-future events<br>
+→ Present for future is very casual: "Je pars demain" (decided, short)<br>
+→ Futur proche is the <strong>safe default</strong>: "Je vais partir demain" (always correct)<br>
+→ When in doubt → use futur proche → it's never wrong for future events</p>
+<hr>
+<h2>🔹 BLOCK I — Futur Proche with All Previous Structures Combined</h2>
+<p><em>Scenario: Complex sentences combining futur proche with everything from Phase 1</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English Meaning</th><th>Structures Combined</th></tr></thead><tbody><tr><td>76</td><td>Je vais aller au bureau demain matin.</td><td>I'm going to go to the office tomorrow morning.</td><td>Futur proche + place (P7) + time (P8)</td></tr><tr><td>77</td><td>On ne va pas pouvoir venir ce soir.</td><td>We're not going to be able to come tonight.</td><td>Negation (P5) + futur proche + modal (P6)</td></tr><tr><td>78</td><td>Tu vas devoir travailler ce week-end.</td><td>You're going to have to work this weekend.</td><td>Futur proche + modal (P6)</td></tr><tr><td>79</td><td>Est-ce qu'il va y avoir du monde ?</td><td>Is there going to be a lot of people?</td><td>Question (P4) + futur proche + il y a (P3)</td></tr><tr><td>80</td><td>Je ne vais pas avoir le temps.</td><td>I'm not going to have time.</td><td>Negation + futur proche + avoir (P1)</td></tr><tr><td>81</td><td>Ça va être cher, le restaurant ?</td><td>Is the restaurant going to be expensive?</td><td>Futur proche + être (P1) + question</td></tr><tr><td>82</td><td>On va essayer de partir tôt.</td><td>We're going to try to leave early.</td><td>Futur proche + verb + de + infinitif</td></tr><tr><td>83</td><td>Tu vas avoir besoin d'un manteau.</td><td>You're going to need a coat.</td><td>Futur proche + avoir besoin de (P6)</td></tr><tr><td>84</td><td>Il ne va pas faire beau ce week-end.</td><td>The weather is not going to be nice this weekend.</td><td>Negation + futur proche + weather (P8)</td></tr><tr><td>85</td><td>On va devoir acheter des billets à l'avance.</td><td>We're going to have to buy tickets in advance.</td><td>Futur proche + devoir + infinitif</td></tr></tbody></table>
+<p><strong>🧠 STACKING: FUTUR PROCHE + MODAL</strong></p>
+<p>→ You can combine aller (futur proche) with a modal verb:<br>
+→ → Je vais <strong>devoir</strong> travailler. (I'm going to have to work.)<br>
+→ → On va <strong>pouvoir</strong> partir. (We're going to be able to leave.)<br>
+→ → Tu ne vas pas <strong>pouvoir</strong> venir. (You're not going to be able to come.)</p>
+<p>→ Structure: <strong>aller + modal (infinitif) + action (infinitif)</strong><br>
+→ Three verbs in a row — but only aller is conjugated<br>
+→ ✅ Je <strong>vais</strong> devoir partir. (going to + have to + leave)<br>
+→ This is a natural French construction — don't be afraid of verb chains</p>
+<p><strong>🧠 Sentence 79 — "IL VA Y AVOIR":</strong><br>
+→ "Il y a" (there is/are — Project 3) in futur proche:<br>
+→ → Present: Il <strong>y a</strong> du monde. (There are people.)<br>
+→ → Futur proche: Il <strong>va y avoir</strong> du monde. (There are going to be people.)<br>
+→ → Passé (imparfait — Project 10): Il <strong>y avait</strong> du monde. (There were people.)<br>
+→ "Il y a" transforms across tenses — always useful, always needed</p>
+<hr>
+<h2>🔹 BLOCK J — Full Weekend Plan: Natural Conversation Flow</h2>
+<p><em>Scenario: You describe your complete weekend plan to a classmate</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>Structure Used</th><th>Context</th></tr></thead><tbody><tr><td>86</td><td>Ce soir, je vais rentrer chez moi.</td><td>Futur proche + chez (P7)</td><td>Friday evening</td></tr><tr><td>87</td><td>Je vais me reposer un peu.</td><td>Futur proche + reflexive</td><td>Rest</td></tr><tr><td>88</td><td>Après, je vais préparer le dîner.</td><td>Futur proche + sequence marker</td><td>Evening routine</td></tr><tr><td>89</td><td>Je ne vais pas sortir ce soir, je suis fatigué.</td><td>Negation + futur proche + reason (present)</td><td>Declining plans</td></tr><tr><td>90</td><td>Demain matin, je vais dormir tard.</td><td>Futur proche + time (P8)</td><td>Saturday morning</td></tr><tr><td>91</td><td>Vers dix heures, je vais prendre le petit-déjeuner.</td><td>Futur proche + approximate time</td><td>Breakfast</td></tr><tr><td>92</td><td>L'après-midi, on va visiter le quartier du Marais.</td><td>Futur proche + place (P7)</td><td>Saturday afternoon</td></tr><tr><td>93</td><td>On va se promener et on va prendre des photos.</td><td>Futur proche + futur proche (sequence)</td><td>Activities</td></tr><tr><td>94</td><td>Le soir, on va dîner dans un bon restaurant.</td><td>Futur proche + place</td><td>Saturday evening</td></tr><tr><td>95</td><td>Je pense qu'on va bien s'amuser.</td><td>Opinion + futur proche</td><td>Anticipation</td></tr><tr><td>96</td><td>Dimanche, je vais aller au Louvre.</td><td>Futur proche + aller aller</td><td>Sunday plan</td></tr><tr><td>97</td><td>Il va y avoir beaucoup de monde, je pense.</td><td>Futur proche + il y a + opinion</td><td>Prediction</td></tr><tr><td>98</td><td>Après le musée, je vais faire les courses.</td><td>Futur proche + sequence</td><td>Sunday afternoon</td></tr><tr><td>99</td><td>Le soir, je vais préparer la semaine.</td><td>Futur proche + routine</td><td>Sunday evening</td></tr><tr><td>100</td><td>Lundi, les cours vont recommencer.</td><td>Futur proche + subject change</td><td>Monday preview</td></tr><tr><td>101</td><td>Ça va être une bonne semaine, j'espère !</td><td>Futur proche + hope</td><td>Final expression</td></tr></tbody></table>
+<p><strong>🧠 Notice the natural FLOW of futur proche in conversation:</strong><br>
+→ Sentence after sentence — futur proche creates a natural timeline<br>
+→ Each sentence advances to the NEXT planned event<br>
+→ Time markers (ce soir, demain matin, l'après-midi, le soir, dimanche, lundi) structure the narrative<br>
+→ This is exactly how French people discuss their plans</p>
+<hr>
+<h1>✅ WHAT SHOULD DO</h1>
+<p>→ <strong>Use futur proche as your DEFAULT future tense</strong> — it's the most common in spoken French<br>
+→ <strong>Keep the infinitif after aller</strong> — never conjugate the second verb<br>
+→ <strong>Combine with time markers from Project 8</strong> — ce soir, demain, la semaine prochaine, dans + duration<br>
+→ <strong>Learn the "dans + duration" time marker</strong> — dans cinq minutes, dans une heure, dans deux jours<br>
+→ <strong>Practice negation</strong> — ne + aller + pas + infinitif (same pattern as all other negation)<br>
+→ <strong>Use "ça va + infinitif"</strong> freely — it's the most casual and natural way to predict things<br>
+→ <strong>Stack aller + modal + infinitif</strong> for complex futures — je vais devoir partir, on va pouvoir manger<br>
+→ <strong>Connect to Project 2</strong> — aller conjugation is the same (je vais, tu vas, il va...)<br>
+→ <strong>Connect to Project 6</strong> — same modal structure: conjugated verb + infinitif<br>
+→ <strong>Connect to Project 8</strong> — time markers are the same, just shifted to future context</p>
+<hr>
+<h1>❌ WHAT SHOULD NOT DO</h1>
+<p>→ ❌ Do NOT conjugate the second verb → <del>"Je vais mange"</del> → "Je vais <strong>manger</strong>"<br>
+→ ❌ Do NOT confuse infinitif (-er) with past participle (-é) in writing → "Je vais mang<strong>er</strong>" ≠ "J'ai mang<strong>é</strong>"<br>
+→ ❌ Do NOT put aller in the future to make futur proche → <del>"J'irai manger"</del> = futur simple (Project 16), not futur proche<br>
+→ ❌ Do NOT use futur proche after <strong>"si"</strong> (if) → <del>"Si je vais manger..."</del> → "<strong>Si</strong> je <strong>mange</strong>..." (present after si)<br>
+→ ❌ Do NOT use futur proche for habitual present actions → "I go to school every day" = present tense, not futur proche<br>
+→ ❌ Do NOT say <del>"Je vais aller aller"</del> (triple aller) → "Je vais aller au cinéma" is the maximum (aller + aller)<br>
+→ ❌ Do NOT place negation around the infinitif → <del>"Je vais ne pas manger"</del> has a different meaning (intentional not-eating) vs. "Je <strong>ne</strong> vais <strong>pas</strong> manger" (plan negation)<br>
+→ ❌ Do NOT forget that "aller + place" ≠ futur proche → "Je vais <strong>au</strong> bureau" (present, movement) vs. "Je vais <strong>travailler</strong>" (future, plan)</p>
+<hr>
+<h1>🔀 WHEN TO USE WHAT</h1>
+<h2>Futur Proche vs. Present vs. Other Tenses</h2>
+<table><thead><tr><th>Situation</th><th>Tense to Use</th><th>Example</th></tr></thead><tbody><tr><td><strong>Plans and intentions</strong></td><td>Futur proche</td><td>Je vais partir demain.</td></tr><tr><td><strong>Predictions with evidence</strong></td><td>Futur proche</td><td>Il va pleuvoir.</td></tr><tr><td><strong>Warnings / imminent events</strong></td><td>Futur proche</td><td>Tu vas tomber !</td></tr><tr><td><strong>Fixed schedules</strong></td><td>Present</td><td>Le train part à midi.</td></tr><tr><td><strong>Habitual actions (now)</strong></td><td>Present</td><td>Je mange à midi tous les jours.</td></tr><tr><td><strong>Past events</strong></td><td>Passé composé (P9)</td><td>J'ai mangé hier.</td></tr><tr><td><strong>Past descriptions</strong></td><td>Imparfait (P10)</td><td>Il faisait beau.</td></tr><tr><td><strong>Past stories</strong></td><td>PC + IMP (P11)</td><td>Je marchais quand j'ai vu Pierre.</td></tr><tr><td><strong>Formal/distant future</strong></td><td>Futur simple (P16 — coming later)</td><td>Je partirai en juin.</td></tr></tbody></table>
+<h2>Futur Proche + Negation Decision</h2>
+<table><thead><tr><th>You Want to Say</th><th>Structure</th><th>Example</th></tr></thead><tbody><tr><td>I'm going to eat.</td><td>aller + infinitif</td><td>Je vais manger.</td></tr><tr><td>I'm NOT going to eat.</td><td>ne + aller + pas + infinitif</td><td>Je ne vais pas manger.</td></tr><tr><td>I'm NEVER going to eat there.</td><td>ne + aller + jamais + infinitif</td><td>Je ne vais jamais manger là-bas.</td></tr><tr><td>I'm not going to eat ANYMORE.</td><td>ne + aller + plus + infinitif</td><td>Je ne vais plus manger de viande.</td></tr><tr><td>I'm not going to eat ANYTHING.</td><td>ne + aller + rien + infinitif</td><td>Je ne vais rien manger.</td></tr><tr><td>I'm not going to see ANYONE.</td><td>ne + aller + infinitif + personne</td><td>Je ne vais voir personne.</td></tr></tbody></table>
+<p>→ Same negation placement rules as Project 6 (modals)<br>
+→ Rien goes BEFORE the infinitif / Personne goes AFTER the infinitif</p>
+<hr>
+<h1>🚫 WHEN NOT TO USE</h1>
+<p>→ Do NOT use futur proche for <strong>formal predictions about distant future</strong> → use futur simple (Project 16)<br>
+→ → "In 50 years, the climate <strong>will</strong> change" → futur simple territory<br>
+→ Do NOT use futur proche in the <strong>"si" clause</strong> of conditional sentences → always present tense after si<br>
+→ Do NOT use futur proche for <strong>past intentions</strong> → "I was going to eat" = "J'allais manger" (imparfait of aller + infinitif — not covered yet)<br>
+→ Do NOT use futur proche for <strong>habitual actions</strong> → "I eat every day" = present tense, not futur proche<br>
+→ Do NOT use futur proche when something is happening <strong>right now</strong> → use present: "Je mange" (I'm eating now) vs. "Je vais manger" (I'm going to eat later)</p>
+<p><strong>🧠 PREVIEW — "J'ALLAIS + infinitif" (past intention):</strong><br>
+→ If you put aller in <strong>imparfait</strong> instead of present → you get <strong>past intention</strong><br>
+→ "J'allais partir" = I was going to leave / I was about to leave<br>
+→ "On allait manger quand le téléphone a sonné" = We were about to eat when the phone rang<br>
+→ This is the <strong>imparfait of aller + infinitif</strong> → "futur proche in the past"<br>
+→ Very useful but not the focus of this project — just be aware it exists</p>
+<hr>
+<h1>⚠️ COMMON PITFALLS AND FAILURE MODES</h1>
+<table><thead><tr><th>Pitfall</th><th>What Learners Do Wrong</th><th>Correct Version</th><th>Why</th></tr></thead><tbody><tr><td><strong>Conjugating the infinitif</strong></td><td>Je vais mange.</td><td>Je vais <strong>manger</strong>.</td><td>Second verb stays infinitif — always</td></tr><tr><td><strong>Infinitif vs. participle</strong></td><td>Je vais mangé. (written)</td><td>Je vais mang<strong>er</strong>.</td><td>-é = participle (PC) / -er = infinitif (FP)</td></tr><tr><td><strong>Futur after si</strong></td><td>Si je vais manger...</td><td><strong>Si</strong> je <strong>mange</strong>...</td><td>Present tense after si — never future</td></tr><tr><td><strong>Aller + aller confusion</strong></td><td>Avoiding "on va aller"</td><td>"On <strong>va aller</strong>" is correct</td><td>Aller + aller is natural and grammatical</td></tr><tr><td><strong>Negation misplacement</strong></td><td>Je vais ne pas manger.</td><td>Je <strong>ne vais pas</strong> manger.</td><td>Ne...pas wraps aller, not the infinitif</td></tr><tr><td><strong>Aller place vs. future</strong></td><td>"Je vais manger" = going to a restaurant?</td><td>Context decides</td><td>Aller + infinitif = future / Aller + place = movement</td></tr><tr><td><strong>Using for right now</strong></td><td>"Je vais manger" while currently eating</td><td>"Je <strong>mange</strong>" (present)</td><td>Futur proche = upcoming, not current</td></tr><tr><td><strong>Missing "dans" for future duration</strong></td><td>"En cinq minutes, je pars"</td><td>"<strong>Dans</strong> cinq minutes, je pars"</td><td>"Dans" = in X time from now / "En" = within X time</td></tr><tr><td><strong>Rien/Personne placement</strong></td><td>Je ne vais manger rien.</td><td>Je ne vais <strong>rien</strong> manger.</td><td>Rien before infinitif</td></tr><tr><td><strong>Past intention confusion</strong></td><td>Using futur proche for "was going to"</td><td>J'<strong>allais</strong> manger. (imparfait of aller)</td><td>Past intention = imparfait aller + infinitif</td></tr></tbody></table>
+<hr>
+<h1>🔑 KEY TAKEAWAY</h1>
+<blockquote>
+<p><strong>Project 9 → Passé composé = what HAPPENED (completed past)</strong><br>
+<strong>Project 10 → Imparfait = how things WERE (descriptive past)</strong><br>
+<strong>Project 11 → PC + IMP together = complete storytelling</strong><br>
+<strong>Project 12 → Futur proche = what's GOING TO happen (plans, predictions, warnings)</strong></p>
+<p>The futur proche structure:</p>
+<code>Subject + ALLER (present) + INFINITIF + rest</code>
+<p>It follows the <strong>exact same pattern</strong> as modals (Project 6):<br>
+→ Conjugated verb + infinitif<br>
+→ Negation wraps the conjugated verb<br>
+→ Questions follow Project 4 rules</p>
+<p><strong>You now have THREE time zones:</strong></p>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>PAST ← ← ← ← ← PRESENT → → → → → FUTURE
+</span>PC + IMP           Present         Futur proche
+(Projects 9-11)    (Projects 1-8)  (Project 12)</code></pre></div>
+<p><strong>But you can only DESCRIBE, NARRATE, and PLAN.</strong><br>
+→ You cannot yet TELL someone what to do<br>
+→ "Close the door!" / "Listen to me!" / "Let's go!"<br>
+→ You need the <strong>impératif</strong> — the command form</p>
+</blockquote>
+<hr>
+<h1>🌉 BRIDGE TO PROJECT 13</h1>
+<blockquote>
+<p>You can now say <strong>"I'm going to eat tonight"</strong> and <strong>"It's going to rain"</strong> and <strong>"You're going to be late!"</strong><br>
+But you're in the kitchen with your host family — cooking together<br>
+The mother says: <strong>"Coupe les oignons !"</strong> / <strong>"Mélange bien !"</strong> / <strong>"Goûte ça !"</strong><br>
+→ Cut the onions! / Mix well! / Taste this!<br>
+→ These are <strong>commands</strong> — direct instructions with NO subject pronoun<br>
+→ Project 13: <strong>"Tell Them What to Do"</strong> unlocks the <strong>impératif</strong><br>
+→ Commands, instructions, suggestions, recipes, directions — all in one project</p>
+</blockquote>
+<hr>
+<h1>✅ PROJECT 12 COMPLETE</h1>
+<blockquote>
+<p><strong>Are you ready for PROJECT 13: "Tell Them What to Do"?</strong><br>
+→ ~100 sentences covering the <strong>impératif</strong> (command form)<br>
+→ Scenario: Cooking with a friend, giving directions, offering advice<br>
+→ Builds on present tense verb forms (Project 2) with a twist: no subject pronoun</p>
+</blockquote>
+</div>
+</div>
+
+<!-- ========== data-index="27" ========== -->
+
+        </div>
+
+        <div class="nav-bar">
+            <a href="project-11.html" class="nav-button prev">← Previous Chapter</a>
+            <div class="page-info">
+                <a href="index.html" class="nav-button home">📚 Table of Contents</a><br>
+                <span style="margin-top:8px;display:block">Chapter 12 of 50</span>
+            </div>
+            <a href="project-13.html" class="nav-button next">Next Chapter →</a>
+        </div>
+    </div>
+
+    
+    <div id="progress-track"><div id="progress-fill"></div></div>
+    <div id="progress-pct">0%</div>
+
+
+    <script>
+    const fill = document.getElementById('progress-fill');
+    const pct  = document.getElementById('progress-pct');
+    function updateProgress() {
+        const scrollTop = window.scrollY;
+        const docHeight = document.body.scrollHeight - window.innerHeight;
+        const scrolled  = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+        fill.style.height = scrolled + '%';
+        pct.textContent   = Math.round(scrolled) + '%';
+    }
+    window.addEventListener('scroll', updateProgress);
+    updateProgress();
+
+    document.addEventListener('keydown', function(e) {
+        if (['INPUT','TEXTAREA'].includes(document.activeElement.tagName)) return;
+        if (e.key === 'ArrowLeft') {
+            const b = document.querySelector('.nav-button.prev');
+            if (b && !b.classList.contains('disabled')) window.location.href = b.href;
+        }
+        if (e.key === 'ArrowRight') {
+            const b = document.querySelector('.nav-button.next');
+            if (b && !b.classList.contains('disabled')) window.location.href = b.href;
+        }
+    });
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="images/favicon.png">
+    <title>Project 18: "If This, Then That — Part 1" — French Daily Sentences</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.75;
+            color: #1a202c;
+            background-color: #f7fafc;
+        }
+        .container {
+            max-width: 1800px;
+            margin: 0 auto;
+            background: white;
+            min-height: 100vh;
+            box-shadow: 0 0 30px rgba(0,0,0,0.08);
+            padding: 48px 52px;
+        }
+        
+        .content { max-width: 1700px; margin: 0 auto; color: #1a202c; }
+        .content h1 {
+            color: #1a202c; margin: 32px 0 20px;
+            padding-bottom: 12px;
+            border-bottom: 4px solid #3b82f6;
+            font-size: 2.1em;
+            font-weight: 700;
+        }
+        .content h2 {
+            color: #1a202c; margin: 28px 0 16px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #60a5fa;
+            font-size: 1.6em;
+            font-weight: 600;
+        }
+        .content h3 { color: #1a202c; margin: 22px 0 12px; font-size: 1.3em; font-weight: 600; }
+        .content h4 { color: #2d3748; margin: 18px 0 10px; font-size: 1.1em; font-weight: 600; }
+        .content p  { margin-bottom: 16px; line-height: 1.8; color: #1a202c; }
+        .content ul, .content ol { margin: 12px 0 18px 30px; color: #1a202c; }
+        .content li { margin-bottom: 8px; line-height: 1.75; color: #1a202c; }
+        .content hr { border: none; border-top: 2px solid #e2e8f0; margin: 26px 0; }
+        .content pre {
+            background: #f7fafc !important;
+            border: 1px solid #cbd5e0 !important;
+            border-left: 4px solid #3b82f6 !important;
+            padding: 18px !important; overflow-x: auto; margin: 18px 0; border-radius: 6px;
+            font-family: 'Consolas','Monaco','Courier New',monospace !important;
+            font-size: 0.9em !important;
+        }
+        .content pre:not([style*="color"]) { color: #1a202c !important; }
+        .content code {
+            font-family: 'Consolas','Monaco','Courier New',monospace !important;
+            font-size: 0.88em !important;
+        }
+        .content code:not(pre code) {
+            background: #dbeafe !important;
+            color: #1a202c !important;
+            padding: 2px 6px;
+            border-radius: 3px;
+        }
+        .content pre code { background: transparent !important; padding: 0; }
+        .content table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+        .content th {
+            background: linear-gradient(135deg, #3b82f6 0%, #60a5fa 100%);
+            color: white; padding: 12px 16px; text-align: left;
+            font-weight: 600;
+        }
+        .content td { padding: 11px 16px; border: 1px solid #e2e8f0; color: #1a202c; }
+        .content tr:nth-child(even) td { background: #eff6ff; }
+        .content blockquote {
+            border-left: 4px solid #3b82f6; background: #eff6ff;
+            padding: 14px 20px; margin: 18px 0; border-radius: 0 6px 6px 0;
+            color: #1a202c;
+        }
+        .content strong { color: #1a202c; font-weight: 600; }
+        .px-2 { padding: 0; }
+        .chat-message { background: transparent; padding: 0; margin: 0; }
+
+        /* Bottom nav bar only */
+        .nav-bar {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 24px 0;
+            margin-top: 50px;
+            border-top: 3px solid #60a5fa;
+        }
+        .nav-button {
+            display: inline-flex; align-items: center; gap: 8px;
+            padding: 12px 26px;
+            background: linear-gradient(135deg, #3b82f6 0%, #60a5fa 100%);
+            color: white !important; text-decoration: none;
+            border-radius: 8px; font-weight: 600; font-size: 0.95em;
+            transition: all 0.2s;
+            box-shadow: 0 2px 8px rgba(59,130,246,0.35);
+        }
+        .nav-button:hover { transform: translateY(-2px); box-shadow: 0 4px 14px rgba(59,130,246,0.5); }
+        .nav-button.disabled { background: #cbd5e1; box-shadow: none; pointer-events: none; }
+        .nav-button.home {
+            background: linear-gradient(135deg, #ef4444 0%, #f87171 100%);
+            box-shadow: 0 2px 8px rgba(239,68,68,0.35);
+        }
+        .nav-button.home:hover { box-shadow: 0 4px 14px rgba(239,68,68,0.5); }
+        .page-info { color: #718096; font-size: 0.9em; text-align: center; }
+
+        /* Progress bar */
+        #progress-track {
+            position: fixed; top: 20px; right: 20px;
+            width: 10px; height: 150px;
+            background: rgba(59,130,246,0.2);
+            border: 2px solid #3b82f6;
+            border-radius: 6px; overflow: hidden; z-index: 1000;
+        }
+        #progress-fill {
+            width: 100%;
+            background: linear-gradient(180deg, #3b82f6, #2563eb);
+            height: 0%;
+            transition: height 0.15s ease;
+        }
+        #progress-pct {
+            position: fixed; top: 0px; right: 16px;
+            color: #2563eb; font-size: 14px; font-weight: bold;
+            z-index: 1001;
+            text-shadow: 0 1px 2px rgba(255,255,255,0.9);
+            line-height: 20px;
+        }
+
+    </style>
+<link rel="stylesheet" href="assets/chapters.css?v=20260421203847"><script src="assets/chapters.js?v=20260421203847" defer></script>
+</head>
+<body>
+    <div class="container">
+        <div class="content">
+            <div class="chat-message" data-index="5">
+<div class="px-2"><h1>🟡 PROJECT 18: "If This, Then That — Part 1"</h1>
+<h2><em>Someone asks "What if it rains?" — you answer with a real plan</em></h2>
+<hr>
+<h1>🎯 THE HYPOTHETICAL PROBLEM</h1>
+<p>→ You live in France now — life is full of <strong>conditions</strong><br>
+→ Your friend says: "What do we do this weekend?"<br>
+→ Your answer depends on <strong>weather, money, time, mood, availability</strong><br>
+→ Your boss says: "Can you finish by Friday?"<br>
+→ Your answer depends on <strong>workload, help, deadlines</strong><br>
+→ Your partner says: "Where should we go for vacation?"<br>
+→ Your answer depends on <strong>budget, dates, preferences</strong><br>
+→ Every plan, every decision, every negotiation in real life is <strong>conditional</strong><br>
+→ You need to say: <strong>"IF this happens → THEN that will happen"</strong><br>
+→ French has a <strong>strict system</strong> for this — break the rules and you sound broken</p>
+<p><strong>The core realization:</strong><br>
+→ In Project 16, you learned to say what <strong>WILL</strong> happen (futur simple)<br>
+→ In Project 17, you learned to say what <strong>WOULD</strong> happen (conditionnel)<br>
+→ Now you must learn: <strong>what TRIGGERS which future</strong> — and the trigger word is <strong>SI</strong><br>
+→ "Si" is the <strong>gatekeeper</strong> — it controls which tense is allowed after it and which tense follows in the result</p>
+<hr>
+<h1>🔍 HOW TO APPROACH IT</h1>
+<p>→ Every conditional sentence has <strong>TWO parts</strong>:</p>
+<code>SI-CLAUSE (the condition)  →  RESULT CLAUSE (the consequence)</code>
+<p>→ Think of it like a <strong>door and a room</strong>:<br>
+→ The SI-clause is the <strong>door</strong> — it sets the condition<br>
+→ The result clause is the <strong>room</strong> — it tells what happens if you walk through</p>
+<p>→ In Project 18 (Part 1), we deal with <strong>REAL / LIKELY conditions</strong><br>
+→ These are things that <strong>CAN actually happen</strong> — not fantasy</p>
+<p>→ Three combinations are possible at this level:</p>
+<table><thead><tr><th>SI-Clause Tense</th><th>Result Clause Tense</th><th>Meaning</th></tr></thead><tbody><tr><td><strong>Si + présent</strong></td><td><strong>→ futur simple</strong></td><td>If X happens, Y will happen</td></tr><tr><td><strong>Si + présent</strong></td><td><strong>→ présent</strong></td><td>If X happens, Y (always) happens</td></tr><tr><td><strong>Si + présent</strong></td><td><strong>→ impératif</strong></td><td>If X happens, do Y!</td></tr></tbody></table>
+<hr>
+<h1>🔧 HOW CAN WE SOLVE IT</h1>
+<h2>THE GOLDEN RULE OF FRENCH SI-CLAUSES</h2>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>❌ NEVER put FUTUR or CONDITIONNEL directly after "SI"
+</span>✅ SI always takes PRÉSENT (in Part 1), IMPARFAIT (Part 2 — Project 33), or PLUS-QUE-PARFAIT (Part 3 — Project 34)</code></pre></div>
+<p>→ This is <strong>the single most violated rule</strong> by French learners<br>
+→ In English you can say "If I will go..." — in French this is <strong>IMPOSSIBLE</strong><br>
+→ ❌ <del>Si je serai là</del> → completely wrong<br>
+→ ✅ Si je suis là → correct</p>
+<p><strong>Memorize this now — it never changes across all 3 si-clause projects</strong></p>
+<hr>
+<h2>THE STRUCTURE MAP FOR PROJECT 18</h2>
+<table><thead><tr><th>Pattern</th><th>Structure</th><th>Real Meaning</th></tr></thead><tbody><tr><td><strong>Pattern A</strong></td><td>Si + présent → <strong>futur simple</strong></td><td>Likely plan — "If it rains, I will stay home"</td></tr><tr><td><strong>Pattern B</strong></td><td>Si + présent → <strong>présent</strong></td><td>General truth — "If you heat water, it boils"</td></tr><tr><td><strong>Pattern C</strong></td><td>Si + présent → <strong>impératif</strong></td><td>Instruction — "If you're tired, go to bed"</td></tr></tbody></table>
+<p>→ <strong>Order can be reversed</strong> — the result can come first:</p>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>Je resterai à la maison si il pleut.
+</span>= Si il pleut, je resterai à la maison.
+(Both correct — same meaning)</code></pre></div>
+<p>→ When SI comes first → <strong>comma after the si-clause</strong><br>
+→ When result comes first → <strong>no comma needed</strong></p>
+<hr>
+<h1>✅ WHAT COULD BE DONE — THE 100 SENTENCES</h1>
+<hr>
+<h2>🔹 BLOCK A — Si + Présent → Futur Simple: Weather Conditions</h2>
+<p><em>Scenario: You're planning a weekend outing — everything depends on weather</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English Meaning</th><th>Structure</th></tr></thead><tbody><tr><td>1</td><td>Si il pleut, on restera à la maison.</td><td>If it rains, we'll stay home.</td><td>Si + présent → futur simple</td></tr><tr><td>2</td><td>Si il fait beau, on ira à la plage.</td><td>If the weather is nice, we'll go to the beach.</td><td>Si + présent → futur simple</td></tr><tr><td>3</td><td>Si il neige, les routes seront dangereuses.</td><td>If it snows, the roads will be dangerous.</td><td>Si + présent → futur simple</td></tr><tr><td>4</td><td>Si le soleil revient, nous ferons un pique-nique.</td><td>If the sun comes back, we'll have a picnic.</td><td>Si + présent → futur simple</td></tr><tr><td>5</td><td>Si il fait trop froid, je mettrai un manteau.</td><td>If it's too cold, I'll put on a coat.</td><td>Si + présent → futur simple</td></tr><tr><td>6</td><td>Si il y a du vent, on ne pourra pas manger dehors.</td><td>If it's windy, we won't be able to eat outside.</td><td>Si + présent → futur simple (negative)</td></tr><tr><td>7</td><td>Si la météo est bonne, on partira tôt le matin.</td><td>If the forecast is good, we'll leave early in the morning.</td><td>Si + présent → futur simple</td></tr><tr><td>8</td><td>Si il fait chaud demain, j'ouvrirai les fenêtres.</td><td>If it's hot tomorrow, I'll open the windows.</td><td>Si + présent → futur simple</td></tr><tr><td>9</td><td>Si l'orage arrive, on annulera la randonnée.</td><td>If the storm comes, we'll cancel the hike.</td><td>Si + présent → futur simple</td></tr><tr><td>10</td><td>Si le temps ne change pas, ce sera parfait.</td><td>If the weather doesn't change, it will be perfect.</td><td>Si + présent (negative) → futur simple</td></tr></tbody></table>
+<p><strong>🧠 Structure unlocked:</strong> <code>Si + [weather verb in présent], Subject + [plan verb in futur simple]</code></p>
+<hr>
+<h2>🔹 BLOCK B — Si + Présent → Futur Simple: Availability &amp; Time</h2>
+<p><em>Scenario: You're coordinating plans with friends — schedules are uncertain</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English Meaning</th><th>Structure</th></tr></thead><tbody><tr><td>11</td><td>Si tu es libre samedi, on se verra.</td><td>If you're free Saturday, we'll see each other.</td><td>Si + être (présent) → futur simple</td></tr><tr><td>12</td><td>Si j'ai le temps, je passerai te voir.</td><td>If I have time, I'll come see you.</td><td>Si + avoir (présent) → futur simple</td></tr><tr><td>13</td><td>Si elle finit tôt, elle nous rejoindra.</td><td>If she finishes early, she'll join us.</td><td>Si + présent → futur simple</td></tr><tr><td>14</td><td>Si on a assez de temps, on visitera le musée.</td><td>If we have enough time, we'll visit the museum.</td><td>Si + avoir (présent) → futur simple</td></tr><tr><td>15</td><td>Si vous arrivez avant midi, nous déjeunerons ensemble.</td><td>If you arrive before noon, we'll have lunch together.</td><td>Si + présent → futur simple</td></tr><tr><td>16</td><td>Si le train est à l'heure, je serai là à dix heures.</td><td>If the train is on time, I'll be there at ten.</td><td>Si + être (présent) → futur simple</td></tr><tr><td>17</td><td>Si tu ne peux pas venir, dis-le-moi.</td><td>If you can't come, tell me.</td><td>Si + présent → <strong>impératif</strong> (preview of Pattern C)</td></tr><tr><td>18</td><td>Si mon rendez-vous s'annule, j'aurai toute l'après-midi.</td><td>If my appointment gets cancelled, I'll have all afternoon.</td><td>Si + présent → futur simple</td></tr><tr><td>19</td><td>Si les enfants sont à l'école, on aura la maison pour nous.</td><td>If the kids are at school, we'll have the house to ourselves.</td><td>Si + être (présent) → futur simple</td></tr><tr><td>20</td><td>Si ça te convient, on se retrouvera à la gare.</td><td>If that works for you, we'll meet at the station.</td><td>Si + présent → futur simple</td></tr></tbody></table>
+<p><strong>🧠 Structure unlocked:</strong> <code>Si + [availability/time condition in présent] → [plan in futur simple]</code></p>
+<hr>
+<h2>🔹 BLOCK C — Si + Présent → Futur Simple: Money &amp; Resources</h2>
+<p><em>Scenario: You're planning a trip or purchase — budget matters</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English Meaning</th><th>Structure</th></tr></thead><tbody><tr><td>21</td><td>Si j'ai assez d'argent, j'achèterai un billet.</td><td>If I have enough money, I'll buy a ticket.</td><td>Si + avoir → futur simple</td></tr><tr><td>22</td><td>Si c'est trop cher, on choisira un autre hôtel.</td><td>If it's too expensive, we'll choose another hotel.</td><td>Si + être → futur simple</td></tr><tr><td>23</td><td>Si tu trouves une promotion, on réservera tout de suite.</td><td>If you find a deal, we'll book right away.</td><td>Si + présent → futur simple</td></tr><tr><td>24</td><td>Si le prix baisse, je le prendrai.</td><td>If the price drops, I'll take it.</td><td>Si + présent → futur simple</td></tr><tr><td>25</td><td>Si on économise ce mois-ci, on pourra voyager en juillet.</td><td>If we save this month, we'll be able to travel in July.</td><td>Si + présent → futur simple</td></tr><tr><td>26</td><td>Si le loyer augmente, il faudra déménager.</td><td>If the rent goes up, we'll have to move.</td><td>Si + présent → il faudra (futur impersonal)</td></tr><tr><td>27</td><td>Si elle reçoit son salaire, elle remboursera sa dette.</td><td>If she receives her salary, she'll pay off her debt.</td><td>Si + présent → futur simple</td></tr><tr><td>28</td><td>Si les billets ne sont pas chers, on prendra l'avion.</td><td>If the tickets aren't expensive, we'll fly.</td><td>Si + présent (neg) → futur simple</td></tr><tr><td>29</td><td>Si vous payez maintenant, vous aurez une réduction.</td><td>If you pay now, you'll get a discount.</td><td>Si + présent → futur simple</td></tr><tr><td>30</td><td>Si on partage les frais, ça coûtera moins cher.</td><td>If we split the costs, it'll cost less.</td><td>Si + présent → futur simple</td></tr></tbody></table>
+<p><strong>🧠 Structure unlocked:</strong> <code>Si + [financial/resource condition] → [financial consequence in futur simple]</code></p>
+<hr>
+<h2>🔹 BLOCK D — Si + Présent → Futur Simple: Decisions &amp; Choices</h2>
+<p><em>Scenario: Life decisions — career, relationships, daily choices</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English Meaning</th><th>Structure</th></tr></thead><tbody><tr><td>31</td><td>Si tu acceptes ce poste, tu gagneras plus.</td><td>If you accept this position, you'll earn more.</td><td>Si + présent → futur simple</td></tr><tr><td>32</td><td>Si je déménage à Lyon, je serai plus près de ma famille.</td><td>If I move to Lyon, I'll be closer to my family.</td><td>Si + présent → futur simple</td></tr><tr><td>33</td><td>Si on adopte un chien, il faudra le promener chaque jour.</td><td>If we adopt a dog, we'll have to walk it every day.</td><td>Si + présent → il faudra + infinitif</td></tr><tr><td>34</td><td>Si elle change de travail, elle sera plus heureuse.</td><td>If she changes jobs, she'll be happier.</td><td>Si + présent → futur simple</td></tr><tr><td>35</td><td>Si tu ne te décides pas, quelqu'un d'autre le fera.</td><td>If you don't decide, someone else will.</td><td>Si + présent (neg) → futur simple</td></tr><tr><td>36</td><td>Si nous vendons la voiture, nous économiserons beaucoup.</td><td>If we sell the car, we'll save a lot.</td><td>Si + présent → futur simple</td></tr><tr><td>37</td><td>Si il refuse l'offre, il le regrettera.</td><td>If he refuses the offer, he'll regret it.</td><td>Si + présent → futur simple</td></tr><tr><td>38</td><td>Si je prends ce cours, j'apprendrai plus vite.</td><td>If I take this course, I'll learn faster.</td><td>Si + présent → futur simple</td></tr><tr><td>39</td><td>Si on commence maintenant, on finira avant ce soir.</td><td>If we start now, we'll finish before tonight.</td><td>Si + présent → futur simple</td></tr><tr><td>40</td><td>Si vous ne faites rien, la situation ne changera pas.</td><td>If you do nothing, the situation won't change.</td><td>Si + présent (neg) → futur simple (neg)</td></tr></tbody></table>
+<p><strong>🧠 Structure unlocked:</strong> <code>Si + [decision in présent] → [consequence in futur simple]</code></p>
+<hr>
+<h2>🔹 BLOCK E — Si + Présent → Présent: General Truths &amp; Habits</h2>
+<p><em>Scenario: You're explaining how things work — rules, routines, cause-effect</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English Meaning</th><th>Structure</th></tr></thead><tbody><tr><td>41</td><td>Si on mange trop, on grossit.</td><td>If you eat too much, you gain weight.</td><td>Si + présent → présent (general truth)</td></tr><tr><td>42</td><td>Si tu chauffes de l'eau, elle bout à cent degrés.</td><td>If you heat water, it boils at 100 degrees.</td><td>Si + présent → présent (scientific fact)</td></tr><tr><td>43</td><td>Si je bois du café le soir, je ne dors pas.</td><td>If I drink coffee in the evening, I don't sleep.</td><td>Si + présent → présent (personal habit)</td></tr><tr><td>44</td><td>Si il pleut, je prends toujours mon parapluie.</td><td>If it rains, I always take my umbrella.</td><td>Si + présent → présent (habitual)</td></tr><tr><td>45</td><td>Si on ne dort pas assez, on est fatigué le lendemain.</td><td>If you don't sleep enough, you're tired the next day.</td><td>Si + présent (neg) → présent</td></tr><tr><td>46</td><td>Si tu ne manges pas le matin, tu as faim avant midi.</td><td>If you don't eat in the morning, you get hungry before noon.</td><td>Si + présent (neg) → présent</td></tr><tr><td>47</td><td>Si elle est stressée, elle fume.</td><td>If she's stressed, she smokes.</td><td>Si + être (présent) → présent (habit)</td></tr><tr><td>48</td><td>Si les enfants s'ennuient, ils regardent la télé.</td><td>If the kids are bored, they watch TV.</td><td>Si + présent → présent (habit)</td></tr><tr><td>49</td><td>Si on ajoute du sel, le goût change.</td><td>If you add salt, the taste changes.</td><td>Si + présent → présent (cause-effect)</td></tr><tr><td>50</td><td>Si vous parlez trop vite, personne ne comprend.</td><td>If you speak too fast, nobody understands.</td><td>Si + présent → présent (general rule)</td></tr></tbody></table>
+<p><strong>🧠 Structure unlocked:</strong> <code>Si + [trigger in présent] → [automatic result in présent]</code><br>
+<strong>Key difference from Pattern A:</strong> No futur = no specific future event — this is <strong>always true / habitual</strong></p>
+<hr>
+<h2>🔹 BLOCK F — Si + Présent → Impératif: Giving Conditional Instructions</h2>
+<p><em>Scenario: You're advising a friend, giving directions, setting rules</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English Meaning</th><th>Structure</th></tr></thead><tbody><tr><td>51</td><td>Si tu as faim, mange quelque chose.</td><td>If you're hungry, eat something.</td><td>Si + présent → impératif</td></tr><tr><td>52</td><td>Si vous êtes fatigué, reposez-vous.</td><td>If you're tired, rest.</td><td>Si + présent → impératif (vous)</td></tr><tr><td>53</td><td>Si tu ne comprends pas, demande au professeur.</td><td>If you don't understand, ask the teacher.</td><td>Si + présent (neg) → impératif</td></tr><tr><td>54</td><td>Si il y a un problème, appelle-moi.</td><td>If there's a problem, call me.</td><td>Si + présent → impératif</td></tr><tr><td>55</td><td>Si tu vois Marie, dis-lui bonjour de ma part.</td><td>If you see Marie, say hello from me.</td><td>Si + présent → impératif</td></tr><tr><td>56</td><td>Si le feu est rouge, arrête-toi.</td><td>If the light is red, stop.</td><td>Si + être (présent) → impératif (reflexive)</td></tr><tr><td>57</td><td>Si tu es en retard, préviens-moi.</td><td>If you're late, let me know.</td><td>Si + être (présent) → impératif</td></tr><tr><td>58</td><td>Si vous n'êtes pas sûr, vérifiez avant.</td><td>If you're not sure, check first.</td><td>Si + être (présent, neg) → impératif (vous)</td></tr><tr><td>59</td><td>Si tu as le temps, passe à la boulangerie.</td><td>If you have time, stop by the bakery.</td><td>Si + avoir (présent) → impératif</td></tr><tr><td>60</td><td>Si ça ne marche pas, essaie encore une fois.</td><td>If it doesn't work, try once more.</td><td>Si + présent (neg) → impératif</td></tr></tbody></table>
+<p><strong>🧠 Structure unlocked:</strong> <code>Si + [condition in présent] → [direct command in impératif]</code><br>
+<strong>Connection to Project 13:</strong> Impératif forms used here — same conjugation, new trigger context</p>
+<hr>
+<h2>🔹 BLOCK G — Reversed Order: Result First, Condition Second</h2>
+<p><em>Scenario: Same real situations — but the sentence starts with the result</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English Meaning</th><th>Structure</th></tr></thead><tbody><tr><td>61</td><td>On ira à la plage si il fait beau.</td><td>We'll go to the beach if the weather is nice.</td><td>Futur simple + si + présent</td></tr><tr><td>62</td><td>Je t'appellerai si j'ai des nouvelles.</td><td>I'll call you if I have news.</td><td>Futur simple + si + présent</td></tr><tr><td>63</td><td>Elle viendra si elle peut.</td><td>She'll come if she can.</td><td>Futur simple + si + présent</td></tr><tr><td>64</td><td>Nous partirons plus tôt si tu veux.</td><td>We'll leave earlier if you want.</td><td>Futur simple + si + présent</td></tr><tr><td>65</td><td>Il sera content si tu lui dis la vérité.</td><td>He'll be happy if you tell him the truth.</td><td>Futur simple + si + présent</td></tr><tr><td>66</td><td>Je prendrai un taxi si le bus ne vient pas.</td><td>I'll take a taxi if the bus doesn't come.</td><td>Futur simple + si + présent (neg)</td></tr><tr><td>67</td><td>Tu te sentiras mieux si tu dors un peu.</td><td>You'll feel better if you sleep a bit.</td><td>Futur simple + si + présent</td></tr><tr><td>68</td><td>On économisera du temps si on prend l'autoroute.</td><td>We'll save time if we take the highway.</td><td>Futur simple + si + présent</td></tr><tr><td>69</td><td>Ça marchera si tout le monde fait un effort.</td><td>It'll work if everyone makes an effort.</td><td>Futur simple + si + présent</td></tr><tr><td>70</td><td>Appelle-moi si tu as besoin de quelque chose.</td><td>Call me if you need anything.</td><td>Impératif + si + présent</td></tr></tbody></table>
+<p><strong>🧠 Structure unlocked:</strong> Result can come <strong>before</strong> the si-clause — <strong>no comma needed</strong> in reversed order<br>
+→ Si il fait beau**,** on ira à la plage. (comma)<br>
+→ On ira à la plage si il fait beau. (no comma)</p>
+<hr>
+<h2>🔹 BLOCK H — Negative Conditions: "If...Not" Chains</h2>
+<p><em>Scenario: Warning about what happens when something DOESN'T occur</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English Meaning</th><th>Structure</th></tr></thead><tbody><tr><td>71</td><td>Si tu ne te dépêches pas, on sera en retard.</td><td>If you don't hurry, we'll be late.</td><td>Si + ne...pas (présent) → futur simple</td></tr><tr><td>72</td><td>Si il ne pleut pas, on n'aura pas besoin de parapluie.</td><td>If it doesn't rain, we won't need an umbrella.</td><td>Si + ne...pas → futur (neg)</td></tr><tr><td>73</td><td>Si vous ne répondez pas, je rappellerai demain.</td><td>If you don't answer, I'll call again tomorrow.</td><td>Si + ne...pas → futur simple</td></tr><tr><td>74</td><td>Si on ne réserve pas maintenant, il n'y aura plus de places.</td><td>If we don't book now, there won't be any spots left.</td><td>Si + ne...pas → futur (neg)</td></tr><tr><td>75</td><td>Si elle ne vient pas, on partira sans elle.</td><td>If she doesn't come, we'll leave without her.</td><td>Si + ne...pas → futur simple</td></tr><tr><td>76</td><td>Si tu ne fais pas attention, tu feras des erreurs.</td><td>If you don't pay attention, you'll make mistakes.</td><td>Si + ne...pas → futur simple</td></tr><tr><td>77</td><td>Si je ne trouve pas de travail, je devrai retourner chez mes parents.</td><td>If I don't find work, I'll have to go back to my parents'.</td><td>Si + ne...pas → futur simple</td></tr><tr><td>78</td><td>Si ça ne te plaît pas, on changera.</td><td>If you don't like it, we'll change.</td><td>Si + ne...pas → futur simple</td></tr><tr><td>79</td><td>Si personne ne m'aide, je ne pourrai pas finir.</td><td>If nobody helps me, I won't be able to finish.</td><td>Si + personne ne → futur (neg)</td></tr><tr><td>80</td><td>Si rien ne change, on aura un gros problème.</td><td>If nothing changes, we'll have a big problem.</td><td>Si + rien ne → futur simple</td></tr></tbody></table>
+<p><strong>🧠 Structure unlocked:</strong> Negation inside si-clause follows <strong>standard ne...pas placement</strong> around the conjugated verb<br>
+<strong>Connection to Project 5 &amp; 39:</strong> Basic negation (P5) and advanced negation (P39 — future) patterns reappear inside si-clauses</p>
+<hr>
+<h2>🔹 BLOCK I — Real Conversational Chains: Multiple Conditions</h2>
+<p><em>Scenario: Complex planning — real-life conversations with layered conditions</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English Meaning</th><th>Structure</th></tr></thead><tbody><tr><td>81</td><td>Si il fait beau et si tu es libre, on ira se promener.</td><td>If the weather is nice and if you're free, we'll go for a walk.</td><td>Si + présent <strong>+ et si</strong> + présent → futur</td></tr><tr><td>82</td><td>Si j'ai le temps et si j'ai l'énergie, je ferai du sport.</td><td>If I have time and energy, I'll exercise.</td><td>Double si-clause → futur simple</td></tr><tr><td>83</td><td>Si tu veux, on peut aller au cinéma.</td><td>If you want, we can go to the movies.</td><td>Si + présent → <strong>présent</strong> (casual offer)</td></tr><tr><td>84</td><td>Si tu veux, on ira au cinéma.</td><td>If you want, we'll go to the movies.</td><td>Si + présent → <strong>futur</strong> (firm plan)</td></tr><tr><td>85</td><td>Si c'est possible, j'aimerais partir vendredi.</td><td>If it's possible, I'd like to leave Friday.</td><td>Si + présent → <strong>conditionnel</strong> (polite wish — see note below)</td></tr><tr><td>86</td><td>Si tu préfères, on peut rester ici.</td><td>If you prefer, we can stay here.</td><td>Si + présent → présent (offer)</td></tr><tr><td>87</td><td>Si ça te dit, je t'emmènerai.</td><td>If you're up for it, I'll take you.</td><td>Si + présent (idiom) → futur simple</td></tr><tr><td>88</td><td>Si tout va bien, on arrivera vers huit heures.</td><td>If all goes well, we'll arrive around eight.</td><td>Si + présent → futur simple</td></tr><tr><td>89</td><td>Si je comprends bien, tu ne viendras pas ?</td><td>If I understand correctly, you won't come?</td><td>Si + présent → futur simple (neg) + ?</td></tr><tr><td>90</td><td>Si j'ai bien compris, c'est annulé.</td><td>If I understood correctly, it's cancelled.</td><td>Si + passé composé → présent (see note)</td></tr></tbody></table>
+<p><strong>🧠 SPECIAL NOTE on Sentence 85:</strong><br>
+→ <code>Si + présent → conditionnel</code> is <strong>technically used</strong> in spoken French for <strong>polite wishes</strong><br>
+→ This is NOT the same as <code>Si + imparfait → conditionnel</code> (Project 33 — unreal present)<br>
+→ Here the condition is <strong>real</strong> ("if it's possible") — the conditionnel just <strong>softens the request</strong><br>
+→ This is a <strong>politeness crossover</strong> from Project 17, not a grammar violation</p>
+<p><strong>🧠 SPECIAL NOTE on Sentence 90:</strong><br>
+→ <code>Si + passé composé</code> is occasionally used for <strong>verification</strong> — "If I understood correctly..."<br>
+→ This is <strong>not a standard conditional chain</strong> — it's a <strong>conversational formula</strong><br>
+→ Very common in real speech — treat it as a <strong>fixed pattern</strong></p>
+<hr>
+<h2>🔹 BLOCK J — Full Conversational Dialogues Using Si-Clauses</h2>
+<p><em>Scenario: Mini-conversations showing how si-clauses flow naturally between speakers</em></p>
+<table><thead><tr><th>#</th><th>Speaker</th><th>French Sentence</th><th>English Meaning</th><th>Pattern</th></tr></thead><tbody><tr><td>91</td><td>A:</td><td>Tu viens demain ?</td><td>Are you coming tomorrow?</td><td>Simple question</td></tr><tr><td>92</td><td>B:</td><td>Si je finis mon travail, je viendrai.</td><td>If I finish my work, I'll come.</td><td>Si + présent → futur</td></tr><tr><td>93</td><td>A:</td><td>Et si tu ne finis pas ?</td><td>And if you don't finish?</td><td>Incomplete si-clause (implied result)</td></tr><tr><td>94</td><td>B:</td><td>Si je ne finis pas, on se verra un autre jour.</td><td>If I don't finish, we'll see each other another day.</td><td>Si + présent (neg) → futur</td></tr><tr><td>95</td><td>A:</td><td>Qu'est-ce qu'on fait ce soir ?</td><td>What are we doing tonight?</td><td>Planning question</td></tr><tr><td>96</td><td>B:</td><td>Si tu veux, on peut commander une pizza.</td><td>If you want, we can order a pizza.</td><td>Si + présent → présent (offer)</td></tr><tr><td>97</td><td>A:</td><td>Et si le restaurant est ouvert ?</td><td>And if the restaurant is open?</td><td>Incomplete si-clause</td></tr><tr><td>98</td><td>B:</td><td>Si il est ouvert, on ira là-bas. Sinon, on restera ici.</td><td>If it's open, we'll go there. Otherwise, we'll stay here.</td><td>Si → futur + <strong>sinon</strong> → futur</td></tr><tr><td>99</td><td>A:</td><td>D'accord. Appelle-moi si tu as la réponse.</td><td>Okay. Call me if you have the answer.</td><td>Impératif + si + présent</td></tr><tr><td>100</td><td>B:</td><td>Je t'appellerai si je sais quelque chose avant six heures.</td><td>I'll call you if I know something before six.</td><td>Futur + si + présent</td></tr></tbody></table>
+<p><strong>🧠 Critical vocabulary unlocked:</strong><br>
+→ <strong>Sinon</strong> = Otherwise / If not — the <strong>shortcut replacement</strong> for repeating a negative si-clause<br>
+→ "Si il est ouvert, on ira. <strong>Sinon</strong>, on restera." = massively common in daily speech</p>
+<hr>
+<h1>✅ WHAT SHOULD DO</h1>
+<p>→ <strong>Always check:</strong> Is my condition REAL and POSSIBLE? → If yes → Si + présent (this project)<br>
+→ <strong>Always pair correctly:</strong> Si + présent goes with → futur simple / présent / impératif<br>
+→ <strong>Practice reversed order</strong> — French speakers mix both orders naturally<br>
+→ <strong>Use "sinon"</strong> — it makes you sound fluent immediately<br>
+→ <strong>Memorize the incomplete si-clause</strong> — "Et si tu ne peux pas ?" — natives leave the result <strong>implied</strong><br>
+→ <strong>Read each sentence and identify the TWO parts</strong> — the door (condition) and the room (result)</p>
+<hr>
+<h1>❌ WHAT SHOULD NOT DO</h1>
+<p>→ ❌ <strong>NEVER</strong> put futur simple after si</p>
+<table><thead><tr><th>Wrong</th><th>Correct</th></tr></thead><tbody><tr><td><del>Si je <strong>serai</strong> libre</del></td><td>Si je <strong>suis</strong> libre</td></tr><tr><td><del>Si il <strong>fera</strong> beau</del></td><td>Si il <strong>fait</strong> beau</td></tr><tr><td><del>Si tu <strong>pourras</strong> venir</del></td><td>Si tu <strong>peux</strong> venir</td></tr><tr><td><del>Si elle <strong>aura</strong> le temps</del></td><td>Si elle <strong>a</strong> le temps</td></tr></tbody></table>
+<p>→ ❌ <strong>NEVER</strong> put conditionnel after si (at this level)</p>
+<table><thead><tr><th>Wrong</th><th>Correct</th></tr></thead><tbody><tr><td><del>Si je <strong>voudrais</strong></del></td><td>Si je <strong>veux</strong></td></tr><tr><td><del>Si il <strong>pourrait</strong></del></td><td>Si il <strong>peut</strong></td></tr></tbody></table>
+<p>→ ❌ Do NOT confuse "si" (if) with "si" (yes — used to contradict a negative)<br>
+→ "Tu ne viens pas ?" — "<strong>Si</strong>, je viens !" = "Yes I am!" (contradicting)<br>
+→ Completely different usage — context makes it clear</p>
+<p>→ ❌ Do NOT use si-clauses for <strong>unreal/imaginary</strong> conditions — that's Project 33<br>
+→ "If I <strong>were</strong> rich" = NOT this project — that requires si + imparfait</p>
+<hr>
+<h1>🔀 WHEN TO USE WHAT</h1>
+<table><thead><tr><th>You Want To Say</th><th>Pattern</th><th>Example</th></tr></thead><tbody><tr><td>A specific future plan depending on a condition</td><td>Si + présent → <strong>futur simple</strong></td><td>Si il pleut, je resterai chez moi.</td></tr><tr><td>A general truth / habit triggered by a condition</td><td>Si + présent → <strong>présent</strong></td><td>Si je bois du café, je ne dors pas.</td></tr><tr><td>A command / advice triggered by a condition</td><td>Si + présent → <strong>impératif</strong></td><td>Si tu es fatigué, repose-toi.</td></tr><tr><td>A polite wish depending on a real condition</td><td>Si + présent → <strong>conditionnel</strong> (soft)</td><td>Si c'est possible, j'aimerais partir tôt.</td></tr><tr><td>"Otherwise" as a shortcut</td><td><strong>Sinon</strong> + futur/présent/impératif</td><td>Dépêche-toi, sinon on sera en retard.</td></tr></tbody></table>
+<hr>
+<h1>🚫 WHEN NOT TO USE</h1>
+<table><thead><tr><th>Situation</th><th>Do NOT Use Si + Présent</th><th>Use Instead</th></tr></thead><tbody><tr><td>Imagining something unreal NOW</td><td>❌ Si + présent</td><td>Si + <strong>imparfait</strong> → conditionnel (Project 33)</td></tr><tr><td>Regretting something in the PAST</td><td>❌ Si + présent</td><td>Si + <strong>plus-que-parfait</strong> → conditionnel passé (Project 34)</td></tr><tr><td>Expressing a wish with no real condition</td><td>❌ Si + présent</td><td><strong>Conditionnel</strong> alone — J'aimerais... (Project 17)</td></tr><tr><td>Stating a fact with no condition</td><td>❌ Si-clause unnecessary</td><td>Simple futur or présent statement</td></tr></tbody></table>
+<hr>
+<h1>⚠️ COMMON PITFALLS AND FAILURE MODES</h1>
+<table><thead><tr><th>Pitfall</th><th>What Learners Do</th><th>Why It's Wrong</th><th>Fix</th></tr></thead><tbody><tr><td><strong>Futur after si</strong></td><td>Si je <strong>serai</strong> là...</td><td>French NEVER allows futur after si</td><td>Si je <strong>suis</strong> là...</td></tr><tr><td><strong>Conditionnel after si</strong></td><td>Si je <strong>pourrais</strong>...</td><td>Same rule — no conditionnel after si</td><td>Si je <strong>peux</strong>...</td></tr><tr><td><strong>Forgetting comma</strong></td><td>Si il pleut on restera</td><td>When si-clause comes first → comma required</td><td>Si il pleut**,** on restera</td></tr><tr><td><strong>Adding comma when reversed</strong></td><td>On restera**,** si il pleut</td><td>Reversed order → no comma needed</td><td>On restera si il pleut</td></tr><tr><td><strong>Confusing si = if vs. si = yes</strong></td><td>Mixing them in conversation</td><td>Context separates them — "si" as "yes" only contradicts a negative question</td><td>Practice both separately</td></tr><tr><td><strong>Using si for "whether"</strong></td><td>Je ne sais pas si...</td><td>This is actually correct! "Si" also means "whether" — but this is NOT a conditional structure</td><td>Recognize it as a different use</td></tr><tr><td><strong>Overcomplicating</strong></td><td>Building 3-4 chained si-clauses</td><td>Natives rarely chain more than 2 — keep it clean</td><td>Maximum: si X et si Y → result</td></tr><tr><td><strong>Mixing real and unreal</strong></td><td>Si je suis riche (but you're NOT rich)</td><td>If condition is UNREAL → need imparfait (Project 33)</td><td>Si j'<strong>étais</strong> riche → conditionnel</td></tr></tbody></table>
+<hr>
+<h1>🔑 KEY TAKEAWAY</h1>
+<blockquote>
+<p><strong>The si-clause is the CONTROL CENTER of French conditional thinking.</strong></p>
+<p>→ In Project 16, you learned to make <strong>statements about the future</strong> (futur simple)<br>
+→ In Project 17, you learned to make <strong>softened/imagined statements</strong> (conditionnel)<br>
+→ Now in Project 18, you learned <strong>WHAT TRIGGERS THEM</strong> — the si-clause</p>
+<p><strong>The rule is absolute and permanent:</strong><br>
+→ Si + <strong>PRÉSENT</strong> → futur / présent / impératif = <strong>REAL possibility</strong><br>
+→ Si + <strong>IMPARFAIT</strong> → conditionnel = UNREAL present (Project 33)<br>
+→ Si + <strong>PLUS-QUE-PARFAIT</strong> → conditionnel passé = UNREAL past (Project 34)</p>
+<p>You now own Part 1 of 3 — the <strong>real, likely, possible</strong> conditional system<br>
+Parts 2 and 3 will unlock <strong>imagination and regret</strong> — but they follow the SAME skeleton</p>
+</blockquote>
+<hr>
+<h1>🌉 BRIDGE TO PROJECT 19</h1>
+<blockquote>
+<p>You can now build conditional plans — "If X, then Y"<br>
+But notice something in your sentences — you keep <strong>repeating nouns</strong>:</p>
+<p>→ "Si tu vois <strong>Marie</strong>, dis à <strong>Marie</strong> bonjour"<br>
+→ "Si tu achètes <strong>le livre</strong>, donne <strong>le livre</strong> à <strong>Pierre</strong>"</p>
+<p>This sounds <strong>heavy and unnatural</strong> — French natives NEVER do this<br>
+They <strong>replace</strong> repeated nouns with <strong>tiny words</strong> — pronouns</p>
+<p>→ Project 19: <strong>"Don't Say the Noun Twice"</strong><br>
+→ You'll learn COD / COI pronouns (le, la, les, lui, leur)<br>
+→ These pronouns <strong>compress</strong> your sentences and make you sound 10x more fluent<br>
+→ The si-clause structures you just learned will become <strong>sharper and faster</strong></p>
+</blockquote>
+<hr>
+<h1>✅ PROJECT 18 COMPLETE</h1>
+<blockquote>
+<p><strong>Are you ready for PROJECT 19: "Don't Say the Noun Twice"?</strong><br>
+→ ~100 sentences covering direct &amp; indirect object pronouns (COD/COI)<br>
+→ Scenario: Your speech sounds repetitive — how do natives avoid repeating nouns?<br>
+→ Builds on all previous structures — pronouns plug INTO every sentence type learned so far</p>
+</blockquote>
+</div>
+</div>
+
+<!-- ========== data-index="7" ========== -->
+
+        </div>
+
+        <div class="nav-bar">
+            <a href="project-17.html" class="nav-button prev">← Previous Chapter</a>
+            <div class="page-info">
+                <a href="index.html" class="nav-button home">📚 Table of Contents</a><br>
+                <span style="margin-top:8px;display:block">Chapter 18 of 50</span>
+            </div>
+            <a href="project-19.html" class="nav-button next">Next Chapter →</a>
+        </div>
+    </div>
+
+    
+    <div id="progress-track"><div id="progress-fill"></div></div>
+    <div id="progress-pct">0%</div>
+
+
+    <script>
+    const fill = document.getElementById('progress-fill');
+    const pct  = document.getElementById('progress-pct');
+    function updateProgress() {
+        const scrollTop = window.scrollY;
+        const docHeight = document.body.scrollHeight - window.innerHeight;
+        const scrolled  = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+        fill.style.height = scrolled + '%';
+        pct.textContent   = Math.round(scrolled) + '%';
+    }
+    window.addEventListener('scroll', updateProgress);
+    updateProgress();
+
+    document.addEventListener('keydown', function(e) {
+        if (['INPUT','TEXTAREA'].includes(document.activeElement.tagName)) return;
+        if (e.key === 'ArrowLeft') {
+            const b = document.querySelector('.nav-button.prev');
+            if (b && !b.classList.contains('disabled')) window.location.href = b.href;
+        }
+        if (e.key === 'ArrowRight') {
+            const b = document.querySelector('.nav-button.next');
+            if (b && !b.classList.contains('disabled')) window.location.href = b.href;
+        }
+    });
+    </script>
+
+</body>
+</html>

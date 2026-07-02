@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="images/favicon.png">
+    <title>Project 10: "How Things Used to Be" — French Daily Sentences</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.75;
+            color: #1a202c;
+            background-color: #f7fafc;
+        }
+        .container {
+            max-width: 1800px;
+            margin: 0 auto;
+            background: white;
+            min-height: 100vh;
+            box-shadow: 0 0 30px rgba(0,0,0,0.08);
+            padding: 48px 52px;
+        }
+        
+        .content { max-width: 1700px; margin: 0 auto; color: #1a202c; }
+        .content h1 {
+            color: #1a202c; margin: 32px 0 20px;
+            padding-bottom: 12px;
+            border-bottom: 4px solid #3b82f6;
+            font-size: 2.1em;
+            font-weight: 700;
+        }
+        .content h2 {
+            color: #1a202c; margin: 28px 0 16px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #60a5fa;
+            font-size: 1.6em;
+            font-weight: 600;
+        }
+        .content h3 { color: #1a202c; margin: 22px 0 12px; font-size: 1.3em; font-weight: 600; }
+        .content h4 { color: #2d3748; margin: 18px 0 10px; font-size: 1.1em; font-weight: 600; }
+        .content p  { margin-bottom: 16px; line-height: 1.8; color: #1a202c; }
+        .content ul, .content ol { margin: 12px 0 18px 30px; color: #1a202c; }
+        .content li { margin-bottom: 8px; line-height: 1.75; color: #1a202c; }
+        .content hr { border: none; border-top: 2px solid #e2e8f0; margin: 26px 0; }
+        .content pre {
+            background: #f7fafc !important;
+            border: 1px solid #cbd5e0 !important;
+            border-left: 4px solid #3b82f6 !important;
+            padding: 18px !important; overflow-x: auto; margin: 18px 0; border-radius: 6px;
+            font-family: 'Consolas','Monaco','Courier New',monospace !important;
+            font-size: 0.9em !important;
+        }
+        .content pre:not([style*="color"]) { color: #1a202c !important; }
+        .content code {
+            font-family: 'Consolas','Monaco','Courier New',monospace !important;
+            font-size: 0.88em !important;
+        }
+        .content code:not(pre code) {
+            background: #dbeafe !important;
+            color: #1a202c !important;
+            padding: 2px 6px;
+            border-radius: 3px;
+        }
+        .content pre code { background: transparent !important; padding: 0; }
+        .content table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+        .content th {
+            background: linear-gradient(135deg, #3b82f6 0%, #60a5fa 100%);
+            color: white; padding: 12px 16px; text-align: left;
+            font-weight: 600;
+        }
+        .content td { padding: 11px 16px; border: 1px solid #e2e8f0; color: #1a202c; }
+        .content tr:nth-child(even) td { background: #eff6ff; }
+        .content blockquote {
+            border-left: 4px solid #3b82f6; background: #eff6ff;
+            padding: 14px 20px; margin: 18px 0; border-radius: 0 6px 6px 0;
+            color: #1a202c;
+        }
+        .content strong { color: #1a202c; font-weight: 600; }
+        .px-2 { padding: 0; }
+        .chat-message { background: transparent; padding: 0; margin: 0; }
+
+        /* Bottom nav bar only */
+        .nav-bar {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 24px 0;
+            margin-top: 50px;
+            border-top: 3px solid #60a5fa;
+        }
+        .nav-button {
+            display: inline-flex; align-items: center; gap: 8px;
+            padding: 12px 26px;
+            background: linear-gradient(135deg, #3b82f6 0%, #60a5fa 100%);
+            color: white !important; text-decoration: none;
+            border-radius: 8px; font-weight: 600; font-size: 0.95em;
+            transition: all 0.2s;
+            box-shadow: 0 2px 8px rgba(59,130,246,0.35);
+        }
+        .nav-button:hover { transform: translateY(-2px); box-shadow: 0 4px 14px rgba(59,130,246,0.5); }
+        .nav-button.disabled { background: #cbd5e1; box-shadow: none; pointer-events: none; }
+        .nav-button.home {
+            background: linear-gradient(135deg, #ef4444 0%, #f87171 100%);
+            box-shadow: 0 2px 8px rgba(239,68,68,0.35);
+        }
+        .nav-button.home:hover { box-shadow: 0 4px 14px rgba(239,68,68,0.5); }
+        .page-info { color: #718096; font-size: 0.9em; text-align: center; }
+
+        /* Progress bar */
+        #progress-track {
+            position: fixed; top: 20px; right: 20px;
+            width: 10px; height: 150px;
+            background: rgba(59,130,246,0.2);
+            border: 2px solid #3b82f6;
+            border-radius: 6px; overflow: hidden; z-index: 1000;
+        }
+        #progress-fill {
+            width: 100%;
+            background: linear-gradient(180deg, #3b82f6, #2563eb);
+            height: 0%;
+            transition: height 0.15s ease;
+        }
+        #progress-pct {
+            position: fixed; top: 0px; right: 16px;
+            color: #2563eb; font-size: 14px; font-weight: bold;
+            z-index: 1001;
+            text-shadow: 0 1px 2px rgba(255,255,255,0.9);
+            line-height: 20px;
+        }
+
+    </style>
+<link rel="stylesheet" href="assets/chapters.css?v=20260421203847"><script src="assets/chapters.js?v=20260421203847" defer></script>
+</head>
+<body>
+    <div class="container">
+        <div class="content">
+            <div class="chat-message" data-index="21">
+<div class="px-2"><h1>🔵 PROJECT 10: "How Things Used to Be"</h1>
+<h2><em>You're describing your childhood, old habits, and scenes from the past</em></h2>
+<hr>
+<h1>🎯 THE HYPOTHETICAL PROBLEM</h1>
+<p>→ It's Wednesday evening at your host family's home in Lyon<br>
+→ After dinner, the family starts sharing memories — <strong>"Quand j'étais petit..."</strong> (When I was little...)<br>
+→ The grandmother talks about life in the 1960s — how things <strong>were</strong>, what people <strong>used to do</strong>, how the town <strong>looked</strong><br>
+→ The father describes his childhood summers — what he <strong>would do every day</strong>, how the weather <strong>was</strong>, how he <strong>felt</strong><br>
+→ They turn to you: <strong>"Et toi ? C'était comment ton enfance ?"</strong> (And you? What was your childhood like?)<br>
+→ You try to answer using passé composé (Project 9):<br>
+→ → <del>"J'ai été petit. J'ai habité dans une grande maison. J'ai joué dehors."</del><br>
+→ This sounds <strong>completely wrong</strong> — like a list of one-time events<br>
+→ You're describing a <strong>state</strong> (being small), a <strong>situation</strong> (living in a house), a <strong>habit</strong> (playing outside)<br>
+→ These are NOT completed events — they're <strong>backgrounds, atmospheres, ongoing realities of the past</strong><br>
+→ You need a DIFFERENT past tense — one that paints the <strong>scenery</strong> instead of listing the <strong>events</strong></p>
+<p><strong>The core realization:</strong><br>
+→ French has <strong>two main past tenses</strong> that work as a PAIR — like two layers of a painting:</p>
+<table><thead><tr><th>Layer</th><th>Tense</th><th>Function</th><th>Analogy</th></tr></thead><tbody><tr><td><strong>Background</strong></td><td><strong>Imparfait</strong></td><td>The scenery, atmosphere, feelings, habits, descriptions</td><td>The <strong>canvas and sky</strong> of a painting</td></tr><tr><td><strong>Foreground</strong></td><td><strong>Passé composé</strong> (Project 9)</td><td>The events, actions, things that happened</td><td>The <strong>figures and action</strong> in the painting</td></tr></tbody></table>
+<p>→ You CANNOT tell a proper story with only one of these tenses<br>
+→ Project 9 gave you the foreground (events)<br>
+→ Project 10 gives you the background (descriptions)<br>
+→ Project 11 will teach you how to <strong>layer them together</strong> in real narratives</p>
+<hr>
+<h1>🔍 HOW TO APPROACH IT</h1>
+<p>→ The imparfait is used for <strong>5 specific functions</strong> in the past:</p>
+<table><thead><tr><th>Function</th><th>What It Describes</th><th>Example (English)</th></tr></thead><tbody><tr><td><strong>1. Description</strong></td><td>How things looked, felt, were</td><td>The sky <strong>was</strong> blue. He <strong>was</strong> tall.</td></tr><tr><td><strong>2. Ongoing state</strong></td><td>Emotions, conditions, situations</td><td>I <strong>was</strong> tired. She <strong>was</strong> happy.</td></tr><tr><td><strong>3. Habitual action</strong></td><td>Things you used to do regularly</td><td>I <strong>used to play</strong> outside. We <strong>would eat</strong> at noon.</td></tr><tr><td><strong>4. Background action</strong></td><td>What was happening when something else occurred</td><td>I <strong>was walking</strong> when...</td></tr><tr><td><strong>5. Age / Time / Weather</strong></td><td>Setting the scene</td><td>It <strong>was</strong> 3 PM. He <strong>was</strong> 10 years old. It <strong>was</strong> raining.</td></tr></tbody></table>
+<p>→ Notice: NONE of these are "events" — they're all <strong>states, scenes, and patterns</strong><br>
+→ If you can add "used to" or "was/were ...ing" in English → it's probably imparfait in French</p>
+<hr>
+<h1>🔧 HOW CAN WE SOLVE IT</h1>
+<h2>Step 1 — Forming the Imparfait: ONE Rule for ALL Verbs</h2>
+<p><strong>This is the EASIEST tense to conjugate in French — almost no exceptions</strong></p>
+<h3>The formula:</h3>
+<code>Take the NOUS form of present tense → Remove -ONS → Add imparfait endings</code>
+<h3>The endings (same for ALL verbs):</h3>
+<table><thead><tr><th>Subject</th><th>Ending</th><th>Pronunciation</th></tr></thead><tbody><tr><td>Je</td><td><strong>-ais</strong></td><td>"ay"</td></tr><tr><td>Tu</td><td><strong>-ais</strong></td><td>"ay"</td></tr><tr><td>Il / Elle / On</td><td><strong>-ait</strong></td><td>"ay"</td></tr><tr><td>Nous</td><td><strong>-ions</strong></td><td>"ee-on"</td></tr><tr><td>Vous</td><td><strong>-iez</strong></td><td>"ee-ay"</td></tr><tr><td>Ils / Elles</td><td><strong>-aient</strong></td><td>"ay"</td></tr></tbody></table>
+<p><strong>🔊 CRITICAL pronunciation fact:</strong><br>
+→ Je, tu, il, ils forms ALL sound <strong>identical</strong> → "ay"<br>
+→ Only <strong>nous</strong> (-ions) and <strong>vous</strong> (-iez) sound different<br>
+→ Same pattern as present tense -ER verbs (Project 2) — spoken French relies heavily on the subject to distinguish</p>
+<hr>
+<h2>Step 2 — Building the Stem: Examples</h2>
+<table><thead><tr><th>Verb</th><th>Nous Present Form</th><th>Remove -ons</th><th>Imparfait Stem</th><th>Je Form</th></tr></thead><tbody><tr><td><strong>Parler</strong></td><td>nous parl<strong>ons</strong></td><td>parl-</td><td>parl-</td><td>je parl<strong>ais</strong></td></tr><tr><td><strong>Manger</strong></td><td>nous mange<strong>ons</strong></td><td>mange-</td><td>mange-</td><td>je mange<strong>ais</strong></td></tr><tr><td><strong>Finir</strong></td><td>nous finiss<strong>ons</strong></td><td>finiss-</td><td>finiss-</td><td>je finiss<strong>ais</strong></td></tr><tr><td><strong>Faire</strong></td><td>nous fais<strong>ons</strong></td><td>fais-</td><td>fais-</td><td>je fais<strong>ais</strong></td></tr><tr><td><strong>Prendre</strong></td><td>nous pren<strong>ons</strong></td><td>pren-</td><td>pren-</td><td>je pren<strong>ais</strong></td></tr><tr><td><strong>Avoir</strong></td><td>nous av<strong>ons</strong></td><td>av-</td><td>av-</td><td>j'av<strong>ais</strong></td></tr><tr><td><strong>Aller</strong></td><td>nous all<strong>ons</strong></td><td>all-</td><td>all-</td><td>j'all<strong>ais</strong></td></tr><tr><td><strong>Vouloir</strong></td><td>nous voul<strong>ons</strong></td><td>voul-</td><td>voul-</td><td>je voul<strong>ais</strong></td></tr><tr><td><strong>Pouvoir</strong></td><td>nous pouv<strong>ons</strong></td><td>pouv-</td><td>pouv-</td><td>je pouv<strong>ais</strong></td></tr><tr><td><strong>Devoir</strong></td><td>nous dev<strong>ons</strong></td><td>dev-</td><td>dev-</td><td>je dev<strong>ais</strong></td></tr><tr><td><strong>Venir</strong></td><td>nous ven<strong>ons</strong></td><td>ven-</td><td>ven-</td><td>je ven<strong>ais</strong></td></tr><tr><td><strong>Dormir</strong></td><td>nous dorm<strong>ons</strong></td><td>dorm-</td><td>dorm-</td><td>je dorm<strong>ais</strong></td></tr><tr><td><strong>Connaître</strong></td><td>nous connaiss<strong>ons</strong></td><td>connaiss-</td><td>connaiss-</td><td>je connaiss<strong>ais</strong></td></tr><tr><td><strong>Boire</strong></td><td>nous buv<strong>ons</strong></td><td>buv-</td><td>buv-</td><td>je buv<strong>ais</strong></td></tr><tr><td><strong>Dire</strong></td><td>nous dis<strong>ons</strong></td><td>dis-</td><td>dis-</td><td>je dis<strong>ais</strong></td></tr><tr><td><strong>Voir</strong></td><td>nous voy<strong>ons</strong></td><td>voy-</td><td>voy-</td><td>je voy<strong>ais</strong></td></tr></tbody></table>
+<p>→ Even the most irregular verbs in present tense become <strong>perfectly regular</strong> in imparfait<br>
+→ Just take the nous form → remove -ons → add endings<br>
+→ This works for EVERY verb except ONE</p>
+<hr>
+<h2>Step 3 — The ONE Exception: ÊTRE</h2>
+<p>→ <strong>Être</strong> is the ONLY verb with an irregular imparfait stem</p>
+<table><thead><tr><th>Subject</th><th>Imparfait of ÊTRE</th><th>Pronunciation</th></tr></thead><tbody><tr><td>Je / J'</td><td><strong>étais</strong></td><td>"ay-tay"</td></tr><tr><td>Tu</td><td><strong>étais</strong></td><td>"ay-tay"</td></tr><tr><td>Il / Elle / On</td><td><strong>était</strong></td><td>"ay-tay"</td></tr><tr><td>Nous</td><td><strong>étions</strong></td><td>"ay-tee-on"</td></tr><tr><td>Vous</td><td><strong>étiez</strong></td><td>"ay-tee-ay"</td></tr><tr><td>Ils / Elles</td><td><strong>étaient</strong></td><td>"ay-tay"</td></tr></tbody></table>
+<p>→ The stem is <strong>ét-</strong> (not from "nous sommes" which would give "somm-")<br>
+→ But the <strong>endings</strong> are the same as every other verb: -ais, -ais, -ait, -ions, -iez, -aient<br>
+→ <strong>Être in imparfait is the MOST used form</strong> — because descriptions of the past almost always involve "was/were"</p>
+<hr>
+<h2>Step 4 — Quick Reference: Full Conjugation of Key Verbs</h2>
+<h3>AVOIR (to have) — Imparfait</h3>
+<table><thead><tr><th>Subject</th><th>Form</th></tr></thead><tbody><tr><td>J'</td><td><strong>avais</strong></td></tr><tr><td>Tu</td><td><strong>avais</strong></td></tr><tr><td>Il / Elle / On</td><td><strong>avait</strong></td></tr><tr><td>Nous</td><td><strong>avions</strong></td></tr><tr><td>Vous</td><td><strong>aviez</strong></td></tr><tr><td>Ils / Elles</td><td><strong>avaient</strong></td></tr></tbody></table>
+<h3>FAIRE (to do/make) — Imparfait</h3>
+<table><thead><tr><th>Subject</th><th>Form</th></tr></thead><tbody><tr><td>Je</td><td><strong>faisais</strong></td></tr><tr><td>Tu</td><td><strong>faisais</strong></td></tr><tr><td>Il / Elle / On</td><td><strong>faisait</strong></td></tr><tr><td>Nous</td><td><strong>faisions</strong></td></tr><tr><td>Vous</td><td><strong>faisiez</strong></td></tr><tr><td>Ils / Elles</td><td><strong>faisaient</strong></td></tr></tbody></table>
+<h3>ALLER (to go) — Imparfait</h3>
+<table><thead><tr><th>Subject</th><th>Form</th></tr></thead><tbody><tr><td>J'</td><td><strong>allais</strong></td></tr><tr><td>Tu</td><td><strong>allais</strong></td></tr><tr><td>Il / Elle / On</td><td><strong>allait</strong></td></tr><tr><td>Nous</td><td><strong>allions</strong></td></tr><tr><td>Vous</td><td><strong>alliez</strong></td></tr><tr><td>Ils / Elles</td><td><strong>allaient</strong></td></tr></tbody></table>
+<p>→ Remember: even aller (wildly irregular in present) is <strong>perfectly regular</strong> in imparfait<br>
+→ nous all<strong>ons</strong> → stem: all- → j'all<strong>ais</strong>, tu all<strong>ais</strong>, etc.</p>
+<hr>
+<h1>✅ WHAT COULD BE DONE — THE 100 SENTENCES</h1>
+<h2>🔹 BLOCK A — ÊTRE in Imparfait: Describing How Things Were</h2>
+<p><em>Scenario: You describe your childhood — states, qualities, locations</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English Meaning</th><th>Function</th></tr></thead><tbody><tr><td>1</td><td>J'étais petit.</td><td>I was small.</td><td>Physical description</td></tr><tr><td>2</td><td>Tu étais timide ?</td><td>Were you shy?</td><td>Personality description</td></tr><tr><td>3</td><td>Il était grand et mince.</td><td>He was tall and thin.</td><td>Physical description</td></tr><tr><td>4</td><td>Elle était très gentille.</td><td>She was very kind.</td><td>Personality description</td></tr><tr><td>5</td><td>On était jeunes.</td><td>We were young.</td><td>State</td></tr><tr><td>6</td><td>Nous étions heureux.</td><td>We were happy.</td><td>Emotional state</td></tr><tr><td>7</td><td>Vous étiez où ?</td><td>Where were you?</td><td>Location in the past</td></tr><tr><td>8</td><td>Ils étaient fatigués.</td><td>They were tired.</td><td>Physical state</td></tr><tr><td>9</td><td>C'était beau.</td><td>It was beautiful.</td><td>General description</td></tr><tr><td>10</td><td>C'était une petite ville.</td><td>It was a small town.</td><td>Scene description</td></tr></tbody></table>
+<p><strong>🧠 Structure unlocked:</strong> <code>Subject + ÉTAIS/ÉTAIT/ÉTAIENT + [adjective / noun / location]</code></p>
+<p><strong>🧠 "C'ÉTAIT" — the most useful imparfait form:</strong><br>
+→ "C'était" = "It was" / "That was" — used constantly in conversation<br>
+→ C'était bon. (It was good.)<br>
+→ C'était super. (It was great.)<br>
+→ C'était difficile. (It was difficult.)<br>
+→ C'était comment ? (What was it like? — very common question)<br>
+→ Compare with present (Project 3): "C'<strong>est</strong> bon" → past: "C'<strong>était</strong> bon"<br>
+→ Exact same structure — just switch est → était</p>
+<hr>
+<h2>🔹 BLOCK B — AVOIR in Imparfait: Past Possession, Age, Sensations</h2>
+<p><em>Scenario: Describing what you had, how old you were, how you felt as a child</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English Meaning</th><th>Function</th></tr></thead><tbody><tr><td>11</td><td>J'avais un chien.</td><td>I had a dog.</td><td>Past possession</td></tr><tr><td>12</td><td>Tu avais des frères ?</td><td>Did you have brothers?</td><td>Past possession question</td></tr><tr><td>13</td><td>Il avait dix ans.</td><td>He was ten years old.</td><td>Past age (avoir — Project 1)</td></tr><tr><td>14</td><td>Elle avait les cheveux longs.</td><td>She had long hair.</td><td>Physical description</td></tr><tr><td>15</td><td>On avait une grande maison.</td><td>We had a big house.</td><td>Past possession</td></tr><tr><td>16</td><td>Nous avions un jardin.</td><td>We had a garden.</td><td>Past possession</td></tr><tr><td>17</td><td>Vous aviez peur du noir ?</td><td>Were you afraid of the dark?</td><td>Past sensation (avoir — Project 1)</td></tr><tr><td>18</td><td>Ils avaient faim tout le temps.</td><td>They were always hungry.</td><td>Past sensation</td></tr><tr><td>19</td><td>J'avais sommeil le matin.</td><td>I was sleepy in the morning.</td><td>Past sensation</td></tr><tr><td>20</td><td>Il y avait un parc à côté.</td><td>There was a park nearby.</td><td>Past existence</td></tr></tbody></table>
+<p><strong>🧠 CRITICAL — Sentence 20: IL Y AVAIT</strong><br>
+→ "Il y a" (Project 3) in imparfait → "Il y <strong>avait</strong>"<br>
+→ "There is" → "There <strong>was</strong> / There <strong>were</strong>"<br>
+→ Il y avait beaucoup de monde. (There were a lot of people.)<br>
+→ Il y avait du soleil. (There was sunshine.)<br>
+→ Il n'y avait pas de wifi. (There was no wifi.)<br>
+→ Same structure as "il y a" — just shift avoir to imparfait<br>
+→ Used CONSTANTLY to set scenes in the past</p>
+<hr>
+<h2>🔹 BLOCK C — Habitual Actions: "Used To" / "Would Always"</h2>
+<p><em>Scenario: Describing what you used to do regularly as a child</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English Meaning</th><th>Verb</th></tr></thead><tbody><tr><td>21</td><td>Je jouais dehors tous les jours.</td><td>I used to play outside every day.</td><td>jouer</td></tr><tr><td>22</td><td>Tu regardais quoi à la télé ?</td><td>What did you used to watch on TV?</td><td>regarder</td></tr><tr><td>23</td><td>Il mangeait toujours à midi.</td><td>He always used to eat at noon.</td><td>manger</td></tr><tr><td>24</td><td>Elle lisait beaucoup.</td><td>She used to read a lot.</td><td>lire (nous lisons → lis-)</td></tr><tr><td>25</td><td>On allait à la plage en été.</td><td>We used to go to the beach in summer.</td><td>aller</td></tr><tr><td>26</td><td>Nous faisions du vélo le dimanche.</td><td>We used to bike on Sundays.</td><td>faire</td></tr><tr><td>27</td><td>Vous sortiez souvent le soir ?</td><td>Did you used to go out often at night?</td><td>sortir</td></tr><tr><td>28</td><td>Ils prenaient le bus pour aller à l'école.</td><td>They used to take the bus to go to school.</td><td>prendre</td></tr><tr><td>29</td><td>Je dormais chez mes grands-parents le week-end.</td><td>I used to sleep at my grandparents' on weekends.</td><td>dormir</td></tr><tr><td>30</td><td>On se promenait le long de la rivière.</td><td>We used to walk along the river.</td><td>se promener</td></tr></tbody></table>
+<p><strong>🧠 HOW TO KNOW IT'S HABITUAL (= IMPARFAIT):</strong><br>
+→ Look for <strong>frequency markers</strong> that signal repetition:</p>
+<table><thead><tr><th>Frequency Marker</th><th>Signals Imparfait</th></tr></thead><tbody><tr><td><strong>tous les jours</strong></td><td>every day</td></tr><tr><td><strong>toujours</strong></td><td>always</td></tr><tr><td><strong>souvent</strong></td><td>often</td></tr><tr><td><strong>parfois</strong></td><td>sometimes</td></tr><tr><td><strong>le lundi / le dimanche</strong></td><td>on Mondays / on Sundays (recurring — Project 8)</td></tr><tr><td><strong>d'habitude</strong></td><td>usually</td></tr><tr><td><strong>en général</strong></td><td>in general</td></tr><tr><td><strong>chaque été / chaque jour</strong></td><td>every summer / every day</td></tr></tbody></table>
+<p>→ When you see these markers + a past context → imparfait<br>
+→ When you see "hier, une fois, soudain" (specific, one-time) → passé composé (Project 9)</p>
+<p><strong>🧠 English "used to" and "would":</strong><br>
+→ "I <strong>used to</strong> play" = Je jouais → imparfait<br>
+→ "I <strong>would</strong> play every day" (habitual, NOT conditional) = Je jouais → imparfait<br>
+→ Be careful: English "would" can mean habitual past OR conditional — French separates them clearly<br>
+→ Habitual "would" → imparfait (this project)<br>
+→ Conditional "would" → conditionnel (Project 17)</p>
+<hr>
+<h2>🔹 BLOCK D — Describing Scenes: Weather, Time, Atmosphere</h2>
+<p><em>Scenario: Setting the scene for a story — what the world looked like at that moment</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English Meaning</th><th>Scene Element</th></tr></thead><tbody><tr><td>31</td><td>Il faisait beau.</td><td>The weather was nice.</td><td>Weather</td></tr><tr><td>32</td><td>Il faisait froid.</td><td>It was cold.</td><td>Weather</td></tr><tr><td>33</td><td>Il faisait chaud.</td><td>It was hot.</td><td>Weather</td></tr><tr><td>34</td><td>Il pleuvait.</td><td>It was raining.</td><td>Weather</td></tr><tr><td>35</td><td>Il neigeait.</td><td>It was snowing.</td><td>Weather</td></tr><tr><td>36</td><td>Le soleil brillait.</td><td>The sun was shining.</td><td>Atmosphere</td></tr><tr><td>37</td><td>Il était trois heures de l'après-midi.</td><td>It was 3 PM.</td><td>Time</td></tr><tr><td>38</td><td>C'était le mois de décembre.</td><td>It was the month of December.</td><td>Time</td></tr><tr><td>39</td><td>C'était un dimanche.</td><td>It was a Sunday.</td><td>Time</td></tr><tr><td>40</td><td>Les rues étaient vides.</td><td>The streets were empty.</td><td>Scene description</td></tr><tr><td>41</td><td>Il y avait beaucoup de monde.</td><td>There were a lot of people.</td><td>Scene description</td></tr><tr><td>42</td><td>La musique jouait.</td><td>Music was playing.</td><td>Atmosphere</td></tr><tr><td>43</td><td>Tout était calme.</td><td>Everything was calm.</td><td>Atmosphere</td></tr><tr><td>44</td><td>Les enfants jouaient dans le parc.</td><td>The children were playing in the park.</td><td>Background action</td></tr><tr><td>45</td><td>Les gens marchaient dans la rue.</td><td>People were walking in the street.</td><td>Background action</td></tr></tbody></table>
+<p><strong>🧠 WEATHER IN IMPARFAIT — compare with present (Project 8):</strong></p>
+<table><thead><tr><th>Present (Now)</th><th>Imparfait (Then)</th></tr></thead><tbody><tr><td>Il <strong>fait</strong> beau.</td><td>Il <strong>faisait</strong> beau.</td></tr><tr><td>Il <strong>fait</strong> froid.</td><td>Il <strong>faisait</strong> froid.</td></tr><tr><td>Il <strong>pleut</strong>.</td><td>Il <strong>pleuvait</strong>.</td></tr><tr><td>Il <strong>neige</strong>.</td><td>Il <strong>neigeait</strong>.</td></tr></tbody></table>
+<p>→ Weather descriptions in the past are ALWAYS imparfait — never passé composé<br>
+→ Weather is a <strong>state/atmosphere</strong> — not an event<br>
+→ <del>"Il a fait beau"</del> is grammatically possible but means "The weather was nice" as a COMPLETED assessment<br>
+→ "Il faisait beau" = the weather WAS nice (ongoing scene) — this is what you use for storytelling</p>
+<p><strong>🧠 Sentences 44-45 — Background actions:</strong><br>
+→ "Les enfants <strong>jouaient</strong>" = The children <strong>were playing</strong> (ongoing in the background)<br>
+→ This is NOT a completed event — it's what was HAPPENING at a certain moment<br>
+→ If something INTERRUPTED it → that interruption would be passé composé<br>
+→ → "Les enfants jouaient (imparfait) quand il a commencé à pleuvoir (passé composé)."<br>
+→ → (The children were playing when it started to rain.)<br>
+→ This interaction between the two tenses is the ENTIRE focus of Project 11</p>
+<hr>
+<h2>🔹 BLOCK E — Ongoing States: Emotions, Feelings, Conditions</h2>
+<p><em>Scenario: Describing how you felt, what you thought, what you knew</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English Meaning</th><th>State Type</th></tr></thead><tbody><tr><td>46</td><td>J'étais content.</td><td>I was happy.</td><td>Emotion</td></tr><tr><td>47</td><td>Tu étais triste ?</td><td>Were you sad?</td><td>Emotion</td></tr><tr><td>48</td><td>Il était en colère.</td><td>He was angry.</td><td>Emotion</td></tr><tr><td>49</td><td>Elle avait peur.</td><td>She was scared.</td><td>Sensation (avoir — Project 1)</td></tr><tr><td>50</td><td>On était fatigués.</td><td>We were tired.</td><td>Physical state</td></tr><tr><td>51</td><td>Je ne savais pas quoi faire.</td><td>I didn't know what to do.</td><td>Mental state</td></tr><tr><td>52</td><td>Tu connaissais cette ville ?</td><td>Did you know this city?</td><td>Knowledge state</td></tr><tr><td>53</td><td>Il voulait partir.</td><td>He wanted to leave.</td><td>Desire state</td></tr><tr><td>54</td><td>Elle ne pouvait pas dormir.</td><td>She couldn't sleep.</td><td>Ability state</td></tr><tr><td>55</td><td>On devait travailler.</td><td>We had to work.</td><td>Obligation state</td></tr></tbody></table>
+<p><strong>🧠 MENTAL AND EMOTIONAL VERBS — almost always imparfait in storytelling:</strong></p>
+<table><thead><tr><th>Verb</th><th>Imparfait Use</th><th>Why Imparfait</th></tr></thead><tbody><tr><td><strong>être</strong> (état)</td><td>J'étais fatigué.</td><td>State — not an event</td></tr><tr><td><strong>avoir</strong> (sensation)</td><td>J'avais faim.</td><td>Sensation — ongoing</td></tr><tr><td><strong>savoir</strong></td><td>Je savais la vérité.</td><td>Knowledge — continuous</td></tr><tr><td><strong>connaître</strong></td><td>Je connaissais la ville.</td><td>Familiarity — continuous</td></tr><tr><td><strong>vouloir</strong></td><td>Je voulais partir.</td><td>Desire — ongoing</td></tr><tr><td><strong>pouvoir</strong></td><td>Je pouvais voir la mer.</td><td>Ability — ongoing</td></tr><tr><td><strong>devoir</strong></td><td>Je devais travailler.</td><td>Obligation — ongoing</td></tr><tr><td><strong>penser</strong></td><td>Je pensais que c'était vrai.</td><td>Thought — ongoing</td></tr><tr><td><strong>croire</strong></td><td>Je croyais qu'il allait venir.</td><td>Belief — ongoing</td></tr><tr><td><strong>aimer</strong></td><td>J'aimais le chocolat.</td><td>Preference — ongoing</td></tr><tr><td><strong>détester</strong></td><td>Je détestais les maths.</td><td>Dislike — ongoing</td></tr><tr><td><strong>espérer</strong></td><td>J'espérais qu'il viendrait.</td><td>Hope — ongoing</td></tr><tr><td><strong>préférer</strong></td><td>Je préférais rester.</td><td>Preference — ongoing</td></tr></tbody></table>
+<p>→ These verbs describe <strong>states of mind</strong> — they are NOT events<br>
+→ They almost ALWAYS appear in imparfait when telling a story<br>
+→ Exception: when a mental state CHANGED at a specific moment → passé composé<br>
+→ → "Soudain, j'<strong>ai su</strong> la vérité." (Suddenly, I knew the truth — the moment of realization = event = PC)<br>
+→ → "Je <strong>savais</strong> la vérité." (I knew the truth — ongoing knowledge = imparfait)<br>
+→ This subtle distinction is explored in Project 11</p>
+<hr>
+<h2>🔹 BLOCK F — Negation in Imparfait</h2>
+<p><em>Scenario: Things that WEREN'T happening, things you DIDN'T use to do</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English Meaning</th><th>Negation Type</th></tr></thead><tbody><tr><td>56</td><td>Je ne parlais pas français.</td><td>I didn't speak French. (back then)</td><td>ne...pas</td></tr><tr><td>57</td><td>Tu ne sortais pas souvent ?</td><td>You didn't use to go out often?</td><td>ne...pas</td></tr><tr><td>58</td><td>Il n'avait pas de voiture.</td><td>He didn't have a car.</td><td>ne...pas + de (Project 5)</td></tr><tr><td>59</td><td>Elle n'était jamais en retard.</td><td>She was never late.</td><td>ne...jamais</td></tr><tr><td>60</td><td>On ne mangeait pas de viande.</td><td>We didn't eat meat. (habitual)</td><td>ne...pas + de</td></tr><tr><td>61</td><td>Il n'y avait pas de téléphone portable.</td><td>There were no cell phones.</td><td>il n'y avait pas + de</td></tr><tr><td>62</td><td>Je ne connaissais personne.</td><td>I didn't know anyone.</td><td>ne...personne</td></tr><tr><td>63</td><td>Rien ne marchait.</td><td>Nothing worked.</td><td>rien...ne (subject)</td></tr><tr><td>64</td><td>Ce n'était pas facile.</td><td>It wasn't easy.</td><td>ne...pas</td></tr><tr><td>65</td><td>Il ne faisait jamais beau.</td><td>The weather was never nice.</td><td>ne...jamais</td></tr></tbody></table>
+<p><strong>🧠 NEGATION IN IMPARFAIT — same rules as present tense (Project 5):</strong></p>
+<code>Subject + NE + IMPARFAIT VERB + PAS/PLUS/JAMAIS/RIEN + rest</code>
+<p>→ The negation sandwich wraps around the <strong>single imparfait verb</strong><br>
+→ No auxiliary to worry about (unlike passé composé — Project 9)<br>
+→ This makes negation SIMPLER in imparfait than in passé composé</p>
+<table><thead><tr><th>Tense</th><th>Negation Structure</th></tr></thead><tbody><tr><td><strong>Present</strong></td><td>Je <strong>ne</strong> mange <strong>pas</strong></td></tr><tr><td><strong>Imparfait</strong></td><td>Je <strong>ne</strong> mangeais <strong>pas</strong></td></tr><tr><td><strong>Passé composé</strong></td><td>Je **n'**ai <strong>pas</strong> mangé</td></tr></tbody></table>
+<p>→ Present and imparfait: sandwich wraps ONE verb<br>
+→ Passé composé: sandwich wraps the AUXILIARY, participle goes after</p>
+<hr>
+<h2>🔹 BLOCK G — Questions in Imparfait</h2>
+<p><em>Scenario: Your host family asks about your past — you ask them about theirs</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English Meaning</th><th>Question Type (Project 4)</th></tr></thead><tbody><tr><td>66</td><td>C'était comment ton enfance ?</td><td>What was your childhood like?</td><td>Casual — comment</td></tr><tr><td>67</td><td>Tu habitais où avant ?</td><td>Where did you live before?</td><td>Casual — où at end</td></tr><tr><td>68</td><td>Qu'est-ce que tu faisais comme travail ?</td><td>What did you used to do for work?</td><td>Standard — est-ce que</td></tr><tr><td>69</td><td>Comment c'était à l'école ?</td><td>What was school like?</td><td>Comment + c'était</td></tr><tr><td>70</td><td>Tu aimais quoi comme musique ?</td><td>What kind of music did you like?</td><td>Casual — quoi</td></tr><tr><td>71</td><td>Il y avait combien d'élèves ?</td><td>How many students were there?</td><td>Combien + il y avait</td></tr><tr><td>72</td><td>Vous sortiez souvent ?</td><td>Did you used to go out often?</td><td>Casual — intonation</td></tr><tr><td>73</td><td>Qu'est-ce que vous faisiez le dimanche ?</td><td>What did you used to do on Sundays?</td><td>Standard — habitual</td></tr><tr><td>74</td><td>C'était cher à l'époque ?</td><td>Was it expensive back then?</td><td>C'était + adjective + ?</td></tr><tr><td>75</td><td>Tu connaissais la France avant de venir ?</td><td>Did you know France before coming?</td><td>Casual — intonation</td></tr></tbody></table>
+<p><strong>🧠 Key expression — "C'ÉTAIT COMMENT ?":</strong><br>
+→ = "What was it like?" — the #1 question for asking about past experiences<br>
+→ Very casual and extremely common<br>
+→ Variants:<br>
+→ → C'était comment <strong>ton voyage</strong> ? (What was your trip like?)<br>
+→ → C'était comment <strong>la France</strong> dans les années 80 ? (What was France like in the 80s?)<br>
+→ → C'était comment <strong>chez toi</strong> ? (What was it like at your place?)</p>
+<p><strong>🧠 Key expression — "À L'ÉPOQUE":</strong><br>
+→ = "back then" / "at the time" — very useful imparfait companion<br>
+→ "À l'époque, il n'y avait pas d'internet." (Back then, there was no internet.)<br>
+→ Signals that you're describing a past period → imparfait territory</p>
+<hr>
+<h2>🔹 BLOCK H — "Quand j'étais..." — Setting Up Childhood Memories</h2>
+<p><em>Scenario: Classic French storytelling opener — "When I was..."</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English Meaning</th><th>Structure</th></tr></thead><tbody><tr><td>76</td><td>Quand j'étais petit, j'habitais à la campagne.</td><td>When I was little, I lived in the countryside.</td><td>Quand + imparfait, imparfait</td></tr><tr><td>77</td><td>Quand j'étais enfant, j'aimais les animaux.</td><td>When I was a child, I loved animals.</td><td>Quand + imparfait, imparfait</td></tr><tr><td>78</td><td>Quand j'avais dix ans, j'allais à l'école à pied.</td><td>When I was 10, I used to walk to school.</td><td>Quand + imparfait, imparfait</td></tr><tr><td>79</td><td>Quand il faisait beau, on jouait dehors.</td><td>When the weather was nice, we used to play outside.</td><td>Quand + weather, habitual</td></tr><tr><td>80</td><td>Quand j'étais au lycée, je faisais du basket.</td><td>When I was in high school, I used to play basketball.</td><td>Quand + location state, habitual</td></tr><tr><td>81</td><td>Quand on avait faim, ma mère préparait des crêpes.</td><td>When we were hungry, my mother would make crepes.</td><td>Quand + sensation, habitual response</td></tr><tr><td>82</td><td>Quand j'étais jeune, la vie était plus simple.</td><td>When I was young, life was simpler.</td><td>Quand + age state, description</td></tr><tr><td>83</td><td>Quand il pleuvait, on restait à la maison.</td><td>When it rained, we used to stay home.</td><td>Quand + weather, habitual</td></tr><tr><td>84</td><td>Quand j'avais du temps libre, je lisais.</td><td>When I had free time, I used to read.</td><td>Quand + possession, habitual</td></tr><tr><td>85</td><td>Quand mes parents travaillaient, ma grand-mère nous gardait.</td><td>When my parents worked, my grandmother used to watch us.</td><td>Quand + background, habitual</td></tr></tbody></table>
+<p><strong>🧠 THE "QUAND + IMPARFAIT" STRUCTURE:</strong></p>
+<code>QUAND + IMPARFAIT (situation/condition), IMPARFAIT (habitual response/description)</code>
+<p>→ Both parts are imparfait because BOTH describe habitual/ongoing realities<br>
+→ "When I <strong>was</strong> little" = ongoing state → imparfait<br>
+→ "I <strong>used to live</strong> in the countryside" = habitual → imparfait<br>
+→ This is the classic French storytelling opener — you will hear it constantly</p>
+<p><strong>🧠 IMPORTANT: "Quand + imparfait" ≠ "Quand + passé composé"</strong><br>
+→ "Quand j'étais petit, je jouais dehors." = habitual (both imparfait)<br>
+→ "Quand je suis arrivé, il pleuvait." = one event (PC) + background (imparfait) — Project 11!<br>
+→ The difference is whether "quand" introduces a <strong>repeated situation</strong> or a <strong>single event</strong></p>
+<hr>
+<h2>🔹 BLOCK I — Before vs. Now: Contrasting Past and Present</h2>
+<p><em>Scenario: Comparing how things were with how things are now</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English Meaning</th><th>Tense Contrast</th></tr></thead><tbody><tr><td>86</td><td>Avant, j'habitais à Lyon. Maintenant, j'habite à Paris.</td><td>Before, I lived in Lyon. Now, I live in Paris.</td><td>Imparfait → Present</td></tr><tr><td>87</td><td>Avant, je ne parlais pas français. Maintenant, je parle un peu.</td><td>Before, I didn't speak French. Now, I speak a little.</td><td>Imparfait → Present</td></tr><tr><td>88</td><td>Avant, il n'y avait pas de wifi. Maintenant, c'est partout.</td><td>Before, there was no wifi. Now, it's everywhere.</td><td>Imparfait → Present</td></tr><tr><td>89</td><td>Avant, on sortait tous les soirs. Maintenant, on reste à la maison.</td><td>Before, we used to go out every night. Now, we stay home.</td><td>Imparfait → Present</td></tr><tr><td>90</td><td>Quand j'étais jeune, je faisais du sport. Maintenant, je ne fais plus rien.</td><td>When I was young, I used to exercise. Now, I don't do anything anymore.</td><td>Imparfait → Present + ne...plus</td></tr><tr><td>91</td><td>À l'époque, la vie était moins chère.</td><td>Back then, life was less expensive.</td><td>Imparfait — comparison</td></tr><tr><td>92</td><td>Avant, je ne connaissais personne ici.</td><td>Before, I didn't know anyone here.</td><td>Imparfait — past isolation</td></tr><tr><td>93</td><td>Quand j'étais étudiant, je n'avais pas d'argent.</td><td>When I was a student, I had no money.</td><td>Imparfait — past financial state</td></tr><tr><td>94</td><td>Mon quartier était très calme avant.</td><td>My neighborhood used to be very quiet.</td><td>Imparfait — description</td></tr><tr><td>95</td><td>Les gens étaient plus patients à l'époque.</td><td>People were more patient back then.</td><td>Imparfait — generalization</td></tr></tbody></table>
+<p><strong>🧠 KEY TIME MARKERS THAT SIGNAL IMPARFAIT:</strong></p>
+<table><thead><tr><th>Marker</th><th>English</th><th>Signals</th></tr></thead><tbody><tr><td><strong>Avant</strong></td><td>Before / In the past</td><td>Past state → imparfait</td></tr><tr><td><strong>À l'époque</strong></td><td>Back then / At that time</td><td>Past period → imparfait</td></tr><tr><td><strong>Quand j'étais...</strong></td><td>When I was...</td><td>Past state → imparfait</td></tr><tr><td><strong>D'habitude</strong></td><td>Usually</td><td>Past habit → imparfait</td></tr><tr><td><strong>Tous les jours / tous les étés</strong></td><td>Every day / Every summer</td><td>Past repetition → imparfait</td></tr><tr><td><strong>En ce temps-là</strong></td><td>In those days</td><td>Past period → imparfait</td></tr><tr><td><strong>Autrefois</strong></td><td>In former times</td><td>Past period → imparfait</td></tr></tbody></table>
+<p>→ Compare with passé composé markers (Project 9):</p>
+<table><thead><tr><th>Passé Composé Markers</th><th>Imparfait Markers</th></tr></thead><tbody><tr><td>Hier (yesterday) — specific</td><td>Avant (before) — general past</td></tr><tr><td>La semaine dernière (last week) — specific</td><td>D'habitude (usually) — habitual</td></tr><tr><td>Soudain (suddenly) — one-time event</td><td>Tous les jours (every day) — repeated</td></tr><tr><td>Il y a deux jours (two days ago) — specific</td><td>À l'époque (back then) — period</td></tr><tr><td>Une fois (once) — one-time</td><td>Toujours (always) — habitual</td></tr></tbody></table>
+<hr>
+<h2>🔹 BLOCK J — Full Childhood Story: Imparfait in Natural Flow</h2>
+<p><em>Scenario: You tell your host family about your childhood — painting the full picture</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English Meaning</th><th>Imparfait Function</th></tr></thead><tbody><tr><td>96</td><td>Quand j'étais petit, j'habitais dans une petite ville.</td><td>When I was little, I lived in a small town.</td><td>State + habitual location</td></tr><tr><td>97</td><td>C'était une ville tranquille près de la mer.</td><td>It was a quiet town near the sea.</td><td>Description</td></tr><tr><td>98</td><td>Ma maison était grande avec un jardin.</td><td>My house was big with a garden.</td><td>Description</td></tr><tr><td>99</td><td>J'avais un chien qui s'appelait Max.</td><td>I had a dog named Max.</td><td>Possession + description</td></tr><tr><td>100</td><td>Mon père travaillait dans un bureau.</td><td>My father worked in an office.</td><td>Habitual action</td></tr><tr><td>101</td><td>Ma mère était professeur.</td><td>My mother was a teacher.</td><td>State / profession</td></tr><tr><td>102</td><td>J'allais à l'école à pied tous les jours.</td><td>I walked to school every day.</td><td>Habitual action</td></tr><tr><td>103</td><td>Le matin, je prenais le petit-déjeuner avec ma sœur.</td><td>In the morning, I had breakfast with my sister.</td><td>Habitual action</td></tr><tr><td>104</td><td>L'après-midi, je jouais avec mes amis dans le parc.</td><td>In the afternoon, I played with my friends in the park.</td><td>Habitual action</td></tr><tr><td>105</td><td>Le soir, on mangeait ensemble en famille.</td><td>In the evening, we ate together as a family.</td><td>Habitual action</td></tr><tr><td>106</td><td>En été, il faisait très chaud.</td><td>In summer, it was very hot.</td><td>Weather / scene</td></tr><tr><td>107</td><td>On allait à la plage tous les week-ends.</td><td>We went to the beach every weekend.</td><td>Habitual action</td></tr><tr><td>108</td><td>Mon grand-père racontait des histoires.</td><td>My grandfather told stories.</td><td>Habitual action</td></tr><tr><td>109</td><td>J'adorais écouter ses histoires.</td><td>I loved listening to his stories.</td><td>Emotional state</td></tr><tr><td>110</td><td>La vie était simple et belle.</td><td>Life was simple and beautiful.</td><td>General description</td></tr></tbody></table>
+<p><strong>🧠 Notice: NOT A SINGLE PASSÉ COMPOSÉ IN THIS BLOCK</strong><br>
+→ The entire passage is pure imparfait because it's ALL:<br>
+→ → Descriptions (the town, the house, the weather)<br>
+→ → States (having a dog, being a teacher, being hot)<br>
+→ → Habits (walking to school, eating together, going to the beach)<br>
+→ → Emotions (loving stories)<br>
+→ → There are NO specific one-time events</p>
+<p>→ If you added "Un jour, ..." (One day, ...) → the verb after would be <strong>passé composé</strong><br>
+→ → "Un jour, mon chien <strong>a disparu</strong>." (One day, my dog disappeared.) = specific event<br>
+→ This interaction is <strong>Project 11's territory</strong></p>
+<hr>
+<h1>✅ WHAT SHOULD DO</h1>
+<p>→ <strong>Memorize the ONE formula:</strong> nous present form → remove -ons → add imparfait endings<br>
+→ <strong>Memorize ÊTRE as the only exception:</strong> ét- stem → j'étais, tu étais, il était...<br>
+→ <strong>Master "c'était"</strong> — you will use it in every conversation about the past<br>
+→ <strong>Master "il y avait"</strong> — it replaces "il y a" for past scenes<br>
+→ <strong>Learn the state/emotion/mental verbs</strong> that almost always take imparfait (être, avoir, savoir, connaître, vouloir, pouvoir, devoir, penser, croire, aimer)<br>
+→ <strong>Recognize habitual markers</strong> (tous les jours, souvent, d'habitude, toujours, à l'époque)<br>
+→ <strong>Practice "Quand j'étais..." openers</strong> — they're the gateway to childhood stories<br>
+→ <strong>Connect to Project 1</strong> — être and avoir descriptions shift to imparfait in the past (j'étais fatigué, j'avais faim)<br>
+→ <strong>Connect to Project 8</strong> — weather, time, seasons all shift to imparfait for past scenes (il faisait beau, il était midi)<br>
+→ <strong>Connect to Project 9</strong> — the two tenses work as a PAIR — you need both for complete stories</p>
+<hr>
+<h1>❌ WHAT SHOULD NOT DO</h1>
+<p>→ ❌ Do NOT use passé composé for descriptions → <del>"Il a fait beau"</del> for scene-setting → "Il <strong>faisait</strong> beau"<br>
+→ ❌ Do NOT use passé composé for habitual past → <del>"J'ai joué dehors tous les jours"</del> → "Je <strong>jouais</strong> dehors tous les jours"<br>
+→ ❌ Do NOT use passé composé for emotional states → <del>"J'ai été triste"</del> for ongoing sadness → "J'<strong>étais</strong> triste"<br>
+→ ❌ Do NOT use imparfait for specific completed events → <del>"Hier, je mangeais au restaurant"</del> (unless it was interrupted) → "Hier, j'<strong>ai mangé</strong> au restaurant" (Project 9)<br>
+→ ❌ Do NOT try to derive être's imparfait from "nous sommes" → <del>"je sommais"</del> ❌ → "j'<strong>étais</strong>" ✅<br>
+→ ❌ Do NOT forget the spelling quirks from present tense:<br>
+→ → Manger: nous mange<strong>ons</strong> → mange- → je mange<strong>ais</strong> (keep the "e" before "a" to preserve soft "g")<br>
+→ → Commencer: nous commenç<strong>ons</strong> → commenç- → je commenç<strong>ais</strong> (keep "ç" before "a")<br>
+→ ❌ Do NOT translate English "was/were ...ing" as always imparfait → sometimes it's passé composé (Project 11 will clarify)<br>
+→ ❌ Do NOT use imparfait to say what happened ONCE → that's passé composé territory</p>
+<hr>
+<h1>🔀 WHEN TO USE WHAT</h1>
+<h2>Imparfait vs. Passé Composé — The Decision Guide</h2>
+<table><thead><tr><th>Use IMPARFAIT When...</th><th>Use PASSÉ COMPOSÉ When...</th></tr></thead><tbody><tr><td>Describing <strong>how things were</strong></td><td>Telling <strong>what happened</strong></td></tr><tr><td>Describing a <strong>state</strong> (tired, happy, cold)</td><td>An action <strong>started and finished</strong></td></tr><tr><td>Something was <strong>ongoing</strong> / <strong>in progress</strong></td><td>Something occurred at a <strong>specific moment</strong></td></tr><tr><td>An action was <strong>habitual</strong> / <strong>repeated</strong></td><td>An action happened a <strong>specific number of times</strong></td></tr><tr><td>Setting the <strong>scene</strong> (weather, time, atmosphere)</td><td>Reporting a <strong>sequence of events</strong></td></tr><tr><td>Describing <strong>what someone looked like / felt</strong></td><td>Telling <strong>what someone did</strong></td></tr><tr><td>Background — the <strong>canvas</strong></td><td>Foreground — the <strong>action</strong></td></tr></tbody></table>
+<h2>Verb-by-Verb Guide:</h2>
+<table><thead><tr><th>Verb</th><th>Imparfait Meaning</th><th>Passé Composé Meaning</th></tr></thead><tbody><tr><td><strong>être</strong></td><td>was (state) → J'étais fatigué.</td><td>was (became, in one moment) → rare at this level</td></tr><tr><td><strong>avoir</strong></td><td>had (ongoing) → J'avais un chien.</td><td>had (received) → J'ai eu un cadeau.</td></tr><tr><td><strong>savoir</strong></td><td>knew (ongoing) → Je savais la vérité.</td><td>found out (moment of discovery) → J'ai su la vérité.</td></tr><tr><td><strong>connaître</strong></td><td>knew (familiarity) → Je connaissais Paris.</td><td>met (first time) → J'ai connu Marie en 2020.</td></tr><tr><td><strong>vouloir</strong></td><td>wanted (ongoing desire) → Je voulais partir.</td><td>wanted (attempted/decided) → J'ai voulu partir.</td></tr><tr><td><strong>pouvoir</strong></td><td>could (ongoing ability) → Je pouvais voir.</td><td>managed to (succeeded) → J'ai pu entrer.</td></tr><tr><td><strong>devoir</strong></td><td>had to (ongoing obligation) → Je devais travailler.</td><td>had to (and did it) → J'ai dû partir.</td></tr></tbody></table>
+<p>→ The imparfait version = the <strong>state existed</strong><br>
+→ The passé composé version = something <strong>happened</strong> (a change, a result, a moment)</p>
+<hr>
+<h1>🚫 WHEN NOT TO USE</h1>
+<p>→ Do NOT use imparfait for <strong>sudden events</strong> → "Soudain, il <strong>a crié</strong>." (Suddenly, he screamed.) — passé composé<br>
+→ Do NOT use imparfait for <strong>sequences</strong> → "J'<strong>ai mangé</strong>, j'<strong>ai payé</strong>, je <strong>suis parti</strong>." — all passé composé<br>
+→ Do NOT use imparfait with "<strong>une fois</strong>" (once) → "Une fois, j'<strong>ai vu</strong> un ours." — specific event → PC<br>
+→ Do NOT use imparfait with "<strong>soudain / tout à coup</strong>" (suddenly) → these trigger passé composé<br>
+→ Do NOT use imparfait for things that happened a <strong>specific number of times</strong> → "J'<strong>ai visité</strong> Paris trois fois." — PC<br>
+→ Do NOT use imparfait alone to tell a story — you need passé composé for the EVENTS (Project 11)</p>
+<hr>
+<h1>⚠️ COMMON PITFALLS AND FAILURE MODES</h1>
+<table><thead><tr><th>Pitfall</th><th>What Learners Do Wrong</th><th>Correct Version</th><th>Why</th></tr></thead><tbody><tr><td><strong>Être stem error</strong></td><td>Je sommais / Je suisais</td><td>J'<strong>étais</strong></td><td>Être is the ONLY irregular stem in imparfait</td></tr><tr><td><strong>Using PC for descriptions</strong></td><td>Il a fait beau ce jour-là. (for scene-setting)</td><td>Il <strong>faisait</strong> beau ce jour-là.</td><td>Scene = background = imparfait</td></tr><tr><td><strong>Using PC for habits</strong></td><td>J'ai joué dehors tous les jours.</td><td>Je <strong>jouais</strong> dehors tous les jours.</td><td>"Tous les jours" = habitual = imparfait</td></tr><tr><td><strong>Using imparfait for events</strong></td><td>Hier, je mangeais au restaurant.</td><td>Hier, j'<strong>ai mangé</strong> au restaurant.</td><td>Specific completed action = PC</td></tr><tr><td><strong>Manger spelling</strong></td><td>Je mangais (missing "e")</td><td>Je mange<strong>ais</strong></td><td>Keep "e" to preserve soft "g"</td></tr><tr><td><strong>Commencer spelling</strong></td><td>Je commencais (missing "ç")</td><td>Je commen<strong>ç</strong>ais</td><td>Keep "ç" to preserve soft "c"</td></tr><tr><td><strong>Confusing English "would"</strong></td><td>Using conditionnel for habitual past</td><td>"We would eat" (habitual) = On <strong>mangeait</strong> (imparfait)</td><td>English "would" (habit) ≠ conditionnel</td></tr><tr><td><strong>All imparfait story</strong></td><td>Telling a whole story in imparfait only</td><td>Need PC for events — imparfait for background</td><td>Story needs BOTH tenses (Project 11)</td></tr><tr><td><strong>All PC story</strong></td><td>Telling a whole story in PC only</td><td>Need imparfait for descriptions/atmosphere</td><td>Story needs BOTH tenses (Project 11)</td></tr><tr><td><strong>"C'était" vs. "Ça a été"</strong></td><td>Using interchangeably</td><td>C'était = description / Ça a été = result/assessment</td><td>"C'était bien" (it was nice — describing) vs. "Ça a été rapide" (it was quick — assessing a completed event)</td></tr></tbody></table>
+<hr>
+<h1>🔑 KEY TAKEAWAY</h1>
+<blockquote>
+<p><strong>Project 9 → You tell what HAPPENED (events, actions, completed moments) — Passé Composé</strong><br>
+<strong>Project 10 → You describe how things WERE (states, scenes, habits, feelings) — Imparfait</strong></p>
+<p>The imparfait is the <strong>easiest tense to conjugate</strong> — one formula works for every verb except être:</p>
+<code>Nous present form → remove -ons → add: -ais, -ais, -ait, -ions, -iez, -aient</code>
+<p>Five functions of imparfait:</p>
+<ol>
+<li><strong>Description</strong> — C'était beau. Les rues étaient vides.</li>
+<li><strong>Ongoing state</strong> — J'étais fatigué. Elle avait peur.</li>
+<li><strong>Habitual action</strong> — Je jouais dehors tous les jours.</li>
+<li><strong>Background action</strong> — Les enfants jouaient quand...</li>
+<li><strong>Scene-setting</strong> — Il faisait beau. Il était trois heures.</li>
+</ol>
+<p><strong>You now have BOTH past tenses — but you don't yet know how to USE THEM TOGETHER.</strong><br>
+→ Real French stories are a constant dance between PC and imparfait<br>
+→ "I was walking (imparfait) when I saw (PC) a friend."<br>
+→ "It was raining (imparfait) so we decided (PC) to go to a café."<br>
+→ This layering technique is what makes French storytelling come alive.</p>
+</blockquote>
+<hr>
+<h1>🌉 BRIDGE TO PROJECT 11</h1>
+<blockquote>
+<p>You can now say <strong>"I was tired"</strong> (imparfait) and <strong>"I went to the museum"</strong> (passé composé)<br>
+But when you try to combine them in a story, you don't know <strong>which tense goes where</strong><br>
+→ "I <strong>was walking</strong> when I <strong>met</strong> Pierre" — which verb gets which tense?<br>
+→ "It <strong>was raining</strong> so I <strong>took</strong> a taxi" — how do you layer them?<br>
+→ "She <strong>was reading</strong> a book, the phone <strong>rang</strong>, and she <strong>answered</strong>" — three verbs, two tenses<br>
+→ Project 11: <strong>"The Story Has Two Layers"</strong> teaches you to weave PC and imparfait together<br>
+→ This is where your French storytelling becomes REAL</p>
+</blockquote>
+<hr>
+<h1>✅ PROJECT 10 COMPLETE</h1>
+<blockquote>
+<p><strong>Are you ready for PROJECT 11: "The Story Has Two Layers"?</strong><br>
+→ ~100 sentences combining passé composé AND imparfait in real narratives<br>
+→ Scenario: You're telling a story — some things happened, some things were ongoing<br>
+→ This is the project that UNLOCKS French storytelling</p>
+</blockquote>
+</div>
+</div>
+
+<!-- ========== data-index="23" ========== -->
+
+        </div>
+
+        <div class="nav-bar">
+            <a href="project-9.html" class="nav-button prev">← Previous Chapter</a>
+            <div class="page-info">
+                <a href="index.html" class="nav-button home">📚 Table of Contents</a><br>
+                <span style="margin-top:8px;display:block">Chapter 10 of 50</span>
+            </div>
+            <a href="project-11.html" class="nav-button next">Next Chapter →</a>
+        </div>
+    </div>
+
+    
+    <div id="progress-track"><div id="progress-fill"></div></div>
+    <div id="progress-pct">0%</div>
+
+
+    <script>
+    const fill = document.getElementById('progress-fill');
+    const pct  = document.getElementById('progress-pct');
+    function updateProgress() {
+        const scrollTop = window.scrollY;
+        const docHeight = document.body.scrollHeight - window.innerHeight;
+        const scrolled  = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+        fill.style.height = scrolled + '%';
+        pct.textContent   = Math.round(scrolled) + '%';
+    }
+    window.addEventListener('scroll', updateProgress);
+    updateProgress();
+
+    document.addEventListener('keydown', function(e) {
+        if (['INPUT','TEXTAREA'].includes(document.activeElement.tagName)) return;
+        if (e.key === 'ArrowLeft') {
+            const b = document.querySelector('.nav-button.prev');
+            if (b && !b.classList.contains('disabled')) window.location.href = b.href;
+        }
+        if (e.key === 'ArrowRight') {
+            const b = document.querySelector('.nav-button.next');
+            if (b && !b.classList.contains('disabled')) window.location.href = b.href;
+        }
+    });
+    </script>
+
+</body>
+</html>

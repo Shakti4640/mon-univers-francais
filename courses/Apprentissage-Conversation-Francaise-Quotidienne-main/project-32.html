@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="images/favicon.png">
+    <title>Project 32: "Before That Happened, This Had Already Happened" — French Daily Sentences</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.75;
+            color: #1a202c;
+            background-color: #f7fafc;
+        }
+        .container {
+            max-width: 1800px;
+            margin: 0 auto;
+            background: white;
+            min-height: 100vh;
+            box-shadow: 0 0 30px rgba(0,0,0,0.08);
+            padding: 48px 52px;
+        }
+        
+        .content { max-width: 1700px; margin: 0 auto; color: #1a202c; }
+        .content h1 {
+            color: #1a202c; margin: 32px 0 20px;
+            padding-bottom: 12px;
+            border-bottom: 4px solid #3b82f6;
+            font-size: 2.1em;
+            font-weight: 700;
+        }
+        .content h2 {
+            color: #1a202c; margin: 28px 0 16px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #60a5fa;
+            font-size: 1.6em;
+            font-weight: 600;
+        }
+        .content h3 { color: #1a202c; margin: 22px 0 12px; font-size: 1.3em; font-weight: 600; }
+        .content h4 { color: #2d3748; margin: 18px 0 10px; font-size: 1.1em; font-weight: 600; }
+        .content p  { margin-bottom: 16px; line-height: 1.8; color: #1a202c; }
+        .content ul, .content ol { margin: 12px 0 18px 30px; color: #1a202c; }
+        .content li { margin-bottom: 8px; line-height: 1.75; color: #1a202c; }
+        .content hr { border: none; border-top: 2px solid #e2e8f0; margin: 26px 0; }
+        .content pre {
+            background: #f7fafc !important;
+            border: 1px solid #cbd5e0 !important;
+            border-left: 4px solid #3b82f6 !important;
+            padding: 18px !important; overflow-x: auto; margin: 18px 0; border-radius: 6px;
+            font-family: 'Consolas','Monaco','Courier New',monospace !important;
+            font-size: 0.9em !important;
+        }
+        .content pre:not([style*="color"]) { color: #1a202c !important; }
+        .content code {
+            font-family: 'Consolas','Monaco','Courier New',monospace !important;
+            font-size: 0.88em !important;
+        }
+        .content code:not(pre code) {
+            background: #dbeafe !important;
+            color: #1a202c !important;
+            padding: 2px 6px;
+            border-radius: 3px;
+        }
+        .content pre code { background: transparent !important; padding: 0; }
+        .content table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+        .content th {
+            background: linear-gradient(135deg, #3b82f6 0%, #60a5fa 100%);
+            color: white; padding: 12px 16px; text-align: left;
+            font-weight: 600;
+        }
+        .content td { padding: 11px 16px; border: 1px solid #e2e8f0; color: #1a202c; }
+        .content tr:nth-child(even) td { background: #eff6ff; }
+        .content blockquote {
+            border-left: 4px solid #3b82f6; background: #eff6ff;
+            padding: 14px 20px; margin: 18px 0; border-radius: 0 6px 6px 0;
+            color: #1a202c;
+        }
+        .content strong { color: #1a202c; font-weight: 600; }
+        .px-2 { padding: 0; }
+        .chat-message { background: transparent; padding: 0; margin: 0; }
+
+        /* Bottom nav bar only */
+        .nav-bar {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 24px 0;
+            margin-top: 50px;
+            border-top: 3px solid #60a5fa;
+        }
+        .nav-button {
+            display: inline-flex; align-items: center; gap: 8px;
+            padding: 12px 26px;
+            background: linear-gradient(135deg, #3b82f6 0%, #60a5fa 100%);
+            color: white !important; text-decoration: none;
+            border-radius: 8px; font-weight: 600; font-size: 0.95em;
+            transition: all 0.2s;
+            box-shadow: 0 2px 8px rgba(59,130,246,0.35);
+        }
+        .nav-button:hover { transform: translateY(-2px); box-shadow: 0 4px 14px rgba(59,130,246,0.5); }
+        .nav-button.disabled { background: #cbd5e1; box-shadow: none; pointer-events: none; }
+        .nav-button.home {
+            background: linear-gradient(135deg, #ef4444 0%, #f87171 100%);
+            box-shadow: 0 2px 8px rgba(239,68,68,0.35);
+        }
+        .nav-button.home:hover { box-shadow: 0 4px 14px rgba(239,68,68,0.5); }
+        .page-info { color: #718096; font-size: 0.9em; text-align: center; }
+
+        /* Progress bar */
+        #progress-track {
+            position: fixed; top: 20px; right: 20px;
+            width: 10px; height: 150px;
+            background: rgba(59,130,246,0.2);
+            border: 2px solid #3b82f6;
+            border-radius: 6px; overflow: hidden; z-index: 1000;
+        }
+        #progress-fill {
+            width: 100%;
+            background: linear-gradient(180deg, #3b82f6, #2563eb);
+            height: 0%;
+            transition: height 0.15s ease;
+        }
+        #progress-pct {
+            position: fixed; top: 0px; right: 16px;
+            color: #2563eb; font-size: 14px; font-weight: bold;
+            z-index: 1001;
+            text-shadow: 0 1px 2px rgba(255,255,255,0.9);
+            line-height: 20px;
+        }
+
+    </style>
+<link rel="stylesheet" href="assets/chapters.css?v=20260421203847"><script src="assets/chapters.js?v=20260421203847" defer></script>
+</head>
+<body>
+    <div class="container">
+        <div class="content">
+            <div class="chat-message" data-index="33">
+<div class="px-2"><h1>🟠 PROJECT 32: "Before That Happened, This Had Already Happened"</h1>
+<h2><em>You're telling a complex story — layered past events requiring past-before-past</em></h2>
+<hr>
+<h1>🎯 THE HYPOTHETICAL PROBLEM</h1>
+<p>→ You're at a dinner party in France — telling a story about your weekend<br>
+→ You say:</p>
+<code>❌ "Je suis arrivé à la gare. Le train est parti. J'ai attendu le prochain."</code>
+<p>→ Your French friend is confused: "Attends — le train est parti QUAND tu es arrivé ? Ou AVANT ?"<br>
+→ Your three sentences are all in passé composé — they sound like THREE SEPARATE events in sequence<br>
+→ But what you MEANT was: the train <strong>had already left</strong> BEFORE you arrived</p>
+<p>→ A French person would say:</p>
+<code>✅ "Quand je suis arrivé à la gare, le train ÉTAIT DÉJÀ PARTI."</code>
+<p>→ That "était parti" is the <strong>PLUS-QUE-PARFAIT</strong> — it places one event BEFORE another in the past<br>
+→ Without it, your past stories have only ONE layer — everything sounds like it happened at the same time</p>
+<p>→ At work, your boss asks why the project was late:</p>
+<code>❌ "Le fournisseur n'a pas livré. On n'a pas pu commencer."</code>
+<p>→ Two events in passé composé — but which happened FIRST?<br>
+→ The clear version:</p>
+<code>✅ "On n'a pas pu commencer parce que le fournisseur N'AVAIT PAS LIVRÉ."</code>
+<p>→ "N'avait pas livré" = had not delivered — this happened FIRST, causing the second event</p>
+<p>→ Your friend tells you about a surprise:</p>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>✅ "Elle a ouvert la porte et elle a vu que nous AVIONS PRÉPARÉ une fête."
+</span>✅ "Quand il est rentré, il a découvert qu'elle ÉTAIT PARTIE."
+✅ "J'ai réalisé que j'AVAIS OUBLIÉ mes clés."</code></pre></div>
+<p>→ In each case, <strong>two past events</strong> — and one happened BEFORE the other<br>
+→ The plus-que-parfait marks the <strong>EARLIER</strong> one</p>
+<p><strong>The core realization:</strong><br>
+→ Projects 9-11 gave you <strong>one layer</strong> of past: passé composé (events) + imparfait (background)<br>
+→ Project 32 adds the <strong>second layer</strong>: plus-que-parfait (past BEFORE the past)<br>
+→ This creates a <strong>three-layer past system</strong>:</p>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>LAYER 3 (deepest past):   PLUS-QUE-PARFAIT  → had done (before everything else)
+</span>LAYER 2 (past events):    PASSÉ COMPOSÉ      → did (specific completed events)
+LAYER 1 (past background): IMPARFAIT         → was doing / used to do (ongoing/habitual)</code></pre></div>
+<p>→ Without the plus-que-parfait, you can only tell <strong>flat stories</strong><br>
+→ With it, you tell <strong>layered, complex, adult narratives</strong> — with cause, consequence, and surprise</p>
+<hr>
+<h1>🔍 HOW TO APPROACH IT</h1>
+<p>→ Think of the plus-que-parfait as a <strong>flashback</strong> in a movie:<br>
+→ The movie is playing (passé composé / imparfait)<br>
+→ Suddenly, the screen goes wavy — you see what happened BEFORE the current scene<br>
+→ That flashback = <strong>plus-que-parfait</strong></p>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>TIMELINE:
+</span>
+[PLUS-QUE-PARFAIT]          [PASSÉ COMPOSÉ / IMPARFAIT]          [PRÉSENT]
+     ←←←                          ←←←                               NOW
+  "had done"                    "did / was doing"                  "now"
+  (earlier past)                (reference past)                   (present)
+
+Example:
+"Il AVAIT MANGÉ"         →    "quand je SUIS ARRIVÉ"        →    (now telling the story)
+ (he ate FIRST)               (then I arrived)</code></pre></div>
+<p>→ The plus-que-parfait <strong>ALWAYS exists relative to another past event</strong><br>
+→ It never stands alone — it always answers: "What had ALREADY happened before [that past event]?"</p>
+<hr>
+<h1>🔧 HOW CAN WE SOLVE IT</h1>
+<h2>FORMATION — Simple and Predictable</h2>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>PLUS-QUE-PARFAIT = AVOIR or ÊTRE (in IMPARFAIT) + PARTICIPE PASSÉ
+</span>
+AVOIR VERBS (majority):
+j'avais mangé              nous avions mangé
+tu avais mangé             vous aviez mangé
+il/elle avait mangé        ils/elles avaient mangé
+
+ÊTRE VERBS (same list as passé composé — Project 9):
+j'étais arrivé(e)          nous étions arrivé(e)s
+tu étais arrivé(e)         vous étiez arrivé(e)(s)
+il était arrivé            ils étaient arrivés
+elle était arrivée         elles étaient arrivées
+
+REFLEXIVE VERBS:
+je m'étais reposé(e)
+tu t'étais couché(e)
+il s'était trompé
+elle s'était souvenue
+nous nous étions amusé(e)s</code></pre></div>
+<h2>THE KEY INSIGHT — It's Just Passé Composé with Imparfait Auxiliaries</h2>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>PASSÉ COMPOSÉ:       j'AI mangé      / je SUIS arrivé(e)
+</span>PLUS-QUE-PARFAIT:    j'AVAIS mangé   / j'ÉTAIS arrivé(e)
+
+→ Same past participle
+→ Same auxiliary choice (avoir or être)
+→ Same agreement rules
+→ ONLY the auxiliary changes: présent → imparfait
+
+If you know passé composé (Project 9) → you already know 90% of plus-que-parfait
+Just shift the auxiliary to imparfait — done.</code></pre></div>
+<h2>AGREEMENT RULES — Same as Passé Composé</h2>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>ÊTRE VERBS: PP agrees with SUBJECT
+</span>→ Elle était arrivéE (fem)
+→ Ils étaient partIS (masc plural)
+→ Elles s'étaient retrouvéES (fem plural reflexive)
+
+AVOIR VERBS: PP agrees with preceding COD (Project 19)
+→ La lettre que j'avais écritE (que = COD fem → agreement)
+→ Les clés qu'il avait oubliéES (que = COD fem plural → agreement)
+→ J'avais mangé. (no preceding COD → no agreement)
+
+REFLEXIVE VERBS: PP agrees with reflexive pronoun if it's COD
+→ Elle s'était lavéE. (se = COD → agreement)
+→ Elle s'était lavé les mains. (se = COI, les mains = COD → no agreement on PP)
+
+→ ALL rules identical to passé composé — no new agreement rules to learn</code></pre></div>
+<hr>
+<h1>✅ WHAT COULD BE DONE — THE 100 SENTENCES</h1>
+<hr>
+<h2>🔹 BLOCK A — PQP with "Quand" — The Classic Narrative Structure</h2>
+<p><em>Scenario: Telling what had ALREADY happened when another event occurred</em><br>
+<em>Connection to Project 30: Quand + past tenses — now with the third layer</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English</th><th>PQP Action</th><th>PC/Imparfait Action</th></tr></thead><tbody><tr><td>1</td><td>Quand je suis arrivé, il <strong>avait déjà mangé</strong>.</td><td>When I arrived, he had already eaten.</td><td>avait mangé (earlier)</td><td>suis arrivé (later)</td></tr><tr><td>2</td><td>Quand elle est rentrée, les enfants <strong>s'étaient déjà couchés</strong>.</td><td>When she got home, the kids had already gone to bed.</td><td>s'étaient couchés</td><td>est rentrée</td></tr><tr><td>3</td><td>Quand on est arrivés au cinéma, le film <strong>avait déjà commencé</strong>.</td><td>When we got to the cinema, the movie had already started.</td><td>avait commencé</td><td>est arrivés</td></tr><tr><td>4</td><td>Quand le professeur est entré, les élèves <strong>avaient fini</strong> l'exercice.</td><td>When the teacher entered, the students had finished the exercise.</td><td>avaient fini</td><td>est entré</td></tr><tr><td>5</td><td>Quand j'ai appelé, elle <strong>était déjà partie</strong>.</td><td>When I called, she had already left.</td><td>était partie</td><td>ai appelé</td></tr><tr><td>6</td><td>Quand nous sommes arrivés à la plage, le soleil <strong>s'était couché</strong>.</td><td>When we arrived at the beach, the sun had set.</td><td>s'était couché</td><td>sommes arrivés</td></tr><tr><td>7</td><td>Quand il a ouvert le frigo, il a vu qu'on <strong>avait tout mangé</strong>.</td><td>When he opened the fridge, he saw we had eaten everything.</td><td>avait mangé</td><td>a ouvert / a vu</td></tr><tr><td>8</td><td>Quand la police est arrivée, le voleur <strong>avait disparu</strong>.</td><td>When the police arrived, the thief had disappeared.</td><td>avait disparu</td><td>est arrivée</td></tr><tr><td>9</td><td>Quand j'ai voulu payer, je me suis rendu compte que j'<strong>avais oublié</strong> mon portefeuille.</td><td>When I wanted to pay, I realized I had forgotten my wallet.</td><td>avais oublié</td><td>ai voulu / me suis rendu compte</td></tr><tr><td>10</td><td>Quand tu m'as dit ça, j'<strong>avais déjà pris</strong> ma décision.</td><td>When you told me that, I had already made my decision.</td><td>avais pris</td><td>as dit</td></tr></tbody></table>
+<p><strong>🧠 THE "QUAND + PC, PQP" PATTERN — The Most Common Use:</strong></p>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>Structure: Quand [PASSÉ COMPOSÉ], [PLUS-QUE-PARFAIT]
+</span>Or:        Quand [PASSÉ COMPOSÉ], subject [PLUS-QUE-PARFAIT]
+
+→ PC = the "reference event" — the moment in the story
+→ PQP = what had ALREADY happened BEFORE that moment
+
+TIMELINE:
+   [PQP: avait mangé]  ←  [PC: je suis arrivé]  ←  [NOW: telling the story]
+   "had eaten"              "I arrived"              "I'm telling you now"
+
+KEY WORD: "DÉJÀ" (already)
+→ "Il avait DÉJÀ mangé" = He had ALREADY eaten
+→ "Déjà" is very often paired with PQP — it reinforces the "before" meaning
+→ Not required — but very natural and common</code></pre></div>
+<hr>
+<h2>🔹 BLOCK B — PQP Explaining Past Causes</h2>
+<p><em>Scenario: Explaining WHY something happened in the past — the cause was even further in the past</em><br>
+<em>Connection to Project 28: Cause connectors — now with past-before-past causes</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English</th><th>Cause (PQP)</th><th>Result (PC/Imparfait)</th></tr></thead><tbody><tr><td>11</td><td>J'étais fatigué parce que je <strong>n'avais pas dormi</strong>.</td><td>I was tired because I hadn't slept.</td><td>n'avais pas dormi</td><td>étais fatigué</td></tr><tr><td>12</td><td>Elle pleurait parce qu'elle <strong>avait perdu</strong> son chat.</td><td>She was crying because she had lost her cat.</td><td>avait perdu</td><td>pleurait</td></tr><tr><td>13</td><td>Il ne pouvait pas entrer parce qu'il <strong>avait oublié</strong> ses clés.</td><td>He couldn't get in because he had forgotten his keys.</td><td>avait oublié</td><td>ne pouvait pas entrer</td></tr><tr><td>14</td><td>On n'a pas pu manger au restaurant parce qu'on <strong>n'avait pas réservé</strong>.</td><td>We couldn't eat at the restaurant because we hadn't booked.</td><td>n'avait pas réservé</td><td>n'a pas pu manger</td></tr><tr><td>15</td><td>Le sol était mouillé parce qu'il <strong>avait plu</strong> toute la nuit.</td><td>The ground was wet because it had rained all night.</td><td>avait plu</td><td>était mouillé</td></tr><tr><td>16</td><td>Elle a été surprise parce qu'on <strong>avait préparé</strong> une fête.</td><td>She was surprised because we had prepared a party.</td><td>avait préparé</td><td>a été surprise</td></tr><tr><td>17</td><td>Il était content parce qu'il <strong>avait réussi</strong> son examen.</td><td>He was happy because he had passed his exam.</td><td>avait réussi</td><td>était content</td></tr><tr><td>18</td><td>Nous avons dû prendre un taxi parce que le dernier bus <strong>était déjà parti</strong>.</td><td>We had to take a taxi because the last bus had already left.</td><td>était parti</td><td>avons dû prendre</td></tr><tr><td>19</td><td>Le projet a échoué parce qu'on <strong>n'avait pas prévu</strong> les risques.</td><td>The project failed because we hadn't anticipated the risks.</td><td>n'avait pas prévu</td><td>a échoué</td></tr><tr><td>20</td><td>Je connaissais la réponse parce que j'<strong>avais déjà lu</strong> le livre.</td><td>I knew the answer because I had already read the book.</td><td>avais lu</td><td>connaissais</td></tr></tbody></table>
+<p><strong>🧠 PQP AS PAST CAUSE — The Logic:</strong></p>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>In the PRESENT, you explain causes with passé composé:
+</span>→ "Je suis fatigué parce que j'AI mal dormi." (PC cause → present result)
+
+In the PAST, you explain causes with plus-que-parfait:
+→ "J'ÉTAIS fatigué parce que je N'AVAIS PAS dormi." (PQP cause → past result)
+
+The PQP cause happened BEFORE the past result:
+→ [didn't sleep] → [was tired] → [now telling the story]
+→ PQP            → Imparfait    → Présent (narration)
+
+This works with ALL cause connectors from Project 28:
+→ parce que + PQP: "...parce qu'il avait oublié..."
+→ comme + PQP: "Comme il avait plu, les rues étaient mouillées."
+→ puisque + PQP: "Puisqu'elle avait fini, elle est partie."
+→ vu que + PQP: "Vu qu'on n'avait pas réservé..."</code></pre></div>
+<hr>
+<h2>🔹 BLOCK C — PQP in Reported Speech (Connection to Project 25)</h2>
+<p><em>Scenario: Reporting what someone said — passé composé shifts to plus-que-parfait</em></p>
+<table><thead><tr><th>#</th><th>Direct Speech</th><th>Reported Speech</th><th>English (Reported)</th></tr></thead><tbody><tr><td>21</td><td>"J'<strong>ai fini</strong> mon travail."</td><td>Il a dit qu'il <strong>avait fini</strong> son travail.</td><td>He said he had finished his work.</td></tr><tr><td>22</td><td>"J'<strong>ai vu</strong> ce film."</td><td>Elle a dit qu'elle <strong>avait vu</strong> ce film.</td><td>She said she had seen that movie.</td></tr><tr><td>23</td><td>"Nous <strong>avons déménagé</strong>."</td><td>Ils ont dit qu'ils <strong>avaient déménagé</strong>.</td><td>They said they had moved.</td></tr><tr><td>24</td><td>"J'<strong>ai oublié</strong> de t'appeler."</td><td>Il a dit qu'il <strong>avait oublié</strong> de m'appeler.</td><td>He said he had forgotten to call me.</td></tr><tr><td>25</td><td>"Elle <strong>est partie</strong> hier."</td><td>Il a dit qu'elle <strong>était partie</strong> la veille.</td><td>He said she had left the day before.</td></tr><tr><td>26</td><td>"On <strong>a tout préparé</strong>."</td><td>Ils ont dit qu'ils <strong>avaient tout préparé</strong>.</td><td>They said they had prepared everything.</td></tr><tr><td>27</td><td>"Je n'<strong>ai</strong> rien <strong>compris</strong>."</td><td>Elle a dit qu'elle n'<strong>avait</strong> rien <strong>compris</strong>.</td><td>She said she hadn't understood anything.</td></tr><tr><td>28</td><td>"Nous nous <strong>sommes bien amusés</strong>."</td><td>Ils ont dit qu'ils s'<strong>étaient bien amusés</strong>.</td><td>They said they had had a great time.</td></tr><tr><td>29</td><td>"J'<strong>ai déjà mangé</strong>."</td><td>Il a dit qu'il <strong>avait déjà mangé</strong>.</td><td>He said he had already eaten.</td></tr><tr><td>30</td><td>"On <strong>s'est perdus</strong>."</td><td>Ils ont dit qu'ils s'<strong>étaient perdus</strong>.</td><td>They said they had gotten lost.</td></tr></tbody></table>
+<p><strong>🧠 REPORTED SPEECH SHIFT REVIEW (Project 25):</strong></p>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>When the reporting verb is PAST (il a dit que...):
+</span>→ Passé composé → PLUS-QUE-PARFAIT
+
+"J'AI mangé" → Il a dit qu'il AVAIT mangé.
+"Je SUIS allé" → Il a dit qu'il ÉTAIT allé.
+"On S'EST amusés" → Ils ont dit qu'ils S'ÉTAIENT amusés.
+
+This is the SAME shift from Project 25 — now you understand the PQP form fully.
+The PQP was the "mystery tense" in reported speech — now it's mastered.</code></pre></div>
+<hr>
+<h2>🔹 BLOCK D — PQP in Passive Voice (Connection to Project 24)</h2>
+<p><em>Scenario: Past-before-past in passive — something had been done before another event</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English</th><th>Structure</th></tr></thead><tbody><tr><td>31</td><td>La maison <strong>avait été construite</strong> en 1900.</td><td>The house had been built in 1900.</td><td>PQP passive (avoir imp + été + PP)</td></tr><tr><td>32</td><td>Le message <strong>avait été envoyé</strong> avant mon arrivée.</td><td>The message had been sent before my arrival.</td><td>PQP passive</td></tr><tr><td>33</td><td>Les billets <strong>avaient été réservés</strong> depuis longtemps.</td><td>The tickets had been booked for a long time.</td><td>PQP passive</td></tr><tr><td>34</td><td>La décision <strong>avait été prise</strong> sans nous consulter.</td><td>The decision had been made without consulting us.</td><td>PQP passive</td></tr><tr><td>35</td><td>Le document <strong>avait été signé</strong> par les deux parties.</td><td>The document had been signed by both parties.</td><td>PQP passive</td></tr></tbody></table>
+<p><strong>🧠 PQP PASSIVE — Formation:</strong></p>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>PQP PASSIVE = AVOIR (imparfait) + ÉTÉ + PARTICIPE PASSÉ (agrees with subject)
+</span>
+avait été construit(e)
+avaient été envoyé(e)(s)
+avait été pris(e)
+
+→ Same as Project 24 (passive) but with avoir in IMPARFAIT instead of PRÉSENT
+→ "La lettre a été envoyée." = PC passive (was sent)
+→ "La lettre avait été envoyée." = PQP passive (had been sent)</code></pre></div>
+<hr>
+<h2>🔹 BLOCK E — PQP with Time Connectors (Connection to Project 30)</h2>
+<p><em>Scenario: Using plus-que-parfait with temporal connectors for layered time references</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English</th><th>Connector + PQP</th></tr></thead><tbody><tr><td>36</td><td>**Après qu'**il <strong>avait mangé</strong>, il est sorti se promener.</td><td>After he had eaten, he went out for a walk.</td><td>après que + PQP</td></tr><tr><td>37</td><td>**Dès qu'**elle <strong>avait fini</strong> ses devoirs, elle allait jouer dehors.</td><td>As soon as she had finished her homework, she would go play outside.</td><td>dès que + PQP (habitual past)</td></tr><tr><td>38</td><td>**Une fois qu'**il <strong>avait compris</strong> le problème, il trouvait toujours une solution.</td><td>Once he had understood the problem, he would always find a solution.</td><td>une fois que + PQP (habitual)</td></tr><tr><td>39</td><td>**Depuis qu'**il <strong>avait déménagé</strong>, on ne le voyait plus.</td><td>Since he had moved, we didn't see him anymore.</td><td>depuis que + PQP</td></tr><tr><td>40</td><td>Elle est partie <strong>avant que</strong> j'<strong>aie pu</strong> lui parler.</td><td>She left before I could talk to her.</td><td>avant que + subjonctif passé</td></tr><tr><td>41</td><td><strong>Comme</strong> il <strong>avait plu</strong> toute la nuit, les rues étaient inondées.</td><td>As it had rained all night, the streets were flooded.</td><td>comme + PQP</td></tr><tr><td>42</td><td>**Pendant qu'**il <strong>avait dormi</strong>, quelqu'un avait volé sa voiture.</td><td>While he had been sleeping, someone had stolen his car.</td><td>pendant que + PQP (rare — usually imparfait)</td></tr><tr><td>43</td><td>Il a découvert que quelqu'un <strong>avait ouvert</strong> sa valise **pendant qu'**il <strong>dormait</strong>.</td><td>He discovered someone had opened his suitcase while he was sleeping.</td><td>PQP + pendant que + imparfait</td></tr><tr><td>44</td><td>**Tant qu'**il <strong>n'avait pas reçu</strong> de confirmation, il ne réservait rien.</td><td>As long as he hadn't received confirmation, he wouldn't book anything.</td><td>tant que + PQP (neg)</td></tr><tr><td>45</td><td>Je ne savais pas qu'elle <strong>avait déménagé</strong> <strong>jusqu'à ce que</strong> Marc me le <strong>dise</strong>.</td><td>I didn't know she had moved until Marc told me.</td><td>PQP + jusqu'à ce que + subj</td></tr></tbody></table>
+<p><strong>🧠 PQP WITH TEMPORAL CONNECTORS — Pattern Map:</strong></p>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>QUAND + PC,    PQP        → "Quand je suis arrivé, il avait mangé."
+</span>APRÈS QUE + PQP,    PC    → "Après qu'il avait mangé, il est sorti."
+DÈS QUE + PQP,    IMP    → "Dès qu'il avait fini, il sortait." (habitual)
+UNE FOIS QUE + PQP, IMP  → "Une fois qu'il avait compris, c'était facile."
+COMME + PQP,    IMP/PC    → "Comme il avait plu, les rues étaient mouillées."
+DEPUIS QUE + PQP, IMP     → "Depuis qu'il avait déménagé, on ne le voyait plus."
+TANT QUE + PQP (neg), IMP → "Tant qu'il n'avait pas fini, il restait."
+
+KEY INSIGHT:
+→ PQP replaces PC in the "earlier" position of any time structure
+→ When you need to show that one past event preceded another → PQP
+→ The connector determines the RELATIONSHIP — PQP determines the TIMELINE</code></pre></div>
+<hr>
+<h2>🔹 BLOCK F — PQP for Regret and Unrealized Past (Preview of P34-35)</h2>
+<p><em>Scenario: Expressing what you WISH had happened — or what DIDN'T happen but could have</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English</th><th>Structure</th></tr></thead><tbody><tr><td>46</td><td><strong>Si</strong> j'<strong>avais su</strong>, je ne serais pas venu.</td><td>If I had known, I wouldn't have come.</td><td>Si + PQP → conditionnel passé (P34)</td></tr><tr><td>47</td><td><strong>Si</strong> elle <strong>avait étudié</strong>, elle aurait réussi.</td><td>If she had studied, she would have passed.</td><td>Si + PQP → conditionnel passé</td></tr><tr><td>48</td><td><strong>Si</strong> on <strong>avait réservé</strong>, on n'aurait pas attendu.</td><td>If we had booked, we wouldn't have waited.</td><td>Si + PQP → conditionnel passé</td></tr><tr><td>49</td><td><strong>Si</strong> tu <strong>m'avais dit</strong> la vérité, je t'aurais aidé.</td><td>If you had told me the truth, I would have helped you.</td><td>Si + PQP → conditionnel passé</td></tr><tr><td>50</td><td><strong>Si</strong> j'<strong>avais eu</strong> plus de temps, j'aurais voyagé.</td><td>If I had had more time, I would have traveled.</td><td>Si + PQP → conditionnel passé</td></tr><tr><td>51</td><td><strong>Si</strong> nous <strong>avions pris</strong> le train, nous serions arrivés à l'heure.</td><td>If we had taken the train, we would have arrived on time.</td><td>Si + PQP → conditionnel passé</td></tr><tr><td>52</td><td><strong>Si</strong> tu <strong>n'avais pas oublié</strong> la carte, on ne se serait pas perdus.</td><td>If you hadn't forgotten the map, we wouldn't have gotten lost.</td><td>Si + PQP (neg) → conditionnel passé (neg)</td></tr><tr><td>53</td><td>Je ne savais pas. <strong>Si</strong> j'<strong>avais su</strong>, j'aurais réagi différemment.</td><td>I didn't know. If I had known, I would have reacted differently.</td><td>Si + PQP → conditionnel passé</td></tr><tr><td>54</td><td><strong>Si</strong> elle <strong>était venue</strong>, elle aurait adoré.</td><td>If she had come, she would have loved it.</td><td>Si + PQP (être verb) → conditionnel passé</td></tr><tr><td>55</td><td><strong>Si</strong> on <strong>s'était rencontrés</strong> plus tôt, tout aurait été différent.</td><td>If we had met earlier, everything would have been different.</td><td>Si + PQP (reflexive) → conditionnel passé</td></tr></tbody></table>
+<p><strong>🧠 SI + PLUS-QUE-PARFAIT — The Third Si-Clause Pattern:</strong></p>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>PROJECT 18 (Part 1): Si + PRÉSENT → FUTUR (real/likely condition)
+</span>→ "Si il pleut, je resterai."
+
+PROJECT 33 (Part 2): Si + IMPARFAIT → CONDITIONNEL (unreal present — Next Chapter)
+→ "Si j'étais riche, je voyagerais."
+
+PROJECT 34 (Part 3): Si + PLUS-QUE-PARFAIT → CONDITIONNEL PASSÉ (unreal past)
+→ "Si j'avais su, je ne serais pas venu."
+
+THIS is why PQP is essential — it's the KEY to expressing PAST REGRET
+→ "Si j'avais su" = If I HAD KNOWN (but I didn't — it's too late)
+→ Full mastery of this pattern comes in Project 34
+→ For now: recognize PQP as the SI-CLAUSE tense for past hypotheticals
+→ The golden rule still applies: NEVER put conditionnel after SI
+   ❌ "Si j'aurais su..." (WRONG)
+   ✅ "Si j'avais su..." (CORRECT — PQP after si)</code></pre></div>
+<hr>
+<h2>🔹 BLOCK G — PQP in Discovery and Realization Sentences</h2>
+<p><em>Scenario: You discover or realize something about what had happened earlier</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English</th><th>Discovery Verb</th><th>PQP Discovery</th></tr></thead><tbody><tr><td>56</td><td>J'ai découvert qu'il <strong>avait menti</strong>.</td><td>I discovered he had lied.</td><td>découvrir que</td><td>avait menti</td></tr><tr><td>57</td><td>Elle a réalisé qu'elle <strong>avait fait</strong> une erreur.</td><td>She realized she had made a mistake.</td><td>réaliser que</td><td>avait fait</td></tr><tr><td>58</td><td>On s'est rendu compte qu'on <strong>avait oublié</strong> les billets.</td><td>We realized we had forgotten the tickets.</td><td>se rendre compte que</td><td>avait oublié</td></tr><tr><td>59</td><td>Il a compris qu'elle <strong>était déjà partie</strong>.</td><td>He understood she had already left.</td><td>comprendre que</td><td>était partie</td></tr><tr><td>60</td><td>J'ai appris qu'ils <strong>avaient déménagé</strong>.</td><td>I learned they had moved.</td><td>apprendre que</td><td>avaient déménagé</td></tr><tr><td>61</td><td>Tu savais qu'elle <strong>avait vécu</strong> au Japon ?</td><td>Did you know she had lived in Japan?</td><td>savoir que</td><td>avait vécu</td></tr><tr><td>62</td><td>Personne ne savait qu'il <strong>avait été</strong> marié avant.</td><td>Nobody knew he had been married before.</td><td>savoir que (neg)</td><td>avait été</td></tr><tr><td>63</td><td>On a remarqué qu'il <strong>avait changé</strong> de coiffure.</td><td>We noticed he had changed his hairstyle.</td><td>remarquer que</td><td>avait changé</td></tr><tr><td>64</td><td>Elle a vu qu'on <strong>avait nettoyé</strong> la maison.</td><td>She saw that someone had cleaned the house.</td><td>voir que</td><td>avait nettoyé</td></tr><tr><td>65</td><td>J'ai senti qu'il <strong>s'était passé</strong> quelque chose.</td><td>I sensed something had happened.</td><td>sentir que</td><td>s'était passé</td></tr></tbody></table>
+<p><strong>🧠 THE DISCOVERY PATTERN — PQP's Most Natural Context:</strong></p>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>DISCOVERY VERB (PC) + QUE + PQP
+</span>
+→ "J'ai découvert qu'il AVAIT MENTI."
+→ "Elle a réalisé qu'elle AVAIT FAIT une erreur."
+→ "On s'est rendu compte qu'on AVAIT OUBLIÉ..."
+
+WHY PQP HERE?
+→ The discovery happens at a PAST MOMENT (passé composé)
+→ The thing discovered happened BEFORE that moment (plus-que-parfait)
+→ I discover NOW (past) that he lied BEFORE (earlier past)
+
+COMMON DISCOVERY VERBS:
+→ découvrir que    (to discover that)
+→ réaliser que     (to realize that)
+→ se rendre compte que (to realize that)
+→ comprendre que   (to understand that)
+→ apprendre que    (to learn/find out that)
+→ savoir que       (to know that)
+→ remarquer que    (to notice that)
+→ voir que         (to see that)
+→ sentir que       (to sense/feel that)
+→ constater que    (to observe/note that)</code></pre></div>
+<hr>
+<h2>🔹 BLOCK H — PQP with "Jamais" / "Déjà" / "Toujours" / "Encore" — Emphasis Words</h2>
+<p><em>Scenario: Emphasizing that something had NEVER / ALREADY / ALWAYS / NOT YET happened</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English</th><th>Emphasis Word</th></tr></thead><tbody><tr><td>66</td><td>C'était le plus beau paysage que j'<strong>avais jamais vu</strong>.</td><td>It was the most beautiful landscape I had ever seen.</td><td>jamais (ever)</td></tr><tr><td>67</td><td>Je n'<strong>avais jamais</strong> mangé de sushis avant ce jour-là.</td><td>I had never eaten sushi before that day.</td><td>jamais (never)</td></tr><tr><td>68</td><td>Il n'<strong>avait jamais</strong> été aussi heureux.</td><td>He had never been so happy.</td><td>jamais (never)</td></tr><tr><td>69</td><td>On n'<strong>avait jamais</strong> voyagé en avion avant ce voyage.</td><td>We had never traveled by plane before that trip.</td><td>jamais (never)</td></tr><tr><td>70</td><td>Elle n'<strong>avait encore jamais</strong> conduit sur l'autoroute.</td><td>She had never yet driven on the highway.</td><td>encore jamais (never yet)</td></tr><tr><td>71</td><td>J'<strong>avais déjà</strong> visité Paris trois fois.</td><td>I had already visited Paris three times.</td><td>déjà (already)</td></tr><tr><td>72</td><td>Elle <strong>avait déjà</strong> fini quand je suis arrivé.</td><td>She had already finished when I arrived.</td><td>déjà (already)</td></tr><tr><td>73</td><td>On <strong>avait déjà</strong> pris notre décision.</td><td>We had already made our decision.</td><td>déjà (already)</td></tr><tr><td>74</td><td>Il <strong>avait toujours</strong> rêvé de vivre à la mer.</td><td>He had always dreamed of living by the sea.</td><td>toujours (always)</td></tr><tr><td>75</td><td>Elle <strong>avait toujours</strong> cru qu'il disait la vérité.</td><td>She had always believed he was telling the truth.</td><td>toujours (always)</td></tr><tr><td>76</td><td>Je n'<strong>avais</strong> pas <strong>encore</strong> fini quand il est arrivé.</td><td>I hadn't yet finished when he arrived.</td><td>pas encore (not yet)</td></tr><tr><td>77</td><td>Il n'<strong>avait</strong> pas <strong>encore</strong> pris sa décision.</td><td>He hadn't made his decision yet.</td><td>pas encore (not yet)</td></tr><tr><td>78</td><td>On n'<strong>avait</strong> pas <strong>encore</strong> reçu la confirmation.</td><td>We hadn't received the confirmation yet.</td><td>pas encore (not yet)</td></tr><tr><td>79</td><td>Personne n'<strong>avait</strong> rien <strong>dit</strong>.</td><td>Nobody had said anything.</td><td>rien (nothing)</td></tr><tr><td>80</td><td>Rien n'<strong>avait</strong> changé depuis mon départ.</td><td>Nothing had changed since my departure.</td><td>rien (nothing)</td></tr></tbody></table>
+<p><strong>🧠 EMPHASIS WORD PLACEMENT IN PQP:</strong></p>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>DÉJÀ (already):
+</span>→ Between auxiliary and PP: "J'avais DÉJÀ mangé."
+→ Same position as in passé composé: "J'ai DÉJÀ mangé."
+
+JAMAIS (never/ever):
+→ NEGATIVE: ne + auxiliary + JAMAIS + PP
+   "Je n'avais JAMAIS vu ça." = I had never seen that.
+→ NON-NEGATIVE (ever — with superlative):
+   "Le plus beau film que j'avais JAMAIS vu." = ...I had ever seen.
+
+TOUJOURS (always):
+→ Between auxiliary and PP: "Il avait TOUJOURS voulu..."
+
+PAS ENCORE (not yet):
+→ ne + auxiliary + PAS ENCORE + PP
+   "Je n'avais PAS ENCORE fini."
+
+RIEN (nothing):
+→ ne + auxiliary + RIEN + PP
+   "Personne n'avait RIEN dit."
+→ Or: RIEN + ne + auxiliary + PP
+   "Rien n'avait changé."
+
+→ Same placement rules as passé composé (Projects 5, 39)
+→ Negation/emphasis words sit between AUXILIARY and PARTICIPE PASSÉ</code></pre></div>
+<hr>
+<h2>🔹 BLOCK I — PQP in the Three-Layer Past System</h2>
+<p><em>Scenario: Full narratives using ALL THREE past layers together — the complete system</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English</th><th>Layer Analysis</th></tr></thead><tbody><tr><td>81</td><td>Il <strong>faisait</strong> beau ce matin-là. J'<strong>avais bien dormi</strong> et j'<strong>étais</strong> de bonne humeur.</td><td>The weather was nice that morning. I had slept well and I was in a good mood.</td><td>IMP (background) + PQP (earlier) + IMP (state)</td></tr><tr><td>82</td><td>Elle <strong>a ouvert</strong> la lettre qu'elle <strong>avait reçue</strong> la veille.</td><td>She opened the letter she had received the day before.</td><td>PC (event) + PQP (earlier)</td></tr><tr><td>83</td><td>Quand je <strong>suis arrivé</strong>, Marie <strong>avait déjà préparé</strong> le dîner et les enfants <strong>regardaient</strong> la télé.</td><td>When I arrived, Marie had already prepared dinner and the kids were watching TV.</td><td>PC (event) + PQP (earlier) + IMP (background)</td></tr><tr><td>84</td><td>Il <strong>a compris</strong> qu'il <strong>avait fait</strong> une erreur et il <strong>s'est excusé</strong>.</td><td>He understood he had made a mistake and he apologized.</td><td>PC + PQP (earlier realization) + PC (following action)</td></tr><tr><td>85</td><td>On <strong>marchait</strong> dans la rue quand on <strong>a vu</strong> la maison où on <strong>avait habité</strong> enfants.</td><td>We were walking down the street when we saw the house where we had lived as children.</td><td>IMP (background) + PC (event) + PQP (distant past)</td></tr><tr><td>86</td><td>Ce jour-là, il <strong>pleuvait</strong>. J'<strong>avais oublié</strong> mon parapluie et je <strong>me suis fait</strong> tremper.</td><td>That day, it was raining. I had forgotten my umbrella and I got soaked.</td><td>IMP (background) + PQP (earlier cause) + PC (result)</td></tr><tr><td>87</td><td>Elle <strong>était</strong> nerveuse parce qu'elle n'<strong>avait</strong> jamais <strong>parlé</strong> en public. Quand elle <strong>a commencé</strong>, tout le monde <strong>l'a applaudie</strong>.</td><td>She was nervous because she had never spoken in public. When she started, everyone applauded her.</td><td>IMP (state) + PQP (reason) + PC (event) + PC (reaction)</td></tr><tr><td>88</td><td>Nous <strong>avions prévu</strong> d'aller à la plage, mais comme il <strong>pleuvait</strong>, nous <strong>sommes restés</strong> à la maison.</td><td>We had planned to go to the beach, but since it was raining, we stayed home.</td><td>PQP (original plan) + IMP (interfering background) + PC (actual action)</td></tr><tr><td>89</td><td>Il <strong>a retrouvé</strong> le livre qu'il <strong>avait perdu</strong> des années auparavant. Il <strong>était</strong> en bon état.</td><td>He found the book he had lost years before. It was in good condition.</td><td>PC (finding) + PQP (earlier loss) + IMP (description)</td></tr><tr><td>90</td><td>Quand le médecin <strong>est arrivé</strong>, le patient <strong>avait déjà repris</strong> connaissance. Il <strong>respirait</strong> normalement.</td><td>When the doctor arrived, the patient had already regained consciousness. He was breathing normally.</td><td>PC (arrival) + PQP (earlier recovery) + IMP (ongoing state)</td></tr></tbody></table>
+<p><strong>🧠 THE THREE-LAYER PAST SYSTEM — COMPLETE:</strong></p>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>LAYER 1: IMPARFAIT = Background, ongoing states, descriptions, habits
+</span>→ "Il faisait beau." / "Elle était nerveuse." / "Les enfants regardaient la télé."
+→ WHAT WAS HAPPENING (no specific start/end)
+
+LAYER 2: PASSÉ COMPOSÉ = Specific completed events, actions, changes
+→ "J'ai ouvert la porte." / "Il a compris." / "On est restés."
+→ WHAT HAPPENED (specific moment, completed)
+
+LAYER 3: PLUS-QUE-PARFAIT = Events that happened BEFORE Layer 2
+→ "Elle avait déjà mangé." / "Il avait oublié ses clés." / "On avait prévu..."
+→ WHAT HAD ALREADY HAPPENED (before the events of the story)
+
+HOW THEY INTERACT:
+→ PQP sets up the BACKSTORY (what happened before the story begins)
+→ IMP paints the SCENE (what was ongoing when the story takes place)
+→ PC drives the ACTION (what happened — the events of the story)
+
+EXAMPLE COMBINING ALL THREE:
+"Ce matin-là, il FAISAIT beau. (IMP — scene)
+ J'AVAIS bien dormi. (PQP — backstory)
+ Je me SENTAIS en forme. (IMP — state)
+ J'AI décidé de sortir. (PC — action)
+ En marchant, j'AI vu un vieil ami que je N'AVAIS PAS VU depuis dix ans." (PC + PQP)</code></pre></div>
+<hr>
+<h2>🔹 BLOCK J — Full Conversational PQP Flow</h2>
+<p><em>Scenario: Real dialogues where plus-que-parfait flows naturally in storytelling</em></p>
+<table><thead><tr><th>#</th><th>Speaker</th><th>French</th><th>English</th><th>Tense Analysis</th></tr></thead><tbody><tr><td>91</td><td>A:</td><td>Alors, comment s'est passé ton week-end ?</td><td>So, how was your weekend?</td><td>PC (general question)</td></tr><tr><td>92</td><td>B:</td><td>Super ! Samedi, on <strong>avait prévu</strong> d'aller au marché.</td><td>Great! Saturday, we <strong>had planned</strong> to go to the market.</td><td>PQP (original plan)</td></tr><tr><td>93</td><td>B:</td><td>Mais quand on <strong>est arrivés</strong>, il <strong>avait déjà fermé</strong>.</td><td>But when we <strong>arrived</strong>, it <strong>had already closed</strong>.</td><td>PC (event) + PQP (earlier)</td></tr><tr><td>94</td><td>A:</td><td>Ah non ! Vous n'<strong>aviez</strong> pas vérifié les horaires ?</td><td>Oh no! Hadn't you checked the schedule?</td><td>PQP (question about earlier action)</td></tr><tr><td>95</td><td>B:</td><td>Non, on <strong>avait oublié</strong>. <strong>Du coup</strong>, on <strong>est allés</strong> au parc à la place.</td><td>No, we <strong>had forgotten</strong>. <strong>So</strong>, we <strong>went</strong> to the park instead.</td><td>PQP (cause) + PC (consequence)</td></tr><tr><td>96</td><td>A:</td><td>Et dimanche ?</td><td>And Sunday?</td><td>—</td></tr><tr><td>97</td><td>B:</td><td>Dimanche, j'<strong>ai retrouvé</strong> un ami que je n'<strong>avais</strong> pas <strong>vu</strong> depuis cinq ans.</td><td>Sunday, I <strong>met up with</strong> a friend I <strong>hadn't seen</strong> in five years.</td><td>PC (event) + PQP (timespan)</td></tr><tr><td>98</td><td>A:</td><td>Ah c'est chouette ! Il n'<strong>avait</strong> pas changé ?</td><td>Oh that's nice! Hadn't he changed?</td><td>PQP (question)</td></tr><tr><td>99</td><td>B:</td><td>Si, il <strong>avait</strong> beaucoup <strong>changé</strong> ! Il <strong>s'était marié</strong> et il <strong>avait</strong> deux enfants.</td><td>Yes, he <strong>had changed</strong> a lot! He <strong>had gotten married</strong> and he <strong>had</strong> two kids.</td><td>PQP + PQP (reflexive) + IMP (description)</td></tr><tr><td>100</td><td>A:</td><td>C'est fou comme le temps passe. On <strong>avait</strong> le même âge à la fac, et maintenant...</td><td>It's crazy how time flies. We <strong>were</strong> the same age in college, and now...</td><td>IMP (past state/memory)</td></tr></tbody></table>
+<hr>
+<h1>✅ WHAT SHOULD DO</h1>
+<p>→ <strong>Think of PQP as a "flashback" tense</strong> — it takes you FURTHER back than passé composé<br>
+→ <strong>Always pair PQP with another past tense</strong> — it never stands alone meaningfully<br>
+→ <strong>Use "déjà" with PQP</strong> — "avait déjà mangé" is the most natural PQP phrase<br>
+→ <strong>Practice the discovery pattern</strong> — "J'ai découvert qu'il avait..." is extremely common<br>
+→ <strong>Practice the cause pattern</strong> — "parce qu'il avait..." explains past reasons elegantly<br>
+→ <strong>Use "jamais" with PQP</strong> for "had never" stories — very natural in conversation<br>
+→ <strong>Recognize PQP in reported speech</strong> — it's the shifted form of passé composé (Project 25)<br>
+→ <strong>Preview si-clauses Part 3</strong> — "Si j'avais su..." uses PQP (full mastery in Project 34)<br>
+→ <strong>Build three-layer stories</strong> — IMP (background) + PC (events) + PQP (backstory)</p>
+<hr>
+<h1>❌ WHAT SHOULD NOT DO</h1>
+<p>→ ❌ Do NOT use PQP as a standalone "past tense" without a reference point</p>
+<table><thead><tr><th>Wrong (no reference)</th><th>Correct (with reference)</th></tr></thead><tbody><tr><td><del>J'avais mangé.</del> (just this — no context)</td><td>Quand tu es arrivé, j'<strong>avais déjà mangé</strong>.</td></tr><tr><td><del>Il avait fini.</del> (floating — when?)</td><td>Il <strong>avait fini</strong> avant que le chef n'arrive.</td></tr></tbody></table>
+<p>→ PQP always needs <strong>another past event</strong> as a reference — without it, it sounds incomplete<br>
+→ Exception: storytelling context where the reference is IMPLIED</p>
+<p>→ ❌ Do NOT confuse PQP with imparfait</p>
+<table><thead><tr><th>Imparfait (ongoing/background)</th><th>PQP (completed before another past)</th></tr></thead><tbody><tr><td>Il <strong>mangeait</strong> quand je suis arrivé. (He was eating — still eating)</td><td>Il <strong>avait mangé</strong> quand je suis arrivé. (He had eaten — finished)</td></tr><tr><td>Elle <strong>dormait</strong>. (She was sleeping — ongoing)</td><td>Elle <strong>avait dormi</strong> huit heures. (She had slept 8 hours — completed)</td></tr></tbody></table>
+<p>→ ❌ Do NOT forget agreement rules — same as passé composé</p>
+<table><thead><tr><th>Wrong</th><th>Correct</th><th>Why</th></tr></thead><tbody><tr><td><del>Elle était arrivé</del></td><td>Elle était arrivé<strong>e</strong></td><td>Être verb → agrees with subject (fem)</td></tr><tr><td><del>Les lettres qu'il avait envoyé</del></td><td>Les lettres qu'il avait envoyé<strong>es</strong></td><td>Preceding COD (que = fem plural) → agreement</td></tr><tr><td><del>Ils s'étaient retrouvé</del></td><td>Ils s'étaient retrouvé<strong>s</strong></td><td>Reflexive + être → agrees with subject</td></tr></tbody></table>
+<p>→ ❌ Do NOT put conditionnel after "si" for past hypotheticals</p>
+<table><thead><tr><th>Wrong</th><th>Correct</th></tr></thead><tbody><tr><td><del>Si j'<strong>aurais</strong> su</del></td><td>Si j'<strong>avais</strong> su (PQP after si — ALWAYS)</td></tr><tr><td><del>Si elle <strong>serait</strong> venue</del></td><td>Si elle <strong>était</strong> venue (PQP after si)</td></tr></tbody></table>
+<p>→ ❌ Do NOT use PQP where simple passé composé is enough</p>
+<table><thead><tr><th>Overuse (unnecessary PQP)</th><th>Simple and correct</th></tr></thead><tbody><tr><td><del>Hier, j'avais mangé une pizza.</del> (no reference event)</td><td>Hier, j'<strong>ai mangé</strong> une pizza. (simple past)</td></tr><tr><td><del>La semaine dernière, j'avais vu un film.</del></td><td>La semaine dernière, j'<strong>ai vu</strong> un film.</td></tr></tbody></table>
+<p>→ PQP is for RELATIVE past — not for "yesterday I did X"<br>
+→ If there's only ONE event → use passé composé<br>
+→ If there are TWO past events and one came FIRST → use PQP for the first one</p>
+<hr>
+<h1>🔀 WHEN TO USE WHAT — THE THREE-LAYER PAST MAP</h1>
+<table><thead><tr><th>Situation</th><th>Tense</th><th>Example</th></tr></thead><tbody><tr><td>Ongoing state/description in the past</td><td><strong>IMPARFAIT</strong></td><td>Il faisait beau. / Elle était contente.</td></tr><tr><td>Habitual action in the past</td><td><strong>IMPARFAIT</strong></td><td>Je mangeais toujours à midi.</td></tr><tr><td>Specific completed event in the past</td><td><strong>PASSÉ COMPOSÉ</strong></td><td>J'ai mangé à midi. / Il est arrivé.</td></tr><tr><td>Event that happened BEFORE another past event</td><td><strong>PLUS-QUE-PARFAIT</strong></td><td>J'avais déjà mangé quand il est arrivé.</td></tr><tr><td>Cause that happened before a past result</td><td><strong>PQP</strong> (cause) + <strong>IMP/PC</strong> (result)</td><td>J'étais fatigué parce que je n'avais pas dormi.</td></tr><tr><td>Discovery of an earlier event</td><td><strong>PC</strong> (discovery) + <strong>PQP</strong> (what was discovered)</td><td>J'ai découvert qu'il avait menti.</td></tr><tr><td>"Had never" before a moment</td><td><strong>PQP</strong> + jamais</td><td>Je n'avais jamais vu ça.</td></tr><tr><td>Past hypothetical (if I had...)</td><td><strong>Si + PQP</strong> → conditionnel passé</td><td>Si j'avais su, je serais venu.</td></tr><tr><td>Reported speech (PC shifts)</td><td><strong>PQP</strong></td><td>Il a dit qu'il avait fini.</td></tr><tr><td>Passive past-before-past</td><td><strong>PQP passive</strong></td><td>La décision avait été prise.</td></tr></tbody></table>
+<hr>
+<h1>🚫 WHEN NOT TO USE</h1>
+<table><thead><tr><th>Situation</th><th>Do NOT Use PQP</th><th>Use Instead</th><th>Why</th></tr></thead><tbody><tr><td>Simple past event (no reference)</td><td>PQP</td><td>Passé composé</td><td>PQP needs another past event as reference</td></tr><tr><td>Ongoing background in past</td><td>PQP</td><td>Imparfait</td><td>Background/description = imparfait</td></tr><tr><td>Present perfect in English</td><td>PQP</td><td>Passé composé</td><td>"I have eaten" = J'ai mangé (NOT j'avais mangé)</td></tr><tr><td>Sequential past events (same time)</td><td>PQP</td><td>Two passé composés</td><td>PC + PC for events in sequence at same level</td></tr><tr><td>Habitual past</td><td>PQP</td><td>Imparfait</td><td>"I used to eat" = Je mangeais (NOT j'avais mangé)</td></tr></tbody></table>
+<hr>
+<h1>⚠️ COMMON PITFALLS AND FAILURE MODES</h1>
+<table><thead><tr><th>Pitfall</th><th>What Learners Do</th><th>Why It's Wrong</th><th>Fix</th></tr></thead><tbody><tr><td><strong>PQP without reference</strong></td><td>"Hier, j'avais mangé"</td><td>PQP needs another past event</td><td>"Hier, j'ai mangé" (PC — simple past)</td></tr><tr><td><strong>Confusing IMP and PQP</strong></td><td>"Il mangeait quand..." (meaning "had eaten")</td><td>Mangeait = was eating (ongoing) / Avait mangé = had eaten (completed)</td><td>Choose based on completed vs. ongoing</td></tr><tr><td><strong>No agreement with être</strong></td><td>"Elle était arrivé"</td><td>Être verb → agrees with subject</td><td>"Elle était arrivéE"</td></tr><tr><td><strong>Conditionnel after si</strong></td><td>"Si j'aurais su..."</td><td>Si + PQP (never conditionnel after si)</td><td>"Si j'avais su..."</td></tr><tr><td><strong>Overusing PQP</strong></td><td>Using PQP for every past event</td><td>PQP only for the EARLIER of two past events</td><td>Use PC for main events, PQP only for "before that"</td></tr><tr><td><strong>Wrong auxiliary</strong></td><td>"J'avais arrivé"</td><td>Arriver uses ÊTRE</td><td>"J'étais arrivé"</td></tr><tr><td><strong>Missing "déjà"</strong></td><td>"Il avait mangé quand..." (unclear)</td><td>Adding "déjà" clarifies the "before" meaning</td><td>"Il avait DÉJÀ mangé quand..."</td></tr><tr><td><strong>Confusing with passive</strong></td><td>"Il avait été mangé" (passive PQP) vs. "Il avait mangé" (active PQP)</td><td>"Avait été + PP" = passive / "Avait + PP" = active</td><td>Check: is the subject the DOER or RECEIVER?</td></tr><tr><td><strong>English interference</strong></td><td>Using PQP where English uses simple past</td><td>English often uses simple past where French needs PQP</td><td>Ask: did this happen BEFORE another past event? → PQP</td></tr><tr><td><strong>Forgetting reflexive pronoun</strong></td><td>"Il avait trompé" (meaning "he had been wrong")</td><td>Se tromper = reflexive → needs "s'"</td><td>"Il s'était trompé"</td></tr></tbody></table>
+<hr>
+<h1>🔑 KEY TAKEAWAY</h1>
+<blockquote>
+<p><strong>The plus-que-parfait completes your past tense system — giving you a three-layer timeline.</strong></p>
+<p>→ Project 9 gave you <strong>passé composé</strong> — completed past events<br>
+→ Project 10 gave you <strong>imparfait</strong> — past background and ongoing states<br>
+→ Project 11 taught you to <strong>combine</strong> PC and imparfait in narratives<br>
+→ Project 32 adds <strong>plus-que-parfait</strong> — the past BEFORE the past</p>
+<table><thead><tr><th>Layer</th><th>Tense</th><th>Function</th><th>Example</th></tr></thead><tbody><tr><td>Background</td><td>IMPARFAIT</td><td>Scene, state, habit</td><td>Il faisait beau.</td></tr><tr><td>Events</td><td>PASSÉ COMPOSÉ</td><td>Actions, changes</td><td>J'ai ouvert la porte.</td></tr><tr><td>Backstory</td><td>PLUS-QUE-PARFAIT</td><td>What happened before</td><td>Elle avait déjà mangé.</td></tr></tbody></table>
+<p>→ PQP is <strong>essential</strong> for:<br>
+→ Telling complex stories with flashbacks<br>
+→ Explaining past causes ("parce qu'il avait...")<br>
+→ Discovering past events ("j'ai découvert qu'il avait...")<br>
+→ Reported speech ("il a dit qu'il avait...")<br>
+→ Past hypotheticals ("si j'avais su..." — fully in P34)</p>
+<p>→ The formation is <strong>simple</strong> — it's just passé composé with imparfait auxiliaries<br>
+→ The challenge is <strong>knowing WHEN to use it</strong> — and that's about timeline thinking</p>
+<p>→ You now have the PQP — the missing piece for the next two projects:<br>
+→ Project 33: Si + <strong>imparfait</strong> → conditionnel (imagining an unreal PRESENT)<br>
+→ Project 34: Si + <strong>plus-que-parfait</strong> → conditionnel passé (regretting an unreal PAST)</p>
+</blockquote>
+<hr>
+<h1>🌉 BRIDGE TO PROJECT 33</h1>
+<blockquote>
+<p>You now have the complete past tense system — three layers deep<br>
+But there's an entire world of French you haven't fully entered: <strong>imagination and hypothesis</strong></p>
+<p>→ Project 18 gave you REAL conditions: "Si il pleut, je resterai." (likely)<br>
+→ But what about UNREAL conditions?</p>
+<p>→ "Si j'<strong>étais</strong> riche, je <strong>voyagerais</strong> autour du monde." (But I'm NOT rich)<br>
+→ "Si tu <strong>avais</strong> plus de temps, tu <strong>pourrais</strong> te reposer." (But you DON'T have time)<br>
+→ "Si on <strong>habitait</strong> à Paris, on <strong>irait</strong> au restaurant tous les soirs." (But we DON'T live in Paris)</p>
+<p>→ These are <strong>UNREAL PRESENT hypotheticals</strong> — imagining a different reality<br>
+→ They use: <strong>Si + IMPARFAIT → CONDITIONNEL PRÉSENT</strong><br>
+→ This is the SECOND si-clause pattern — and one of the most USED structures in French conversation</p>
+<p>→ Project 33: <strong>"If Things Were Different — Part 2"</strong></p>
+</blockquote>
+<hr>
+<h1>✅ PROJECT 32 COMPLETE</h1>
+<blockquote>
+<p><strong>Are you ready for PROJECT 33: "If Things Were Different — Part 2"?</strong><br>
+→ ~100 sentences covering si + imparfait → conditionnel présent<br>
+→ Scenario: Imagining an unreal present — "If I were rich...", "If we lived in Paris..."<br>
+→ Builds on si-clauses Part 1 (P18), conditionnel (P17), and imparfait (P10)</p>
+</blockquote>
+</div>
+</div>
+
+
+
+
+<!-- ========== data-index="5" ========== -->
+
+        </div>
+
+        <div class="nav-bar">
+            <a href="project-31.html" class="nav-button prev">← Previous Chapter</a>
+            <div class="page-info">
+                <a href="index.html" class="nav-button home">📚 Table of Contents</a><br>
+                <span style="margin-top:8px;display:block">Chapter 32 of 50</span>
+            </div>
+            <a href="project-33.html" class="nav-button next">Next Chapter →</a>
+        </div>
+    </div>
+
+    
+    <div id="progress-track"><div id="progress-fill"></div></div>
+    <div id="progress-pct">0%</div>
+
+
+    <script>
+    const fill = document.getElementById('progress-fill');
+    const pct  = document.getElementById('progress-pct');
+    function updateProgress() {
+        const scrollTop = window.scrollY;
+        const docHeight = document.body.scrollHeight - window.innerHeight;
+        const scrolled  = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+        fill.style.height = scrolled + '%';
+        pct.textContent   = Math.round(scrolled) + '%';
+    }
+    window.addEventListener('scroll', updateProgress);
+    updateProgress();
+
+    document.addEventListener('keydown', function(e) {
+        if (['INPUT','TEXTAREA'].includes(document.activeElement.tagName)) return;
+        if (e.key === 'ArrowLeft') {
+            const b = document.querySelector('.nav-button.prev');
+            if (b && !b.classList.contains('disabled')) window.location.href = b.href;
+        }
+        if (e.key === 'ArrowRight') {
+            const b = document.querySelector('.nav-button.next');
+            if (b && !b.classList.contains('disabled')) window.location.href = b.href;
+        }
+    });
+    </script>
+
+</body>
+</html>

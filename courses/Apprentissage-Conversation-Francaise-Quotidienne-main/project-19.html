@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="images/favicon.png">
+    <title>Project 19: "Don't Say the Noun Twice" — French Daily Sentences</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.75;
+            color: #1a202c;
+            background-color: #f7fafc;
+        }
+        .container {
+            max-width: 1800px;
+            margin: 0 auto;
+            background: white;
+            min-height: 100vh;
+            box-shadow: 0 0 30px rgba(0,0,0,0.08);
+            padding: 48px 52px;
+        }
+        
+        .content { max-width: 1700px; margin: 0 auto; color: #1a202c; }
+        .content h1 {
+            color: #1a202c; margin: 32px 0 20px;
+            padding-bottom: 12px;
+            border-bottom: 4px solid #3b82f6;
+            font-size: 2.1em;
+            font-weight: 700;
+        }
+        .content h2 {
+            color: #1a202c; margin: 28px 0 16px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #60a5fa;
+            font-size: 1.6em;
+            font-weight: 600;
+        }
+        .content h3 { color: #1a202c; margin: 22px 0 12px; font-size: 1.3em; font-weight: 600; }
+        .content h4 { color: #2d3748; margin: 18px 0 10px; font-size: 1.1em; font-weight: 600; }
+        .content p  { margin-bottom: 16px; line-height: 1.8; color: #1a202c; }
+        .content ul, .content ol { margin: 12px 0 18px 30px; color: #1a202c; }
+        .content li { margin-bottom: 8px; line-height: 1.75; color: #1a202c; }
+        .content hr { border: none; border-top: 2px solid #e2e8f0; margin: 26px 0; }
+        .content pre {
+            background: #f7fafc !important;
+            border: 1px solid #cbd5e0 !important;
+            border-left: 4px solid #3b82f6 !important;
+            padding: 18px !important; overflow-x: auto; margin: 18px 0; border-radius: 6px;
+            font-family: 'Consolas','Monaco','Courier New',monospace !important;
+            font-size: 0.9em !important;
+        }
+        .content pre:not([style*="color"]) { color: #1a202c !important; }
+        .content code {
+            font-family: 'Consolas','Monaco','Courier New',monospace !important;
+            font-size: 0.88em !important;
+        }
+        .content code:not(pre code) {
+            background: #dbeafe !important;
+            color: #1a202c !important;
+            padding: 2px 6px;
+            border-radius: 3px;
+        }
+        .content pre code { background: transparent !important; padding: 0; }
+        .content table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+        .content th {
+            background: linear-gradient(135deg, #3b82f6 0%, #60a5fa 100%);
+            color: white; padding: 12px 16px; text-align: left;
+            font-weight: 600;
+        }
+        .content td { padding: 11px 16px; border: 1px solid #e2e8f0; color: #1a202c; }
+        .content tr:nth-child(even) td { background: #eff6ff; }
+        .content blockquote {
+            border-left: 4px solid #3b82f6; background: #eff6ff;
+            padding: 14px 20px; margin: 18px 0; border-radius: 0 6px 6px 0;
+            color: #1a202c;
+        }
+        .content strong { color: #1a202c; font-weight: 600; }
+        .px-2 { padding: 0; }
+        .chat-message { background: transparent; padding: 0; margin: 0; }
+
+        /* Bottom nav bar only */
+        .nav-bar {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 24px 0;
+            margin-top: 50px;
+            border-top: 3px solid #60a5fa;
+        }
+        .nav-button {
+            display: inline-flex; align-items: center; gap: 8px;
+            padding: 12px 26px;
+            background: linear-gradient(135deg, #3b82f6 0%, #60a5fa 100%);
+            color: white !important; text-decoration: none;
+            border-radius: 8px; font-weight: 600; font-size: 0.95em;
+            transition: all 0.2s;
+            box-shadow: 0 2px 8px rgba(59,130,246,0.35);
+        }
+        .nav-button:hover { transform: translateY(-2px); box-shadow: 0 4px 14px rgba(59,130,246,0.5); }
+        .nav-button.disabled { background: #cbd5e1; box-shadow: none; pointer-events: none; }
+        .nav-button.home {
+            background: linear-gradient(135deg, #ef4444 0%, #f87171 100%);
+            box-shadow: 0 2px 8px rgba(239,68,68,0.35);
+        }
+        .nav-button.home:hover { box-shadow: 0 4px 14px rgba(239,68,68,0.5); }
+        .page-info { color: #718096; font-size: 0.9em; text-align: center; }
+
+        /* Progress bar */
+        #progress-track {
+            position: fixed; top: 20px; right: 20px;
+            width: 10px; height: 150px;
+            background: rgba(59,130,246,0.2);
+            border: 2px solid #3b82f6;
+            border-radius: 6px; overflow: hidden; z-index: 1000;
+        }
+        #progress-fill {
+            width: 100%;
+            background: linear-gradient(180deg, #3b82f6, #2563eb);
+            height: 0%;
+            transition: height 0.15s ease;
+        }
+        #progress-pct {
+            position: fixed; top: 0px; right: 16px;
+            color: #2563eb; font-size: 14px; font-weight: bold;
+            z-index: 1001;
+            text-shadow: 0 1px 2px rgba(255,255,255,0.9);
+            line-height: 20px;
+        }
+
+    </style>
+<link rel="stylesheet" href="assets/chapters.css?v=20260421203847"><script src="assets/chapters.js?v=20260421203847" defer></script>
+</head>
+<body>
+    <div class="container">
+        <div class="content">
+            <div class="chat-message" data-index="7">
+<div class="px-2"><h1>🟡 PROJECT 19: "Don't Say the Noun Twice"</h1>
+<h2><em>Your speech sounds repetitive — how do natives avoid repeating nouns?</em></h2>
+<hr>
+<h1>🎯 THE HYPOTHETICAL PROBLEM</h1>
+<p>→ You've been speaking French for weeks now<br>
+→ You can describe your day, tell stories, make plans, set conditions<br>
+→ But every time you speak, something sounds <strong>heavy and childish</strong><br>
+→ You say things like:</p>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>❌ J'aime le chocolat. Je mange le chocolat tous les jours.
+</span>❌ Tu connais Marie ? J'ai vu Marie hier.
+❌ J'ai acheté un cadeau. Je donnerai le cadeau à Pierre.</code></pre></div>
+<p>→ A French person would <strong>never</strong> repeat these nouns<br>
+→ They would say:</p>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>✅ J'aime le chocolat. J'en mange tous les jours.
+</span>✅ Tu connais Marie ? Je l'ai vue hier.
+✅ J'ai acheté un cadeau. Je le lui donnerai.</code></pre></div>
+<p>→ Those tiny words — <strong>le, la, les, lui, leur, l'</strong> — are <strong>object pronouns</strong><br>
+→ They <strong>replace nouns</strong> that have already been mentioned<br>
+→ Without them, you sound like a robot repeating itself<br>
+→ With them, you sound like a <strong>native thinker</strong></p>
+<p><strong>The core realization:</strong><br>
+→ French has <strong>two types</strong> of objects a verb can act upon:<br>
+→ <strong>Direct Object (COD)</strong> — the thing directly receiving the action<br>
+→ <strong>Indirect Object (COI)</strong> — the person receiving something indirectly (usually with "à")<br>
+→ Each type has its <strong>own set of replacement pronouns</strong><br>
+→ And those pronouns go in a <strong>specific position</strong> — NOT where English puts them</p>
+<hr>
+<h1>🔍 HOW TO APPROACH IT</h1>
+<p>→ Think of every French sentence as having <strong>slots</strong>:</p>
+<code>SUBJECT → [PRONOUN SLOT] → VERB → OBJECT</code>
+<p>→ In English, the pronoun <strong>replaces the object and stays in the object's position</strong>:<br>
+→ "I see <strong>Marie</strong>" → "I see <strong>her</strong>"</p>
+<p>→ In French, the pronoun <strong>jumps BEFORE the verb</strong>:<br>
+→ "Je vois <strong>Marie</strong>" → "Je <strong>la</strong> vois"</p>
+<p>→ This is the <strong>fundamental shift</strong> — pronouns move LEFT in French</p>
+<p>→ Your job in Project 19: Learn <strong>which pronoun replaces which object</strong> and <strong>where it sits</strong> in every sentence type you've learned so far</p>
+<hr>
+<h1>🔧 HOW CAN WE SOLVE IT</h1>
+<h2>Step 1 — Identify the Two Object Types</h2>
+<table><thead><tr><th>Type</th><th>French Name</th><th>What It Is</th><th>How to Spot It</th></tr></thead><tbody><tr><td><strong>Direct Object</strong></td><td>COD (Complément d'Objet Direct)</td><td>The thing/person <strong>directly</strong> acted upon</td><td>No preposition between verb and object</td></tr><tr><td><strong>Indirect Object</strong></td><td>COI (Complément d'Objet Indirect)</td><td>The person <strong>receiving</strong> something (via "à")</td><td>Preposition <strong>à</strong> between verb and object</td></tr></tbody></table>
+<p><strong>Examples:</strong></p>
+<table><thead><tr><th>Sentence</th><th>COD</th><th>COI</th></tr></thead><tbody><tr><td>Je mange <strong>la pomme</strong>.</td><td>la pomme (direct — no "à")</td><td>—</td></tr><tr><td>Je parle <strong>à Marie</strong>.</td><td>—</td><td>à Marie (indirect — "à")</td></tr><tr><td>Je donne <strong>le livre</strong> <strong>à Pierre</strong>.</td><td>le livre (direct)</td><td>à Pierre (indirect)</td></tr></tbody></table>
+<hr>
+<h2>Step 2 — The COD Pronoun Set (Direct Object Pronouns)</h2>
+<table><thead><tr><th>Replaces</th><th>COD Pronoun</th><th>Example</th></tr></thead><tbody><tr><td><strong>me</strong> (myself)</td><td><strong>me / m'</strong></td><td>Il me voit. (He sees me.)</td></tr><tr><td><strong>you</strong> (informal)</td><td><strong>te / t'</strong></td><td>Je te connais. (I know you.)</td></tr><tr><td><strong>him / it</strong> (masc singular)</td><td><strong>le / l'</strong></td><td>Je le vois. (I see him/it.)</td></tr><tr><td><strong>her / it</strong> (fem singular)</td><td><strong>la / l'</strong></td><td>Je la connais. (I know her/it.)</td></tr><tr><td><strong>us</strong></td><td><strong>nous</strong></td><td>Il nous attend. (He's waiting for us.)</td></tr><tr><td><strong>you</strong> (formal/plural)</td><td><strong>vous</strong></td><td>Je vous comprends. (I understand you.)</td></tr><tr><td><strong>them</strong> (masc/fem plural)</td><td><strong>les</strong></td><td>Je les adore. (I love them.)</td></tr></tbody></table>
+<hr>
+<h2>Step 3 — The COI Pronoun Set (Indirect Object Pronouns)</h2>
+<table><thead><tr><th>Replaces</th><th>COI Pronoun</th><th>Example</th></tr></thead><tbody><tr><td><strong>to me</strong></td><td><strong>me / m'</strong></td><td>Il me parle. (He speaks to me.)</td></tr><tr><td><strong>to you</strong> (informal)</td><td><strong>te / t'</strong></td><td>Je te téléphone. (I call you.)</td></tr><tr><td><strong>to him / to her</strong></td><td><strong>lui</strong></td><td>Je lui parle. (I speak to him/her.)</td></tr><tr><td><strong>to us</strong></td><td><strong>nous</strong></td><td>Elle nous écrit. (She writes to us.)</td></tr><tr><td><strong>to you</strong> (formal/plural)</td><td><strong>vous</strong></td><td>Je vous envoie un email. (I'm sending you an email.)</td></tr><tr><td><strong>to them</strong></td><td><strong>leur</strong></td><td>Je leur donne le livre. (I give them the book.)</td></tr></tbody></table>
+<hr>
+<h2>Step 4 — The Critical Difference at a Glance</h2>
+<table><thead><tr><th>Person</th><th>COD (direct)</th><th>COI (indirect)</th></tr></thead><tbody><tr><td>me</td><td>me</td><td>me</td></tr><tr><td>you (tu)</td><td>te</td><td>te</td></tr><tr><td>him</td><td><strong>le</strong></td><td><strong>lui</strong></td></tr><tr><td>her</td><td><strong>la</strong></td><td><strong>lui</strong></td></tr><tr><td>us</td><td>nous</td><td>nous</td></tr><tr><td>you (vous)</td><td>vous</td><td>vous</td></tr><tr><td>them</td><td><strong>les</strong></td><td><strong>leur</strong></td></tr></tbody></table>
+<p>→ <strong>me, te, nous, vous</strong> are IDENTICAL in both sets<br>
+→ The difference only matters for <strong>3rd person</strong>: le/la/les (COD) vs. lui/leur (COI)</p>
+<hr>
+<h2>Step 5 — Placement Rule (The Golden Position)</h2>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>PRESENT TENSE:     Subject + [PRONOUN] + conjugated verb
+</span>NEGATIVE:          Subject + ne + [PRONOUN] + verb + pas
+PASSÉ COMPOSÉ:     Subject + [PRONOUN] + auxiliary (avoir/être) + participe passé
+FUTUR PROCHE:      Subject + [PRONOUN before infinitif] ... OR ... see Block E
+IMPÉRATIF (+):     Verb + hyphen + [PRONOUN after]
+IMPÉRATIF (−):     Ne + [PRONOUN] + verb + pas</code></pre></div>
+<p>→ In almost every case: <strong>pronoun goes directly BEFORE the verb it depends on</strong></p>
+<hr>
+<h1>✅ WHAT COULD BE DONE — THE 100 SENTENCES</h1>
+<hr>
+<h2>🔹 BLOCK A — COD Pronouns in Present Tense</h2>
+<p><em>Scenario: Daily conversations where you replace direct objects</em></p>
+<table><thead><tr><th>#</th><th>Without Pronoun</th><th>With Pronoun</th><th>English</th><th>COD Used</th></tr></thead><tbody><tr><td>1</td><td>Je regarde le film.</td><td>Je <strong>le</strong> regarde.</td><td>I watch it.</td><td>le (masc)</td></tr><tr><td>2</td><td>Je prends la clé.</td><td>Je <strong>la</strong> prends.</td><td>I take it.</td><td>la (fem)</td></tr><tr><td>3</td><td>Je mange les fruits.</td><td>Je <strong>les</strong> mange.</td><td>I eat them.</td><td>les (plural)</td></tr><tr><td>4</td><td>Tu connais cet homme ?</td><td>Tu <strong>le</strong> connais ?</td><td>Do you know him?</td><td>le (person, masc)</td></tr><tr><td>5</td><td>Elle aime cette chanson.</td><td>Elle <strong>l'</strong> aime.</td><td>She loves it.</td><td>l' (before vowel)</td></tr><tr><td>6</td><td>Il attend sa sœur.</td><td>Il <strong>l'</strong> attend.</td><td>He's waiting for her.</td><td>l' (before vowel)</td></tr><tr><td>7</td><td>Nous regardons les photos.</td><td>Nous <strong>les</strong> regardons.</td><td>We look at them.</td><td>les</td></tr><tr><td>8</td><td>Vous comprenez la question ?</td><td>Vous <strong>la</strong> comprenez ?</td><td>Do you understand it?</td><td>la</td></tr><tr><td>9</td><td>Ils écoutent le professeur.</td><td>Ils <strong>l'</strong> écoutent.</td><td>They listen to him.</td><td>l' (before vowel)</td></tr><tr><td>10</td><td>On adore ce restaurant.</td><td>On <strong>l'</strong> adore.</td><td>We love it.</td><td>l' (before vowel)</td></tr></tbody></table>
+<p><strong>🧠 Structure unlocked:</strong> <code>Subject + COD pronoun + verb (present)</code><br>
+→ <strong>le</strong> → before consonant (masc singular)<br>
+→ <strong>la</strong> → before consonant (fem singular)<br>
+→ <strong>l'</strong> → before vowel or silent h (both masc and fem singular)<br>
+→ <strong>les</strong> → plural (both masc and fem)</p>
+<hr>
+<h2>🔹 BLOCK B — COD Pronouns in Negative Sentences</h2>
+<p><em>Scenario: Saying you DON'T do something to an object/person — without repeating the noun</em></p>
+<table><thead><tr><th>#</th><th>Without Pronoun</th><th>With Pronoun</th><th>English</th><th>Structure</th></tr></thead><tbody><tr><td>11</td><td>Je ne regarde pas la télé.</td><td>Je ne <strong>la</strong> regarde pas.</td><td>I don't watch it.</td><td>ne + COD + verb + pas</td></tr><tr><td>12</td><td>Tu ne connais pas cet homme.</td><td>Tu ne <strong>le</strong> connais pas.</td><td>You don't know him.</td><td>ne + COD + verb + pas</td></tr><tr><td>13</td><td>Elle ne mange pas les légumes.</td><td>Elle ne <strong>les</strong> mange pas.</td><td>She doesn't eat them.</td><td>ne + COD + verb + pas</td></tr><tr><td>14</td><td>Il ne comprend pas cette phrase.</td><td>Il ne <strong>la</strong> comprend pas.</td><td>He doesn't understand it.</td><td>ne + COD + verb + pas</td></tr><tr><td>15</td><td>Nous n'aimons pas ce film.</td><td>Nous ne <strong>l'</strong> aimons pas.</td><td>We don't like it.</td><td>ne + l' + verb + pas</td></tr><tr><td>16</td><td>Vous n'entendez pas la musique ?</td><td>Vous ne <strong>l'</strong> entendez pas ?</td><td>Don't you hear it?</td><td>ne + l' + verb + pas + ?</td></tr><tr><td>17</td><td>Ils ne voient pas les enfants.</td><td>Ils ne <strong>les</strong> voient pas.</td><td>They don't see them.</td><td>ne + COD + verb + pas</td></tr><tr><td>18</td><td>On ne prend pas le bus.</td><td>On ne <strong>le</strong> prend pas.</td><td>We don't take it.</td><td>ne + COD + verb + pas</td></tr><tr><td>19</td><td>Je ne lis jamais le journal.</td><td>Je ne <strong>le</strong> lis jamais.</td><td>I never read it.</td><td>ne + COD + verb + jamais</td></tr><tr><td>20</td><td>Tu ne portes plus cette veste ?</td><td>Tu ne <strong>la</strong> portes plus ?</td><td>You don't wear it anymore?</td><td>ne + COD + verb + plus</td></tr></tbody></table>
+<p><strong>🧠 Structure unlocked:</strong> <code>Subject + ne + [COD pronoun] + verb + pas/jamais/plus</code><br>
+→ The pronoun stays <strong>glued before the verb</strong> — negation wraps AROUND both</p>
+<hr>
+<h2>🔹 BLOCK C — COI Pronouns in Present Tense</h2>
+<p><em>Scenario: Talking about giving, telling, sending, showing TO someone</em></p>
+<table><thead><tr><th>#</th><th>Without Pronoun</th><th>With Pronoun</th><th>English</th><th>COI Used</th></tr></thead><tbody><tr><td>21</td><td>Je parle à Marie.</td><td>Je <strong>lui</strong> parle.</td><td>I speak to her.</td><td>lui (to her)</td></tr><tr><td>22</td><td>Tu téléphones à ton père ?</td><td>Tu <strong>lui</strong> téléphones ?</td><td>Do you call him?</td><td>lui (to him)</td></tr><tr><td>23</td><td>Elle écrit à ses amis.</td><td>Elle <strong>leur</strong> écrit.</td><td>She writes to them.</td><td>leur (to them)</td></tr><tr><td>24</td><td>Il donne un cadeau à sa mère.</td><td>Il <strong>lui</strong> donne un cadeau.</td><td>He gives her a gift.</td><td>lui (to her)</td></tr><tr><td>25</td><td>Nous envoyons un message à Paul.</td><td>Nous <strong>lui</strong> envoyons un message.</td><td>We send him a message.</td><td>lui (to him)</td></tr><tr><td>26</td><td>Vous répondez aux clients ?</td><td>Vous <strong>leur</strong> répondez ?</td><td>Do you answer them?</td><td>leur (to them)</td></tr><tr><td>27</td><td>Ils demandent au professeur.</td><td>Ils <strong>lui</strong> demandent.</td><td>They ask him.</td><td>lui (to him)</td></tr><tr><td>28</td><td>On dit la vérité à nos parents.</td><td>On <strong>leur</strong> dit la vérité.</td><td>We tell them the truth.</td><td>leur (to them)</td></tr><tr><td>29</td><td>Je montre les photos à Sophie.</td><td>Je <strong>lui</strong> montre les photos.</td><td>I show her the photos.</td><td>lui (to her)</td></tr><tr><td>30</td><td>Tu offres un café à tes collègues ?</td><td>Tu <strong>leur</strong> offres un café ?</td><td>Do you offer them a coffee?</td><td>leur (to them)</td></tr></tbody></table>
+<p><strong>🧠 Structure unlocked:</strong> <code>Subject + COI pronoun + verb + (remaining COD if any)</code><br>
+→ <strong>lui</strong> = to him OR to her (no gender distinction!)<br>
+→ <strong>leur</strong> = to them (no gender distinction!)<br>
+→ Notice: when COI replaces the person, the <strong>thing (COD) stays as a full noun</strong></p>
+<hr>
+<h2>🔹 BLOCK D — COI Pronouns: Me, Te, Nous, Vous</h2>
+<p><em>Scenario: Someone does something TO you, or you do something TO someone you're speaking with</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English</th><th>COI Used</th></tr></thead><tbody><tr><td>31</td><td>Il <strong>me</strong> parle tous les jours.</td><td>He talks to me every day.</td><td>me (to me)</td></tr><tr><td>32</td><td>Je <strong>te</strong> téléphonerai demain.</td><td>I'll call you tomorrow.</td><td>te (to you)</td></tr><tr><td>33</td><td>Elle <strong>nous</strong> a envoyé un message.</td><td>She sent us a message.</td><td>nous (to us)</td></tr><tr><td>34</td><td>Il <strong>vous</strong> posera des questions.</td><td>He'll ask you questions.</td><td>vous (to you formal)</td></tr><tr><td>35</td><td>Tu <strong>me</strong> donnes ton numéro ?</td><td>Are you giving me your number?</td><td>me (to me)</td></tr><tr><td>36</td><td>Je <strong>te</strong> dis la vérité.</td><td>I'm telling you the truth.</td><td>te (to you)</td></tr><tr><td>37</td><td>Elle <strong>me</strong> montre la route.</td><td>She's showing me the way.</td><td>me (to me)</td></tr><tr><td>38</td><td>Ils <strong>nous</strong> invitent à dîner.</td><td>They're inviting us to dinner.</td><td>nous (to us)</td></tr><tr><td>39</td><td>On <strong>vous</strong> expliquera tout.</td><td>We'll explain everything to you.</td><td>vous (to you)</td></tr><tr><td>40</td><td>Tu <strong>m'</strong> écoutes ?</td><td>Are you listening to me?</td><td>m' (me before vowel)</td></tr></tbody></table>
+<p><strong>🧠 Structure unlocked:</strong> me/te/nous/vous work as <strong>both COD and COI</strong> — same form, same position<br>
+→ "Il <strong>me</strong> voit" = He sees <strong>me</strong> (COD — direct)<br>
+→ "Il <strong>me</strong> parle" = He speaks <strong>to me</strong> (COI — indirect)<br>
+→ The pronoun is identical — <strong>the verb determines</strong> if it's COD or COI</p>
+<hr>
+<h2>🔹 BLOCK E — Pronouns with Passé Composé (Past Tense)</h2>
+<p><em>Scenario: Telling what you did — replacing nouns from past events</em><br>
+<em>Connection to Projects 9-11: Passé composé structures now compressed with pronouns</em></p>
+<table><thead><tr><th>#</th><th>Without Pronoun</th><th>With Pronoun</th><th>English</th><th>Key Rule</th></tr></thead><tbody><tr><td>41</td><td>J'ai vu le film.</td><td>Je <strong>l'</strong> ai vu.</td><td>I saw it.</td><td>COD before auxiliary</td></tr><tr><td>42</td><td>J'ai vu <strong>la</strong> pièce de théâtre.</td><td>Je <strong>l'</strong> ai vu<strong>e</strong>.</td><td>I saw it (fem).</td><td>COD before avoir → <strong>AGREEMENT</strong></td></tr><tr><td>43</td><td>Il a appelé Marie.</td><td>Il <strong>l'</strong> a appelé<strong>e</strong>.</td><td>He called her.</td><td>fem COD before avoir → +e</td></tr><tr><td>44</td><td>Nous avons acheté les billets.</td><td>Nous <strong>les</strong> avons acheté<strong>s</strong>.</td><td>We bought them.</td><td>plural COD before avoir → +s</td></tr><tr><td>45</td><td>Elle a pris les clés.</td><td>Elle <strong>les</strong> a prise<strong>s</strong>.</td><td>She took them (fem).</td><td>fem plural COD → +es</td></tr><tr><td>46</td><td>Tu as compris la leçon ?</td><td>Tu <strong>l'</strong> as comprise ?</td><td>Did you understand it?</td><td>fem COD → agreement</td></tr><tr><td>47</td><td>J'ai parlé à Pierre.</td><td>Je <strong>lui</strong> ai parlé.</td><td>I spoke to him.</td><td>COI → NO agreement</td></tr><tr><td>48</td><td>Elle a écrit à ses parents.</td><td>Elle <strong>leur</strong> a écrit.</td><td>She wrote to them.</td><td>COI → NO agreement</td></tr><tr><td>49</td><td>On a invité les voisins.</td><td>On <strong>les</strong> a invité<strong>s</strong>.</td><td>We invited them.</td><td>COD → agreement</td></tr><tr><td>50</td><td>Tu m'as appelé ?</td><td>Tu <strong>m'</strong> as appelé ?</td><td>Did you call me?</td><td>me = COD before avoir</td></tr></tbody></table>
+<p><strong>🧠 CRITICAL RULE UNLOCKED — AGREEMENT WITH COD BEFORE AVOIR:</strong></p>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>When a COD pronoun comes BEFORE the auxiliary "avoir" in passé composé:
+</span>→ The past participle AGREES in gender and number with the COD
+
+le (masc sing)     → no change      → Je l'ai vu
+la (fem sing)      → +e             → Je l'ai vuE
+les (masc plural)  → +s             → Je les ai vuS
+les (fem plural)   → +es            → Je les ai vuES</code></pre></div>
+<p>→ <strong>COI pronouns (lui, leur) → NEVER trigger agreement</strong><br>
+→ This is one of the <strong>hardest rules in French</strong> — but with pronouns it becomes visible</p>
+<hr>
+<h2>🔹 BLOCK F — Pronouns with Futur Proche (Near Future)</h2>
+<p><em>Scenario: Saying what you're about to do — replacing the object</em><br>
+<em>Connection to Project 12: Futur proche (aller + infinitif) now with pronouns</em></p>
+<table><thead><tr><th>#</th><th>Without Pronoun</th><th>With Pronoun</th><th>English</th><th>Pronoun Position</th></tr></thead><tbody><tr><td>51</td><td>Je vais appeler Marie.</td><td>Je vais <strong>l'</strong> appeler.</td><td>I'm going to call her.</td><td>Before INFINITIF</td></tr><tr><td>52</td><td>Tu vas prendre le bus ?</td><td>Tu vas <strong>le</strong> prendre ?</td><td>Are you going to take it?</td><td>Before INFINITIF</td></tr><tr><td>53</td><td>Elle va envoyer la lettre.</td><td>Elle va <strong>l'</strong> envoyer.</td><td>She's going to send it.</td><td>Before INFINITIF</td></tr><tr><td>54</td><td>On va inviter les voisins.</td><td>On va <strong>les</strong> inviter.</td><td>We're going to invite them.</td><td>Before INFINITIF</td></tr><tr><td>55</td><td>Il va parler à son chef.</td><td>Il va <strong>lui</strong> parler.</td><td>He's going to talk to him.</td><td>Before INFINITIF</td></tr><tr><td>56</td><td>Nous allons écrire à nos amis.</td><td>Nous allons <strong>leur</strong> écrire.</td><td>We're going to write to them.</td><td>Before INFINITIF</td></tr><tr><td>57</td><td>Je ne vais pas acheter cette robe.</td><td>Je ne vais pas <strong>l'</strong> acheter.</td><td>I'm not going to buy it.</td><td>ne + aller + pas + COD + infinitif</td></tr><tr><td>58</td><td>Tu ne vas pas téléphoner à Marc ?</td><td>Tu ne vas pas <strong>lui</strong> téléphoner ?</td><td>You're not going to call him?</td><td>ne + aller + pas + COI + infinitif</td></tr><tr><td>59</td><td>On va te montrer la ville.</td><td>On va <strong>te</strong> montrer la ville.</td><td>We're going to show you the city.</td><td>Before INFINITIF</td></tr><tr><td>60</td><td>Je vais vous envoyer le document.</td><td>Je vais <strong>vous</strong> envoyer le document.</td><td>I'm going to send you the document.</td><td>Before INFINITIF</td></tr></tbody></table>
+<p><strong>🧠 CRITICAL POSITION RULE:</strong></p>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>FUTUR PROCHE: pronoun goes before the INFINITIF — NOT before "aller"
+</span>
+✅ Je vais LE faire.
+❌ Je LE vais faire.  ← WRONG
+
+The pronoun attaches to the verb it DEPENDS ON — "faire" not "aller"</code></pre></div>
+<p>→ Same rule applies to <strong>all verb + infinitif combinations</strong>:<br>
+→ Je veux <strong>le</strong> faire / Je peux <strong>la</strong> voir / Je dois <strong>lui</strong> parler</p>
+<hr>
+<h2>🔹 BLOCK G — Pronouns with Futur Simple &amp; Conditionnel</h2>
+<p><em>Scenario: Plans and polite requests — replacing nouns in future and conditional</em><br>
+<em>Connection to Projects 16-17: Futur simple and conditionnel now compressed</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English</th><th>Tense + Pronoun</th></tr></thead><tbody><tr><td>61</td><td>Je <strong>le</strong> ferai demain.</td><td>I'll do it tomorrow.</td><td>COD + futur simple</td></tr><tr><td>62</td><td>On <strong>la</strong> finira ce soir.</td><td>We'll finish it tonight.</td><td>COD + futur simple</td></tr><tr><td>63</td><td>Ils <strong>les</strong> inviteront samedi.</td><td>They'll invite them Saturday.</td><td>COD + futur simple</td></tr><tr><td>64</td><td>Je <strong>lui</strong> enverrai un email.</td><td>I'll send him/her an email.</td><td>COI + futur simple</td></tr><tr><td>65</td><td>Nous <strong>leur</strong> annoncerons la nouvelle.</td><td>We'll tell them the news.</td><td>COI + futur simple</td></tr><tr><td>66</td><td>Je <strong>le</strong> ferais si j'avais le temps.</td><td>I would do it if I had time.</td><td>COD + conditionnel (preview P33)</td></tr><tr><td>67</td><td>Tu <strong>la</strong> prendrais, cette offre ?</td><td>Would you take it, that offer?</td><td>COD + conditionnel + ?</td></tr><tr><td>68</td><td>On <strong>leur</strong> dirait la vérité.</td><td>We would tell them the truth.</td><td>COI + conditionnel</td></tr><tr><td>69</td><td>Je <strong>vous</strong> recommanderais ce restaurant.</td><td>I would recommend this restaurant to you.</td><td>COI + conditionnel</td></tr><tr><td>70</td><td>Elle ne <strong>le</strong> fera pas, j'en suis sûr.</td><td>She won't do it, I'm sure.</td><td>ne + COD + futur + pas</td></tr></tbody></table>
+<p><strong>🧠 Structure unlocked:</strong> In <strong>simple tenses</strong> (présent, futur, conditionnel, imparfait), pronoun goes directly before the <strong>conjugated verb</strong></p>
+<code>Subject + [ne] + PRONOUN + conjugated verb + [pas]</code>
+<p>→ This is <strong>different</strong> from compound structures (futur proche, passé composé) where the pronoun attaches to the <strong>auxiliary or infinitif</strong></p>
+<hr>
+<h2>🔹 BLOCK H — Pronouns with Impératif (Commands)</h2>
+<p><em>Scenario: Giving instructions — but replacing the noun</em><br>
+<em>Connection to Project 13: Impératif structures now with pronouns</em></p>
+<table><thead><tr><th>#</th><th>Without Pronoun</th><th>With Pronoun (Affirmative)</th><th>English</th><th>Rule</th></tr></thead><tbody><tr><td>71</td><td>Regarde le film.</td><td>Regarde-<strong>le</strong>.</td><td>Watch it.</td><td>Verb + hyphen + pronoun</td></tr><tr><td>72</td><td>Prends la clé.</td><td>Prends-<strong>la</strong>.</td><td>Take it.</td><td>Verb + hyphen + pronoun</td></tr><tr><td>73</td><td>Appelle tes parents.</td><td>Appelle-<strong>les</strong>.</td><td>Call them.</td><td>Verb + hyphen + pronoun</td></tr><tr><td>74</td><td>Donne le livre à Marie.</td><td>Donne-<strong>lui</strong> le livre.</td><td>Give her the book.</td><td>Verb + hyphen + COI</td></tr><tr><td>75</td><td>Écris à tes amis.</td><td>Écris-<strong>leur</strong>.</td><td>Write to them.</td><td>Verb + hyphen + COI</td></tr><tr><td>76</td><td>Écoute-<strong>moi</strong>.</td><td>—</td><td>Listen to me.</td><td>Verb + hyphen + moi (NOT me)</td></tr><tr><td>77</td><td>Dis-<strong>nous</strong> la vérité.</td><td>—</td><td>Tell us the truth.</td><td>Verb + hyphen + nous</td></tr><tr><td>78</td><td>Montrez-<strong>moi</strong> le chemin.</td><td>—</td><td>Show me the way.</td><td>Verb + hyphen + moi</td></tr></tbody></table>
+<p><strong>Now the NEGATIVE imperative — pronouns jump BACK to normal position:</strong></p>
+<table><thead><tr><th>#</th><th>Negative Command</th><th>English</th><th>Rule</th></tr></thead><tbody><tr><td>79</td><td>Ne <strong>le</strong> regarde pas.</td><td>Don't watch it.</td><td>Ne + pronoun + verb + pas</td></tr><tr><td>80</td><td>Ne <strong>lui</strong> donne pas le livre.</td><td>Don't give him/her the book.</td><td>Ne + COI + verb + pas</td></tr></tbody></table>
+<p><strong>🧠 CRITICAL RULE — IMPÉRATIF PRONOUN POSITION:</strong></p>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>AFFIRMATIVE: Verb-PRONOUN     → Regarde-le ! Écoute-moi ! Dis-leur !
+</span>NEGATIVE:    Ne PRONOUN verb pas  → Ne le regarde pas ! Ne me dis pas !
+
+Special changes in affirmative:
+→ me → MOI     (Écoute-moi — NOT écoute-me)
+→ te → TOI     (Assieds-toi — NOT assieds-te)</code></pre></div>
+<hr>
+<h2>🔹 BLOCK I — COD vs. COI: The Decision Framework</h2>
+<p><em>Scenario: You're mid-sentence — how do you know which pronoun to use?</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>Object Type</th><th>Why</th><th>Pronoun</th></tr></thead><tbody><tr><td>81</td><td>Je vois <strong>Pierre</strong>. → Je <strong>le</strong> vois.</td><td>COD</td><td>voir + direct object (no "à")</td><td>le</td></tr><tr><td>82</td><td>Je parle <strong>à Pierre</strong>. → Je <strong>lui</strong> parle.</td><td>COI</td><td>parler <strong>à</strong> + person</td><td>lui</td></tr><tr><td>83</td><td>J'appelle <strong>Marie</strong>. → Je <strong>l'</strong> appelle.</td><td>COD</td><td>appeler + direct object</td><td>l'</td></tr><tr><td>84</td><td>Je téléphone <strong>à Marie</strong>. → Je <strong>lui</strong> téléphone.</td><td>COI</td><td>téléphoner <strong>à</strong> + person</td><td>lui</td></tr><tr><td>85</td><td>J'attends <strong>mes amis</strong>. → Je <strong>les</strong> attends.</td><td>COD</td><td>attendre + direct object</td><td>les</td></tr><tr><td>86</td><td>Je pense <strong>à mes amis</strong>. → Je pense <strong>à eux</strong>.</td><td>⚠️ SPECIAL</td><td>penser <strong>à</strong> → uses STRESS pronoun, NOT lui/leur</td><td>à eux</td></tr><tr><td>87</td><td>J'aide <strong>mon frère</strong>. → Je <strong>l'</strong> aide.</td><td>COD</td><td>aider + direct object (French!)</td><td>l'</td></tr><tr><td>88</td><td>J'obéis <strong>à mon père</strong>. → Je <strong>lui</strong> obéis.</td><td>COI</td><td>obéir <strong>à</strong> + person</td><td>lui</td></tr><tr><td>89</td><td>Je regarde <strong>la télé</strong>. → Je <strong>la</strong> regarde.</td><td>COD</td><td>regarder + direct object</td><td>la</td></tr><tr><td>90</td><td>Je ressemble <strong>à ma mère</strong>. → Je <strong>lui</strong> ressemble.</td><td>COI</td><td>ressembler <strong>à</strong> + person</td><td>lui</td></tr></tbody></table>
+<p><strong>🧠 CRITICAL DECISION FRAMEWORK:</strong></p>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>Step 1: Find the object (the noun after the verb)
+</span>Step 2: Is there "à" between the verb and the person?
+        → NO "à"  = COD → use le / la / les
+        → YES "à" = COI → use lui / leur
+Step 3: EXCEPTION — some "à" verbs use STRESS PRONOUNS instead:
+        → penser à    → je pense à LUI / à ELLE / à EUX
+        → tenir à     → je tiens à LUI / à ELLE
+        → s'habituer à → je m'habitue à LUI
+        (These will be expanded in Project 36 — double pronouns)</code></pre></div>
+<hr>
+<h2>🔹 BLOCK J — Full Conversational Flow: Pronouns in Natural Dialogue</h2>
+<p><em>Scenario: Real conversations where pronouns replace nouns across multiple exchanges</em></p>
+<table><thead><tr><th>#</th><th>Speaker</th><th>French</th><th>English</th><th>Pronoun Analysis</th></tr></thead><tbody><tr><td>91</td><td>A:</td><td>Tu as vu le dernier film de ce réalisateur ?</td><td>Have you seen this director's latest film?</td><td>Full noun — first mention</td></tr><tr><td>92</td><td>B:</td><td>Oui, je <strong>l'</strong> ai vu la semaine dernière.</td><td>Yes, I saw it last week.</td><td><strong>l'</strong> = COD (le film) before avoir — no agreement (masc)</td></tr><tr><td>93</td><td>A:</td><td>Tu <strong>l'</strong> as aimé ?</td><td>Did you like it?</td><td><strong>l'</strong> = COD repeated</td></tr><tr><td>94</td><td>B:</td><td>Je <strong>l'</strong> ai trouvé excellent.</td><td>I found it excellent.</td><td><strong>l'</strong> = COD — trouvé (no fem agreement — masc noun)</td></tr><tr><td>95</td><td>A:</td><td>Tu as parlé à Sophie de ce film ?</td><td>Did you tell Sophie about this film?</td><td>Full noun — first mention of Sophie</td></tr><tr><td>96</td><td>B:</td><td>Oui, je <strong>lui</strong> ai envoyé un message.</td><td>Yes, I sent her a message.</td><td><strong>lui</strong> = COI (à Sophie) — no agreement with COI</td></tr><tr><td>97</td><td>A:</td><td>Et elle, elle veut <strong>le</strong> voir ?</td><td>And her, does she want to see it?</td><td><strong>le</strong> = COD before infinitif</td></tr><tr><td>98</td><td>B:</td><td>Je <strong>lui</strong> ai dit de <strong>le</strong> regarder ce week-end.</td><td>I told her to watch it this weekend.</td><td><strong>lui</strong> = COI (told HER) + <strong>le</strong> = COD (watch IT) — two pronouns in one sentence</td></tr><tr><td>99</td><td>A:</td><td>Bon, recommande-<strong>le</strong>-<strong>moi</strong> aussi !</td><td>Well, recommend it to me too!</td><td><strong>le</strong> = COD + <strong>moi</strong> = COI — impératif affirmative position</td></tr><tr><td>100</td><td>B:</td><td>Je <strong>te</strong> <strong>le</strong> recommande sans hésiter.</td><td>I recommend it to you without hesitation.</td><td><strong>te</strong> = COI (to you) + <strong>le</strong> = COD (it) — double pronoun preview (Project 36)</td></tr></tbody></table>
+<p><strong>🧠 Structure unlocked:</strong> In natural conversation, <strong>pronouns accumulate</strong> — sentences 98-100 show <strong>two pronouns in one sentence</strong><br>
+→ This is a <strong>preview</strong> of Project 36 (Double Pronoun Stacking)<br>
+→ For now, recognize the pattern — full mastery comes later</p>
+<hr>
+<h1>✅ WHAT SHOULD DO</h1>
+<p>→ <strong>Always identify the object FIRST</strong> — is it direct (no "à") or indirect ("à" + person)?<br>
+→ <strong>Practice replacing nouns in sentences you already know</strong> from Projects 1-18<br>
+→ <strong>Read the pronoun sentences aloud</strong> — train your ear to hear the pronoun before the verb<br>
+→ <strong>Start with COD only</strong> — master le/la/les before adding lui/leur<br>
+→ <strong>Pay attention to agreement</strong> in passé composé with COD before avoir<br>
+→ <strong>Memorize the impératif exception</strong> — pronoun goes AFTER in affirmative, BEFORE in negative</p>
+<hr>
+<h1>❌ WHAT SHOULD NOT DO</h1>
+<p>→ ❌ Do NOT put the pronoun AFTER the verb in declarative sentences</p>
+<table><thead><tr><th>Wrong</th><th>Correct</th></tr></thead><tbody><tr><td><del>Je vois le</del></td><td>Je <strong>le</strong> vois</td></tr><tr><td><del>J'ai appelé la</del></td><td>Je <strong>l'</strong> ai appelée</td></tr></tbody></table>
+<p>→ ❌ Do NOT use <strong>le/la</strong> for indirect objects</p>
+<table><thead><tr><th>Wrong</th><th>Correct</th></tr></thead><tbody><tr><td><del>Je <strong>la</strong> parle</del> (talking TO her)</td><td>Je <strong>lui</strong> parle</td></tr><tr><td><del>Je <strong>les</strong> téléphone</del></td><td>Je <strong>leur</strong> téléphone</td></tr></tbody></table>
+<p>→ ❌ Do NOT forget agreement with COD before avoir</p>
+<table><thead><tr><th>Wrong</th><th>Correct</th></tr></thead><tbody><tr><td><del>Je l'ai vu</del> (talking about "la lettre")</td><td>Je l'ai vu<strong>e</strong></td></tr><tr><td><del>Je les ai invité</del> (talking about "les filles")</td><td>Je les ai invité<strong>es</strong></td></tr></tbody></table>
+<p>→ ❌ Do NOT use "me/te" in affirmative impératif</p>
+<table><thead><tr><th>Wrong</th><th>Correct</th></tr></thead><tbody><tr><td><del>Écoute-me</del></td><td>Écoute-<strong>moi</strong></td></tr><tr><td><del>Assieds-te</del></td><td>Assieds-<strong>toi</strong></td></tr></tbody></table>
+<p>→ ❌ Do NOT use lui/leur with "penser à" or "tenir à"</p>
+<table><thead><tr><th>Wrong</th><th>Correct</th></tr></thead><tbody><tr><td><del>Je lui pense</del></td><td>Je pense <strong>à lui</strong></td></tr><tr><td><del>Je leur tiens</del></td><td>Je tiens <strong>à eux</strong></td></tr></tbody></table>
+<hr>
+<h1>🔀 WHEN TO USE WHAT</h1>
+<table><thead><tr><th>Situation</th><th>Pronoun Type</th><th>Example</th></tr></thead><tbody><tr><td>Replacing a <strong>thing/person</strong> directly acted upon</td><td><strong>COD</strong> (le, la, l', les)</td><td>Je <strong>le</strong> vois</td></tr><tr><td>Replacing a <strong>person</strong> after "à"</td><td><strong>COI</strong> (lui, leur)</td><td>Je <strong>lui</strong> parle</td></tr><tr><td>Replacing <strong>me/you/us</strong> (any role)</td><td>me, te, nous, vous</td><td>Il <strong>me</strong> voit / Il <strong>me</strong> parle</td></tr><tr><td>Giving an <strong>affirmative command</strong></td><td>Pronoun AFTER verb</td><td>Regarde-<strong>le</strong> !</td></tr><tr><td>Giving a <strong>negative command</strong></td><td>Pronoun BEFORE verb</td><td>Ne <strong>le</strong> regarde pas !</td></tr><tr><td><strong>Passé composé</strong> with avoir</td><td>Pronoun before auxiliary</td><td>Je <strong>l'</strong> ai vu(e)</td></tr><tr><td><strong>Futur proche</strong> (aller + inf)</td><td>Pronoun before infinitif</td><td>Je vais <strong>le</strong> faire</td></tr><tr><td><strong>Simple tenses</strong> (futur, conditionnel, présent, imparfait)</td><td>Pronoun before conjugated verb</td><td>Je <strong>le</strong> ferai</td></tr></tbody></table>
+<hr>
+<h1>🚫 WHEN NOT TO USE</h1>
+<table><thead><tr><th>Situation</th><th>Do NOT Use Object Pronouns</th><th>Use Instead</th></tr></thead><tbody><tr><td>The noun is mentioned for the <strong>first time</strong></td><td>❌ No pronoun yet</td><td>Full noun — "J'ai vu <strong>un film</strong>"</td></tr><tr><td>After prepositions like <strong>penser à, tenir à</strong></td><td>❌ NOT lui/leur</td><td>Stress pronouns — à <strong>lui</strong>, à <strong>eux</strong></td></tr><tr><td>Replacing a <strong>place</strong></td><td>❌ NOT le/la</td><td><strong>Y</strong> — (Project 20)</td></tr><tr><td>Replacing a <strong>quantity</strong> or "de + noun"</td><td>❌ NOT le/la</td><td><strong>En</strong> — (Project 20)</td></tr><tr><td>The object is a <strong>full clause</strong> (que...)</td><td>❌ NOT le/la usually</td><td>Different structure needed</td></tr></tbody></table>
+<hr>
+<h1>⚠️ COMMON PITFALLS AND FAILURE MODES</h1>
+<table><thead><tr><th>Pitfall</th><th>What Learners Do</th><th>Why It's Wrong</th><th>Fix</th></tr></thead><tbody><tr><td><strong>English word order</strong></td><td>Je vois le / J'appelle la</td><td>Pronoun must go BEFORE verb in French</td><td>Je <strong>le</strong> vois / Je <strong>l'</strong> appelle</td></tr><tr><td><strong>COD vs COI confusion</strong></td><td>Je <strong>le</strong> téléphone</td><td>Téléphoner <strong>à</strong> = COI needed</td><td>Je <strong>lui</strong> téléphone</td></tr><tr><td><strong>No agreement in PC</strong></td><td>Je l'ai vu (about "la robe")</td><td>COD before avoir → agreement</td><td>Je l'ai vu<strong>e</strong></td></tr><tr><td><strong>Agreement with COI</strong></td><td>Je lui ai parlé<strong>e</strong></td><td>COI NEVER triggers agreement</td><td>Je lui ai parlé</td></tr><tr><td><strong>Futur proche position</strong></td><td>Je <strong>le</strong> vais faire</td><td>Pronoun goes before INFINITIF, not aller</td><td>Je vais <strong>le</strong> faire</td></tr><tr><td><strong>Impératif me/te</strong></td><td>Donne-me / Dis-te</td><td>Affirmative impératif → moi / toi</td><td>Donne-<strong>moi</strong> / Dis-<strong>toi</strong></td></tr><tr><td><strong>Lui = him only</strong></td><td>Using "la" for "to her"</td><td>Lui = to him AND to her</td><td>Je <strong>lui</strong> parle (to her too)</td></tr><tr><td><strong>Penser à + lui/leur</strong></td><td>Je lui pense</td><td>Penser à uses stress pronouns</td><td>Je pense <strong>à lui</strong></td></tr><tr><td><strong>Forgetting l' before vowels</strong></td><td>Je la aime / Je le écoute</td><td>Elision required before vowels</td><td>Je <strong>l'</strong> aime / Je <strong>l'</strong> écoute</td></tr><tr><td><strong>Double pronouns too early</strong></td><td>Trying to replace BOTH objects</td><td>Wait for Project 36 — master one at a time first</td><td>Replace ONE noun, keep the other</td></tr></tbody></table>
+<hr>
+<h1>🔑 KEY TAKEAWAY</h1>
+<blockquote>
+<p><strong>Object pronouns are the compression engine of French.</strong></p>
+<p>→ Every structure from Projects 1–18 — present, past, future, conditional, imperative, si-clauses — now becomes <strong>shorter and more natural</strong> with pronouns<br>
+→ The TWO decisions you make every time:<br>
+→ <strong>1. COD or COI?</strong> (Is there "à" before the person?)<br>
+→ <strong>2. Where does it go?</strong> (Before conjugated verb, before infinitif, or after impératif)</p>
+<p>→ In Project 18, you built si-clauses: "Si tu vois Marie, dis à Marie bonjour"<br>
+→ Now you can say: "Si tu <strong>la</strong> vois, dis-<strong>lui</strong> bonjour" — <strong>this is how natives actually speak</strong></p>
+<p>→ But you've noticed two gaps:<br>
+→ You can't yet replace <strong>places</strong> → "I go <strong>there</strong>"<br>
+→ You can't yet replace <strong>quantities</strong> → "I want <strong>some</strong>"<br>
+→ Those require two special pronouns: <strong>Y</strong> and <strong>EN</strong></p>
+</blockquote>
+<hr>
+<h1>🌉 BRIDGE TO PROJECT 20</h1>
+<blockquote>
+<p>You now replace <strong>people and things</strong> with le, la, les, lui, leur<br>
+But what about:</p>
+<p>→ "Tu vas <strong>à Paris</strong> ?" → "Tu <strong>y</strong> vas ?" (replacing a place)<br>
+→ "Tu veux <strong>du café</strong> ?" → "Tu <strong>en</strong> veux ?" (replacing a quantity)<br>
+→ "Tu as <strong>des enfants</strong> ?" → "Tu <strong>en</strong> as ?" (replacing de + noun)</p>
+<p>→ <strong>Y</strong> replaces "à + place" or "à + thing"<br>
+→ <strong>En</strong> replaces "de + noun" or "quantity expressions"<br>
+→ These two tiny words are <strong>the most used pronouns in spoken French</strong><br>
+→ They plug into every structure — and combine with the COD/COI pronouns from this project</p>
+<p>→ Project 20: <strong>"The Two Magic Words: Y and En"</strong></p>
+</blockquote>
+<hr>
+<h1>✅ PROJECT 19 COMPLETE</h1>
+<blockquote>
+<p><strong>Are you ready for PROJECT 20: "The Two Magic Words: Y and En"?</strong><br>
+→ ~100 sentences covering Y (place/à + noun) and En (de + noun / quantities)<br>
+→ Scenario: You keep saying the full place or quantity — natives don't<br>
+→ Builds directly on COD/COI pronouns — adds the final two compression tools</p>
+</blockquote>
+</div>
+</div>
+
+<!-- ========== data-index="9" ========== -->
+
+        </div>
+
+        <div class="nav-bar">
+            <a href="project-18.html" class="nav-button prev">← Previous Chapter</a>
+            <div class="page-info">
+                <a href="index.html" class="nav-button home">📚 Table of Contents</a><br>
+                <span style="margin-top:8px;display:block">Chapter 19 of 50</span>
+            </div>
+            <a href="project-20.html" class="nav-button next">Next Chapter →</a>
+        </div>
+    </div>
+
+    
+    <div id="progress-track"><div id="progress-fill"></div></div>
+    <div id="progress-pct">0%</div>
+
+
+    <script>
+    const fill = document.getElementById('progress-fill');
+    const pct  = document.getElementById('progress-pct');
+    function updateProgress() {
+        const scrollTop = window.scrollY;
+        const docHeight = document.body.scrollHeight - window.innerHeight;
+        const scrolled  = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+        fill.style.height = scrolled + '%';
+        pct.textContent   = Math.round(scrolled) + '%';
+    }
+    window.addEventListener('scroll', updateProgress);
+    updateProgress();
+
+    document.addEventListener('keydown', function(e) {
+        if (['INPUT','TEXTAREA'].includes(document.activeElement.tagName)) return;
+        if (e.key === 'ArrowLeft') {
+            const b = document.querySelector('.nav-button.prev');
+            if (b && !b.classList.contains('disabled')) window.location.href = b.href;
+        }
+        if (e.key === 'ArrowRight') {
+            const b = document.querySelector('.nav-button.next');
+            if (b && !b.classList.contains('disabled')) window.location.href = b.href;
+        }
+    });
+    </script>
+
+</body>
+</html>

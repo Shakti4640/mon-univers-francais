@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="images/favicon.png">
+    <title>Project 16: "What Will Happen Someday" — French Daily Sentences</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.75;
+            color: #1a202c;
+            background-color: #f7fafc;
+        }
+        .container {
+            max-width: 1800px;
+            margin: 0 auto;
+            background: white;
+            min-height: 100vh;
+            box-shadow: 0 0 30px rgba(0,0,0,0.08);
+            padding: 48px 52px;
+        }
+        
+        .content { max-width: 1700px; margin: 0 auto; color: #1a202c; }
+        .content h1 {
+            color: #1a202c; margin: 32px 0 20px;
+            padding-bottom: 12px;
+            border-bottom: 4px solid #3b82f6;
+            font-size: 2.1em;
+            font-weight: 700;
+        }
+        .content h2 {
+            color: #1a202c; margin: 28px 0 16px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #60a5fa;
+            font-size: 1.6em;
+            font-weight: 600;
+        }
+        .content h3 { color: #1a202c; margin: 22px 0 12px; font-size: 1.3em; font-weight: 600; }
+        .content h4 { color: #2d3748; margin: 18px 0 10px; font-size: 1.1em; font-weight: 600; }
+        .content p  { margin-bottom: 16px; line-height: 1.8; color: #1a202c; }
+        .content ul, .content ol { margin: 12px 0 18px 30px; color: #1a202c; }
+        .content li { margin-bottom: 8px; line-height: 1.75; color: #1a202c; }
+        .content hr { border: none; border-top: 2px solid #e2e8f0; margin: 26px 0; }
+        .content pre {
+            background: #f7fafc !important;
+            border: 1px solid #cbd5e0 !important;
+            border-left: 4px solid #3b82f6 !important;
+            padding: 18px !important; overflow-x: auto; margin: 18px 0; border-radius: 6px;
+            font-family: 'Consolas','Monaco','Courier New',monospace !important;
+            font-size: 0.9em !important;
+        }
+        .content pre:not([style*="color"]) { color: #1a202c !important; }
+        .content code {
+            font-family: 'Consolas','Monaco','Courier New',monospace !important;
+            font-size: 0.88em !important;
+        }
+        .content code:not(pre code) {
+            background: #dbeafe !important;
+            color: #1a202c !important;
+            padding: 2px 6px;
+            border-radius: 3px;
+        }
+        .content pre code { background: transparent !important; padding: 0; }
+        .content table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+        .content th {
+            background: linear-gradient(135deg, #3b82f6 0%, #60a5fa 100%);
+            color: white; padding: 12px 16px; text-align: left;
+            font-weight: 600;
+        }
+        .content td { padding: 11px 16px; border: 1px solid #e2e8f0; color: #1a202c; }
+        .content tr:nth-child(even) td { background: #eff6ff; }
+        .content blockquote {
+            border-left: 4px solid #3b82f6; background: #eff6ff;
+            padding: 14px 20px; margin: 18px 0; border-radius: 0 6px 6px 0;
+            color: #1a202c;
+        }
+        .content strong { color: #1a202c; font-weight: 600; }
+        .px-2 { padding: 0; }
+        .chat-message { background: transparent; padding: 0; margin: 0; }
+
+        /* Bottom nav bar only */
+        .nav-bar {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 24px 0;
+            margin-top: 50px;
+            border-top: 3px solid #60a5fa;
+        }
+        .nav-button {
+            display: inline-flex; align-items: center; gap: 8px;
+            padding: 12px 26px;
+            background: linear-gradient(135deg, #3b82f6 0%, #60a5fa 100%);
+            color: white !important; text-decoration: none;
+            border-radius: 8px; font-weight: 600; font-size: 0.95em;
+            transition: all 0.2s;
+            box-shadow: 0 2px 8px rgba(59,130,246,0.35);
+        }
+        .nav-button:hover { transform: translateY(-2px); box-shadow: 0 4px 14px rgba(59,130,246,0.5); }
+        .nav-button.disabled { background: #cbd5e1; box-shadow: none; pointer-events: none; }
+        .nav-button.home {
+            background: linear-gradient(135deg, #ef4444 0%, #f87171 100%);
+            box-shadow: 0 2px 8px rgba(239,68,68,0.35);
+        }
+        .nav-button.home:hover { box-shadow: 0 4px 14px rgba(239,68,68,0.5); }
+        .page-info { color: #718096; font-size: 0.9em; text-align: center; }
+
+        /* Progress bar */
+        #progress-track {
+            position: fixed; top: 20px; right: 20px;
+            width: 10px; height: 150px;
+            background: rgba(59,130,246,0.2);
+            border: 2px solid #3b82f6;
+            border-radius: 6px; overflow: hidden; z-index: 1000;
+        }
+        #progress-fill {
+            width: 100%;
+            background: linear-gradient(180deg, #3b82f6, #2563eb);
+            height: 0%;
+            transition: height 0.15s ease;
+        }
+        #progress-pct {
+            position: fixed; top: 0px; right: 16px;
+            color: #2563eb; font-size: 14px; font-weight: bold;
+            z-index: 1001;
+            text-shadow: 0 1px 2px rgba(255,255,255,0.9);
+            line-height: 20px;
+        }
+
+    </style>
+<link rel="stylesheet" href="assets/chapters.css?v=20260421203847"><script src="assets/chapters.js?v=20260421203847" defer></script>
+</head>
+<body>
+    <div class="container">
+        <div class="content">
+            <div class="chat-message" data-index="33">
+<div class="px-2"><h1>🟡 PROJECT 16: "What Will Happen Someday"</h1>
+<h2><em>You're talking about future career plans, predictions, and promises — the formal future</em></h2>
+<hr>
+<h1>🎯 THE HYPOTHETICAL PROBLEM</h1>
+<p>→ You've been in France for <strong>three months</strong> now — your French has improved dramatically<br>
+→ Your language school organizes a <strong>career workshop</strong> — students discuss their professional futures<br>
+→ The career counselor asks: <strong>"Où est-ce que vous vous voyez dans cinq ans ?"</strong> (Where do you see yourself in five years?)<br>
+→ Students around you start answering:<br>
+→ → <strong>"Je travaillerai dans une entreprise internationale."</strong> (I will work in an international company.)<br>
+→ → <strong>"J'habiterai à l'étranger."</strong> (I will live abroad.)<br>
+→ → <strong>"Je serai médecin."</strong> (I will be a doctor.)<br>
+→ You try to answer using futur proche (Project 12):<br>
+→ → "Je vais travailler dans une entreprise." — technically correct, but sounds <strong>too casual and immediate</strong> for a five-year plan<br>
+→ → "Je vais être médecin." — sounds like you're about to become a doctor RIGHT NOW<br>
+→ The counselor gently corrects: <strong>"En français formel, on utilise le futur simple pour les projets à long terme."</strong><br>
+→ You also notice the futur simple in:<br>
+→ → <strong>News broadcasts:</strong> "Le président parlera demain." (The president will speak tomorrow.)<br>
+→ → <strong>Weather forecasts:</strong> "Il pleuvra dans l'après-midi." (It will rain in the afternoon.)<br>
+→ → <strong>Promises:</strong> "Je te le promets, je reviendrai." (I promise you, I will come back.)<br>
+→ → <strong>Formal instructions:</strong> "Vous enverrez le document avant vendredi." (You will send the document before Friday.)<br>
+→ → <strong>Predictions:</strong> "Un jour, tu comprendras." (One day, you will understand.)</p>
+<p><strong>The core realization:</strong><br>
+→ French has TWO future tenses — and they're NOT interchangeable in all situations:</p>
+<table><thead><tr><th>Tense</th><th>Register</th><th>Time Frame</th><th>Feeling</th></tr></thead><tbody><tr><td><strong>Futur proche</strong> (Project 12)</td><td>Casual / Spoken</td><td>Near future / Immediate</td><td>Plans, intentions, what's about to happen</td></tr><tr><td><strong>Futur simple</strong> (Project 16)</td><td>Formal / Written / Spoken</td><td>Near OR distant future</td><td>Predictions, promises, formal plans, certainty</td></tr></tbody></table>
+<p>→ In daily conversation, futur proche dominates (~80% of future expressions)<br>
+→ But futur simple is ESSENTIAL for:<br>
+→ → Formal speech, professional contexts, writing<br>
+→ → Promises, predictions, philosophical statements<br>
+→ → After certain conjunctions (quand, dès que, lorsque — a rule English doesn't have)<br>
+→ → Sounding educated and professional</p>
+<hr>
+<h1>🔍 HOW TO APPROACH IT</h1>
+<p>→ The futur simple is built differently from everything you've learned so far<br>
+→ It does NOT use an auxiliary verb (no avoir, no être, no aller)<br>
+→ It's a <strong>single-word</strong> tense — the future meaning is built INTO the verb itself<br>
+→ The formula:</p>
+<code>INFINITIF (full verb) + FUTURE ENDINGS</code>
+<p>→ You literally take the infinitif and ADD endings to it<br>
+→ The endings are the SAME for ALL verbs — no exceptions<br>
+→ The only thing that varies is the <strong>STEM</strong> — regular verbs use the full infinitif, irregular verbs have special stems</p>
+<hr>
+<h1>🔧 HOW CAN WE SOLVE IT</h1>
+<h2>Step 1 — The Future Endings (Universal — Same for ALL Verbs)</h2>
+<table><thead><tr><th>Subject</th><th>Ending</th><th>Pronunciation</th></tr></thead><tbody><tr><td>Je</td><td><strong>-ai</strong></td><td>"ay"</td></tr><tr><td>Tu</td><td><strong>-as</strong></td><td>"ah"</td></tr><tr><td>Il / Elle / On</td><td><strong>-a</strong></td><td>"ah"</td></tr><tr><td>Nous</td><td><strong>-ons</strong></td><td>"on"</td></tr><tr><td>Vous</td><td><strong>-ez</strong></td><td>"ay"</td></tr><tr><td>Ils / Elles</td><td><strong>-ont</strong></td><td>"on"</td></tr></tbody></table>
+<p><strong>🧠 NOTICE SOMETHING?</strong><br>
+→ These endings look exactly like the <strong>present tense of AVOIR:</strong><br>
+→ → j'<strong>ai</strong>, tu <strong>as</strong>, il <strong>a</strong>, nous <strong>avons</strong>, vous <strong>avez</strong>, ils <strong>ont</strong><br>
+→ This is NOT a coincidence — historically, the futur simple was built from the infinitif + avoir<br>
+→ → "Parler + ai" → "Parlerai" = "I will speak" (literally: "to speak I have")<br>
+→ This makes them easier to remember — you already know avoir!</p>
+<hr>
+<h2>Step 2 — Regular -ER Verbs: Infinitif + Endings</h2>
+<code>PARLER + endings = future forms</code>
+<table><thead><tr><th>Subject</th><th>Infinitif + Ending</th><th>Full Form</th><th>Pronunciation</th></tr></thead><tbody><tr><td>Je</td><td>parler + ai</td><td><strong>parlerai</strong></td><td>"parl-ray"</td></tr><tr><td>Tu</td><td>parler + as</td><td><strong>parleras</strong></td><td>"parl-rah"</td></tr><tr><td>Il / Elle / On</td><td>parler + a</td><td><strong>parlera</strong></td><td>"parl-rah"</td></tr><tr><td>Nous</td><td>parler + ons</td><td><strong>parlerons</strong></td><td>"parl-ron"</td></tr><tr><td>Vous</td><td>parler + ez</td><td><strong>parlerez</strong></td><td>"parl-ray"</td></tr><tr><td>Ils / Elles</td><td>parler + ont</td><td><strong>parleront</strong></td><td>"parl-ron"</td></tr></tbody></table>
+<p>→ Take the FULL infinitif (parler) → add endings directly<br>
+→ Works for ALL regular -ER verbs: manger → mangerai, travailler → travaillerai, habiter → habiterai</p>
+<hr>
+<h2>Step 3 — Regular -IR Verbs: Infinitif + Endings</h2>
+<code>FINIR + endings = future forms</code>
+<table><thead><tr><th>Subject</th><th>Full Form</th></tr></thead><tbody><tr><td>Je</td><td><strong>finirai</strong></td></tr><tr><td>Tu</td><td><strong>finiras</strong></td></tr><tr><td>Il / Elle / On</td><td><strong>finira</strong></td></tr><tr><td>Nous</td><td><strong>finirons</strong></td></tr><tr><td>Vous</td><td><strong>finirez</strong></td></tr><tr><td>Ils / Elles</td><td><strong>finiront</strong></td></tr></tbody></table>
+<p>→ Same principle: full infinitif + endings<br>
+→ Works for: choisir → choisirai, dormir → dormirai, partir → partirai, sortir → sortirai</p>
+<hr>
+<h2>Step 4 — Regular -RE Verbs: Drop the Final -E, Then Add Endings</h2>
+<code>ATTENDRE → ATTENDR + endings</code>
+<table><thead><tr><th>Subject</th><th>Full Form</th></tr></thead><tbody><tr><td>Je</td><td><strong>attendrai</strong></td></tr><tr><td>Tu</td><td><strong>attendras</strong></td></tr><tr><td>Il / Elle / On</td><td><strong>attendra</strong></td></tr><tr><td>Nous</td><td><strong>attendrons</strong></td></tr><tr><td>Vous</td><td><strong>attendrez</strong></td></tr><tr><td>Ils / Elles</td><td><strong>attendront</strong></td></tr></tbody></table>
+<p>→ Remove the final <strong>-e</strong> from the infinitif → then add endings<br>
+→ → Attendre → attendr- → attendrai<br>
+→ → Prendre → prendr- → prendrai<br>
+→ → Répondre → répondr- → répondrai<br>
+→ Why? Because "attendreai" would have an awkward double vowel</p>
+<hr>
+<h2>Step 5 — Irregular Stems (The Stems Change — The Endings DON'T)</h2>
+<p><strong>CRITICAL: The endings are ALWAYS the same (-ai, -as, -a, -ons, -ez, -ont)</strong><br>
+<strong>Only the STEM is irregular for some verbs</strong></p>
+<table><thead><tr><th>Infinitif</th><th>Irregular Stem</th><th>Je Form</th><th>English</th></tr></thead><tbody><tr><td><strong>être</strong></td><td><strong>ser-</strong></td><td>je <strong>serai</strong></td><td>I will be</td></tr><tr><td><strong>avoir</strong></td><td><strong>aur-</strong></td><td>j'<strong>aurai</strong></td><td>I will have</td></tr><tr><td><strong>aller</strong></td><td><strong>ir-</strong></td><td>j'<strong>irai</strong></td><td>I will go</td></tr><tr><td><strong>faire</strong></td><td><strong>fer-</strong></td><td>je <strong>ferai</strong></td><td>I will do/make</td></tr><tr><td><strong>venir</strong></td><td><strong>viendr-</strong></td><td>je <strong>viendrai</strong></td><td>I will come</td></tr><tr><td><strong>voir</strong></td><td><strong>verr-</strong></td><td>je <strong>verrai</strong></td><td>I will see</td></tr><tr><td><strong>pouvoir</strong></td><td><strong>pourr-</strong></td><td>je <strong>pourrai</strong></td><td>I will be able to</td></tr><tr><td><strong>vouloir</strong></td><td><strong>voudr-</strong></td><td>je <strong>voudrai</strong></td><td>I will want</td></tr><tr><td><strong>devoir</strong></td><td><strong>devr-</strong></td><td>je <strong>devrai</strong></td><td>I will have to</td></tr><tr><td><strong>savoir</strong></td><td><strong>saur-</strong></td><td>je <strong>saurai</strong></td><td>I will know</td></tr><tr><td><strong>envoyer</strong></td><td><strong>enverr-</strong></td><td>j'<strong>enverrai</strong></td><td>I will send</td></tr><tr><td><strong>courir</strong></td><td><strong>courr-</strong></td><td>je <strong>courrai</strong></td><td>I will run</td></tr><tr><td><strong>mourir</strong></td><td><strong>mourr-</strong></td><td>je <strong>mourrai</strong></td><td>I will die</td></tr><tr><td><strong>recevoir</strong></td><td><strong>recevr-</strong></td><td>je <strong>recevrai</strong></td><td>I will receive</td></tr><tr><td><strong>falloir</strong></td><td><strong>faudr-</strong></td><td>il <strong>faudra</strong></td><td>it will be necessary</td></tr><tr><td><strong>pleuvoir</strong></td><td><strong>pleuvr-</strong></td><td>il <strong>pleuvra</strong></td><td>it will rain</td></tr><tr><td><strong>tenir</strong></td><td><strong>tiendr-</strong></td><td>je <strong>tiendrai</strong></td><td>I will hold</td></tr><tr><td><strong>appeler</strong></td><td><strong>appeller-</strong></td><td>j'<strong>appellerai</strong></td><td>I will call</td></tr><tr><td><strong>acheter</strong></td><td><strong>achèter-</strong></td><td>j'<strong>achèterai</strong></td><td>I will buy</td></tr><tr><td><strong>jeter</strong></td><td><strong>jetter-</strong></td><td>je <strong>jetterai</strong></td><td>I will throw</td></tr></tbody></table>
+<p><strong>🧠 GROUPING THE IRREGULAR STEMS BY PATTERN:</strong></p>
+<table><thead><tr><th>Pattern</th><th>Verbs</th><th>What Happens</th></tr></thead><tbody><tr><td><strong>Double R</strong></td><td>voir → verr-, pouvoir → pourr-, courir → courr-, mourir → mourr-, envoyer → enverr-</td><td>Extra "r" appears</td></tr><tr><td><strong>DR</strong></td><td>venir → viendr-, tenir → tiendr-</td><td>"dr" replaces "ir"</td></tr><tr><td><strong>Completely different stem</strong></td><td>être → ser-, avoir → aur-, aller → ir-, faire → fer-, savoir → saur-</td><td>Must memorize individually</td></tr><tr><td><strong>Spelling change</strong></td><td>appeler → appeller-, acheter → achèter-, jeter → jetter-</td><td>Double consonant or accent change</td></tr><tr><td><strong>Impersonal</strong></td><td>falloir → faudr- (il faudra), pleuvoir → pleuvr- (il pleuvra)</td><td>Only used in "il" form</td></tr></tbody></table>
+<p>→ The <strong>double-R group</strong> is the easiest to remember: the stem gets an extra R<br>
+→ The <strong>completely different stems</strong> must be memorized: ser-, aur-, ir-, fer-, saur-<br>
+→ But remember: <strong>the endings NEVER change</strong> — once you know the stem, you know ALL six forms</p>
+<hr>
+<h2>Step 6 — Complete Conjugation of the 5 Most Important Irregular Verbs</h2>
+<h3>ÊTRE → SER-</h3>
+<table><thead><tr><th>Subject</th><th>Form</th></tr></thead><tbody><tr><td>Je</td><td><strong>serai</strong></td></tr><tr><td>Tu</td><td><strong>seras</strong></td></tr><tr><td>Il / Elle / On</td><td><strong>sera</strong></td></tr><tr><td>Nous</td><td><strong>serons</strong></td></tr><tr><td>Vous</td><td><strong>serez</strong></td></tr><tr><td>Ils / Elles</td><td><strong>seront</strong></td></tr></tbody></table>
+<h3>AVOIR → AUR-</h3>
+<table><thead><tr><th>Subject</th><th>Form</th></tr></thead><tbody><tr><td>J'</td><td><strong>aurai</strong></td></tr><tr><td>Tu</td><td><strong>auras</strong></td></tr><tr><td>Il / Elle / On</td><td><strong>aura</strong></td></tr><tr><td>Nous</td><td><strong>aurons</strong></td></tr><tr><td>Vous</td><td><strong>aurez</strong></td></tr><tr><td>Ils / Elles</td><td><strong>auront</strong></td></tr></tbody></table>
+<h3>ALLER → IR-</h3>
+<table><thead><tr><th>Subject</th><th>Form</th></tr></thead><tbody><tr><td>J'</td><td><strong>irai</strong></td></tr><tr><td>Tu</td><td><strong>iras</strong></td></tr><tr><td>Il / Elle / On</td><td><strong>ira</strong></td></tr><tr><td>Nous</td><td><strong>irons</strong></td></tr><tr><td>Vous</td><td><strong>irez</strong></td></tr><tr><td>Ils / Elles</td><td><strong>iront</strong></td></tr></tbody></table>
+<h3>FAIRE → FER-</h3>
+<table><thead><tr><th>Subject</th><th>Form</th></tr></thead><tbody><tr><td>Je</td><td><strong>ferai</strong></td></tr><tr><td>Tu</td><td><strong>feras</strong></td></tr><tr><td>Il / Elle / On</td><td><strong>fera</strong></td></tr><tr><td>Nous</td><td><strong>ferons</strong></td></tr><tr><td>Vous</td><td><strong>ferez</strong></td></tr><tr><td>Ils / Elles</td><td><strong>feront</strong></td></tr></tbody></table>
+<h3>VENIR → VIENDR-</h3>
+<table><thead><tr><th>Subject</th><th>Form</th></tr></thead><tbody><tr><td>Je</td><td><strong>viendrai</strong></td></tr><tr><td>Tu</td><td><strong>viendras</strong></td></tr><tr><td>Il / Elle / On</td><td><strong>viendra</strong></td></tr><tr><td>Nous</td><td><strong>viendrons</strong></td></tr><tr><td>Vous</td><td><strong>viendrez</strong></td></tr><tr><td>Ils / Elles</td><td><strong>viendront</strong></td></tr></tbody></table>
+<hr>
+<h1>✅ WHAT COULD BE DONE — THE 100 SENTENCES</h1>
+<h2>🔹 BLOCK A — Career Plans: Regular Verbs in Futur Simple</h2>
+<p><em>Scenario: At the career workshop — discussing professional futures</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English Meaning</th><th>Verb / Stem</th></tr></thead><tbody><tr><td>1</td><td>Je travaillerai dans une entreprise internationale.</td><td>I will work in an international company.</td><td>travailler → travaillerai</td></tr><tr><td>2</td><td>Tu habiteras à l'étranger ?</td><td>Will you live abroad?</td><td>habiter → habiteras</td></tr><tr><td>3</td><td>Il étudiera la médecine.</td><td>He will study medicine.</td><td>étudier → étudiera</td></tr><tr><td>4</td><td>Elle créera sa propre entreprise.</td><td>She will create her own company.</td><td>créer → créera</td></tr><tr><td>5</td><td>On voyagera beaucoup.</td><td>We will travel a lot.</td><td>voyager → voyagera</td></tr><tr><td>6</td><td>Nous parlerons plusieurs langues.</td><td>We will speak several languages.</td><td>parler → parlerons</td></tr><tr><td>7</td><td>Vous gagnerez bien votre vie.</td><td>You will earn a good living.</td><td>gagner → gagnerez</td></tr><tr><td>8</td><td>Ils trouveront un bon emploi.</td><td>They will find a good job.</td><td>trouver → trouveront</td></tr><tr><td>9</td><td>Je finirai mes études en juin.</td><td>I will finish my studies in June.</td><td>finir → finirai</td></tr><tr><td>10</td><td>Elle choisira une spécialisation.</td><td>She will choose a specialization.</td><td>choisir → choisira</td></tr></tbody></table>
+<p><strong>🧠 Structure confirmed:</strong> <code>Subject + VERB (infinitif stem + future ending) + rest</code></p>
+<p><strong>🧠 Vocabulary for career discussions:</strong></p>
+<table><thead><tr><th>French</th><th>English</th></tr></thead><tbody><tr><td>une entreprise</td><td>a company</td></tr><tr><td>un emploi</td><td>a job</td></tr><tr><td>un métier</td><td>a profession / trade</td></tr><tr><td>les études</td><td>studies</td></tr><tr><td>une spécialisation</td><td>a specialization</td></tr><tr><td>gagner sa vie</td><td>to earn a living</td></tr><tr><td>à l'étranger</td><td>abroad</td></tr><tr><td>une carrière</td><td>a career</td></tr></tbody></table>
+<hr>
+<h2>🔹 BLOCK B — The Big 5 Irregulars: Être, Avoir, Aller, Faire, Venir</h2>
+<p><em>Scenario: Life predictions — what you will be, have, do, and where you will go</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English Meaning</th><th>Irregular Stem</th></tr></thead><tbody><tr><td>11</td><td>Je serai médecin.</td><td>I will be a doctor.</td><td>être → ser-</td></tr><tr><td>12</td><td>Tu seras heureux.</td><td>You will be happy.</td><td>être → ser-</td></tr><tr><td>13</td><td>Il sera prêt demain.</td><td>He will be ready tomorrow.</td><td>être → ser-</td></tr><tr><td>14</td><td>Elle sera en France en septembre.</td><td>She will be in France in September.</td><td>être → ser-</td></tr><tr><td>15</td><td>On sera ensemble.</td><td>We will be together.</td><td>être → ser-</td></tr><tr><td>16</td><td>J'aurai trente ans l'année prochaine.</td><td>I will be thirty next year.</td><td>avoir → aur-</td></tr><tr><td>17</td><td>Tu auras une bonne surprise.</td><td>You will have a nice surprise.</td><td>avoir → aur-</td></tr><tr><td>18</td><td>Il y aura beaucoup de monde.</td><td>There will be a lot of people.</td><td>avoir → aur- (il y aura)</td></tr><tr><td>19</td><td>J'irai en Italie cet été.</td><td>I will go to Italy this summer.</td><td>aller → ir-</td></tr><tr><td>20</td><td>On ira au restaurant pour fêter ça.</td><td>We will go to the restaurant to celebrate.</td><td>aller → ir-</td></tr><tr><td>21</td><td>Je ferai de mon mieux.</td><td>I will do my best.</td><td>faire → fer-</td></tr><tr><td>22</td><td>Qu'est-ce que tu feras après tes études ?</td><td>What will you do after your studies?</td><td>faire → fer-</td></tr><tr><td>23</td><td>Il fera beau demain.</td><td>The weather will be nice tomorrow.</td><td>faire → fer-</td></tr><tr><td>24</td><td>Elle viendra nous voir en décembre.</td><td>She will come see us in December.</td><td>venir → viendr-</td></tr><tr><td>25</td><td>Ils viendront avec leurs enfants.</td><td>They will come with their children.</td><td>venir → viendr-</td></tr></tbody></table>
+<p><strong>🧠 Sentence 18 — "IL Y AURA":</strong><br>
+→ "Il y a" (Project 3) in futur simple → "Il y <strong>aura</strong>"<br>
+→ Compare across tenses:</p>
+<table><thead><tr><th>Tense</th><th>"There is/are"</th></tr></thead><tbody><tr><td>Present (P3)</td><td>Il y <strong>a</strong></td></tr><tr><td>Imparfait (P10)</td><td>Il y <strong>avait</strong></td></tr><tr><td>Futur proche (P12)</td><td>Il <strong>va</strong> y avoir</td></tr><tr><td>Futur simple (P16)</td><td>Il y <strong>aura</strong></td></tr></tbody></table>
+<p>→ "Il y aura" is very common in formal predictions and news</p>
+<p><strong>🧠 Sentence 23 — Weather in futur simple:</strong><br>
+→ "Il <strong>fera</strong> beau" = The weather <strong>will be</strong> nice (formal prediction)<br>
+→ Compare: "Il <strong>va</strong> faire beau" = It's <strong>going to be</strong> nice (casual prediction)<br>
+→ Weather forecasts on TV/radio almost always use futur simple</p>
+<hr>
+<h2>🔹 BLOCK C — More Irregular Stems: Pouvoir, Vouloir, Devoir, Savoir, Voir</h2>
+<p><em>Scenario: Talking about future abilities, desires, obligations, knowledge</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English Meaning</th><th>Irregular Stem</th></tr></thead><tbody><tr><td>26</td><td>Je pourrai t'aider demain.</td><td>I will be able to help you tomorrow.</td><td>pouvoir → pourr-</td></tr><tr><td>27</td><td>Tu pourras venir samedi ?</td><td>Will you be able to come Saturday?</td><td>pouvoir → pourr-</td></tr><tr><td>28</td><td>On ne pourra pas rester longtemps.</td><td>We won't be able to stay long.</td><td>pouvoir → pourr-</td></tr><tr><td>29</td><td>Je voudrai un café, s'il vous plaît.</td><td>I will want a coffee, please.</td><td>vouloir → voudr-</td></tr><tr><td>30</td><td>Tu devras travailler dur.</td><td>You will have to work hard.</td><td>devoir → devr-</td></tr><tr><td>31</td><td>Il devra prendre une décision.</td><td>He will have to make a decision.</td><td>devoir → devr-</td></tr><tr><td>32</td><td>Nous devrons partir tôt.</td><td>We will have to leave early.</td><td>devoir → devr-</td></tr><tr><td>33</td><td>Tu sauras bientôt la vérité.</td><td>You will soon know the truth.</td><td>savoir → saur-</td></tr><tr><td>34</td><td>On saura demain.</td><td>We will know tomorrow.</td><td>savoir → saur-</td></tr><tr><td>35</td><td>Je verrai ce que je peux faire.</td><td>I will see what I can do.</td><td>voir → verr-</td></tr><tr><td>36</td><td>Tu verras, ça ira mieux.</td><td>You'll see, it will get better.</td><td>voir → verr-</td></tr><tr><td>37</td><td>Nous verrons bien.</td><td>We'll see.</td><td>voir → verr-</td></tr><tr><td>38</td><td>Vous verrez, c'est magnifique.</td><td>You'll see, it's magnificent.</td><td>voir → verr-</td></tr><tr><td>39</td><td>Il faudra réserver à l'avance.</td><td>It will be necessary to book in advance.</td><td>falloir → faudr-</td></tr><tr><td>40</td><td>Il faudra du courage.</td><td>Courage will be needed.</td><td>falloir → faudr-</td></tr></tbody></table>
+<p><strong>🧠 Key expressions using futur simple:</strong></p>
+<table><thead><tr><th>Expression</th><th>Meaning</th><th>When Used</th></tr></thead><tbody><tr><td><strong>On verra.</strong> / <strong>On verra bien.</strong></td><td>We'll see.</td><td>Deferring a decision — very common</td></tr><tr><td><strong>Tu verras.</strong></td><td>You'll see.</td><td>Reassuring someone about the future</td></tr><tr><td><strong>Il faudra + infinitif</strong></td><td>It will be necessary to...</td><td>Formal obligation (future of "il faut" — P6)</td></tr><tr><td><strong>Ça ira.</strong></td><td>It'll be fine. / It'll work out.</td><td>Reassurance (future of "aller")</td></tr><tr><td><strong>Je ferai de mon mieux.</strong></td><td>I'll do my best.</td><td>Promise / commitment</td></tr><tr><td><strong>Je saurai m'en souvenir.</strong></td><td>I'll remember. (I'll know how to remember.)</td><td>Formal commitment</td></tr></tbody></table>
+<p><strong>🧠 Sentence 29 — "JE VOUDRAI" vs. "JE VOUDRAIS":</strong><br>
+→ <strong>Je voudrai</strong> = futur simple → "I will want" (future fact)<br>
+→ <strong>Je voudrais</strong> = conditionnel → "I would like" (polite request — Project 6 preview, Project 17)<br>
+→ The difference is ONE letter: voudra<strong>i</strong> vs. voudra<strong>is</strong><br>
+→ In speech, they sound almost identical<br>
+→ In writing, the distinction matters:<br>
+→ → "Demain, je <strong>voudrai</strong> partir tôt." = Tomorrow, I will want to leave early. (future fact)<br>
+→ → "Je <strong>voudrais</strong> un café." = I would like a coffee. (polite request — now)<br>
+→ This distinction will be fully explored in Project 17 (Conditionnel)</p>
+<hr>
+<h2>🔹 BLOCK D — Promises and Commitments</h2>
+<p><em>Scenario: Making promises to friends, family, and yourself</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English Meaning</th><th>Promise Context</th></tr></thead><tbody><tr><td>41</td><td>Je t'appellerai demain.</td><td>I will call you tomorrow.</td><td>Promise to a friend</td></tr><tr><td>42</td><td>Je ne t'oublierai jamais.</td><td>I will never forget you.</td><td>Emotional promise</td></tr><tr><td>43</td><td>On se reverra bientôt.</td><td>We will see each other again soon.</td><td>Farewell promise</td></tr><tr><td>44</td><td>Je te le promets, je reviendrai.</td><td>I promise you, I will come back.</td><td>Strong commitment</td></tr><tr><td>45</td><td>Je ferai attention.</td><td>I will be careful.</td><td>Promise of caution</td></tr><tr><td>46</td><td>Nous t'enverrons les photos.</td><td>We will send you the photos.</td><td>Promise of action</td></tr><tr><td>47</td><td>Je ne dirai rien.</td><td>I won't say anything.</td><td>Promise of silence</td></tr><tr><td>48</td><td>Tu auras de mes nouvelles.</td><td>You will hear from me. (You'll have my news.)</td><td>Promise to stay in touch</td></tr><tr><td>49</td><td>Je serai toujours là pour toi.</td><td>I will always be there for you.</td><td>Emotional commitment</td></tr><tr><td>50</td><td>Un jour, je te raconterai tout.</td><td>One day, I will tell you everything.</td><td>Future promise</td></tr></tbody></table>
+<p><strong>🧠 FUTUR SIMPLE FOR PROMISES — why not futur proche?</strong><br>
+→ "Je vais t'appeler demain" = I'm going to call you tomorrow (plan — casual)<br>
+→ "Je t'appellerai demain" = I WILL call you tomorrow (promise — more weight, more commitment)<br>
+→ The futur simple carries a sense of <strong>certainty, determination, and solemnity</strong><br>
+→ When you make a PROMISE → futur simple sounds more serious and sincere<br>
+→ When you state a PLAN → futur proche sounds more natural and casual</p>
+<table><thead><tr><th>Context</th><th>Better Tense</th><th>Why</th></tr></thead><tbody><tr><td>"I'm going to eat at 8" (plan)</td><td>Futur proche</td><td>Casual intention</td></tr><tr><td>"I will always love you" (promise)</td><td>Futur simple</td><td>Solemn commitment</td></tr><tr><td>"It's going to rain" (evidence-based)</td><td>Futur proche</td><td>Immediate prediction</td></tr><tr><td>"It will rain tomorrow" (forecast)</td><td>Futur simple</td><td>Formal prediction</td></tr><tr><td>"I'll call you" (casual)</td><td>Either — both work</td><td>Futur proche = more common in speech</td></tr><tr><td>"I will never forget" (dramatic)</td><td>Futur simple</td><td>Emotional weight</td></tr></tbody></table>
+<hr>
+<h2>🔹 BLOCK E — Predictions and Forecasts</h2>
+<p><em>Scenario: Weather forecasts, news predictions, philosophical statements</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English Meaning</th><th>Prediction Type</th></tr></thead><tbody><tr><td>51</td><td>Demain, il pleuvra dans l'après-midi.</td><td>Tomorrow, it will rain in the afternoon.</td><td>Weather forecast</td></tr><tr><td>52</td><td>Les températures baisseront la semaine prochaine.</td><td>Temperatures will drop next week.</td><td>Weather forecast</td></tr><tr><td>53</td><td>Il fera froid en montagne.</td><td>It will be cold in the mountains.</td><td>Weather</td></tr><tr><td>54</td><td>Le président parlera ce soir à vingt heures.</td><td>The president will speak tonight at 8 PM.</td><td>News</td></tr><tr><td>55</td><td>Les élections auront lieu en juin.</td><td>The elections will take place in June.</td><td>News</td></tr><tr><td>56</td><td>Le prix de l'essence augmentera.</td><td>The price of gas will increase.</td><td>Economic prediction</td></tr><tr><td>57</td><td>La technologie changera notre façon de vivre.</td><td>Technology will change our way of living.</td><td>Philosophical</td></tr><tr><td>58</td><td>Un jour, tout le monde parlera plusieurs langues.</td><td>One day, everyone will speak several languages.</td><td>Philosophical</td></tr><tr><td>59</td><td>L'avenir nous le dira.</td><td>The future will tell us.</td><td>Expression</td></tr><tr><td>60</td><td>Le temps nous le dira.</td><td>Time will tell.</td><td>Expression</td></tr></tbody></table>
+<p><strong>🧠 FUTUR SIMPLE IN FORMAL/MEDIA FRENCH:</strong><br>
+→ News, weather, official announcements → almost always futur simple<br>
+→ "Le président <strong>parlera</strong>..." (formal) vs. "Le président <strong>va parler</strong>..." (casual — less common in news)<br>
+→ This is one of the clearest register differences between futur proche and futur simple</p>
+<p><strong>🧠 Key expressions:</strong><br>
+→ <strong>"L'avenir nous le dira"</strong> = The future will tell us → classic French philosophical expression<br>
+→ <strong>"Le temps nous le dira"</strong> = Time will tell → very common expression<br>
+→ <strong>"Qui vivra verra"</strong> = Who will live will see → "Time will tell" (proverb — literally: "Who will live will see")</p>
+<hr>
+<h2>🔹 BLOCK F — QUAND + Futur Simple (The French Rule English Doesn't Have)</h2>
+<p><em>Scenario: Talking about what will happen WHEN something else happens</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English Meaning</th><th>Structure</th></tr></thead><tbody><tr><td>61</td><td>Quand je serai grand, je serai pilote.</td><td>When I grow up, I will be a pilot.</td><td>quand + FS, FS</td></tr><tr><td>62</td><td>Quand tu arriveras, appelle-moi.</td><td>When you arrive, call me.</td><td>quand + FS, impératif</td></tr><tr><td>63</td><td>Quand il fera beau, on ira à la plage.</td><td>When the weather is nice, we'll go to the beach.</td><td>quand + FS, FS</td></tr><tr><td>64</td><td>Quand j'aurai le temps, je lirai ce livre.</td><td>When I have time, I will read this book.</td><td>quand + FS, FS</td></tr><tr><td>65</td><td>Quand nous serons en vacances, nous visiterons l'Italie.</td><td>When we are on vacation, we will visit Italy.</td><td>quand + FS, FS</td></tr><tr><td>66</td><td>Quand tu comprendras, tu me remercieras.</td><td>When you understand, you will thank me.</td><td>quand + FS, FS</td></tr><tr><td>67</td><td>Dès que j'arriverai, je t'appellerai.</td><td>As soon as I arrive, I will call you.</td><td>dès que + FS, FS</td></tr><tr><td>68</td><td>Dès qu'il fera nuit, on partira.</td><td>As soon as it gets dark, we will leave.</td><td>dès que + FS, FS</td></tr><tr><td>69</td><td>Lorsque tu seras prêt, dis-le-moi.</td><td>When you are ready, tell me.</td><td>lorsque + FS, impératif</td></tr><tr><td>70</td><td>Tant que je vivrai, je me battrai.</td><td>As long as I live, I will fight.</td><td>tant que + FS, FS</td></tr></tbody></table>
+<p><strong>🧠 CRITICAL FRENCH RULE — FUTUR AFTER "QUAND":</strong></p>
+<p>→ In English: "<strong>When</strong> I <strong>arrive</strong>, I <strong>will</strong> call you." → present tense after "when"<br>
+→ In French: "<strong>Quand</strong> j'<strong>arriverai</strong>, je t'<strong>appellerai</strong>." → FUTURE tense after "quand"!</p>
+<table><thead><tr><th>Language</th><th>After "when/quand"</th><th>Main clause</th></tr></thead><tbody><tr><td><strong>English</strong></td><td>Present tense</td><td>Future</td></tr><tr><td><strong>French</strong></td><td><strong>FUTUR SIMPLE</strong></td><td>Futur simple</td></tr></tbody></table>
+<p>→ This is one of the BIGGEST differences between English and French grammar<br>
+→ English speakers instinctively put present tense after "quand" → WRONG in French<br>
+→ → ❌ <del>Quand j'<strong>arrive</strong>, je t'appellerai.</del> (English logic — wrong in French)<br>
+→ → ✅ Quand j'<strong>arriverai</strong>, je t'appellerai. (French logic — future after quand)</p>
+<p><strong>🧠 This rule applies to ALL time conjunctions referring to the future:</strong></p>
+<table><thead><tr><th>Conjunction</th><th>Meaning</th><th>Example</th></tr></thead><tbody><tr><td><strong>Quand</strong></td><td>When</td><td><strong>Quand</strong> je serai grand...</td></tr><tr><td><strong>Lorsque</strong></td><td>When (formal)</td><td><strong>Lorsque</strong> tu arriveras...</td></tr><tr><td><strong>Dès que</strong></td><td>As soon as</td><td><strong>Dès que</strong> j'aurai le temps...</td></tr><tr><td><strong>Aussitôt que</strong></td><td>As soon as</td><td><strong>Aussitôt que</strong> tu pourras...</td></tr><tr><td><strong>Tant que</strong></td><td>As long as</td><td><strong>Tant que</strong> je vivrai...</td></tr></tbody></table>
+<p>→ After ALL of these → use <strong>futur simple</strong> (or futur antérieur — much later)<br>
+→ This rule does NOT apply to <strong>"si"</strong> (if) → recall from Project 12: <strong>si + present, NOT future</strong><br>
+→ → ✅ <strong>Si</strong> tu <strong>viens</strong>, on <strong>ira</strong> au cinéma. (si + present → futur)<br>
+→ → ✅ <strong>Quand</strong> tu <strong>viendras</strong>, on <strong>ira</strong> au cinéma. (quand + futur → futur)</p>
+<hr>
+<h2>🔹 BLOCK G — Negation and Questions in Futur Simple</h2>
+<p><em>Scenario: Things that won't happen, and asking about the future formally</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English Meaning</th><th>Structure</th></tr></thead><tbody><tr><td>71</td><td>Je ne partirai pas sans toi.</td><td>I won't leave without you.</td><td>ne + FS + pas</td></tr><tr><td>72</td><td>Tu ne regretteras pas.</td><td>You won't regret it.</td><td>ne + FS + pas</td></tr><tr><td>73</td><td>Il ne pleuvra pas demain.</td><td>It won't rain tomorrow.</td><td>ne + FS + pas</td></tr><tr><td>74</td><td>Nous n'oublierons jamais cette journée.</td><td>We will never forget this day.</td><td>ne + FS + jamais</td></tr><tr><td>75</td><td>Ça ne changera rien.</td><td>That won't change anything.</td><td>ne + FS + rien</td></tr><tr><td>76</td><td>Personne ne saura.</td><td>Nobody will know.</td><td>personne + ne + FS</td></tr><tr><td>77</td><td>Qu'est-ce que tu feras après tes études ?</td><td>What will you do after your studies?</td><td>Question + FS</td></tr><tr><td>78</td><td>Où est-ce que vous habiterez ?</td><td>Where will you live?</td><td>Question + FS</td></tr><tr><td>79</td><td>Quand est-ce qu'il arrivera ?</td><td>When will he arrive?</td><td>Question + FS</td></tr><tr><td>80</td><td>Est-ce que ça sera difficile ?</td><td>Will it be difficult?</td><td>Question + FS</td></tr></tbody></table>
+<p><strong>🧠 NEGATION IN FUTUR SIMPLE — same as present tense (Project 5):</strong></p>
+<code>Subject + NE + VERB (futur simple) + PAS/PLUS/JAMAIS/RIEN + rest</code>
+<p>→ The futur simple is a SINGLE verb → negation sandwich wraps it directly<br>
+→ Same pattern as present tense and imparfait — simplest negation form<br>
+→ → Je <strong>ne</strong> partirai <strong>pas</strong>. / Il <strong>ne</strong> pleuvra <strong>jamais</strong>. / Ça <strong>ne</strong> changera <strong>rien</strong>.</p>
+<p><strong>🧠 Compare negation across tenses:</strong></p>
+<table><thead><tr><th>Tense</th><th>Negation Pattern</th><th>Example</th></tr></thead><tbody><tr><td>Present (P5)</td><td>ne + verb + pas</td><td>Je <strong>ne</strong> mange <strong>pas</strong>.</td></tr><tr><td>Imparfait (P10)</td><td>ne + verb + pas</td><td>Je <strong>ne</strong> mangeais <strong>pas</strong>.</td></tr><tr><td><strong>Futur simple</strong></td><td>ne + verb + pas</td><td>Je <strong>ne</strong> mangerai <strong>pas</strong>.</td></tr><tr><td>Passé composé (P9)</td><td>ne + auxiliary + pas + participle</td><td>Je **n'**ai <strong>pas</strong> mangé.</td></tr><tr><td>Futur proche (P12)</td><td>ne + aller + pas + infinitif</td><td>Je <strong>ne</strong> vais <strong>pas</strong> manger.</td></tr></tbody></table>
+<p>→ Single-verb tenses (present, imparfait, futur simple) → simplest negation<br>
+→ Two-part tenses (PC, futur proche) → sandwich wraps the first part only</p>
+<hr>
+<h2>🔹 BLOCK H — Futur Simple vs. Futur Proche: Side by Side</h2>
+<p><em>Scenario: Understanding when each future tense sounds more natural</em></p>
+<table><thead><tr><th>#</th><th>Futur Proche (Casual)</th><th>Futur Simple (Formal)</th><th>Context</th></tr></thead><tbody><tr><td>81a</td><td>Je vais manger à huit heures.</td><td>81b</td><td>Je mangerai à huit heures.</td></tr><tr><td></td><td>→ Casual plan for tonight</td><td></td><td>→ Formal schedule / distant plan</td></tr><tr><td>82a</td><td>Il va pleuvoir.</td><td>82b</td><td>Il pleuvra demain après-midi.</td></tr><tr><td></td><td>→ I see clouds — evidence now</td><td></td><td>→ Weather forecast — formal prediction</td></tr><tr><td>83a</td><td>On va se marier en juin.</td><td>83b</td><td>Nous nous marierons en juin.</td></tr><tr><td></td><td>→ Excited announcement to friends</td><td></td><td>→ Formal announcement / invitation</td></tr><tr><td>84a</td><td>Je vais t'appeler demain.</td><td>84b</td><td>Je t'appellerai demain.</td></tr><tr><td></td><td>→ Casual promise</td><td></td><td>→ Serious promise / commitment</td></tr><tr><td>85a</td><td>Tu vas voir, c'est génial.</td><td>85b</td><td>Tu verras, c'est magnifique.</td></tr><tr><td></td><td>→ Casual "you'll see"</td><td></td><td>→ More dramatic / literary "you'll see"</td></tr></tbody></table>
+<p><strong>🧠 DECISION GUIDE — Futur Proche vs. Futur Simple:</strong></p>
+<table><thead><tr><th>Situation</th><th>Better Choice</th><th>Why</th></tr></thead><tbody><tr><td><strong>Casual conversation</strong></td><td>Futur proche</td><td>More natural in speech</td></tr><tr><td><strong>Immediate future</strong> (minutes/hours)</td><td>Futur proche</td><td>"About to happen" feeling</td></tr><tr><td><strong>Formal writing</strong> (emails, essays, reports)</td><td>Futur simple</td><td>Standard formal register</td></tr><tr><td><strong>Promises</strong></td><td>Futur simple</td><td>More solemn and committed</td></tr><tr><td><strong>News / Forecasts</strong></td><td>Futur simple</td><td>Professional register</td></tr><tr><td><strong>After quand/dès que/lorsque</strong></td><td><strong>Futur simple ONLY</strong></td><td>Grammar rule — FP not allowed here</td></tr><tr><td><strong>After si</strong> (if)</td><td><strong>NEITHER</strong> — use present</td><td>Grammar rule — no future after si</td></tr><tr><td><strong>Distant future</strong> (years from now)</td><td>Futur simple</td><td>More natural for long-term</td></tr><tr><td><strong>Warnings</strong> (you're going to fall!)</td><td>Futur proche</td><td>Immediate urgency</td></tr><tr><td><strong>Philosophical / Universal truths</strong></td><td>Futur simple</td><td>Timeless, serious tone</td></tr></tbody></table>
+<p>→ In modern spoken French, futur proche is dominant for most situations<br>
+→ Futur simple is REQUIRED after quand/dès que/lorsque — no choice<br>
+→ Futur simple adds <strong>weight, formality, and certainty</strong> to any statement</p>
+<hr>
+<h2>🔹 BLOCK I — Futur Simple in Real-Life Registers</h2>
+<p><em>Scenario: Different contexts where futur simple appears naturally</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English Meaning</th><th>Register / Context</th></tr></thead><tbody><tr><td>86</td><td>Le magasin ouvrira à dix heures.</td><td>The store will open at ten.</td><td>Store hours / sign</td></tr><tr><td>87</td><td>Les résultats seront disponibles lundi.</td><td>Results will be available Monday.</td><td>Official announcement</td></tr><tr><td>88</td><td>Le cours aura lieu dans la salle 204.</td><td>The class will take place in room 204.</td><td>School notice</td></tr><tr><td>89</td><td>Vous recevrez une confirmation par email.</td><td>You will receive a confirmation by email.</td><td>Customer service</td></tr><tr><td>90</td><td>Les passagers embarqueront à la porte 12.</td><td>Passengers will board at gate 12.</td><td>Airport announcement</td></tr><tr><td>91</td><td>Le concert commencera à vingt heures précises.</td><td>The concert will begin at exactly 8 PM.</td><td>Event information</td></tr><tr><td>92</td><td>Vous trouverez ci-joint le document demandé.</td><td>You will find attached the requested document.</td><td>Formal email</td></tr><tr><td>93</td><td>Je me permettrai de vous rappeler demain.</td><td>I will allow myself to call you back tomorrow.</td><td>Very formal / professional</td></tr><tr><td>94</td><td>Nous vous informerons dès que possible.</td><td>We will inform you as soon as possible.</td><td>Customer service</td></tr><tr><td>95</td><td>Il sera interdit de fumer dans cette zone.</td><td>It will be forbidden to smoke in this area.</td><td>Official rule</td></tr></tbody></table>
+<p><strong>🧠 FUTUR SIMPLE IN PROFESSIONAL/WRITTEN FRENCH:</strong><br>
+→ Emails, official letters, notices, announcements → futur simple is the standard<br>
+→ "Vous <strong>recevrez</strong> une confirmation" (formal) vs. "Vous <strong>allez recevoir</strong> une confirmation" (less formal)<br>
+→ In professional French, futur simple signals <strong>competence and education</strong><br>
+→ Using only futur proche in formal writing can sound too casual</p>
+<p><strong>🧠 Sentence 92 — "VOUS TROUVEREZ CI-JOINT":</strong><br>
+→ = "You will find attached" — classic formal email phrase<br>
+→ <strong>"Ci-joint"</strong> = attached / enclosed<br>
+→ This is a FIXED professional expression — memorize it for French business emails</p>
+<p><strong>🧠 Sentence 93 — "JE ME PERMETTRAI DE":</strong><br>
+→ = "I will allow myself to" — very formal and polite way to announce a future action<br>
+→ Used in professional contexts to soften what could be seen as forward behavior<br>
+→ → "Je me permettrai de vous rappeler" = I'll take the liberty of calling you back</p>
+<hr>
+<h2>🔹 BLOCK J — Full Future Vision: A Complete Career Plan</h2>
+<p><em>Scenario: You present your five-year plan at the career workshop — formal register</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>Verb (Futur Simple)</th><th>Plan Element</th></tr></thead><tbody><tr><td>96</td><td>D'abord, je finirai mes études de commerce.</td><td>finirai</td><td>Education</td></tr><tr><td>97</td><td>J'obtiendrai mon diplôme en juin.</td><td>obtiendrai (obtenir → obtiendr-)</td><td>Graduation</td></tr><tr><td>98</td><td>Ensuite, je chercherai un stage dans une grande entreprise.</td><td>chercherai</td><td>Internship</td></tr><tr><td>99</td><td>Je travaillerai dur pour montrer mes compétences.</td><td>travaillerai</td><td>Work ethic</td></tr><tr><td>100</td><td>Après le stage, j'aurai plus d'expérience.</td><td>aurai</td><td>Growth</td></tr><tr><td>101</td><td>Je postuLerai pour un poste permanent.</td><td>postulerai</td><td>Job application</td></tr><tr><td>102</td><td>Si tout va bien, j'obtiendrai le poste.</td><td>obtiendrai</td><td>Success (si + present → FS)</td></tr><tr><td>103</td><td>Je gagnerai assez d'argent pour voyager.</td><td>gagnerai</td><td>Financial goal</td></tr><tr><td>104</td><td>Dans cinq ans, je serai directeur de projet.</td><td>serai</td><td>Career goal</td></tr><tr><td>105</td><td>Je vivrai à l'étranger pendant quelques années.</td><td>vivrai (vivre → vivr-)</td><td>Life goal</td></tr><tr><td>106</td><td>Je reviendrai en France quand j'aurai quarante ans.</td><td>reviendrai / aurai</td><td>Return plan (quand + FS!)</td></tr><tr><td>107</td><td>Je créerai peut-être ma propre entreprise.</td><td>créerai</td><td>Entrepreneurship</td></tr><tr><td>108</td><td>Je ferai ce que j'aime.</td><td>ferai</td><td>Philosophy</td></tr><tr><td>109</td><td>L'avenir sera ce que j'en ferai.</td><td>sera / ferai</td><td>Final statement</td></tr></tbody></table>
+<p><strong>🧠 Notice sentence 102 — SI + PRESENT → FUTUR SIMPLE:</strong><br>
+→ "<strong>Si</strong> tout <strong>va</strong> bien, j'<strong>obtiendrai</strong> le poste."<br>
+→ → Si + present (va) → futur simple (obtiendrai)<br>
+→ → Confirmed: NEVER put futur after si (Project 12 rule)</p>
+<p><strong>🧠 Notice sentence 106 — QUAND + FUTUR SIMPLE:</strong><br>
+→ "Je reviendrai quand j'<strong>aurai</strong> quarante ans."<br>
+→ → Quand + futur simple (aurai) — French rule from Block F<br>
+→ → English would say "when I <strong>am</strong> forty" (present) — but French requires futur</p>
+<hr>
+<h1>✅ WHAT SHOULD DO</h1>
+<p>→ <strong>Memorize the 6 future endings:</strong> -ai, -as, -a, -ons, -ez, -ont (same as avoir present!)<br>
+→ <strong>Memorize the 5 essential irregular stems:</strong> être→ser-, avoir→aur-, aller→ir-, faire→fer-, venir→viendr-<br>
+→ <strong>Learn the double-R group:</strong> voir→verr-, pouvoir→pourr-, envoyer→enverr-, courir→courr-<br>
+→ <strong>Master the QUAND + futur simple rule</strong> — this is the #1 error for English speakers<br>
+→ <strong>Remember: si + PRESENT</strong> (never future) vs. <strong>quand + FUTUR SIMPLE</strong> (always future)<br>
+→ <strong>Use futur simple for promises, forecasts, formal plans, and after quand/dès que/lorsque</strong><br>
+→ <strong>Use futur proche for casual plans, immediate futures, and evidence-based predictions</strong><br>
+→ <strong>Practice negation</strong> — same as present tense: ne + futur verb + pas<br>
+→ <strong>Connect to Project 12</strong> — futur proche and futur simple are complementary, not competing<br>
+→ <strong>Connect to Project 1</strong> — être and avoir take completely new stems (ser-, aur-) — don't confuse with present forms<br>
+→ <strong>Connect to Project 6</strong> — pouvoir, vouloir, devoir all have irregular future stems (pourr-, voudr-, devr-)</p>
+<hr>
+<h1>❌ WHAT SHOULD NOT DO</h1>
+<p>→ ❌ Do NOT use present tense after "quand" for future events → <del>"Quand j'arrive, je t'appelle"</del> (for future meaning) → "Quand j'<strong>arriverai</strong>, je t'<strong>appellerai</strong>"<br>
+→ ❌ Do NOT use futur simple after "si" → <del>"Si je serai riche..."</del> → "<strong>Si</strong> je <strong>suis</strong> riche..." (present after si)<br>
+→ ❌ Do NOT add future endings to the past participle → <del>"J'ai mangérai"</del> → "Je <strong>mangerai</strong>"<br>
+→ ❌ Do NOT confuse futur simple with conditionnel endings → je parler<strong>ai</strong> (future) vs. je parler<strong>ais</strong> (conditional — Project 17)<br>
+→ ❌ Do NOT use irregular present stems for futur → <del>"Je fairai"</del> → "Je <strong>ferai</strong>" (stem = fer-)<br>
+→ ❌ Do NOT forget to drop the -e from -RE infinitifs → <del>"J'attendreai"</del> → "J'<strong>attendrai</strong>"<br>
+→ ❌ Do NOT use futur simple for IMMEDIATE events in casual speech → "Watch out, you'll fall!" = "Tu <strong>vas</strong> tomber !" (futur proche — more urgent)<br>
+→ ❌ Do NOT use futur proche in formal writing when futur simple is expected → professional emails, reports, announcements<br>
+→ ❌ Do NOT confuse "je voudrai" (future — I will want) with "je voudrais" (conditional — I would like)</p>
+<hr>
+<h1>🔀 WHEN TO USE WHAT</h1>
+<h2>Futur Simple vs. Futur Proche — Complete Guide</h2>
+<table><thead><tr><th>Situation</th><th>Futur Proche (P12)</th><th>Futur Simple (P16)</th></tr></thead><tbody><tr><td>Casual conversation</td><td>✅ Default choice</td><td>✅ Also fine — adds weight</td></tr><tr><td>Formal writing / emails</td><td>⚠️ Acceptable but casual</td><td>✅ Standard choice</td></tr><tr><td>Promises</td><td>✅ Casual promise</td><td>✅ Serious promise</td></tr><tr><td>Weather forecast</td><td>✅ Casual / spoken</td><td>✅ Formal / broadcast</td></tr><tr><td>After <strong>quand / dès que / lorsque</strong></td><td>❌ NEVER</td><td>✅ REQUIRED</td></tr><tr><td>After <strong>si</strong> (if)</td><td>❌ NEVER</td><td>❌ NEVER (use present)</td></tr><tr><td>Immediate future (about to happen)</td><td>✅ Best choice</td><td>⚠️ Sounds too formal</td></tr><tr><td>Distant future (years)</td><td>⚠️ Possible but casual</td><td>✅ More natural</td></tr><tr><td>News / Announcements</td><td>⚠️ Possible</td><td>✅ Standard</td></tr><tr><td>Warnings (Tu vas tomber !)</td><td>✅ Best choice</td><td>⚠️ Less urgent</td></tr><tr><td>Philosophical / Universal</td><td>⚠️ Too casual</td><td>✅ Perfect</td></tr></tbody></table>
+<h2>Complete Future Tense Map</h2>
+<table><thead><tr><th>Context</th><th>Structure</th><th>Example</th></tr></thead><tbody><tr><td>Casual plan</td><td>Futur proche</td><td>Je <strong>vais</strong> manger.</td></tr><tr><td>Formal plan</td><td>Futur simple</td><td>Je <strong>mangerai</strong>.</td></tr><tr><td>After quand (future)</td><td>Futur simple</td><td><strong>Quand</strong> je <strong>serai</strong> grand...</td></tr><tr><td>After si (condition)</td><td>Present</td><td><strong>Si</strong> je <strong>suis</strong> libre...</td></tr><tr><td>Negation (FP)</td><td>ne + aller + pas + inf</td><td>Je <strong>ne vais pas</strong> manger.</td></tr><tr><td>Negation (FS)</td><td>ne + verb + pas</td><td>Je <strong>ne mangerai pas</strong>.</td></tr></tbody></table>
+<hr>
+<h1>🚫 WHEN NOT TO USE</h1>
+<p>→ Do NOT use futur simple after <strong>si</strong> — EVER → this is an absolute rule<br>
+→ Do NOT use futur proche after <strong>quand/dès que/lorsque</strong> for future meaning → must be futur simple<br>
+→ Do NOT use futur simple for things happening in the next few SECONDS → futur proche is more natural for imminent events<br>
+→ Do NOT use futur simple in very casual text messages → futur proche is the norm in texting<br>
+→ Do NOT use futur simple when the present tense already implies future (fixed schedules) → "Le train part à midi" is fine</p>
+<hr>
+<h1>⚠️ COMMON PITFALLS AND FAILURE MODES</h1>
+<table><thead><tr><th>Pitfall</th><th>What Learners Do Wrong</th><th>Correct Version</th><th>Why</th></tr></thead><tbody><tr><td><strong>Present after quand (future)</strong></td><td>Quand j'arrive, je t'appelle. (future meaning)</td><td>Quand j'<strong>arriverai</strong>, je t'<strong>appellerai</strong>.</td><td>French requires futur after quand for future events</td></tr><tr><td><strong>Future after si</strong></td><td>Si je serai riche...</td><td>Si je <strong>suis</strong> riche...</td><td>Never future after si</td></tr><tr><td><strong>Wrong irregular stem</strong></td><td>Je fairai / Je allrai</td><td>Je <strong>ferai</strong> / J'<strong>irai</strong></td><td>Must memorize irregular stems</td></tr><tr><td><strong>-RE verb: keeping -e</strong></td><td>J'attendreai</td><td>J'<strong>attendrai</strong></td><td>Drop final -e from -RE infinitifs</td></tr><tr><td><strong>Futur vs. Conditionnel</strong></td><td>Je parlerai (wanting to say "would")</td><td>Je parler<strong>ais</strong> (conditionnel)</td><td>-ai = future / -ais = conditional</td></tr><tr><td><strong>Confusing stems</strong></td><td>Je serai (from savoir?)</td><td><strong>Serai</strong> = être / <strong>Saurai</strong> = savoir</td><td>Different verbs, different stems</td></tr><tr><td><strong>Double R forgotten</strong></td><td>Je verai / Je pouraj</td><td>Je <strong>verrai</strong> / Je <strong>pourrai</strong></td><td>Double R is part of the stem</td></tr><tr><td><strong>Il faudra confusion</strong></td><td>Je faudrai</td><td><strong>Il</strong> faudra (impersonal only)</td><td>Falloir = only used with "il"</td></tr><tr><td><strong>Futur proche after quand</strong></td><td>Quand je vais arriver...</td><td>Quand j'<strong>arriverai</strong>...</td><td>Futur proche not allowed after quand</td></tr><tr><td><strong>Endings confused with avoir</strong></td><td>Je mangerons (mixing endings)</td><td>Je manger<strong>ai</strong> / Nous manger<strong>ons</strong></td><td>Match ending to subject: -ai=je, -ons=nous</td></tr></tbody></table>
+<hr>
+<h1>🔑 KEY TAKEAWAY</h1>
+<blockquote>
+<p><strong>Phase 1 (P1-8) → Foundation: survive in French (present tense)</strong><br>
+<strong>Phase 2 (P9-15) → Core patterns: past, near future, commands, comparisons</strong><br>
+<strong>Phase 3 begins → Professional techniques: formal tenses, complex structures, nuance</strong></p>
+<p><strong>Project 16 → Futur simple = formal/certain future</strong></p>
+<p>The futur simple structure:</p>
+<code>INFINITIF (or irregular stem) + ENDINGS (-ai, -as, -a, -ons, -ez, -ont)</code>
+<p>Three critical rules:</p>
+<ol>
+<li><strong>After quand/dès que/lorsque</strong> → MUST use futur simple (not present, not futur proche)</li>
+<li><strong>After si</strong> → NEVER use futur (use present — Projects 12/18)</li>
+<li><strong>Endings are the same for ALL verbs</strong> — only stems vary</li>
+</ol>
+<p>Five essential irregular stems: <strong>ser-</strong> (être), <strong>aur-</strong> (avoir), <strong>ir-</strong> (aller), <strong>fer-</strong> (faire), <strong>viendr-</strong> (venir)</p>
+<p><strong>Futur proche (P12) vs. Futur simple (P16):</strong><br>
+→ Futur proche = casual, immediate, spoken<br>
+→ Futur simple = formal, distant, written, promises, after quand<br>
+→ Both are essential — they complement each other</p>
+<p><strong>But all your future statements are FLAT — you can say "I will" but not "I would."</strong><br>
+→ "I <strong>would</strong> like a coffee" / "<strong>Could</strong> you help me?" / "If I <strong>were</strong> rich..."<br>
+→ These require the <strong>conditionnel</strong> — the tense of politeness, wishes, and imagination.</p>
+</blockquote>
+<hr>
+<h1>🌉 BRIDGE TO PROJECT 17</h1>
+<blockquote>
+<p>You can now say <strong>"I will work"</strong> and <strong>"When I arrive, I will call you"</strong><br>
+But at a formal dinner, someone asks: <strong>"Que voudriez-vous boire ?"</strong> (What would you like to drink?)<br>
+You want to answer politely — not "Je veux" (too direct — Project 6) and not "Je voudrai" (wrong tense — that's future)<br>
+→ You need <strong>"Je voudrais"</strong> — the conditionnel<br>
+→ The conditionnel is used for:<br>
+→ → Polite requests ("I would like...")<br>
+→ → Imagined situations ("If I were rich, I would travel")<br>
+→ → Gentle suggestions ("You could try this restaurant")<br>
+→ → Uncertain information ("According to reports, there would be...")<br>
+→ Project 17: <strong>"Could You, Would You"</strong> unlocks the <strong>conditionnel présent</strong><br>
+→ It uses the SAME irregular stems as the futur simple + DIFFERENT endings (imparfait endings!)<br>
+→ This is where your French starts sounding truly SOPHISTICATED.</p>
+</blockquote>
+<hr>
+<h1>✅ PROJECT 16 COMPLETE</h1>
+<blockquote>
+<p><strong>Are you ready for PROJECT 17: "Could You, Would You"?</strong><br>
+→ ~100 sentences covering the <strong>conditionnel présent</strong><br>
+→ Scenario: At a formal dinner — polite requests, imagined situations, gentle suggestions<br>
+→ Uses futur simple stems + imparfait endings — building on BOTH Previous Chapters</p>
+</blockquote>
+</div>
+</div>
+
+<!-- ========== data-index="35" ========== -->
+
+        </div>
+
+        <div class="nav-bar">
+            <a href="project-15.html" class="nav-button prev">← Previous Chapter</a>
+            <div class="page-info">
+                <a href="index.html" class="nav-button home">📚 Table of Contents</a><br>
+                <span style="margin-top:8px;display:block">Chapter 16 of 50</span>
+            </div>
+            <a href="project-17.html" class="nav-button next">Next Chapter →</a>
+        </div>
+    </div>
+
+    
+    <div id="progress-track"><div id="progress-fill"></div></div>
+    <div id="progress-pct">0%</div>
+
+
+    <script>
+    const fill = document.getElementById('progress-fill');
+    const pct  = document.getElementById('progress-pct');
+    function updateProgress() {
+        const scrollTop = window.scrollY;
+        const docHeight = document.body.scrollHeight - window.innerHeight;
+        const scrolled  = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+        fill.style.height = scrolled + '%';
+        pct.textContent   = Math.round(scrolled) + '%';
+    }
+    window.addEventListener('scroll', updateProgress);
+    updateProgress();
+
+    document.addEventListener('keydown', function(e) {
+        if (['INPUT','TEXTAREA'].includes(document.activeElement.tagName)) return;
+        if (e.key === 'ArrowLeft') {
+            const b = document.querySelector('.nav-button.prev');
+            if (b && !b.classList.contains('disabled')) window.location.href = b.href;
+        }
+        if (e.key === 'ArrowRight') {
+            const b = document.querySelector('.nav-button.next');
+            if (b && !b.classList.contains('disabled')) window.location.href = b.href;
+        }
+    });
+    </script>
+
+</body>
+</html>

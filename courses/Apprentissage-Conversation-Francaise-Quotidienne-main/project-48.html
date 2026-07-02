@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="images/favicon.png">
+    <title>Project 48: "Read the Room" — French Daily Sentences</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.75;
+            color: #1a202c;
+            background-color: #f7fafc;
+        }
+        .container {
+            max-width: 1800px;
+            margin: 0 auto;
+            background: white;
+            min-height: 100vh;
+            box-shadow: 0 0 30px rgba(0,0,0,0.08);
+            padding: 48px 52px;
+        }
+        
+        .content { max-width: 1700px; margin: 0 auto; color: #1a202c; }
+        .content h1 {
+            color: #1a202c; margin: 32px 0 20px;
+            padding-bottom: 12px;
+            border-bottom: 4px solid #3b82f6;
+            font-size: 2.1em;
+            font-weight: 700;
+        }
+        .content h2 {
+            color: #1a202c; margin: 28px 0 16px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #60a5fa;
+            font-size: 1.6em;
+            font-weight: 600;
+        }
+        .content h3 { color: #1a202c; margin: 22px 0 12px; font-size: 1.3em; font-weight: 600; }
+        .content h4 { color: #2d3748; margin: 18px 0 10px; font-size: 1.1em; font-weight: 600; }
+        .content p  { margin-bottom: 16px; line-height: 1.8; color: #1a202c; }
+        .content ul, .content ol { margin: 12px 0 18px 30px; color: #1a202c; }
+        .content li { margin-bottom: 8px; line-height: 1.75; color: #1a202c; }
+        .content hr { border: none; border-top: 2px solid #e2e8f0; margin: 26px 0; }
+        .content pre {
+            background: #f7fafc !important;
+            border: 1px solid #cbd5e0 !important;
+            border-left: 4px solid #3b82f6 !important;
+            padding: 18px !important; overflow-x: auto; margin: 18px 0; border-radius: 6px;
+            font-family: 'Consolas','Monaco','Courier New',monospace !important;
+            font-size: 0.9em !important;
+        }
+        .content pre:not([style*="color"]) { color: #1a202c !important; }
+        .content code {
+            font-family: 'Consolas','Monaco','Courier New',monospace !important;
+            font-size: 0.88em !important;
+        }
+        .content code:not(pre code) {
+            background: #dbeafe !important;
+            color: #1a202c !important;
+            padding: 2px 6px;
+            border-radius: 3px;
+        }
+        .content pre code { background: transparent !important; padding: 0; }
+        .content table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+        .content th {
+            background: linear-gradient(135deg, #3b82f6 0%, #60a5fa 100%);
+            color: white; padding: 12px 16px; text-align: left;
+            font-weight: 600;
+        }
+        .content td { padding: 11px 16px; border: 1px solid #e2e8f0; color: #1a202c; }
+        .content tr:nth-child(even) td { background: #eff6ff; }
+        .content blockquote {
+            border-left: 4px solid #3b82f6; background: #eff6ff;
+            padding: 14px 20px; margin: 18px 0; border-radius: 0 6px 6px 0;
+            color: #1a202c;
+        }
+        .content strong { color: #1a202c; font-weight: 600; }
+        .px-2 { padding: 0; }
+        .chat-message { background: transparent; padding: 0; margin: 0; }
+
+        /* Bottom nav bar only */
+        .nav-bar {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 24px 0;
+            margin-top: 50px;
+            border-top: 3px solid #60a5fa;
+        }
+        .nav-button {
+            display: inline-flex; align-items: center; gap: 8px;
+            padding: 12px 26px;
+            background: linear-gradient(135deg, #3b82f6 0%, #60a5fa 100%);
+            color: white !important; text-decoration: none;
+            border-radius: 8px; font-weight: 600; font-size: 0.95em;
+            transition: all 0.2s;
+            box-shadow: 0 2px 8px rgba(59,130,246,0.35);
+        }
+        .nav-button:hover { transform: translateY(-2px); box-shadow: 0 4px 14px rgba(59,130,246,0.5); }
+        .nav-button.disabled { background: #cbd5e1; box-shadow: none; pointer-events: none; }
+        .nav-button.home {
+            background: linear-gradient(135deg, #ef4444 0%, #f87171 100%);
+            box-shadow: 0 2px 8px rgba(239,68,68,0.35);
+        }
+        .nav-button.home:hover { box-shadow: 0 4px 14px rgba(239,68,68,0.5); }
+        .page-info { color: #718096; font-size: 0.9em; text-align: center; }
+
+        /* Progress bar */
+        #progress-track {
+            position: fixed; top: 20px; right: 20px;
+            width: 10px; height: 150px;
+            background: rgba(59,130,246,0.2);
+            border: 2px solid #3b82f6;
+            border-radius: 6px; overflow: hidden; z-index: 1000;
+        }
+        #progress-fill {
+            width: 100%;
+            background: linear-gradient(180deg, #3b82f6, #2563eb);
+            height: 0%;
+            transition: height 0.15s ease;
+        }
+        #progress-pct {
+            position: fixed; top: 0px; right: 16px;
+            color: #2563eb; font-size: 14px; font-weight: bold;
+            z-index: 1001;
+            text-shadow: 0 1px 2px rgba(255,255,255,0.9);
+            line-height: 20px;
+        }
+
+    </style>
+<link rel="stylesheet" href="assets/chapters.css?v=20260421203847"><script src="assets/chapters.js?v=20260421203847" defer></script>
+</head>
+<body>
+    <div class="container">
+        <div class="content">
+            <div class="chat-message" data-index="7">
+<div class="px-2"><h1>🔴 PROJECT 48: "Read the Room"</h1>
+<h2><em>You speak grammatically perfect French — but you just called your boss "mec" and told a stranger "Ouais" — now nobody takes you seriously</em></h2>
+<hr>
+<h1>🎯 THE HYPOTHETICAL PROBLEM</h1>
+<p>→ You wake up on a Monday in Paris<br>
+→ Your day includes <strong>6 different social contexts</strong>:</p>
+<table><thead><tr><th>Time</th><th>Context</th><th>Person</th><th>What's at Stake</th></tr></thead><tbody><tr><td>7:30</td><td>Email</td><td>A potential <strong>client</strong> you've never met</td><td>Professional credibility</td></tr><tr><td>9:00</td><td>Office</td><td>Your <strong>boss</strong> (directeur)</td><td>Career respect</td></tr><tr><td>12:30</td><td>Lunch</td><td>Your <strong>colleagues</strong> (friendly but professional)</td><td>Social integration</td></tr><tr><td>15:00</td><td>Phone call</td><td>A <strong>government office</strong> (administration)</td><td>Getting what you need</td></tr><tr><td>19:00</td><td>Dinner</td><td>Your <strong>friends</strong></td><td>Belonging, fun, naturalness</td></tr><tr><td>23:00</td><td>Texting</td><td>Your <strong>partner / best friend</strong></td><td>Intimacy, zero filter</td></tr></tbody></table>
+<p>→ The SAME message — "I don't agree" / "Can you help me?" / "I'm running late" — must be said <strong>completely differently</strong> in each context<br>
+→ If you use Level 5 language with your boss → disrespectful<br>
+→ If you use Level 1 language with your friends → robotic, distant, weird<br>
+→ <strong>The words change. The structures change. The pronouns change. The fillers change. Even the greeting changes.</strong><br>
+→ French people judge your social intelligence by <strong>how well you calibrate</strong></p>
+<hr>
+<h1>🔍 HOW TO APPROACH IT</h1>
+<p>→ Think of French as having <strong>5 gears</strong> — not just "formal" and "informal"<br>
+→ Each gear shifts MULTIPLE elements simultaneously</p>
+<p><strong>The 5 Registers (Gears):</strong></p>
+<table><thead><tr><th>Gear</th><th>Label</th><th>Used With</th><th>Pronoun</th><th>Ne...pas</th><th>Nous/On</th><th>Vocabulary</th><th>Sentence Length</th></tr></thead><tbody><tr><td>⚪ Gear 1</td><td><strong>Soutenu</strong> (Elevated/Literary)</td><td>Written official documents, speeches, very formal letters</td><td>Vous</td><td>Always kept</td><td>Nous</td><td>Elevated lexicon</td><td>Long, complex</td></tr><tr><td>🔵 Gear 2</td><td><strong>Formel</strong> (Formal Spoken)</td><td>Boss, professor, elderly stranger, client meeting</td><td>Vous</td><td>Usually kept</td><td>Nous or On</td><td>Professional lexicon</td><td>Medium, polished</td></tr><tr><td>🟢 Gear 3</td><td><strong>Standard</strong> (Polite Casual)</td><td>Colleagues, acquaintances, shopkeepers, neighbors</td><td>Vous or Tu (depends)</td><td>Sometimes dropped</td><td>On</td><td>Neutral everyday</td><td>Medium, relaxed</td></tr><tr><td>🟡 Gear 4</td><td><strong>Familier</strong> (Casual)</td><td>Friends, peers, siblings</td><td>Tu</td><td>Always dropped</td><td>On</td><td>Casual, truncated words</td><td>Short, direct</td></tr><tr><td>🔴 Gear 5</td><td><strong>Très familier</strong> (Very Casual / Intimate)</td><td>Partner, best friend, texting</td><td>Tu</td><td>Always dropped</td><td>On</td><td>Slang, abbreviations, verlan</td><td>Minimal, fragmented</td></tr></tbody></table>
+<p><strong>The 8 Calibration Switches:</strong></p>
+<table><thead><tr><th>Switch</th><th>What Changes</th></tr></thead><tbody><tr><td>1. <strong>Pronoun</strong></td><td>Vous ↔ Tu</td></tr><tr><td>2. <strong>Negation</strong></td><td>Ne...pas kept ↔ Ne dropped</td></tr><tr><td>3. <strong>Question form</strong></td><td>Inversion ↔ Est-ce que ↔ Intonation only</td></tr><tr><td>4. <strong>Vocabulary</strong></td><td>Elevated ↔ Standard ↔ Casual ↔ Slang</td></tr><tr><td>5. <strong>Greeting/Closing</strong></td><td>Formal ritual ↔ Casual shortcut</td></tr><tr><td>6. <strong>Softeners</strong></td><td>Heavy politeness markers ↔ Zero softening</td></tr><tr><td>7. <strong>Sentence completeness</strong></td><td>Full grammatical sentences ↔ Fragments</td></tr><tr><td>8. <strong>Filler/Discourse markers</strong></td><td>None ↔ Occasional ↔ Constant (Project 43)</td></tr></tbody></table>
+<hr>
+<h1>🔧 HOW CAN WE SOLVE IT</h1>
+<p>→ Take <strong>10 core communicative functions</strong> everyone performs daily<br>
+→ Show each function across <strong>all 5 gears</strong><br>
+→ You see the SAME meaning — expressed 5 different ways<br>
+→ You learn to <strong>match the gear to the person</strong></p>
+<p><strong>The 10 Functions:</strong></p>
+<table><thead><tr><th>Block</th><th>Function</th><th>Real Situation</th></tr></thead><tbody><tr><td>A</td><td>Greeting someone</td><td>Starting any interaction</td></tr><tr><td>B</td><td>Asking for help</td><td>You need something from someone</td></tr><tr><td>C</td><td>Saying you don't understand</td><td>Confusion in conversation</td></tr><tr><td>D</td><td>Expressing disagreement</td><td>Someone says something you oppose</td></tr><tr><td>E</td><td>Apologizing for being late</td><td>You arrive late somewhere</td></tr><tr><td>F</td><td>Expressing your opinion</td><td>Someone asks what you think</td></tr><tr><td>G</td><td>Refusing / Saying no</td><td>Someone proposes something you don't want</td></tr><tr><td>H</td><td>Saying goodbye</td><td>Ending any interaction</td></tr><tr><td>I</td><td>Expressing frustration</td><td>Something goes wrong</td></tr><tr><td>J</td><td>Making a suggestion</td><td>You propose an idea</td></tr></tbody></table>
+<hr>
+<h1>✅ THE 100 SENTENCES — SAME MESSAGE, 5 GEARS</h1>
+<hr>
+<h2>🔹 BLOCK A — GREETING SOMEONE</h2>
+<h3><em>(Reference: Project 1 — Identity / Project 40 — Register / Project 43 — Fillers)</em></h3>
+<p><strong>Situation:</strong> You walk into a room and must greet someone appropriately</p>
+<table><thead><tr><th>#</th><th>Gear</th><th>French</th><th>English Equivalent</th><th>When</th></tr></thead><tbody><tr><td>1</td><td>⚪ Soutenu</td><td>Madame, Monsieur, je vous prie d'agréer mes salutations distinguées.</td><td>Madam, Sir, please accept my distinguished greetings.</td><td>Written letter closing only</td></tr><tr><td>2</td><td>🔵 Formel</td><td>Bonjour Monsieur Dupont, comment allez-vous ?</td><td>Hello Mr. Dupont, how are you?</td><td>Meeting your boss, a client</td></tr><tr><td>3</td><td>🟢 Standard</td><td>Bonjour, ça va bien ?</td><td>Hello, are you doing well?</td><td>Colleague, neighbor, shopkeeper</td></tr><tr><td>4</td><td>🟡 Familier</td><td>Salut, ça va ?</td><td>Hey, how's it going?</td><td>Friend, peer</td></tr><tr><td>5</td><td>🔴 Très familier</td><td>Wesh / Yo / Salut, ça roule ?</td><td>Yo, what's up?</td><td>Best friend, very casual</td></tr></tbody></table>
+<p><strong>🧠 Calibration switches active:</strong><br>
+→ <strong>Pronoun:</strong> vous (Gear 1–2) → implied tu (Gear 3–5)<br>
+→ <strong>Vocabulary:</strong> "agréer mes salutations" → "ça va" → "ça roule"<br>
+→ <strong>Sentence length:</strong> 12 words → 4 words → 2 words<br>
+→ <strong>Formality markers:</strong> "Monsieur" present in Gear 2, absent from Gear 4–5</p>
+<p><strong>Additional greeting variations by context:</strong></p>
+<table><thead><tr><th>#</th><th>Gear</th><th>French</th><th>Context</th></tr></thead><tbody><tr><td>6</td><td>🔵 Formel</td><td>Bonjour, enchanté de vous rencontrer.</td><td>First meeting — professional</td></tr><tr><td>7</td><td>🟢 Standard</td><td>Bonjour, on s'est déjà vus, non ?</td><td>Recognizing someone — polite</td></tr><tr><td>8</td><td>🟡 Familier</td><td>Eh salut ! Ça fait longtemps !</td><td>Seeing a friend after a while</td></tr><tr><td>9</td><td>🔴 Très familier</td><td>Bah t'es là toi ? Trop bien !</td><td>Surprise at seeing best friend</td></tr><tr><td>10</td><td>🔵 Formel</td><td>Ravi de vous revoir, Madame.</td><td>Seeing a professional contact again</td></tr></tbody></table>
+<hr>
+<h2>🔹 BLOCK B — ASKING FOR HELP</h2>
+<h3><em>(Reference: Project 6 — Modal Structures / Project 17 — Conditionnel for Politeness / Project 40 — Register)</em></h3>
+<p><strong>Situation:</strong> You need someone to do something for you</p>
+<table><thead><tr><th>#</th><th>Gear</th><th>French</th><th>English Equivalent</th></tr></thead><tbody><tr><td>11</td><td>⚪ Soutenu</td><td>Auriez-vous l'obligeance de m'accorder quelques instants ?</td><td>Would you have the kindness to grant me a few moments?</td></tr><tr><td>12</td><td>🔵 Formel</td><td>Pourriez-vous m'aider, s'il vous plaît ?</td><td>Could you help me, please?</td></tr><tr><td>13</td><td>🟢 Standard</td><td>Vous pourriez m'aider ?</td><td>Could you help me?</td></tr><tr><td>14</td><td>🟡 Familier</td><td>Tu peux m'aider ?</td><td>Can you help me?</td></tr><tr><td>15</td><td>🔴 Très familier</td><td>Eh, file-moi un coup de main.</td><td>Hey, give me a hand.</td></tr></tbody></table>
+<p><strong>🧠 Calibration switches active:</strong><br>
+→ <strong>Conditionnel</strong> (Project 17): "Pourriez-vous" (Gear 1–2) → "Tu peux" indicatif (Gear 4–5)<br>
+→ <strong>Inversion</strong> (Project 4): "Auriez-vous" (Gear 1) → "Vous pourriez" (Gear 3) → flat intonation (Gear 4)<br>
+→ <strong>Vocabulary:</strong> "accorder quelques instants" → "aider" → "filer un coup de main"<br>
+→ <strong>Softeners:</strong> "s'il vous plaît" present in Gear 2, absent from Gear 5<br>
+→ <strong>Imperatif</strong> (Project 13): only appears in Gear 5 — "file-moi"</p>
+<p><strong>More asking-for-help variations:</strong></p>
+<table><thead><tr><th>#</th><th>Gear</th><th>French</th><th>Specific Context</th></tr></thead><tbody><tr><td>16</td><td>🔵 Formel</td><td>Serait-il possible de décaler notre réunion ?</td><td>Asking boss to reschedule</td></tr><tr><td>17</td><td>🟢 Standard</td><td>Ça vous dérangerait de répéter ?</td><td>Asking someone to repeat — polite</td></tr><tr><td>18</td><td>🟡 Familier</td><td>Tu peux répéter ? J'ai pas capté.</td><td>Didn't catch what friend said</td></tr><tr><td>19</td><td>🔴 Très familier</td><td>Hein ? T'as dit quoi ?</td><td>Totally casual — didn't hear</td></tr><tr><td>20</td><td>⚪ Soutenu</td><td>Je me permets de solliciter votre aide dans cette affaire.</td><td>Formal written request for assistance</td></tr></tbody></table>
+<p><strong>🧠 Critical gradient:</strong></p>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>Serait-il possible de... → Pourriez-vous... → Vous pourriez... → Tu peux... → [just imperative]
+</span>(Most polite)                                                              (Most direct)</code></pre></div>
+<p>→ This gradient = <strong>the single most important politeness scale in French</strong><br>
+→ Conditionnel + inversion = maximum politeness<br>
+→ Indicatif + tu + no softener = maximum directness</p>
+<hr>
+<h2>🔹 BLOCK C — SAYING YOU DON'T UNDERSTAND</h2>
+<h3><em>(Reference: Project 5 — Negation / Project 47 — Spoken Compression)</em></h3>
+<p><strong>Situation:</strong> Someone explains something and you're lost</p>
+<table><thead><tr><th>#</th><th>Gear</th><th>French</th><th>English Equivalent</th></tr></thead><tbody><tr><td>21</td><td>⚪ Soutenu</td><td>Je crains de ne pas avoir saisi l'ensemble de votre propos.</td><td>I fear I may not have grasped the entirety of your point.</td></tr><tr><td>22</td><td>🔵 Formel</td><td>Excusez-moi, je ne suis pas sûr d'avoir compris.</td><td>Excuse me, I'm not sure I understood.</td></tr><tr><td>23</td><td>🟢 Standard</td><td>Pardon, j'ai pas bien compris.</td><td>Sorry, I didn't quite understand.</td></tr><tr><td>24</td><td>🟡 Familier</td><td>Attends, j'ai rien compris.</td><td>Wait, I didn't understand anything.</td></tr><tr><td>25</td><td>🔴 Très familier</td><td>Hein ? Quoi ? Chuis largué là.</td><td>Huh? What? I'm totally lost.</td></tr></tbody></table>
+<p><strong>🧠 Calibration switches active:</strong><br>
+→ <strong>Negation "ne":</strong> Kept in Gear 1–2 → Dropped in Gear 3–5 (Project 47 Rule 1)<br>
+→ <strong>Vocabulary:</strong> "saisir le propos" (Gear 1) → "comprendre" (Gear 2–3) → "être largué" (Gear 5)<br>
+→ <strong>Self-blame vs. bluntness:</strong> Gear 1–2 blames yourself ("Je crains...") → Gear 5 states the fact bluntly<br>
+→ <strong>Sentence completeness:</strong> Full clause (Gear 1) → Fragment "Hein?" (Gear 5)</p>
+<p><strong>More confusion expressions:</strong></p>
+<table><thead><tr><th>#</th><th>Gear</th><th>French</th><th>Nuance</th></tr></thead><tbody><tr><td>26</td><td>🔵 Formel</td><td>Pourriez-vous reformuler, s'il vous plaît ?</td><td>Asking formal rephrasing</td></tr><tr><td>27</td><td>🟢 Standard</td><td>Vous pouvez répéter plus lentement ?</td><td>Asking to slow down — polite</td></tr><tr><td>28</td><td>🟡 Familier</td><td>Ça veut dire quoi en fait ?</td><td>What does that even mean?</td></tr><tr><td>29</td><td>🔴 Très familier</td><td>J'pige que dalle.</td><td>I don't get a thing. (slang)</td></tr><tr><td>30</td><td>🟡 Familier</td><td>Attends, tu m'as perdu là.</td><td>Wait, you lost me there.</td></tr></tbody></table>
+<p><strong>🧠 Slang unlocked (Gear 5 only):</strong><br>
+→ "Largué" = lost / out of it<br>
+→ "Piger" = to understand (casual)<br>
+→ "Que dalle" = nothing at all (slang — stronger than "rien")<br>
+→ <strong>Never</strong> use these with boss/client/stranger</p>
+<hr>
+<h2>🔹 BLOCK D — EXPRESSING DISAGREEMENT</h2>
+<h3><em>(Reference: Project 22 — Opinions / Project 29 — Concession/Opposition / Project 45 — Argumentation)</em></h3>
+<p><strong>Situation:</strong> Someone states something you disagree with</p>
+<table><thead><tr><th>#</th><th>Gear</th><th>French</th><th>English Equivalent</th></tr></thead><tbody><tr><td>31</td><td>⚪ Soutenu</td><td>Je me permets respectueusement de nuancer cette position.</td><td>I respectfully allow myself to nuance this position.</td></tr><tr><td>32</td><td>🔵 Formel</td><td>Je comprends votre point de vue, mais je ne partage pas tout à fait cette analyse.</td><td>I understand your point of view, but I don't entirely share this analysis.</td></tr><tr><td>33</td><td>🟢 Standard</td><td>Je suis pas tout à fait d'accord sur ce point.</td><td>I don't quite agree on this point.</td></tr><tr><td>34</td><td>🟡 Familier</td><td>Mouais, je suis pas convaincu.</td><td>Hmm yeah, I'm not convinced.</td></tr><tr><td>35</td><td>🔴 Très familier</td><td>N'importe quoi. / Mais n'imp' quoi !</td><td>That's nonsense! / Total BS!</td></tr></tbody></table>
+<p><strong>🧠 Calibration switches active:</strong><br>
+→ <strong>Directness scale:</strong> Gear 1 doesn't even say "disagree" — it says "nuance" → Gear 5 directly dismisses<br>
+→ <strong>Face-saving:</strong> Gear 1–2 acknowledges the other person's view BEFORE disagreeing → Gear 4–5 skips this entirely<br>
+→ <strong>Softening words:</strong> "respectueusement, pas tout à fait, ne...pas entièrement" → zero softening in Gear 5<br>
+→ <strong>Discourse marker:</strong> "Mouais" (Gear 4) = a skeptical "yeah" — extremely common in spoken French</p>
+<p><strong>More disagreement variations:</strong></p>
+<table><thead><tr><th>#</th><th>Gear</th><th>French</th><th>Nuance</th></tr></thead><tbody><tr><td>36</td><td>🔵 Formel</td><td>Il me semble que la situation est plus complexe que cela.</td><td>Diplomatic — implying the person oversimplified</td></tr><tr><td>37</td><td>🟢 Standard</td><td>Oui enfin, c'est pas si simple quand même.</td><td>Yeah well, it's not that simple though</td></tr><tr><td>38</td><td>🟡 Familier</td><td>Bof, moi j'y crois pas trop.</td><td>Meh, I don't really buy it</td></tr><tr><td>39</td><td>🔴 Très familier</td><td>T'es sérieux là ? C'est du grand n'importe quoi.</td><td>Are you serious? That's total nonsense.</td></tr><tr><td>40</td><td>🟢 Standard</td><td>On est pas obligés d'être d'accord sur tout.</td><td>We don't have to agree on everything.</td></tr></tbody></table>
+<p><strong>🧠 The French disagreement hierarchy:</strong></p>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>GEAR 1: Acknowledge → Soften → Suggest nuance (never say "you're wrong")
+</span>GEAR 2: Acknowledge → Soften → State different view
+GEAR 3: Light acknowledge → State disagreement with "pas tout à fait"
+GEAR 4: Skip acknowledge → State skepticism directly ("Bof, mouais")
+GEAR 5: Direct contradiction → Sometimes confrontational</code></pre></div>
+<p>→ <strong>Cultural rule:</strong> French people value debate — but in professional settings, <strong>HOW you disagree matters more than WHAT you disagree about</strong></p>
+<hr>
+<h2>🔹 BLOCK E — APOLOGIZING FOR BEING LATE</h2>
+<h3><em>(Reference: Project 9 — Passé Composé / Project 28 — Cause Connectors / Project 17 — Conditionnel)</em></h3>
+<p><strong>Situation:</strong> You arrive late — you must explain yourself appropriately</p>
+<table><thead><tr><th>#</th><th>Gear</th><th>French</th><th>English Equivalent</th></tr></thead><tbody><tr><td>41</td><td>⚪ Soutenu</td><td>Veuillez accepter mes plus sincères excuses pour ce retard indépendant de ma volonté.</td><td>Please accept my most sincere apologies for this delay beyond my control.</td></tr><tr><td>42</td><td>🔵 Formel</td><td>Je suis vraiment désolé pour le retard, j'ai été retenu en réunion.</td><td>I am truly sorry for the delay, I was held up in a meeting.</td></tr><tr><td>43</td><td>🟢 Standard</td><td>Pardon pour le retard, y'avait un problème dans le métro.</td><td>Sorry for the delay, there was a problem in the metro.</td></tr><tr><td>44</td><td>🟡 Familier</td><td>Désolé, chuis en retard, c'était la galère pour venir.</td><td>Sorry, I'm late, it was a nightmare getting here.</td></tr><tr><td>45</td><td>🔴 Très familier</td><td>Oups, j'suis à la bourre, mon réveil a pas sonné.</td><td>Oops, I'm running late, my alarm didn't go off.</td></tr></tbody></table>
+<p><strong>🧠 Calibration switches active:</strong><br>
+→ <strong>Apology weight:</strong> "Veuillez accepter mes plus sincères excuses" (Gear 1) → "Oups" (Gear 5)<br>
+→ <strong>Explanation style:</strong> Formal cause (Gear 1–2) → casual cause (Gear 3–4) → blunt excuse (Gear 5)<br>
+→ <strong>Vocabulary:</strong> "retenu en réunion" (professional) → "la galère" (casual = nightmare/hassle) → "à la bourre" (slang = running late)<br>
+→ <strong>Spoken compressions (Project 47):</strong> "y'avait" / "chuis" / "j'suis" / "a pas sonné" — all active in Gear 3–5</p>
+<p><strong>More lateness expressions:</strong></p>
+<table><thead><tr><th>#</th><th>Gear</th><th>French</th><th>Nuance</th></tr></thead><tbody><tr><td>46</td><td>🔵 Formel</td><td>Je vous prie de m'excuser, cela ne se reproduira pas.</td><td>Promise it won't happen again — professional</td></tr><tr><td>47</td><td>🟢 Standard</td><td>Vraiment navré, j'ai mal calculé mon temps.</td><td>Genuinely sorry — polite casual</td></tr><tr><td>48</td><td>🟡 Familier</td><td>J'arrive, j'arrive ! Deux secondes !</td><td>I'm coming, I'm coming! Two seconds!</td></tr><tr><td>49</td><td>🔴 Très familier</td><td>Bah ouais, j'suis toujours en retard, tu me connais.</td><td>Yeah well, I'm always late, you know me.</td></tr><tr><td>50</td><td>🟡 Familier</td><td>Fais pas la tête, c'est que cinq minutes.</td><td>Don't make that face, it's only five minutes.</td></tr></tbody></table>
+<p><strong>🧠 Cultural insight:</strong><br>
+→ French professional culture takes punctuality seriously in meetings but is more relaxed for social gatherings<br>
+→ For a dinner party — arriving <strong>15 minutes late</strong> is actually expected (called <strong>"le quart d'heure de politesse"</strong>)<br>
+→ Arriving exactly on time to a home dinner = slightly awkward (host may not be ready)<br>
+→ Arriving late to a business meeting = requires Gear 2 apology minimum</p>
+<hr>
+<h2>🔹 BLOCK F — EXPRESSING YOUR OPINION</h2>
+<h3><em>(Reference: Project 22 — Opinion Structures / Project 23 — Subjonctif with Emotion / Project 45 — Argumentation)</em></h3>
+<p><strong>Situation:</strong> Someone asks what you think about a topic</p>
+<table><thead><tr><th>#</th><th>Gear</th><th>French</th><th>English Equivalent</th></tr></thead><tbody><tr><td>51</td><td>⚪ Soutenu</td><td>Il m'apparaît que cette mesure présente des avantages considérables.</td><td>It appears to me that this measure presents considerable advantages.</td></tr><tr><td>52</td><td>🔵 Formel</td><td>À mon sens, c'est une bonne initiative, bien qu'il y ait des risques.</td><td>In my view, it's a good initiative, although there are risks.</td></tr><tr><td>53</td><td>🟢 Standard</td><td>Moi je trouve que c'est plutôt bien, après y'a des limites.</td><td>Personally I think it's pretty good, but there are limits.</td></tr><tr><td>54</td><td>🟡 Familier</td><td>Franchement, c'est pas mal, mais bon, on verra.</td><td>Honestly, it's not bad, but yeah, we'll see.</td></tr><tr><td>55</td><td>🔴 Très familier</td><td>Grave, c'est ouf ce truc. / Bof, c'est nul.</td><td>Totally, this thing is crazy. / Meh, it sucks.</td></tr></tbody></table>
+<p><strong>🧠 Calibration switches active:</strong><br>
+→ <strong>Opinion markers:</strong> "Il m'apparaît que" (Gear 1) → "À mon sens" (Gear 2) → "Moi je trouve que" (Gear 3) → "Franchement" (Gear 4) → no marker, just reaction (Gear 5)<br>
+→ <strong>Nuance:</strong> Gear 1–2 always includes counterpoint ("bien que, toutefois") → Gear 4–5 gives raw reaction<br>
+→ <strong>Subjonctif (Project 23/31):</strong> "bien qu'il y ait" (Gear 2) — subjonctif signals formal register<br>
+→ <strong>Slang:</strong> "ouf" = verlan for "fou" (crazy) — Gear 5 only / "Grave" = "totally, seriously" — Gear 4–5</p>
+<p><strong>More opinion variations:</strong></p>
+<table><thead><tr><th>#</th><th>Gear</th><th>French</th><th>Context</th></tr></thead><tbody><tr><td>56</td><td>🔵 Formel</td><td>Je suis convaincu que nous devrions poursuivre dans cette direction.</td><td>Recommending strategy — meeting</td></tr><tr><td>57</td><td>🟢 Standard</td><td>Perso, je pense qu'on devrait essayer.</td><td>Personally, I think we should try</td></tr><tr><td>58</td><td>🟡 Familier</td><td>Moi j'dis, faut tester, on a rien à perdre.</td><td>I say we test it, nothing to lose</td></tr><tr><td>59</td><td>🔴 Très familier</td><td>Carrément, fonce !</td><td>Totally, go for it!</td></tr><tr><td>60</td><td>⚪ Soutenu</td><td>Force est de constater que les résultats demeurent insuffisants.</td><td>One must acknowledge the results remain insufficient</td></tr></tbody></table>
+<p><strong>🧠 Verlan unlocked (Gear 5 phenomenon):</strong><br>
+→ Verlan = French slang system that <strong>reverses syllables</strong><br>
+→ "Fou" → <strong>"ouf"</strong> (crazy)<br>
+→ "Femme" → <strong>"meuf"</strong> (woman — Project 47)<br>
+→ "Bizarre" → <strong>"zarbi"</strong><br>
+→ "Louche" → <strong>"chelou"</strong> (sketchy/weird)<br>
+→ "Méchant" → <strong>"chanmé"</strong> (awesome — inverted meaning too)<br>
+→ Verlan is <strong>Gear 5 only</strong> — never in professional settings</p>
+<hr>
+<h2>🔹 BLOCK G — REFUSING / SAYING NO</h2>
+<h3><em>(Reference: Project 5 — Negation / Project 17 — Conditionnel / Project 29 — Concession)</em></h3>
+<p><strong>Situation:</strong> Someone invites you or proposes something — you must decline</p>
+<table><thead><tr><th>#</th><th>Gear</th><th>French</th><th>English Equivalent</th></tr></thead><tbody><tr><td>61</td><td>⚪ Soutenu</td><td>C'est avec le plus grand regret que je me vois dans l'obligation de décliner votre aimable invitation.</td><td>It is with the greatest regret that I find myself obliged to decline your kind invitation.</td></tr><tr><td>62</td><td>🔵 Formel</td><td>Je vous remercie pour cette proposition, malheureusement je ne suis pas disponible.</td><td>Thank you for this offer, unfortunately I am not available.</td></tr><tr><td>63</td><td>🟢 Standard</td><td>C'est gentil, mais je peux pas cette fois.</td><td>That's kind, but I can't this time.</td></tr><tr><td>64</td><td>🟡 Familier</td><td>Ah non, ça va pas être possible, désolé.</td><td>Ah no, it's not gonna work, sorry.</td></tr><tr><td>65</td><td>🔴 Très familier</td><td>Nan, j'peux pas, la flemme.</td><td>Nah, I can't, too lazy.</td></tr></tbody></table>
+<p><strong>🧠 Calibration switches active:</strong><br>
+→ <strong>Refusal softening:</strong> Gear 1–2 wraps the "no" in gratitude and regret → Gear 5 gives naked refusal + real reason<br>
+→ <strong>"La flemme"</strong> = "I can't be bothered / I'm too lazy" — extremely common Gear 4–5 excuse among friends<br>
+→ <strong>Cultural rule:</strong> In French professional culture, <strong>you almost never say a flat "non"</strong> — you soften, redirect, suggest alternatives<br>
+→ <strong>"Nan"</strong> = casual pronunciation of "non" — Gear 4–5 only</p>
+<p><strong>More refusal variations:</strong></p>
+<table><thead><tr><th>#</th><th>Gear</th><th>French</th><th>Nuance</th></tr></thead><tbody><tr><td>66</td><td>🔵 Formel</td><td>J'aurais aimé accepter, mais mon emploi du temps ne me le permet pas.</td><td>I would have liked to accept — professional</td></tr><tr><td>67</td><td>🟢 Standard</td><td>C'est dommage, j'ai déjà quelque chose de prévu.</td><td>Too bad, I already have something planned</td></tr><tr><td>68</td><td>🟡 Familier</td><td>Une autre fois peut-être, là chuis crevé.</td><td>Another time maybe, I'm wiped out</td></tr><tr><td>69</td><td>🔴 Très familier</td><td>Oh non, j'ai trop la flemme, sérieux.</td><td>Oh no, I seriously can't be bothered</td></tr><tr><td>70</td><td>🟢 Standard</td><td>Merci d'avoir pensé à moi, mais ça va pas être possible.</td><td>Thanks for thinking of me, but it won't be possible</td></tr></tbody></table>
+<p><strong>🧠 The French refusal formula by gear:</strong></p>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>GEAR 1-2: Thank → Express regret → Give formal reason → Suggest alternative
+</span>GEAR 3:   Acknowledge kindness → State impossibility → Brief reason
+GEAR 4:   Quick refusal → Real reason (even if lazy)
+GEAR 5:   "Nan" + honest reason (no wrapping)</code></pre></div>
+<hr>
+<h2>🔹 BLOCK H — SAYING GOODBYE</h2>
+<h3><em>(Reference: Project 1 — Basic Interaction / Project 40 — Register)</em></h3>
+<p><strong>Situation:</strong> You're ending an interaction — the farewell must match the relationship</p>
+<table><thead><tr><th>#</th><th>Gear</th><th>French</th><th>English Equivalent</th></tr></thead><tbody><tr><td>71</td><td>⚪ Soutenu</td><td>Je vous prie d'agréer, Madame, l'expression de mes sentiments distingués.</td><td>Please accept, Madam, the expression of my distinguished sentiments.</td></tr><tr><td>72</td><td>🔵 Formel</td><td>Au revoir Monsieur, bonne fin de journée.</td><td>Goodbye Sir, have a good rest of your day.</td></tr><tr><td>73</td><td>🟢 Standard</td><td>Bonne journée, à bientôt !</td><td>Good day, see you soon!</td></tr><tr><td>74</td><td>🟡 Familier</td><td>Allez, salut ! À plus !</td><td>Alright, bye! Later!</td></tr><tr><td>75</td><td>🔴 Très familier</td><td>Bon allez, j'me casse. Bisous ! / Tchao !</td><td>Right, I'm outta here. Kisses! / Ciao!</td></tr></tbody></table>
+<p><strong>🧠 Calibration switches:</strong><br>
+→ <strong>Gear 1</strong> goodbye is ONLY for formal letters — never spoken<br>
+→ <strong>"À plus"</strong> (pronounced "ah plews") = "see you later" — Gear 3–4, extremely common<br>
+→ <strong>"J'me casse"</strong> = "I'm getting out of here" — Gear 5 only (casual/slang)<br>
+→ <strong>"Bisous"</strong> = casual sign-off meaning "kisses" — used between friends/family, even men to women friends<br>
+→ <strong>"Tchao"</strong> = borrowed from Italian "ciao" — very casual French farewell</p>
+<p><strong>More farewell variations:</strong></p>
+<table><thead><tr><th>#</th><th>Gear</th><th>French</th><th>Context</th></tr></thead><tbody><tr><td>76</td><td>🔵 Formel</td><td>Ce fut un plaisir d'échanger avec vous. Au revoir.</td><td>End of professional meeting</td></tr><tr><td>77</td><td>🟢 Standard</td><td>Bon, j'y vais. À la prochaine !</td><td>Leaving colleagues at lunch</td></tr><tr><td>78</td><td>🟡 Familier</td><td>Bon allez, j'file. On se capte plus tard.</td><td>Leaving friends — gotta run</td></tr><tr><td>79</td><td>🔴 Très familier</td><td>Allez, j'arrache. À toute !</td><td>Bouncing — see you! (very casual)</td></tr><tr><td>80</td><td>🟢 Standard</td><td>Passez une bonne soirée. À demain.</td><td>Polite evening farewell to colleague</td></tr></tbody></table>
+<p><strong>🧠 Casual farewell vocabulary:</strong><br>
+→ "J'file" = I'm slipping away<br>
+→ "J'arrache" = I'm tearing out (very casual)<br>
+→ "J'me casse" = I'm breaking out<br>
+→ "On se capte" = We'll catch each other (casual for "we'll be in touch")<br>
+→ "À toute" = short for "à tout à l'heure" = see you in a bit</p>
+<hr>
+<h2>🔹 BLOCK I — EXPRESSING FRUSTRATION</h2>
+<h3><em>(Reference: Project 23 — Emotion Structures / Project 42 — Idioms / Project 44 — Nuance)</em></h3>
+<p><strong>Situation:</strong> Something goes wrong — your reaction must match the social context</p>
+<table><thead><tr><th>#</th><th>Gear</th><th>French</th><th>English Equivalent</th></tr></thead><tbody><tr><td>81</td><td>⚪ Soutenu</td><td>Cette situation est fort regrettable et nécessite une attention immédiate.</td><td>This situation is most regrettable and requires immediate attention.</td></tr><tr><td>82</td><td>🔵 Formel</td><td>C'est très problématique, il va falloir trouver une solution rapidement.</td><td>This is very problematic, we'll need to find a solution quickly.</td></tr><tr><td>83</td><td>🟢 Standard</td><td>C'est vraiment embêtant, ça me complique tout.</td><td>This is really annoying, it complicates everything for me.</td></tr><tr><td>84</td><td>🟡 Familier</td><td>Ça me soûle, sérieux. C'est relou.</td><td>This is driving me crazy, seriously. It's a pain.</td></tr><tr><td>85</td><td>🔴 Très familier</td><td>Putain, c'est quoi ce bordel ?!</td><td>F***, what the hell is this?!</td></tr></tbody></table>
+<p><strong>🧠 Calibration switches active:</strong><br>
+→ <strong>Emotion intensity is expressed through VOCABULARY — not volume in French</strong><br>
+→ <strong>Gear 1–2:</strong> Frustration is described analytically — "regrettable, problématique"<br>
+→ <strong>Gear 3:</strong> "Embêtant" = annoying — perfectly polite<br>
+→ <strong>Gear 4:</strong> "Ça me soûle" = it's making me drunk with annoyance / "Relou" = verlan of "lourd" (heavy/annoying)<br>
+→ <strong>Gear 5:</strong> "Putain" = the most common French swear word — used constantly in Gear 5 as an exclamation (frustration, surprise, admiration) — <strong>NEVER in Gears 1–3</strong></p>
+<p><strong>More frustration expressions:</strong></p>
+<table><thead><tr><th>#</th><th>Gear</th><th>French</th><th>Nuance</th></tr></thead><tbody><tr><td>86</td><td>🔵 Formel</td><td>Je suis navré, mais cette erreur est inacceptable.</td><td>Controlled professional anger</td></tr><tr><td>87</td><td>🟢 Standard</td><td>Franchement, ça commence à bien faire.</td><td>Honestly, enough is enough</td></tr><tr><td>88</td><td>🟡 Familier</td><td>J'en ai marre, c'est toujours pareil.</td><td>I'm fed up, it's always the same</td></tr><tr><td>89</td><td>🔴 Très familier</td><td>J'en ai ras-le-bol de ce truc !</td><td>I'm completely sick of this thing!</td></tr><tr><td>90</td><td>🟡 Familier</td><td>C'est pas possible, ça m'énerve trop.</td><td>This isn't possible, it's making me too angry</td></tr></tbody></table>
+<p><strong>🧠 The French frustration escalation ladder:</strong></p>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>Embêtant → Ennuyeux → Agaçant → Énervant → Soûlant → Relou → Insupportable → Ras-le-bol → Putain
+</span>(mildly annoying)                                                                    (explosive)</code></pre></div>
+<p>→ Each step = a different register level<br>
+→ Using the wrong level = either sounding dramatic (too high for the situation) or sounding unprofessional (too low for the setting)</p>
+<hr>
+<h2>🔹 BLOCK J — MAKING A SUGGESTION</h2>
+<h3><em>(Reference: Project 17 — Conditionnel / Project 31 — Subjonctif / Project 46 — Hypotheticals)</em></h3>
+<p><strong>Situation:</strong> You want to propose an idea to someone</p>
+<table><thead><tr><th>#</th><th>Gear</th><th>French</th><th>English Equivalent</th></tr></thead><tbody><tr><td>91</td><td>⚪ Soutenu</td><td>Il conviendrait d'envisager une approche alternative.</td><td>It would be appropriate to consider an alternative approach.</td></tr><tr><td>92</td><td>🔵 Formel</td><td>Je suggérerais que nous examinions cette option de plus près.</td><td>I would suggest that we examine this option more closely.</td></tr><tr><td>93</td><td>🟢 Standard</td><td>On pourrait peut-être essayer autrement, non ?</td><td>We could maybe try differently, no?</td></tr><tr><td>94</td><td>🟡 Familier</td><td>Et si on faisait comme ça ?</td><td>What if we did it like this?</td></tr><tr><td>95</td><td>🔴 Très familier</td><td>Attends, j'ai un plan de ouf. On fait ça.</td><td>Wait, I have a crazy plan. We do this.</td></tr></tbody></table>
+<p><strong>🧠 Calibration switches active:</strong><br>
+→ <strong>Suggestion softness:</strong> Gear 1 doesn't even say "I suggest" — it says "It would be appropriate to consider" (completely impersonal)<br>
+→ <strong>Conditionnel (Project 17):</strong> "conviendrait / suggérerais / pourrait" — all conditionnel for politeness in Gears 1–3<br>
+→ <strong>"Si + imparfait" (Project 33):</strong> "Et si on faisait" = "What if we did" — Gear 4 suggestion structure — very natural in spoken French<br>
+→ <strong>Gear 5:</strong> No softening, no conditionnel — just direct statement of plan</p>
+<p><strong>More suggestion variations:</strong></p>
+<table><thead><tr><th>#</th><th>Gear</th><th>French</th><th>Context</th></tr></thead><tbody><tr><td>96</td><td>🔵 Formel</td><td>Ne serait-il pas judicieux de reconsidérer notre stratégie ?</td><td>Suggesting strategy change to leadership</td></tr><tr><td>97</td><td>🟢 Standard</td><td>Ça vous dirait d'aller prendre un café ?</td><td>Would you fancy going for a coffee?</td></tr><tr><td>98</td><td>🟡 Familier</td><td>Ça te dit un ciné ce soir ?</td><td>Fancy a movie tonight?</td></tr><tr><td>99</td><td>🔴 Très familier</td><td>Allez viens, on bouge.</td><td>Come on, let's go. (let's move)</td></tr><tr><td>100</td><td>🟢 Standard</td><td>Si jamais t'as le temps, on pourrait se voir cette semaine.</td><td>If ever you have time, we could meet this week</td></tr></tbody></table>
+<hr>
+<h1>✅ WHAT SHOULD DO</h1>
+<p>→ <strong>Identify which gear you default to</strong> — most learners are stuck in Gear 2–3 for everything<br>
+→ <strong>Practice gear-shifting</strong> — take ONE message and say it in all 5 gears<br>
+→ <strong>Listen for register in real French</strong> — podcasts, movies, YouTube — notice which gear speakers are using<br>
+→ <strong>Match the gear to the RELATIONSHIP</strong> — not just the situation<br>
+→ <strong>When in doubt → go one gear MORE formal</strong> — it's safer to be slightly too polite than too casual<br>
+→ <strong>Master Gear 3 first</strong> — it's the most versatile, works in 60% of situations</p>
+<hr>
+<h1>❌ WHAT SHOULD NOT DO</h1>
+<p>→ ❌ Do NOT use Gear 5 vocabulary with anyone you address as "vous"<br>
+→ ❌ Do NOT use "putain" in any professional setting — ever<br>
+→ ❌ Do NOT use Gear 1 in speech — it sounds absurd spoken aloud (it's for written only)<br>
+→ ❌ Do NOT use Gear 2 with friends — they will think you're being distant or cold<br>
+→ ❌ Do NOT assume one gear works everywhere — this is the #1 mistake advanced learners make<br>
+→ ❌ Do NOT use verlan (ouf, meuf, relou, chelou) with anyone over 50 in a professional context<br>
+→ ❌ Do NOT confuse "being friendly" with "being casual" — you can be warm in Gear 2 and cold in Gear 5</p>
+<hr>
+<h1>🔀 WHEN TO USE WHAT — THE MASTER CHART</h1>
+<table><thead><tr><th>Person / Context</th><th>Default Gear</th><th>Can Shift To</th><th>Never Use</th></tr></thead><tbody><tr><td>Written formal letter / email to unknown</td><td>⚪ Gear 1</td><td>🔵 Gear 2</td><td>🟡🔴</td></tr><tr><td>Boss / Director (spoken)</td><td>🔵 Gear 2</td><td>🟢 Gear 3 (if close relationship)</td><td>🟡🔴</td></tr><tr><td>Client / Professional contact</td><td>🔵 Gear 2</td><td>⚪ Gear 1 (written)</td><td>🟡🔴</td></tr><tr><td>Colleague (not close)</td><td>🟢 Gear 3</td><td>🔵 Gear 2 (in meetings)</td><td>🔴</td></tr><tr><td>Colleague (close / lunch)</td><td>🟢 Gear 3</td><td>🟡 Gear 4</td><td>⚪</td></tr><tr><td>Shopkeeper / Waiter</td><td>🟢 Gear 3</td><td>🔵 Gear 2 (upscale place)</td><td>🔴</td></tr><tr><td>Neighbor you know</td><td>🟢 Gear 3</td><td>🟡 Gear 4 (if friendly)</td><td>⚪</td></tr><tr><td>Friend</td><td>🟡 Gear 4</td><td>🔴 Gear 5 (close friend)</td><td>⚪🔵</td></tr><tr><td>Partner / Best friend</td><td>🔴 Gear 5</td><td>🟡 Gear 4</td><td>⚪</td></tr><tr><td>Texting friends</td><td>🔴 Gear 5</td><td>🟡 Gear 4</td><td>⚪🔵</td></tr><tr><td>Government office (phone)</td><td>🔵 Gear 2</td><td>🟢 Gear 3</td><td>🟡🔴</td></tr><tr><td>Doctor</td><td>🔵 Gear 2</td><td>🟢 Gear 3 (familiar doctor)</td><td>🔴</td></tr><tr><td>Elderly stranger</td><td>🔵 Gear 2</td><td>Never go below</td><td>🟡🔴</td></tr><tr><td>Children</td><td>🟡 Gear 4</td><td>🟢 Gear 3 (not your children)</td><td>⚪</td></tr></tbody></table>
+<hr>
+<h1>🚫 WHEN NOT TO USE</h1>
+<p>→ <strong>Gear 1 spoken aloud</strong> → never — you will sound like you're reading a legal document<br>
+→ <strong>Gear 5 at work</strong> → never — even in "cool" startups, there are limits<br>
+→ <strong>Verlan with strangers</strong> → never — it signals extreme familiarity<br>
+→ <strong>"Putain" with anyone you "vouvoyez"</strong> → absolute never<br>
+→ <strong>Gear 2 with friends at a bar</strong> → they'll ask if you're angry at them or being sarcastic<br>
+→ <strong>Gear 4 in a first meeting</strong> → even if the person is your age — start Gear 3, let THEM shift first</p>
+<hr>
+<h1>⚠️ COMMON PITFALLS AND FAILURE MODES</h1>
+<table><thead><tr><th>Pitfall</th><th>What Happens</th><th>Fix</th></tr></thead><tbody><tr><td><strong>Frozen in Gear 2</strong></td><td>You sound polite but distant with everyone</td><td>Practice Gear 3–4 with friends — force yourself to drop "ne" and use "tu"</td></tr><tr><td><strong>Jumping to Gear 5 too fast</strong></td><td>You use slang with someone you just met</td><td>Wait for THEM to shift first — mirror their gear</td></tr><tr><td><strong>Using Gear 4 with elderly</strong></td><td>You "tutoyer" (use tu with) a 70-year-old stranger</td><td>Always "vouvoyer" (use vous with) strangers over ~40 unless they say "On peut se tutoyer"</td></tr><tr><td><strong>Mixing gears in one sentence</strong></td><td>"Veuillez m'excuser, chuis en retard, la galère"</td><td>Pick ONE gear and stay in it — mixing sounds confused</td></tr><tr><td><strong>Thinking formal = respectful, casual = disrespectful</strong></td><td>You over-formalize everything</td><td>Casual can be warm and respectful — formal can be cold and distant — register ≠ respect</td></tr><tr><td><strong>Not knowing "On peut se tutoyer ?"</strong></td><td>You wait forever to switch to tu</td><td>This phrase = "Can we use tu with each other?" — it's the official gear-shift request in French</td></tr><tr><td><strong>Writing spoken French</strong></td><td>Your emails contain "chuis, y'a, t'as"</td><td>Written = minimum Gear 3, usually Gear 2 — spoken compressions (Project 47) stay in speech</td></tr><tr><td><strong>Ignoring "la bise" register</strong></td><td>You don't know when to kiss cheeks vs. shake hands vs. wave</td><td>Gear 1–2 = handshake / Gear 3 = depends / Gear 4–5 = la bise (cheek kiss) — this is a PHYSICAL register marker</td></tr><tr><td><strong>Assuming all young people are Gear 5</strong></td><td>You use slang with a young professional</td><td>Age ≠ register — context and relationship determine gear</td></tr><tr><td><strong>Not recognizing gear shifts in others</strong></td><td>Someone switches from vous to tu with you and you don't notice</td><td>This is a <strong>social signal</strong> — they're inviting closeness — match their shift</td></tr></tbody></table>
+<hr>
+<h1>🔑 KEY TAKEAWAY</h1>
+<blockquote>
+<p><strong>French is not one language — it's five languages stacked in one.</strong><br>
+Every sentence you've learned in Projects 1–47 can be expressed in 5 different ways depending on WHO you're talking to.<br>
+The grammar doesn't change — the <strong>surface expression</strong> changes.<br>
+Native speakers switch gears unconsciously — and they judge your social competence by whether you match the right gear to the right person.</p>
+</blockquote>
+<p><strong>The golden rules:</strong><br>
+→ <strong>When in doubt → Gear 3</strong> (polite casual — works almost everywhere)<br>
+→ <strong>Let the other person set the gear</strong> — then match or go one level more formal<br>
+→ <strong>"On peut se tutoyer ?"</strong> is the most important social phrase in French — it officially shifts the relationship from Gear 2–3 to Gear 4<br>
+→ <strong>Register is not about words — it's about RELATIONSHIP</strong></p>
+<hr>
+<h1>🌉 BRIDGE TO PROJECT 49</h1>
+<blockquote>
+<p>You can now <strong>calibrate</strong> your French to any social situation<br>
+But there's one more layer that separates advanced speakers from truly cultured speakers:<br>
+→ <strong>Proverbs, sayings, and cultural references</strong><br>
+→ French people sprinkle these into conversation constantly<br>
+→ They signal education, cultural belonging, and conversational depth<br>
+→ "C'est la goutte d'eau qui fait déborder le vase" — everyone knows it, everyone uses it<br>
+→ If you can drop the right proverb at the right moment — you sound like you <strong>belong</strong></p>
+<p><strong>Project 49: "As They Say in French"</strong> →<br>
+→ ~100 proverbs and cultural sayings embedded in real conversational sentences<br>
+→ Scenario: You navigate social situations where a well-placed saying changes how people perceive you<br>
+→ Builds on ALL Previous Chapters — especially Project 42 (idioms), Project 44 (nuance), and Project 48 (register)</p>
+</blockquote>
+<hr>
+<h1>✅ PROJECT 48 COMPLETE</h1>
+<blockquote>
+<p><strong>Are you ready for PROJECT 49: "As They Say in French"?</strong><br>
+→ ~100 sentences embedding proverbs, cultural sayings, and references into real conversations<br>
+→ Scenario: Social situations where dropping the right saying makes you sound culturally fluent<br>
+→ Builds on Project 42 (idioms) + Project 44 (nuance) + Project 48 (register calibration)</p>
+
+</blockquote></div>
+</div>
+
+<!-- ========== data-index="9" ========== -->
+
+        </div>
+
+        <div class="nav-bar">
+            <a href="project-47.html" class="nav-button prev">← Previous Chapter</a>
+            <div class="page-info">
+                <a href="index.html" class="nav-button home">📚 Table of Contents</a><br>
+                <span style="margin-top:8px;display:block">Chapter 48 of 50</span>
+            </div>
+            <a href="project-49.html" class="nav-button next">Next Chapter →</a>
+        </div>
+    </div>
+
+    
+    <div id="progress-track"><div id="progress-fill"></div></div>
+    <div id="progress-pct">0%</div>
+
+
+    <script>
+    const fill = document.getElementById('progress-fill');
+    const pct  = document.getElementById('progress-pct');
+    function updateProgress() {
+        const scrollTop = window.scrollY;
+        const docHeight = document.body.scrollHeight - window.innerHeight;
+        const scrolled  = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+        fill.style.height = scrolled + '%';
+        pct.textContent   = Math.round(scrolled) + '%';
+    }
+    window.addEventListener('scroll', updateProgress);
+    updateProgress();
+
+    document.addEventListener('keydown', function(e) {
+        if (['INPUT','TEXTAREA'].includes(document.activeElement.tagName)) return;
+        if (e.key === 'ArrowLeft') {
+            const b = document.querySelector('.nav-button.prev');
+            if (b && !b.classList.contains('disabled')) window.location.href = b.href;
+        }
+        if (e.key === 'ArrowRight') {
+            const b = document.querySelector('.nav-button.next');
+            if (b && !b.classList.contains('disabled')) window.location.href = b.href;
+        }
+    });
+    </script>
+
+</body>
+</html>

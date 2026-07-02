@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="images/favicon.png">
+    <title>Project 11: "The Story Has Two Layers" — French Daily Sentences</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.75;
+            color: #1a202c;
+            background-color: #f7fafc;
+        }
+        .container {
+            max-width: 1800px;
+            margin: 0 auto;
+            background: white;
+            min-height: 100vh;
+            box-shadow: 0 0 30px rgba(0,0,0,0.08);
+            padding: 48px 52px;
+        }
+        
+        .content { max-width: 1700px; margin: 0 auto; color: #1a202c; }
+        .content h1 {
+            color: #1a202c; margin: 32px 0 20px;
+            padding-bottom: 12px;
+            border-bottom: 4px solid #3b82f6;
+            font-size: 2.1em;
+            font-weight: 700;
+        }
+        .content h2 {
+            color: #1a202c; margin: 28px 0 16px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #60a5fa;
+            font-size: 1.6em;
+            font-weight: 600;
+        }
+        .content h3 { color: #1a202c; margin: 22px 0 12px; font-size: 1.3em; font-weight: 600; }
+        .content h4 { color: #2d3748; margin: 18px 0 10px; font-size: 1.1em; font-weight: 600; }
+        .content p  { margin-bottom: 16px; line-height: 1.8; color: #1a202c; }
+        .content ul, .content ol { margin: 12px 0 18px 30px; color: #1a202c; }
+        .content li { margin-bottom: 8px; line-height: 1.75; color: #1a202c; }
+        .content hr { border: none; border-top: 2px solid #e2e8f0; margin: 26px 0; }
+        .content pre {
+            background: #f7fafc !important;
+            border: 1px solid #cbd5e0 !important;
+            border-left: 4px solid #3b82f6 !important;
+            padding: 18px !important; overflow-x: auto; margin: 18px 0; border-radius: 6px;
+            font-family: 'Consolas','Monaco','Courier New',monospace !important;
+            font-size: 0.9em !important;
+        }
+        .content pre:not([style*="color"]) { color: #1a202c !important; }
+        .content code {
+            font-family: 'Consolas','Monaco','Courier New',monospace !important;
+            font-size: 0.88em !important;
+        }
+        .content code:not(pre code) {
+            background: #dbeafe !important;
+            color: #1a202c !important;
+            padding: 2px 6px;
+            border-radius: 3px;
+        }
+        .content pre code { background: transparent !important; padding: 0; }
+        .content table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+        .content th {
+            background: linear-gradient(135deg, #3b82f6 0%, #60a5fa 100%);
+            color: white; padding: 12px 16px; text-align: left;
+            font-weight: 600;
+        }
+        .content td { padding: 11px 16px; border: 1px solid #e2e8f0; color: #1a202c; }
+        .content tr:nth-child(even) td { background: #eff6ff; }
+        .content blockquote {
+            border-left: 4px solid #3b82f6; background: #eff6ff;
+            padding: 14px 20px; margin: 18px 0; border-radius: 0 6px 6px 0;
+            color: #1a202c;
+        }
+        .content strong { color: #1a202c; font-weight: 600; }
+        .px-2 { padding: 0; }
+        .chat-message { background: transparent; padding: 0; margin: 0; }
+
+        /* Bottom nav bar only */
+        .nav-bar {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 24px 0;
+            margin-top: 50px;
+            border-top: 3px solid #60a5fa;
+        }
+        .nav-button {
+            display: inline-flex; align-items: center; gap: 8px;
+            padding: 12px 26px;
+            background: linear-gradient(135deg, #3b82f6 0%, #60a5fa 100%);
+            color: white !important; text-decoration: none;
+            border-radius: 8px; font-weight: 600; font-size: 0.95em;
+            transition: all 0.2s;
+            box-shadow: 0 2px 8px rgba(59,130,246,0.35);
+        }
+        .nav-button:hover { transform: translateY(-2px); box-shadow: 0 4px 14px rgba(59,130,246,0.5); }
+        .nav-button.disabled { background: #cbd5e1; box-shadow: none; pointer-events: none; }
+        .nav-button.home {
+            background: linear-gradient(135deg, #ef4444 0%, #f87171 100%);
+            box-shadow: 0 2px 8px rgba(239,68,68,0.35);
+        }
+        .nav-button.home:hover { box-shadow: 0 4px 14px rgba(239,68,68,0.5); }
+        .page-info { color: #718096; font-size: 0.9em; text-align: center; }
+
+        /* Progress bar */
+        #progress-track {
+            position: fixed; top: 20px; right: 20px;
+            width: 10px; height: 150px;
+            background: rgba(59,130,246,0.2);
+            border: 2px solid #3b82f6;
+            border-radius: 6px; overflow: hidden; z-index: 1000;
+        }
+        #progress-fill {
+            width: 100%;
+            background: linear-gradient(180deg, #3b82f6, #2563eb);
+            height: 0%;
+            transition: height 0.15s ease;
+        }
+        #progress-pct {
+            position: fixed; top: 0px; right: 16px;
+            color: #2563eb; font-size: 14px; font-weight: bold;
+            z-index: 1001;
+            text-shadow: 0 1px 2px rgba(255,255,255,0.9);
+            line-height: 20px;
+        }
+
+    </style>
+<link rel="stylesheet" href="assets/chapters.css?v=20260421203847"><script src="assets/chapters.js?v=20260421203847" defer></script>
+</head>
+<body>
+    <div class="container">
+        <div class="content">
+            <div class="chat-message" data-index="23">
+<div class="px-2"><h1>🔵 PROJECT 11: "The Story Has Two Layers"</h1>
+<h2><em>You're telling a story — some things happened, some things were ongoing</em></h2>
+<hr>
+<h1>🎯 THE HYPOTHETICAL PROBLEM</h1>
+<p>→ It's <strong>Thursday evening</strong> at a dinner with your classmates from the language school<br>
+→ Everyone is sharing interesting stories — funny things that happened, unexpected encounters, travel mishaps<br>
+→ Your turn comes — you want to tell this story:</p>
+<blockquote>
+<p><em>"Last Saturday, I was walking in Montmartre. The weather was nice and the streets were full of people. There were musicians everywhere. I was looking at a painting when suddenly a man called my name. It was Pierre — an old friend from university! He was living in Paris now. He looked happy. We decided to have coffee together. We talked for three hours. It was a great day."</em></p>
+</blockquote>
+<p>→ You know passé composé (Project 9) — events that happened<br>
+→ You know imparfait (Project 10) — descriptions, states, habits<br>
+→ But when you try to tell this story, you <strong>freeze at every verb</strong><br>
+→ → "I was walking" — is that PC or imparfait?<br>
+→ → "The weather was nice" — PC or imparfait?<br>
+→ → "A man called my name" — PC or imparfait?<br>
+→ → "It was Pierre" — PC or imparfait?<br>
+→ → "We decided to have coffee" — PC or imparfait?<br>
+→ → "We talked for three hours" — PC or imparfait?<br>
+→ You need a <strong>decision system</strong> — a way to INSTANTLY know which tense to use for each verb</p>
+<p><strong>The core realization:</strong><br>
+→ French storytelling is like a <strong>movie with two tracks:</strong></p>
+<table><thead><tr><th>Track</th><th>Tense</th><th>What It Does</th><th>Movie Analogy</th></tr></thead><tbody><tr><td><strong>Background track</strong></td><td>Imparfait</td><td>Sets the scene — what was happening, how things looked, how people felt</td><td>The <strong>scenery, lighting, and music</strong></td></tr><tr><td><strong>Event track</strong></td><td>Passé composé</td><td>Moves the story forward — what happened next</td><td>The <strong>action, dialogue, and plot</strong></td></tr></tbody></table>
+<p>→ Every verb in a story belongs to ONE of these tracks<br>
+→ The skill is learning to <strong>switch between tracks instantly</strong> — this is what makes French storytelling fluid and natural<br>
+→ Native French speakers do this unconsciously — you need to learn the logic consciously until it becomes automatic</p>
+<hr>
+<h1>🔍 HOW TO APPROACH IT</h1>
+<p>→ You need <strong>5 decision tools</strong> to choose the right tense:</p>
+<table><thead><tr><th>Tool</th><th>Question to Ask Yourself</th><th>If YES →</th><th>If NO →</th></tr></thead><tbody><tr><td><strong>Tool 1</strong></td><td>Did this HAPPEN at a specific moment? Did it START and FINISH?</td><td><strong>PC</strong></td><td>Check Tool 2</td></tr><tr><td><strong>Tool 2</strong></td><td>Was this ONGOING when something else happened? Was it the background?</td><td><strong>Imparfait</strong></td><td>Check Tool 3</td></tr><tr><td><strong>Tool 3</strong></td><td>Is this a DESCRIPTION (weather, appearance, emotion, state)?</td><td><strong>Imparfait</strong></td><td>Check Tool 4</td></tr><tr><td><strong>Tool 4</strong></td><td>Was this a HABIT (used to, every day, always)?</td><td><strong>Imparfait</strong></td><td>Check Tool 5</td></tr><tr><td><strong>Tool 5</strong></td><td>Did this ADVANCE the story? Is it a new action in a sequence?</td><td><strong>PC</strong></td><td>Probably imparfait</td></tr></tbody></table>
+<p>→ When in doubt → ask: <strong>"Does this move the plot FORWARD or paint the scene?"</strong><br>
+→ Forward → <strong>PC</strong> / Scene → <strong>Imparfait</strong></p>
+<hr>
+<h1>🔧 HOW CAN WE SOLVE IT</h1>
+<h2>Step 1 — The Camera Analogy</h2>
+<p>Think of yourself as a <strong>movie director:</strong></p>
+<table><thead><tr><th>Camera Mode</th><th>Tense</th><th>What You Film</th></tr></thead><tbody><tr><td><strong>Wide shot / Slow pan</strong> — showing the setting</td><td><strong>Imparfait</strong></td><td>Weather, scenery, people in background, moods</td></tr><tr><td><strong>Close-up / Action shot</strong> — something happens!</td><td><strong>Passé composé</strong></td><td>Events, reactions, sudden changes, decisions</td></tr></tbody></table>
+<p>→ "Il faisait beau" = wide shot of the sky → imparfait<br>
+→ "Soudain, il a commencé à pleuvoir" = close-up on rain starting → PC<br>
+→ "Les gens marchaient dans la rue" = wide shot of people → imparfait<br>
+→ "Un homme a crié" = close-up on the man → PC</p>
+<hr>
+<h2>Step 2 — The 7 Interaction Patterns</h2>
+<p>French stories use PC and imparfait in <strong>7 predictable patterns:</strong></p>
+<table><thead><tr><th>Pattern</th><th>Structure</th><th>Example</th></tr></thead><tbody><tr><td><strong>1. Background + Event</strong></td><td>Imparfait + quand/lorsque + PC</td><td>Je marchais quand j'ai vu Pierre.</td></tr><tr><td><strong>2. Scene-setting + Action</strong></td><td>Imparfait, imparfait → PC</td><td>Il faisait beau, les oiseaux chantaient. Soudain, il a plu.</td></tr><tr><td><strong>3. Two simultaneous backgrounds</strong></td><td>Imparfait + pendant que + imparfait</td><td>Je lisais pendant qu'il dormait.</td></tr><tr><td><strong>4. Event sequence</strong></td><td>PC + PC + PC</td><td>J'ai mangé, j'ai payé, je suis parti.</td></tr><tr><td><strong>5. Reason (state) → Action</strong></td><td>Imparfait + donc/alors + PC</td><td>J'avais faim, alors j'ai mangé.</td></tr><tr><td><strong>6. Event → Resulting state</strong></td><td>PC → imparfait</td><td>Je suis arrivé. J'étais fatigué.</td></tr><tr><td><strong>7. Description interrupted</strong></td><td>Imparfait + quand/soudain + PC</td><td>Elle chantait quand le téléphone a sonné.</td></tr></tbody></table>
+<p>→ These 7 patterns cover <strong>95% of all story situations</strong><br>
+→ Master them and you can tell ANY story in French</p>
+<hr>
+<h1>✅ WHAT COULD BE DONE — THE 100 SENTENCES</h1>
+<h2>🔹 BLOCK A — Pattern 1: Background + Event ("was doing... when... happened")</h2>
+<p><em>Scenario: Something was happening — then something ELSE happened</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English Meaning</th><th>Tense Logic</th></tr></thead><tbody><tr><td>1</td><td>Je marchais dans la rue quand j'ai vu Pierre.</td><td>I was walking in the street when I saw Pierre.</td><td>Walking = ongoing (IMP) / Seeing = event (PC)</td></tr><tr><td>2</td><td>Il dormait quand le téléphone a sonné.</td><td>He was sleeping when the phone rang.</td><td>Sleeping = ongoing / Ringing = event</td></tr><tr><td>3</td><td>Elle lisait un livre quand quelqu'un a frappé à la porte.</td><td>She was reading a book when someone knocked on the door.</td><td>Reading = ongoing / Knocking = event</td></tr><tr><td>4</td><td>On mangeait au restaurant quand il a commencé à pleuvoir.</td><td>We were eating at the restaurant when it started to rain.</td><td>Eating = ongoing / Starting = event</td></tr><tr><td>5</td><td>Tu regardais la télé quand je suis arrivé ?</td><td>Were you watching TV when I arrived?</td><td>Watching = ongoing / Arriving = event</td></tr><tr><td>6</td><td>Nous parlions de toi quand tu as appelé.</td><td>We were talking about you when you called.</td><td>Talking = ongoing / Calling = event</td></tr><tr><td>7</td><td>Je travaillais sur mon ordinateur quand la lumière s'est éteinte.</td><td>I was working on my computer when the light went out.</td><td>Working = ongoing / Going out = event</td></tr><tr><td>8</td><td>Les enfants jouaient dehors quand il a commencé à neiger.</td><td>The children were playing outside when it started to snow.</td><td>Playing = ongoing / Starting = event</td></tr><tr><td>9</td><td>Elle conduisait quand elle a vu un accident.</td><td>She was driving when she saw an accident.</td><td>Driving = ongoing / Seeing = event</td></tr><tr><td>10</td><td>Je cherchais mes clés quand j'ai trouvé un billet de vingt euros.</td><td>I was looking for my keys when I found a twenty-euro bill.</td><td>Looking = ongoing / Finding = event</td></tr></tbody></table>
+<p><strong>🧠 PATTERN 1 STRUCTURE:</strong></p>
+<code>[IMPARFAIT — ongoing action] + QUAND + [PASSÉ COMPOSÉ — interrupting event]</code>
+<p>→ The imparfait action was <strong>already happening</strong> — it's the background<br>
+→ The passé composé action <strong>breaks into</strong> the background — it's the event<br>
+→ <strong>"Quand"</strong> is the bridge word — it connects the background to the event<br>
+→ You can also use <strong>"lorsque"</strong> (when — more formal) with the same structure</p>
+<p><strong>🧠 VISUAL:</strong></p>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>IMPARFAIT ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+</span>                          ↑ QUAND
+                    PASSÉ COMPOSÉ !</code></pre></div>
+<p>→ The imparfait is a <strong>continuous line</strong> (ongoing)<br>
+→ The passé composé is a <strong>point</strong> (one moment) that breaks into that line</p>
+<hr>
+<h2>🔹 BLOCK B — Pattern 2: Scene-Setting + Action (Setting the Stage)</h2>
+<p><em>Scenario: You describe the scene FIRST, then tell what happened IN that scene</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English Meaning</th><th>Tense Logic</th></tr></thead><tbody><tr><td>11</td><td>Il faisait beau. Les oiseaux chantaient. J'ai décidé de sortir.</td><td>The weather was nice. Birds were singing. I decided to go out.</td><td>Scene (IMP) + Scene (IMP) → Action (PC)</td></tr><tr><td>12</td><td>C'était samedi matin. Il était dix heures. Je suis allé au marché.</td><td>It was Saturday morning. It was ten o'clock. I went to the market.</td><td>Time-setting (IMP) → Action (PC)</td></tr><tr><td>13</td><td>Il y avait beaucoup de monde. La musique jouait. J'ai acheté des fleurs.</td><td>There were lots of people. Music was playing. I bought flowers.</td><td>Scene (IMP) → Action (PC)</td></tr><tr><td>14</td><td>Il faisait froid dehors. Je ne voulais pas sortir. Mais j'ai dû aller travailler.</td><td>It was cold outside. I didn't want to go out. But I had to go to work.</td><td>Scene (IMP) + State (IMP) → Obligation-event (PC)</td></tr><tr><td>15</td><td>La salle était vide. Il n'y avait personne. Le professeur est arrivé en retard.</td><td>The room was empty. There was nobody. The teacher arrived late.</td><td>Scene (IMP) → Event (PC)</td></tr><tr><td>16</td><td>Les rues étaient calmes. Il pleuvait un peu. Soudain, j'ai entendu un cri.</td><td>The streets were quiet. It was raining a little. Suddenly, I heard a scream.</td><td>Scene (IMP) → Sudden event (PC)</td></tr><tr><td>17</td><td>Elle portait une robe rouge. Elle était très belle. Je suis allé lui parler.</td><td>She was wearing a red dress. She was very beautiful. I went to talk to her.</td><td>Description (IMP) → Action (PC)</td></tr><tr><td>18</td><td>On était fatigués. Il était tard. On a décidé de rentrer.</td><td>We were tired. It was late. We decided to go home.</td><td>State (IMP) → Decision (PC)</td></tr><tr><td>19</td><td>Le restaurant était plein. Il n'y avait plus de place. On a choisi un autre restaurant.</td><td>The restaurant was full. There was no more room. We chose another restaurant.</td><td>Scene (IMP) → Action (PC)</td></tr><tr><td>20</td><td>Tout était calme. Les lumières étaient éteintes. Et puis le chien a aboyé.</td><td>Everything was calm. The lights were off. And then the dog barked.</td><td>Scene (IMP) → Event (PC)</td></tr></tbody></table>
+<p><strong>🧠 PATTERN 2 STRUCTURE:</strong></p>
+<code>[IMPARFAIT — scene] + [IMPARFAIT — more scene] → [PASSÉ COMPOSÉ — first action]</code>
+<p>→ You can stack MULTIPLE imparfait sentences to build the scene<br>
+→ Then the FIRST passé composé verb = the story starts moving<br>
+→ This is exactly how novels, movies, and oral stories work in French</p>
+<p><strong>🧠 Key trigger words for the EVENT:</strong><br>
+→ <strong>Soudain</strong> (suddenly) → always triggers PC<br>
+→ <strong>Tout à coup</strong> (all of a sudden) → always triggers PC<br>
+→ <strong>Et puis</strong> (and then) → usually triggers PC<br>
+→ <strong>Alors</strong> (so/then) → usually triggers PC<br>
+→ <strong>À ce moment-là</strong> (at that moment) → usually triggers PC</p>
+<hr>
+<h2>🔹 BLOCK C — Pattern 3: Two Simultaneous Backgrounds ("while... was happening")</h2>
+<p><em>Scenario: Two things were happening at the same time — neither is an event</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English Meaning</th><th>Tense Logic</th></tr></thead><tbody><tr><td>21</td><td>Je lisais pendant qu'il dormait.</td><td>I was reading while he was sleeping.</td><td>Both ongoing → both IMP</td></tr><tr><td>22</td><td>Elle cuisinait pendant que les enfants jouaient.</td><td>She was cooking while the children were playing.</td><td>Both ongoing → both IMP</td></tr><tr><td>23</td><td>Il pleuvait et le vent soufflait.</td><td>It was raining and the wind was blowing.</td><td>Both ongoing → both IMP</td></tr><tr><td>24</td><td>Tu travaillais pendant que moi, je m'amusais.</td><td>You were working while I was having fun.</td><td>Both ongoing → both IMP</td></tr><tr><td>25</td><td>Les adultes parlaient et les enfants regardaient la télé.</td><td>The adults were talking and the children were watching TV.</td><td>Both ongoing → both IMP</td></tr><tr><td>26</td><td>Je pensais à toi pendant que je marchais.</td><td>I was thinking of you while I was walking.</td><td>Both ongoing → both IMP</td></tr><tr><td>27</td><td>Mon père lisait le journal pendant que ma mère préparait le dîner.</td><td>My father was reading the newspaper while my mother was preparing dinner.</td><td>Both ongoing → both IMP</td></tr><tr><td>28</td><td>La musique jouait et les gens dansaient.</td><td>Music was playing and people were dancing.</td><td>Both ongoing → both IMP</td></tr><tr><td>29</td><td>Il faisait beau dehors mais il faisait froid à l'intérieur.</td><td>It was nice outside but it was cold inside.</td><td>Both descriptions → both IMP</td></tr><tr><td>30</td><td>Le professeur expliquait et les étudiants prenaient des notes.</td><td>The teacher was explaining and the students were taking notes.</td><td>Both ongoing → both IMP</td></tr></tbody></table>
+<p><strong>🧠 PATTERN 3 STRUCTURE:</strong></p>
+<code>[IMPARFAIT — action A] + PENDANT QUE + [IMPARFAIT — action B]</code>
+<p>→ <strong>Pendant que</strong> = "while" — connects two simultaneous ongoing actions<br>
+→ Both actions are backgrounds → both get imparfait<br>
+→ NEITHER action interrupts the other<br>
+→ You can also use <strong>"et"</strong> (and) or <strong>"tandis que"</strong> (while/whereas) for the same effect</p>
+<p><strong>🧠 PENDANT QUE vs. QUAND — the critical difference:</strong></p>
+<table><thead><tr><th>Connector</th><th>Usual Tense Combination</th><th>Meaning</th></tr></thead><tbody><tr><td><strong>Pendant que</strong></td><td>IMP + IMP</td><td>Two things happening simultaneously (both ongoing)</td></tr><tr><td><strong>Quand</strong></td><td>IMP + PC (most common)</td><td>Something was happening WHEN something else occurred</td></tr><tr><td><strong>Quand</strong></td><td>IMP + IMP (possible)</td><td>Habitual — "when it rained, we stayed home" (Project 10)</td></tr></tbody></table>
+<p>→ "Pendant que" almost always = both imparfait (two parallel backgrounds)<br>
+→ "Quand" usually = one imparfait + one PC (background + event)<br>
+→ But "quand" with habitual past = both imparfait (Project 10, Block H)</p>
+<hr>
+<h2>🔹 BLOCK D — Pattern 4: Event Sequence (Action After Action)</h2>
+<p><em>Scenario: You tell what happened step by step — a chain of events</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English Meaning</th><th>Tense Logic</th></tr></thead><tbody><tr><td>31</td><td>Je me suis levé, j'ai pris une douche et j'ai mangé.</td><td>I got up, took a shower, and ate.</td><td>Event → Event → Event = all PC</td></tr><tr><td>32</td><td>Elle est arrivée, elle a vu le message et elle a pleuré.</td><td>She arrived, saw the message, and cried.</td><td>PC → PC → PC</td></tr><tr><td>33</td><td>On est sortis, on a marché un peu et on a trouvé un café.</td><td>We went out, walked a bit, and found a café.</td><td>PC → PC → PC</td></tr><tr><td>34</td><td>J'ai ouvert la porte, j'ai allumé la lumière et j'ai vu le désordre.</td><td>I opened the door, turned on the light, and saw the mess.</td><td>PC → PC → PC</td></tr><tr><td>35</td><td>Il a pris le métro, il a changé à Châtelet et il est arrivé à Montmartre.</td><td>He took the metro, changed at Châtelet, and arrived at Montmartre.</td><td>PC → PC → PC</td></tr><tr><td>36</td><td>D'abord, j'ai fait les courses. Ensuite, j'ai préparé le dîner. Enfin, j'ai appelé mes amis.</td><td>First, I did the shopping. Then, I prepared dinner. Finally, I called my friends.</td><td>PC → PC → PC</td></tr><tr><td>37</td><td>Elle a regardé à gauche, puis à droite, et elle a traversé la rue.</td><td>She looked left, then right, and crossed the street.</td><td>PC → PC → PC</td></tr><tr><td>38</td><td>On a commandé, on a mangé et on a payé.</td><td>We ordered, ate, and paid.</td><td>PC → PC → PC</td></tr><tr><td>39</td><td>J'ai cherché partout, j'ai demandé aux voisins et finalement j'ai trouvé mon chat.</td><td>I searched everywhere, asked the neighbors, and finally found my cat.</td><td>PC → PC → PC</td></tr><tr><td>40</td><td>Il est entré, il s'est assis et il a commandé un café.</td><td>He came in, sat down, and ordered a coffee.</td><td>PC → PC → PC</td></tr></tbody></table>
+<p><strong>🧠 PATTERN 4 STRUCTURE:</strong></p>
+<code>[PC — event 1] → [PC — event 2] → [PC — event 3] → ...</code>
+<p>→ Each event is <strong>completed</strong> and <strong>advances the story</strong><br>
+→ They happen in <strong>chronological order</strong> — one after another<br>
+→ NO imparfait needed because there's no background — it's pure action</p>
+<p><strong>🧠 Sequence markers (connectors for chaining events):</strong></p>
+<table><thead><tr><th>French</th><th>English</th><th>Position</th></tr></thead><tbody><tr><td><strong>D'abord</strong></td><td>First</td><td>Beginning of sequence</td></tr><tr><td><strong>Ensuite / Puis</strong></td><td>Then / Next</td><td>Middle of sequence</td></tr><tr><td><strong>Après</strong></td><td>After / Afterwards</td><td>Middle of sequence</td></tr><tr><td><strong>Enfin / Finalement</strong></td><td>Finally</td><td>End of sequence</td></tr><tr><td><strong>Et puis</strong></td><td>And then</td><td>Casual connector</td></tr><tr><td><strong>Alors</strong></td><td>So / Then</td><td>Casual connector</td></tr></tbody></table>
+<p>→ These are the <strong>glue words</strong> that hold a sequence together<br>
+→ They signal "new action coming" → passé composé follows</p>
+<hr>
+<h2>🔹 BLOCK E — Pattern 5: State/Reason → Action ("I was... so I did...")</h2>
+<p><em>Scenario: Your internal state CAUSED you to do something</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English Meaning</th><th>Tense Logic</th></tr></thead><tbody><tr><td>41</td><td>J'avais faim, alors j'ai mangé.</td><td>I was hungry, so I ate.</td><td>State (IMP) → Resulting action (PC)</td></tr><tr><td>42</td><td>Il faisait froid, donc j'ai mis un manteau.</td><td>It was cold, so I put on a coat.</td><td>Weather (IMP) → Action (PC)</td></tr><tr><td>43</td><td>Elle était fatiguée, alors elle est rentrée.</td><td>She was tired, so she went home.</td><td>State (IMP) → Action (PC)</td></tr><tr><td>44</td><td>On s'ennuyait, alors on a décidé de sortir.</td><td>We were bored, so we decided to go out.</td><td>State (IMP) → Decision (PC)</td></tr><tr><td>45</td><td>Je ne comprenais pas, alors j'ai demandé.</td><td>I didn't understand, so I asked.</td><td>Mental state (IMP) → Action (PC)</td></tr><tr><td>46</td><td>Il n'avait pas d'argent, donc il n'a pas payé.</td><td>He didn't have money, so he didn't pay.</td><td>State (IMP) → Resulting non-action (PC)</td></tr><tr><td>47</td><td>Il pleuvait, alors on a pris un taxi.</td><td>It was raining, so we took a taxi.</td><td>Weather (IMP) → Action (PC)</td></tr><tr><td>48</td><td>Je voulais lui parler, alors je suis allé chez lui.</td><td>I wanted to talk to him, so I went to his place.</td><td>Desire (IMP) → Action (PC)</td></tr><tr><td>49</td><td>Elle ne se sentait pas bien, alors elle est restée au lit.</td><td>She wasn't feeling well, so she stayed in bed.</td><td>State (IMP) → Action (PC)</td></tr><tr><td>50</td><td>Il y avait trop de monde, donc on est partis.</td><td>There were too many people, so we left.</td><td>Scene (IMP) → Action (PC)</td></tr></tbody></table>
+<p><strong>🧠 PATTERN 5 STRUCTURE:</strong></p>
+<code>[IMPARFAIT — state/reason/condition] + DONC/ALORS + [PASSÉ COMPOSÉ — resulting action]</code>
+<p>→ The imparfait explains <strong>WHY</strong> → the passé composé tells <strong>WHAT HAPPENED as a result</strong><br>
+→ This is a <strong>cause-effect</strong> pattern: background state → triggered action<br>
+→ <strong>Donc</strong> and <strong>Alors</strong> = "so" / "therefore" — they bridge the reason to the result<br>
+→ These connectors will be explored deeply in Project 28 — for now, use them naturally in stories</p>
+<hr>
+<h2>🔹 BLOCK F — Pattern 6: Event → Resulting State ("I arrived. I was tired.")</h2>
+<p><em>Scenario: Something happened — and then you describe the state AFTER</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English Meaning</th><th>Tense Logic</th></tr></thead><tbody><tr><td>51</td><td>Je suis arrivé chez moi. J'étais épuisé.</td><td>I arrived home. I was exhausted.</td><td>Event (PC) → Resulting state (IMP)</td></tr><tr><td>52</td><td>On a fini le repas. On était contents.</td><td>We finished the meal. We were happy.</td><td>Event (PC) → State (IMP)</td></tr><tr><td>53</td><td>Elle a ouvert la porte. La maison était vide.</td><td>She opened the door. The house was empty.</td><td>Event (PC) → Description (IMP)</td></tr><tr><td>54</td><td>J'ai regardé par la fenêtre. Il neigeait.</td><td>I looked out the window. It was snowing.</td><td>Event (PC) → Scene (IMP)</td></tr><tr><td>55</td><td>Il a goûté le plat. C'était délicieux.</td><td>He tasted the dish. It was delicious.</td><td>Event (PC) → Assessment (IMP)</td></tr><tr><td>56</td><td>On est entrés dans le restaurant. Il y avait du monde partout.</td><td>We entered the restaurant. There were people everywhere.</td><td>Event (PC) → Scene (IMP)</td></tr><tr><td>57</td><td>J'ai rencontré Marie. Elle portait une robe bleue.</td><td>I met Marie. She was wearing a blue dress.</td><td>Event (PC) → Description (IMP)</td></tr><tr><td>58</td><td>Il a vu sa note d'examen. Il était choqué.</td><td>He saw his exam grade. He was shocked.</td><td>Event (PC) → Emotional state (IMP)</td></tr><tr><td>59</td><td>On a trouvé l'hôtel. C'était un petit hôtel charmant.</td><td>We found the hotel. It was a small charming hotel.</td><td>Event (PC) → Description (IMP)</td></tr><tr><td>60</td><td>Je suis sorti. Il faisait déjà nuit.</td><td>I went outside. It was already dark.</td><td>Event (PC) → Scene (IMP)</td></tr></tbody></table>
+<p><strong>🧠 PATTERN 6 STRUCTURE:</strong></p>
+<code>[PASSÉ COMPOSÉ — event] → [IMPARFAIT — resulting state/description]</code>
+<p>→ The reverse of Pattern 5 — here, the event comes FIRST<br>
+→ After the event, you <strong>describe what you found / how things were / how you felt</strong><br>
+→ The imparfait here paints what the world looked like AFTER the action</p>
+<p><strong>🧠 Compare Pattern 5 and Pattern 6:</strong></p>
+<table><thead><tr><th>Pattern 5</th><th>Pattern 6</th></tr></thead><tbody><tr><td>State → caused → Action</td><td>Action → revealed → State</td></tr><tr><td>IMP → PC</td><td>PC → IMP</td></tr><tr><td>J'avais faim → j'ai mangé.</td><td>J'ai mangé → j'étais content.</td></tr><tr><td>Cause → Effect</td><td>Action → Result/Description</td></tr></tbody></table>
+<p>→ Both patterns show the <strong>interplay</strong> between states and events<br>
+→ Together, they create the <strong>rhythm</strong> of French storytelling</p>
+<hr>
+<h2>🔹 BLOCK G — Pattern 7: Description Interrupted ("She was singing when...")</h2>
+<p><em>Scenario: Extended version of Pattern 1 — richer descriptions before the interruption</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English Meaning</th><th>Layer Analysis</th></tr></thead><tbody><tr><td>61</td><td>Elle chantait sous la douche quand le téléphone a sonné.</td><td>She was singing in the shower when the phone rang.</td><td>Background → Interruption</td></tr><tr><td>62</td><td>Je rêvais de vacances quand le réveil a sonné.</td><td>I was dreaming of vacation when the alarm went off.</td><td>Background → Interruption</td></tr><tr><td>63</td><td>Il conduisait tranquillement quand un chat a traversé la route.</td><td>He was driving calmly when a cat crossed the road.</td><td>Background → Interruption</td></tr><tr><td>64</td><td>Nous regardions le coucher de soleil quand il a commencé à pleuvoir.</td><td>We were watching the sunset when it started to rain.</td><td>Background → Interruption</td></tr><tr><td>65</td><td>Les étudiants écoutaient le professeur quand l'alarme incendie s'est déclenchée.</td><td>The students were listening to the teacher when the fire alarm went off.</td><td>Background → Interruption</td></tr><tr><td>66</td><td>Je pensais à mon avenir quand mon ami m'a appelé avec une bonne nouvelle.</td><td>I was thinking about my future when my friend called me with good news.</td><td>Mental background → Interrupting event</td></tr><tr><td>67</td><td>On discutait de politique quand soudain tout le monde s'est mis à rire.</td><td>We were discussing politics when suddenly everyone started laughing.</td><td>Background → Sudden event</td></tr><tr><td>68</td><td>Elle attendait le bus depuis vingt minutes quand un taxi s'est arrêté devant elle.</td><td>She had been waiting for the bus for twenty minutes when a taxi stopped in front of her.</td><td>Extended background → Event</td></tr><tr><td>69</td><td>Je dormais profondément quand un bruit m'a réveillé.</td><td>I was sleeping deeply when a noise woke me up.</td><td>Background → Interruption</td></tr><tr><td>70</td><td>Il faisait ses devoirs quand sa mère l'a appelé pour dîner.</td><td>He was doing his homework when his mother called him for dinner.</td><td>Background → Interruption</td></tr></tbody></table>
+<p><strong>🧠 Pattern 7 = Pattern 1 with richer descriptions</strong><br>
+→ The principle is identical — background interrupted by event<br>
+→ But here, the descriptions are more detailed, more vivid<br>
+→ Adding adverbs to the imparfait part makes the scene richer:<br>
+→ → "Il conduisait <strong>tranquillement</strong>" (He was driving <strong>calmly</strong>)<br>
+→ → "Je dormais <strong>profondément</strong>" (I was sleeping <strong>deeply</strong>)<br>
+→ → The adverb enhances the CONTRAST with the sudden event</p>
+<p><strong>🧠 Sentence 68 — "depuis" with imparfait:</strong><br>
+→ Recall from Project 8: "depuis" + present tense = ongoing action continuing NOW<br>
+→ In a PAST story: "depuis" + imparfait = ongoing action that was continuing THEN<br>
+→ "Elle attendait depuis vingt minutes" = She HAD BEEN waiting for twenty minutes (at that point in the past)<br>
+→ This is the past version of the "depuis" rule from Project 8</p>
+<hr>
+<h2>🔹 BLOCK H — Mixed Patterns: Real Stories with Multiple Switches</h2>
+<p><em>Scenario: Longer stories with natural switching between PC and imparfait</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>Tense</th><th>Function</th></tr></thead><tbody><tr><td>71</td><td>Samedi dernier, il faisait très beau.</td><td>IMP</td><td>Scene-setting: weather</td></tr><tr><td>72</td><td>J'étais de bonne humeur.</td><td>IMP</td><td>State: mood</td></tr><tr><td>73</td><td>J'ai décidé d'aller me promener.</td><td>PC</td><td>Event: decision</td></tr><tr><td>74</td><td>Je marchais dans le parc quand j'ai vu un vieil ami.</td><td>IMP → PC</td><td>Background → Event (Pattern 1)</td></tr><tr><td>75</td><td>Il s'appelait Thomas.</td><td>IMP</td><td>Description: his name</td></tr><tr><td>76</td><td>On était ensemble à l'université.</td><td>IMP</td><td>Background: shared past</td></tr><tr><td>77</td><td>Il avait l'air content de me voir.</td><td>IMP</td><td>Description: appearance</td></tr><tr><td>78</td><td>On s'est arrêtés et on a commencé à parler.</td><td>PC + PC</td><td>Event sequence (Pattern 4)</td></tr><tr><td>79</td><td>Il m'a raconté sa vie.</td><td>PC</td><td>Event: action</td></tr><tr><td>80</td><td>Il travaillait dans une banque maintenant.</td><td>IMP</td><td>Description: current situation</td></tr><tr><td>81</td><td>Il habitait dans le sixième arrondissement.</td><td>IMP</td><td>Description: where he lived</td></tr><tr><td>82</td><td>Sa femme attendait un bébé.</td><td>IMP</td><td>Description: ongoing situation</td></tr><tr><td>83</td><td>Il avait l'air vraiment heureux.</td><td>IMP</td><td>Description: appearance/state</td></tr><tr><td>84</td><td>On a décidé de prendre un café ensemble.</td><td>PC</td><td>Event: decision</td></tr><tr><td>85</td><td>On est allés dans un petit bistrot.</td><td>PC</td><td>Event: movement</td></tr><tr><td>86</td><td>Le bistrot était charmant et calme.</td><td>IMP</td><td>Description: the place</td></tr><tr><td>87</td><td>Il n'y avait pas beaucoup de monde.</td><td>IMP</td><td>Scene: how many people</td></tr><tr><td>88</td><td>On a commandé deux cafés.</td><td>PC</td><td>Event: ordering</td></tr><tr><td>89</td><td>On a parlé pendant deux heures.</td><td>PC</td><td>Event: talking (completed duration)</td></tr><tr><td>90</td><td>C'était vraiment bien.</td><td>IMP</td><td>Assessment/feeling</td></tr><tr><td>91</td><td>À la fin, on a échangé nos numéros.</td><td>PC</td><td>Event: action</td></tr><tr><td>92</td><td>Je suis rentré chez moi vers six heures.</td><td>PC</td><td>Event: going home</td></tr><tr><td>93</td><td>J'étais content de cette rencontre.</td><td>IMP</td><td>Final state: emotion</td></tr></tbody></table>
+<p><strong>🧠 THIS IS A COMPLETE FRENCH STORY — analyze the rhythm:</strong></p>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>IMP (scene) → IMP (state) → PC (action!) →
+</span>IMP (background) → PC (event!) →
+IMP (description) → IMP (description) → IMP (description) →
+PC (action!) → PC (action!) →
+IMP (description) → IMP (scene) →
+PC (action!) → PC (action!) →
+IMP (assessment) →
+PC (action!) → PC (action!) →
+IMP (final feeling)</code></pre></div>
+<p>→ Notice the <strong>wave pattern</strong>: imparfait builds → PC breaks in → imparfait describes → PC acts again<br>
+→ This is the <strong>natural rhythm</strong> of French storytelling<br>
+→ Stories typically START with imparfait (setting the scene) and END with imparfait (final feeling/assessment)<br>
+→ The MIDDLE alternates between PC events and IMP descriptions</p>
+<hr>
+<h2>🔹 BLOCK I — Tricky Cases: Same Verb, Different Tense, Different Meaning</h2>
+<p><em>Scenario: The same verb can appear in EITHER tense — the meaning changes</em></p>
+<table><thead><tr><th>#</th><th>Imparfait Version</th><th>PC Version</th><th>Key Difference</th></tr></thead><tbody><tr><td>94a</td><td>Je savais qu'il était là.</td><td>94b</td><td>J'ai su qu'il était là.</td></tr><tr><td></td><td>I knew he was there. (ongoing knowledge)</td><td></td><td>I found out he was there. (moment of discovery)</td></tr><tr><td>95a</td><td>Elle connaissait Paris.</td><td>95b</td><td>Elle a connu Pierre en 2020.</td></tr><tr><td></td><td>She knew Paris. (familiarity)</td><td></td><td>She met Pierre in 2020. (first encounter)</td></tr><tr><td>96a</td><td>Je voulais partir.</td><td>96b</td><td>J'ai voulu partir.</td></tr><tr><td></td><td>I wanted to leave. (ongoing desire)</td><td></td><td>I tried/decided to leave. (attempted action)</td></tr><tr><td>97a</td><td>Il ne pouvait pas dormir.</td><td>97b</td><td>Il n'a pas pu dormir.</td></tr><tr><td></td><td>He couldn't sleep. (ongoing inability)</td><td></td><td>He failed to sleep. (tried and failed)</td></tr><tr><td>98a</td><td>Je devais travailler.</td><td>98b</td><td>J'ai dû travailler.</td></tr><tr><td></td><td>I had to work. (obligation existed)</td><td></td><td>I had to work. (and I did — completed)</td></tr></tbody></table>
+<p><strong>🧠 THE MEANING SHIFT — mental/modal verbs:</strong></p>
+<table><thead><tr><th>Verb</th><th>Imparfait = STATE</th><th>Passé Composé = EVENT/RESULT</th></tr></thead><tbody><tr><td><strong>savoir</strong></td><td>knew (had the knowledge)</td><td>found out (discovered)</td></tr><tr><td><strong>connaître</strong></td><td>was familiar with</td><td>met for the first time</td></tr><tr><td><strong>vouloir</strong></td><td>wanted (the desire existed)</td><td>tried to / decided to</td></tr><tr><td><strong>pouvoir</strong></td><td>was able to / could (ability existed)</td><td>managed to / succeeded (or failed with negation)</td></tr><tr><td><strong>devoir</strong></td><td>had to (obligation existed)</td><td>had to and did it</td></tr></tbody></table>
+<p>→ Imparfait = the <strong>state of wanting/knowing/being able</strong> existed<br>
+→ PC = a <strong>specific moment</strong> of discovery/attempt/completion</p>
+<p>→ This is one of the most <strong>subtle and advanced</strong> aspects of the PC/IMP distinction<br>
+→ At this level: understand the concept → mastery comes with exposure</p>
+<hr>
+<h2>🔹 BLOCK J — The Full Story from the Problem: Retold Correctly</h2>
+<p><em>Scenario: The story from the beginning of this project — now properly told</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>Tense</th><th>Why This Tense</th></tr></thead><tbody><tr><td>99</td><td>Samedi dernier, je me promenais à Montmartre.</td><td>IMP</td><td>Ongoing background action</td></tr><tr><td>100</td><td>Il faisait beau et les rues étaient pleines de monde.</td><td>IMP + IMP</td><td>Weather + scene description</td></tr><tr><td>101</td><td>Il y avait des musiciens partout.</td><td>IMP</td><td>Scene description</td></tr><tr><td>102</td><td>Je regardais un tableau quand soudain un homme a crié mon nom.</td><td>IMP → PC</td><td>Background → interrupting event</td></tr><tr><td>103</td><td>Je me suis retourné.</td><td>PC</td><td>Action: reaction</td></tr><tr><td>104</td><td>C'était Pierre — un vieil ami de l'université !</td><td>IMP</td><td>Identification / description</td></tr><tr><td>105</td><td>Il habitait à Paris maintenant.</td><td>IMP</td><td>Description: his current situation</td></tr><tr><td>106</td><td>Il avait l'air heureux.</td><td>IMP</td><td>Description: his appearance</td></tr><tr><td>107</td><td>On a décidé de prendre un café ensemble.</td><td>PC</td><td>Event: decision</td></tr><tr><td>108</td><td>On a trouvé un petit café près du Sacré-Cœur.</td><td>PC</td><td>Event: finding</td></tr><tr><td>109</td><td>Le café était charmant. Il n'y avait pas trop de touristes.</td><td>IMP + IMP</td><td>Description of the café</td></tr><tr><td>110</td><td>On a parlé pendant trois heures.</td><td>PC</td><td>Event: completed action with duration</td></tr><tr><td>111</td><td>On a ri, on a partagé des souvenirs.</td><td>PC + PC</td><td>Event sequence</td></tr><tr><td>112</td><td>C'était une journée magnifique.</td><td>IMP</td><td>Final assessment / feeling</td></tr></tbody></table>
+<hr>
+<h1>✅ WHAT SHOULD DO</h1>
+<p>→ <strong>Ask yourself for EVERY past-tense verb:</strong> "Does this MOVE the story forward or PAINT the scene?"<br>
+→ → Forward → <strong>PC</strong> / Scene → <strong>Imparfait</strong><br>
+→ <strong>Learn the 7 patterns</strong> — they cover 95% of all storytelling situations<br>
+→ <strong>Practice the "camera" technique</strong> — wide shot (IMP) vs. close-up (PC)<br>
+→ <strong>Watch for trigger words:</strong><br>
+→ → <strong>Soudain, tout à coup, à ce moment-là</strong> → PC coming<br>
+→ → <strong>Pendant que, tandis que</strong> → IMP + IMP<br>
+→ → <strong>D'abord, ensuite, puis, enfin</strong> → PC sequence<br>
+→ → <strong>Donc, alors</strong> → state (IMP) caused action (PC)<br>
+→ <strong>Read French stories</strong> and identify each verb as PC or IMP — this builds instinct<br>
+→ <strong>Connect to Project 9</strong> — PC structures (auxiliary + participle) haven't changed<br>
+→ <strong>Connect to Project 10</strong> — IMP structures (stem + endings) haven't changed<br>
+→ <strong>Connect to Project 5</strong> — negation works the same in both tenses</p>
+<hr>
+<h1>❌ WHAT SHOULD NOT DO</h1>
+<p>→ ❌ Do NOT use only PC to tell a story → it sounds like a police report: "I went. I ate. I left."<br>
+→ ❌ Do NOT use only IMP to tell a story → nothing HAPPENS: "I was walking. It was nice. I was happy." — no events!<br>
+→ ❌ Do NOT use IMP for sudden/specific events → <del>"Soudain, il pleuvait"</del> → "Soudain, il <strong>a commencé</strong> à pleuvoir"<br>
+→ ❌ Do NOT use PC for scene-setting → <del>"Il a fait beau et les rues ont été pleines"</del> → "Il <strong>faisait</strong> beau et les rues <strong>étaient</strong> pleines"<br>
+→ ❌ Do NOT use PC for ongoing background actions → <del>"J'ai marché quand j'ai vu Pierre"</del> → "Je <strong>marchais</strong> quand j'ai vu Pierre"<br>
+→ ❌ Do NOT put both verbs in the same tense for Pattern 1 → <del>"Je marchais quand je voyais Pierre"</del> (both IMP = habitual "whenever I walked, I would see Pierre")<br>
+→ ❌ Do NOT think "quand" always triggers PC → "quand" + habitual past = both IMP (Project 10)<br>
+→ ❌ Do NOT overthink at this stage → the instinct builds with reading and listening</p>
+<hr>
+<h1>🔀 WHEN TO USE WHAT</h1>
+<h2>The Master Decision Flowchart</h2>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>IS IT A PAST VERB?
+</span>│
+├── Does it DESCRIBE something? (weather, appearance, state, emotion)
+│   └── → IMPARFAIT
+│
+├── Was it HABITUAL? (every day, always, used to)
+│   └── → IMPARFAIT
+│
+├── Was it ONGOING when something else happened?
+│   └── → IMPARFAIT
+│
+├── Did it HAPPEN at a specific moment? (once, suddenly, then)
+│   └── → PASSÉ COMPOSÉ
+│
+├── Does it ADVANCE the story? (next action in sequence)
+│   └── → PASSÉ COMPOSÉ
+│
+├── Is it a RESULT or COMPLETION? (finished, done, decided)
+│   └── → PASSÉ COMPOSÉ
+│
+└── Still unsure?
+    └── Ask: "Can I add 'used to' or 'was/were ...ing'?"
+        ├── YES → IMPARFAIT
+        └── NO → PASSÉ COMPOSÉ</code></pre></div>
+<h2>Quick-Reference Pattern Table</h2>
+<table><thead><tr><th>Pattern</th><th>Structure</th><th>Connector</th><th>Example</th></tr></thead><tbody><tr><td><strong>1</strong> Background + Event</td><td>IMP + PC</td><td>quand, lorsque</td><td>Je marchais <strong>quand</strong> j'ai vu Pierre.</td></tr><tr><td><strong>2</strong> Scene → Action</td><td>IMP, IMP → PC</td><td>soudain, alors, et puis</td><td>Il faisait beau. <strong>Soudain</strong>, il a plu.</td></tr><tr><td><strong>3</strong> Two backgrounds</td><td>IMP + IMP</td><td>pendant que, tandis que, et</td><td>Je lisais **pendant qu'**il dormait.</td></tr><tr><td><strong>4</strong> Event chain</td><td>PC + PC + PC</td><td>d'abord, ensuite, puis, enfin</td><td>J'ai mangé, <strong>puis</strong> je suis parti.</td></tr><tr><td><strong>5</strong> State → Action</td><td>IMP → PC</td><td>donc, alors</td><td>J'avais faim, <strong>alors</strong> j'ai mangé.</td></tr><tr><td><strong>6</strong> Event → State</td><td>PC → IMP</td><td>(no connector needed)</td><td>Je suis arrivé. J'étais fatigué.</td></tr><tr><td><strong>7</strong> Rich interruption</td><td>IMP...IMP + PC</td><td>quand, soudain</td><td>Elle chantait <strong>quand</strong> le téléphone a sonné.</td></tr></tbody></table>
+<hr>
+<h1>🚫 WHEN NOT TO USE</h1>
+<p>→ Do NOT use Pattern 1 (IMP + quand + PC) when both actions are <strong>habitual</strong> → use Pattern 3 variant (IMP + quand + IMP)<br>
+→ → "Quand il <strong>pleuvait</strong>, on <strong>restait</strong> à la maison" = habitual → both IMP<br>
+→ → "Quand il <strong>pleuvait</strong>, on <strong>est restés</strong> à la maison" = specific occasion → IMP + PC<br>
+→ Do NOT use Pattern 4 (all PC) when you want to describe HOW things were between events → insert IMP descriptions<br>
+→ Do NOT use "pendant que" with PC → it signals simultaneous ongoing actions → always IMP + IMP<br>
+→ Do NOT use "soudain" or "tout à coup" with IMP → these words DEMAND passé composé</p>
+<hr>
+<h1>⚠️ COMMON PITFALLS AND FAILURE MODES</h1>
+<table><thead><tr><th>Pitfall</th><th>What Learners Do Wrong</th><th>Correct Version</th><th>Why</th></tr></thead><tbody><tr><td><strong>All-PC story</strong></td><td>J'ai marché. J'ai vu. Il a fait beau.</td><td>Je <strong>marchais</strong>. J'ai vu. Il <strong>faisait</strong> beau.</td><td>Need IMP for background/scene</td></tr><tr><td><strong>All-IMP story</strong></td><td>Je marchais. Je voyais Pierre. On parlait.</td><td>Je marchais. J'<strong>ai vu</strong> Pierre. On <strong>a parlé</strong>.</td><td>Need PC for events</td></tr><tr><td><strong>Wrong tense with "quand"</strong></td><td>Je marchais quand je voyais Pierre.</td><td>Je marchais quand j'<strong>ai vu</strong> Pierre.</td><td>"Quand" + one-time event = IMP + PC</td></tr><tr><td><strong>PC for weather</strong></td><td>Il a fait beau samedi. (as scene-setting)</td><td>Il <strong>faisait</strong> beau samedi.</td><td>Weather = scene = IMP</td></tr><tr><td><strong>IMP for sudden event</strong></td><td>Soudain, il pleuvait.</td><td>Soudain, il <strong>a commencé</strong> à pleuvoir.</td><td>"Soudain" = event = PC</td></tr><tr><td><strong>"Pendant que" + PC</strong></td><td>Je lisais pendant qu'il a dormi.</td><td>Je lisais pendant qu'il <strong>dormait</strong>.</td><td>Pendant que = both IMP</td></tr><tr><td><strong>Forgetting state verbs</strong></td><td>J'ai été fatigué quand je suis arrivé.</td><td>J'<strong>étais</strong> fatigué quand je suis arrivé.</td><td>Fatigue = state = IMP</td></tr><tr><td><strong>Same verb confusion</strong></td><td>Je savais (when meaning "I found out")</td><td>J'<strong>ai su</strong> (moment of discovery = PC)</td><td>Check: state or moment?</td></tr><tr><td><strong>Duration confusion</strong></td><td>On a parlé pendant deux heures = IMP?</td><td>On <strong>a parlé</strong> pendant deux heures = PC</td><td>Completed action with duration = PC</td></tr><tr><td><strong>"C'était" vs. "Ça a été"</strong></td><td>Using interchangeably</td><td>C'<strong>était</strong> bien = description / Ça <strong>a été</strong> rapide = assessment of completed event</td><td>Different functions</td></tr></tbody></table>
+<p><strong>🧠 SENTENCE 89 EXPLANATION — "On a parlé pendant deux heures":</strong><br>
+→ You might think "two hours" = duration = ongoing = imparfait<br>
+→ BUT the action is <strong>completed</strong> — the two hours are FINISHED<br>
+→ "Pendant" + duration + passé composé = completed action with defined duration<br>
+→ → "On a parlé <strong>pendant</strong> deux heures" = We talked for two hours (and stopped) → PC<br>
+→ → "On parlait <strong>depuis</strong> deux heures quand..." = We had been talking for two hours when... → IMP (still ongoing at that point)<br>
+→ <strong>Pendant</strong> (completed duration) ≠ <strong>Depuis</strong> (ongoing duration)<br>
+→ This connects to Project 8's depuis/pendant distinction</p>
+<hr>
+<h1>🔑 KEY TAKEAWAY</h1>
+<blockquote>
+<p><strong>Project 9 → Passé composé = WHAT HAPPENED (events, actions, completed moments)</strong><br>
+<strong>Project 10 → Imparfait = HOW THINGS WERE (descriptions, states, habits, background)</strong><br>
+<strong>Project 11 → The TWO TENSES TOGETHER = complete, natural French storytelling</strong></p>
+<p>The 7 patterns:</p>
+<ol>
+<li>Background + Event (IMP + quand + PC)</li>
+<li>Scene → Action (IMP → PC)</li>
+<li>Two backgrounds (IMP + pendant que + IMP)</li>
+<li>Event chain (PC + PC + PC)</li>
+<li>State → Action (IMP → PC)</li>
+<li>Event → State (PC → IMP)</li>
+<li>Rich interruption (IMP + soudain + PC)</li>
+</ol>
+<p>The rhythm of French storytelling:</p>
+<code>IMP (set the scene) → PC (something happens!) → IMP (describe what you found) → PC (next action!) → IMP (final feeling)</code>
+<p><strong>You can now TELL STORIES IN FRENCH.</strong><br>
+→ You can describe your weekend, your childhood, your travel experiences<br>
+→ You can set scenes, report events, express feelings about the past</p>
+<p><strong>But you're stuck in the past.</strong><br>
+→ You can't say "I'm <strong>going to</strong> eat" or "We're <strong>about to</strong> leave"<br>
+→ You need the <strong>futur proche</strong> — the near future — to talk about what's coming NEXT.</p>
+</blockquote>
+<hr>
+<h1>🌉 BRIDGE TO PROJECT 12</h1>
+<blockquote>
+<p>You can now say <strong>"I was walking when I saw Pierre"</strong> and <strong>"The weather was nice so we went out"</strong><br>
+But your French teacher asks: <strong>"Qu'est-ce que tu vas faire ce soir ?"</strong> (What are you going to do tonight?)<br>
+→ You can't answer — you have no future tense yet<br>
+→ "I'm <strong>going to</strong> eat" / "We're <strong>about to</strong> leave" / "She's <strong>going to</strong> call"<br>
+→ Project 12: <strong>"What's About to Happen"</strong> introduces the <strong>futur proche</strong> (aller + infinitif)<br>
+→ It's the simplest future structure — and the most used in daily spoken French<br>
+→ It builds directly on <strong>aller</strong> (Project 2) + <strong>infinitif</strong> (Project 6 modal pattern)</p>
+</blockquote>
+<hr>
+<h1>✅ PROJECT 11 COMPLETE</h1>
+<blockquote>
+<p><strong>Are you ready for PROJECT 12: "What's About to Happen"?</strong><br>
+→ ~100 sentences covering the <strong>futur proche</strong> (aller + infinitif)<br>
+→ Scenario: Making plans for tonight, this weekend, right now<br>
+→ First future tense — unlocks the ability to talk about what comes NEXT</p>
+</blockquote>
+</div>
+</div>
+
+<!-- ========== data-index="25" ========== -->
+
+        </div>
+
+        <div class="nav-bar">
+            <a href="project-10.html" class="nav-button prev">← Previous Chapter</a>
+            <div class="page-info">
+                <a href="index.html" class="nav-button home">📚 Table of Contents</a><br>
+                <span style="margin-top:8px;display:block">Chapter 11 of 50</span>
+            </div>
+            <a href="project-12.html" class="nav-button next">Next Chapter →</a>
+        </div>
+    </div>
+
+    
+    <div id="progress-track"><div id="progress-fill"></div></div>
+    <div id="progress-pct">0%</div>
+
+
+    <script>
+    const fill = document.getElementById('progress-fill');
+    const pct  = document.getElementById('progress-pct');
+    function updateProgress() {
+        const scrollTop = window.scrollY;
+        const docHeight = document.body.scrollHeight - window.innerHeight;
+        const scrolled  = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+        fill.style.height = scrolled + '%';
+        pct.textContent   = Math.round(scrolled) + '%';
+    }
+    window.addEventListener('scroll', updateProgress);
+    updateProgress();
+
+    document.addEventListener('keydown', function(e) {
+        if (['INPUT','TEXTAREA'].includes(document.activeElement.tagName)) return;
+        if (e.key === 'ArrowLeft') {
+            const b = document.querySelector('.nav-button.prev');
+            if (b && !b.classList.contains('disabled')) window.location.href = b.href;
+        }
+        if (e.key === 'ArrowRight') {
+            const b = document.querySelector('.nav-button.next');
+            if (b && !b.classList.contains('disabled')) window.location.href = b.href;
+        }
+    });
+    </script>
+
+</body>
+</html>

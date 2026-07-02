@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="images/favicon.png">
+    <title>Project 4: "Asking Without Sounding Lost" — French Daily Sentences</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.75;
+            color: #1a202c;
+            background-color: #f7fafc;
+        }
+        .container {
+            max-width: 1800px;
+            margin: 0 auto;
+            background: white;
+            min-height: 100vh;
+            box-shadow: 0 0 30px rgba(0,0,0,0.08);
+            padding: 48px 52px;
+        }
+        
+        .content { max-width: 1700px; margin: 0 auto; color: #1a202c; }
+        .content h1 {
+            color: #1a202c; margin: 32px 0 20px;
+            padding-bottom: 12px;
+            border-bottom: 4px solid #3b82f6;
+            font-size: 2.1em;
+            font-weight: 700;
+        }
+        .content h2 {
+            color: #1a202c; margin: 28px 0 16px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #60a5fa;
+            font-size: 1.6em;
+            font-weight: 600;
+        }
+        .content h3 { color: #1a202c; margin: 22px 0 12px; font-size: 1.3em; font-weight: 600; }
+        .content h4 { color: #2d3748; margin: 18px 0 10px; font-size: 1.1em; font-weight: 600; }
+        .content p  { margin-bottom: 16px; line-height: 1.8; color: #1a202c; }
+        .content ul, .content ol { margin: 12px 0 18px 30px; color: #1a202c; }
+        .content li { margin-bottom: 8px; line-height: 1.75; color: #1a202c; }
+        .content hr { border: none; border-top: 2px solid #e2e8f0; margin: 26px 0; }
+        .content pre {
+            background: #f7fafc !important;
+            border: 1px solid #cbd5e0 !important;
+            border-left: 4px solid #3b82f6 !important;
+            padding: 18px !important; overflow-x: auto; margin: 18px 0; border-radius: 6px;
+            font-family: 'Consolas','Monaco','Courier New',monospace !important;
+            font-size: 0.9em !important;
+        }
+        .content pre:not([style*="color"]) { color: #1a202c !important; }
+        .content code {
+            font-family: 'Consolas','Monaco','Courier New',monospace !important;
+            font-size: 0.88em !important;
+        }
+        .content code:not(pre code) {
+            background: #dbeafe !important;
+            color: #1a202c !important;
+            padding: 2px 6px;
+            border-radius: 3px;
+        }
+        .content pre code { background: transparent !important; padding: 0; }
+        .content table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+        .content th {
+            background: linear-gradient(135deg, #3b82f6 0%, #60a5fa 100%);
+            color: white; padding: 12px 16px; text-align: left;
+            font-weight: 600;
+        }
+        .content td { padding: 11px 16px; border: 1px solid #e2e8f0; color: #1a202c; }
+        .content tr:nth-child(even) td { background: #eff6ff; }
+        .content blockquote {
+            border-left: 4px solid #3b82f6; background: #eff6ff;
+            padding: 14px 20px; margin: 18px 0; border-radius: 0 6px 6px 0;
+            color: #1a202c;
+        }
+        .content strong { color: #1a202c; font-weight: 600; }
+        .px-2 { padding: 0; }
+        .chat-message { background: transparent; padding: 0; margin: 0; }
+
+        /* Bottom nav bar only */
+        .nav-bar {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 24px 0;
+            margin-top: 50px;
+            border-top: 3px solid #60a5fa;
+        }
+        .nav-button {
+            display: inline-flex; align-items: center; gap: 8px;
+            padding: 12px 26px;
+            background: linear-gradient(135deg, #3b82f6 0%, #60a5fa 100%);
+            color: white !important; text-decoration: none;
+            border-radius: 8px; font-weight: 600; font-size: 0.95em;
+            transition: all 0.2s;
+            box-shadow: 0 2px 8px rgba(59,130,246,0.35);
+        }
+        .nav-button:hover { transform: translateY(-2px); box-shadow: 0 4px 14px rgba(59,130,246,0.5); }
+        .nav-button.disabled { background: #cbd5e1; box-shadow: none; pointer-events: none; }
+        .nav-button.home {
+            background: linear-gradient(135deg, #ef4444 0%, #f87171 100%);
+            box-shadow: 0 2px 8px rgba(239,68,68,0.35);
+        }
+        .nav-button.home:hover { box-shadow: 0 4px 14px rgba(239,68,68,0.5); }
+        .page-info { color: #718096; font-size: 0.9em; text-align: center; }
+
+        /* Progress bar */
+        #progress-track {
+            position: fixed; top: 20px; right: 20px;
+            width: 10px; height: 150px;
+            background: rgba(59,130,246,0.2);
+            border: 2px solid #3b82f6;
+            border-radius: 6px; overflow: hidden; z-index: 1000;
+        }
+        #progress-fill {
+            width: 100%;
+            background: linear-gradient(180deg, #3b82f6, #2563eb);
+            height: 0%;
+            transition: height 0.15s ease;
+        }
+        #progress-pct {
+            position: fixed; top: 0px; right: 16px;
+            color: #2563eb; font-size: 14px; font-weight: bold;
+            z-index: 1001;
+            text-shadow: 0 1px 2px rgba(255,255,255,0.9);
+            line-height: 20px;
+        }
+
+    </style>
+<link rel="stylesheet" href="assets/chapters.css?v=20260421203847"><script src="assets/chapters.js?v=20260421203847" defer></script>
+</head>
+<body>
+    <div class="container">
+        <div class="content">
+            <div class="chat-message" data-index="9">
+<div class="px-2"><h1>🟢 PROJECT 4: "Asking Without Sounding Lost"</h1>
+<h2><em>You need information — directions, prices, times — how do you ask properly?</em></h2>
+<hr>
+<h1>🎯 THE HYPOTHETICAL PROBLEM</h1>
+<p>→ You're walking through <strong>le Vieux Lyon</strong> (Old Lyon) — the historic district<br>
+→ You're lost — you need to find a pharmacy, a metro station, a restaurant<br>
+→ You want to know <strong>prices, times, directions, reasons, names</strong><br>
+→ You can identify things (Project 3), describe your routine (Project 2), and say who you are (Project 1)<br>
+→ But every time you need information, you <strong>freeze</strong><br>
+→ You don't know how to <strong>form a question</strong> in French<br>
+→ You default to pointing and saying single words: "Pharmacie ?" "Métro ?" "Combien ?"<br>
+→ This works for survival — but you sound like a tourist reading a phrasebook<br>
+→ French has <strong>THREE different ways</strong> to ask the same question — and each one signals a <strong>different social register</strong></p>
+<p><strong>The core realization:</strong><br>
+→ In English, questions are formed mainly by word order change: "You are" → "Are you?"<br>
+→ In French, you have <strong>three systems</strong> — and the one you choose tells the listener whether you're being <strong>casual, neutral, or formal</strong><br>
+→ Choosing the wrong register doesn't create a grammar error — it creates a <strong>social error</strong><br>
+→ A tourist asking a shopkeeper using inversion sounds strangely formal<br>
+→ A professional using only intonation in a business meeting sounds uneducated</p>
+<hr>
+<h1>🔍 HOW TO APPROACH IT</h1>
+<p>→ French questions are built using <strong>two ingredients:</strong></p>
+<table><thead><tr><th>Ingredient 1</th><th>Ingredient 2</th></tr></thead><tbody><tr><td><strong>Question FORM</strong> (how you structure it)</td><td><strong>Question WORD</strong> (what information you want)</td></tr></tbody></table>
+<p>→ There are <strong>3 forms</strong> and <strong>8 main question words</strong><br>
+→ Any question word can be used with any form<br>
+→ This gives you an enormous <strong>matrix of possibilities</strong></p>
+<hr>
+<h2>The 3 Question Forms</h2>
+<table><thead><tr><th>Form</th><th>Name</th><th>Register</th><th>How It Works</th><th>Example</th></tr></thead><tbody><tr><td><strong>Form 1</strong></td><td>Intonation</td><td><strong>Casual / Spoken</strong></td><td>Same word order as statement → voice goes UP at end</td><td>Tu parles français ? ↗</td></tr><tr><td><strong>Form 2</strong></td><td>Est-ce que</td><td><strong>Neutral / Standard</strong></td><td>Add "Est-ce que" at the beginning → normal word order</td><td>Est-ce que tu parles français ?</td></tr><tr><td><strong>Form 3</strong></td><td>Inversion</td><td><strong>Formal / Written</strong></td><td>Flip subject and verb → add hyphen</td><td>Parles-tu français ?</td></tr></tbody></table>
+<hr>
+<h2>The 8 Question Words</h2>
+<table><thead><tr><th>French</th><th>English</th><th>What It Asks For</th></tr></thead><tbody><tr><td><strong>Qui</strong></td><td>Who</td><td>Person</td></tr><tr><td><strong>Que / Quoi</strong></td><td>What</td><td>Thing / action</td></tr><tr><td><strong>Où</strong></td><td>Where</td><td>Place</td></tr><tr><td><strong>Quand</strong></td><td>When</td><td>Time</td></tr><tr><td><strong>Comment</strong></td><td>How</td><td>Manner / method</td></tr><tr><td><strong>Pourquoi</strong></td><td>Why</td><td>Reason</td></tr><tr><td><strong>Combien</strong></td><td>How much / How many</td><td>Quantity / price</td></tr><tr><td><strong>Quel(le)(s)</strong></td><td>Which / What</td><td>Choice / specification</td></tr></tbody></table>
+<hr>
+<h1>🔧 HOW CAN WE SOLVE IT</h1>
+<h2>Step 1 — Yes/No Questions (No question word needed)</h2>
+<p>These are questions where the answer is simply <strong>oui</strong> or <strong>non</strong></p>
+<h3>Form 1 — Intonation (Casual)</h3>
+<p>→ Take any statement from Projects 1-3 → raise your voice at the end</p>
+<h3>Form 2 — Est-ce que (Standard)</h3>
+<p>→ Put <strong>"Est-ce que"</strong> before the statement → keep everything else the same</p>
+<h3>Form 3 — Inversion (Formal)</h3>
+<p>→ Flip the subject pronoun and the verb → connect with a hyphen</p>
+<hr>
+<h1>✅ WHAT COULD BE DONE — THE 100 SENTENCES</h1>
+<h2>🔹 BLOCK A — Yes/No Questions: Three Forms Side by Side</h2>
+<p><em>Scenario: You're at a hotel reception desk — checking basic information</em></p>
+<table><thead><tr><th>#</th><th>Form 1 (Casual)</th><th>Form 2 (Standard)</th><th>Form 3 (Formal)</th><th>English</th></tr></thead><tbody><tr><td>1</td><td>Tu parles anglais ?</td><td>Est-ce que tu parles anglais ?</td><td>Parles-tu anglais ?</td><td>Do you speak English?</td></tr><tr><td>2</td><td>Vous avez une chambre ?</td><td>Est-ce que vous avez une chambre ?</td><td>Avez-vous une chambre ?</td><td>Do you have a room?</td></tr><tr><td>3</td><td>C'est loin ?</td><td>Est-ce que c'est loin ?</td><td><em>(rarely inverted)</em></td><td>Is it far?</td></tr><tr><td>4</td><td>Le petit-déjeuner est inclus ?</td><td>Est-ce que le petit-déjeuner est inclus ?</td><td>Le petit-déjeuner est-il inclus ?</td><td>Is breakfast included?</td></tr><tr><td>5</td><td>Il y a du wifi ?</td><td>Est-ce qu'il y a du wifi ?</td><td>Y a-t-il du wifi ?</td><td>Is there wifi?</td></tr><tr><td>6</td><td>Tu es français ?</td><td>Est-ce que tu es français ?</td><td>Es-tu français ?</td><td>Are you French?</td></tr><tr><td>7</td><td>Vous acceptez la carte ?</td><td>Est-ce que vous acceptez la carte ?</td><td>Acceptez-vous la carte ?</td><td>Do you accept cards?</td></tr><tr><td>8</td><td>On peut entrer ?</td><td>Est-ce qu'on peut entrer ?</td><td>Peut-on entrer ?</td><td>Can we come in?</td></tr><tr><td>9</td><td>Tu aimes le café ?</td><td>Est-ce que tu aimes le café ?</td><td>Aimes-tu le café ?</td><td>Do you like coffee?</td></tr><tr><td>10</td><td>Vous comprenez ?</td><td>Est-ce que vous comprenez ?</td><td>Comprenez-vous ?</td><td>Do you understand?</td></tr></tbody></table>
+<p><strong>🧠 Structure unlocked:</strong> Same question — three registers — three impressions</p>
+<p><strong>🧠 Critical note on sentence 5:</strong><br>
+→ "Y a-t-il" — that <strong>-t-</strong> between "a" and "il" is a <strong>phonetic bridge</strong><br>
+→ French avoids two vowel sounds colliding<br>
+→ Il a → A-t-il ? (the -t- is inserted for pronunciation only)<br>
+→ Il parle → Parle-t-il ? (same reason: "parle" ends in vowel sound, "il" starts with one)<br>
+→ Il finit → Finit-il ? (no -t- needed — "finit" already ends in "t")</p>
+<hr>
+<h2>🔹 BLOCK B — OÙ (Where): Finding Places</h2>
+<p><em>Scenario: You're lost in the old town — you need directions</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>Form Used</th><th>English</th></tr></thead><tbody><tr><td>11</td><td>La pharmacie, c'est où ?</td><td>Casual (où at end)</td><td>Where is the pharmacy?</td></tr><tr><td>12</td><td>Où est la pharmacie ?</td><td>Standard (où at start)</td><td>Where is the pharmacy?</td></tr><tr><td>13</td><td>Où se trouve la pharmacie ?</td><td>Formal</td><td>Where is the pharmacy located?</td></tr><tr><td>14</td><td>Tu habites où ?</td><td>Casual</td><td>Where do you live?</td></tr><tr><td>15</td><td>Où est-ce que tu habites ?</td><td>Standard</td><td>Where do you live?</td></tr><tr><td>16</td><td>Où habites-tu ?</td><td>Formal</td><td>Where do you live?</td></tr><tr><td>17</td><td>C'est où, la gare ?</td><td>Casual (very natural)</td><td>Where's the train station?</td></tr><tr><td>18</td><td>Où est la sortie ?</td><td>Standard</td><td>Where is the exit?</td></tr><tr><td>19</td><td>Où sont les toilettes ?</td><td>Standard (most common for this)</td><td>Where are the restrooms?</td></tr><tr><td>20</td><td>Vous allez où ?</td><td>Casual</td><td>Where are you going?</td></tr><tr><td>21</td><td>Où est-ce que vous allez ?</td><td>Standard</td><td>Where are you going?</td></tr><tr><td>22</td><td>Où allez-vous ?</td><td>Formal</td><td>Where are you going?</td></tr></tbody></table>
+<p><strong>🧠 Structure patterns for OÙ:</strong></p>
+<table><thead><tr><th>Register</th><th>Pattern</th><th>Example</th></tr></thead><tbody><tr><td>Casual</td><td>Statement + <strong>où</strong> ?</td><td>Tu vas <strong>où</strong> ?</td></tr><tr><td>Casual (alternate)</td><td><strong>C'est où</strong>, + noun ?</td><td><strong>C'est où</strong>, le métro ?</td></tr><tr><td>Standard</td><td><strong>Où est-ce que</strong> + statement ?</td><td><strong>Où est-ce que</strong> tu vas ?</td></tr><tr><td>Standard (with être)</td><td><strong>Où est / Où sont</strong> + noun ?</td><td><strong>Où est</strong> la gare ?</td></tr><tr><td>Formal</td><td><strong>Où</strong> + inverted verb-subject ?</td><td><strong>Où</strong> allez-<strong>vous</strong> ?</td></tr></tbody></table>
+<hr>
+<h2>🔹 BLOCK C — QUAND (When): Finding Times</h2>
+<p><em>Scenario: You need to know schedules — shops, events, departures</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>Form Used</th><th>English</th></tr></thead><tbody><tr><td>23</td><td>Tu pars quand ?</td><td>Casual</td><td>When are you leaving?</td></tr><tr><td>24</td><td>Quand est-ce que tu pars ?</td><td>Standard</td><td>When are you leaving?</td></tr><tr><td>25</td><td>Quand pars-tu ?</td><td>Formal</td><td>When are you leaving?</td></tr><tr><td>26</td><td>Le magasin ouvre quand ?</td><td>Casual</td><td>When does the store open?</td></tr><tr><td>27</td><td>Quand est-ce que le magasin ouvre ?</td><td>Standard</td><td>When does the store open?</td></tr><tr><td>28</td><td>Le train arrive quand ?</td><td>Casual</td><td>When does the train arrive?</td></tr><tr><td>29</td><td>Quand est-ce qu'on mange ?</td><td>Standard</td><td>When do we eat?</td></tr><tr><td>30</td><td>C'est quand, la fête ?</td><td>Casual (very spoken)</td><td>When is the party?</td></tr><tr><td>31</td><td>Quand est la réunion ?</td><td>Standard (with être)</td><td>When is the meeting?</td></tr><tr><td>32</td><td>Vous finissez quand ?</td><td>Casual</td><td>When do you finish?</td></tr></tbody></table>
+<p><strong>🧠 Structure patterns for QUAND:</strong></p>
+<table><thead><tr><th>Register</th><th>Pattern</th></tr></thead><tbody><tr><td>Casual</td><td>Statement + <strong>quand</strong> ?</td></tr><tr><td>Casual (alternate)</td><td><strong>C'est quand</strong>, + noun ?</td></tr><tr><td>Standard</td><td><strong>Quand est-ce que</strong> + statement ?</td></tr><tr><td>Formal</td><td><strong>Quand</strong> + inverted verb-subject ?</td></tr></tbody></table>
+<p>→ Same logic as <strong>où</strong> — the question word moves from END (casual) to START (standard/formal)</p>
+<hr>
+<h2>🔹 BLOCK D — COMMENT (How): Understanding Methods, Manners, Names</h2>
+<p><em>Scenario: You need to know how to do things, how things work, what things are called</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>Form Used</th><th>English</th></tr></thead><tbody><tr><td>33</td><td>Comment tu t'appelles ?</td><td>Casual</td><td>What's your name?</td></tr><tr><td>34</td><td>Comment est-ce que tu t'appelles ?</td><td>Standard</td><td>What is your name?</td></tr><tr><td>35</td><td>Comment t'appelles-tu ?</td><td>Formal</td><td>What is your name?</td></tr><tr><td>36</td><td>Comment ça va ?</td><td>Fixed casual expression</td><td>How are you? / How's it going?</td></tr><tr><td>37</td><td>Comment allez-vous ?</td><td>Formal</td><td>How are you?</td></tr><tr><td>38</td><td>On fait comment ?</td><td>Casual</td><td>How do we do it?</td></tr><tr><td>39</td><td>Comment est-ce qu'on fait ?</td><td>Standard</td><td>How do we do it?</td></tr><tr><td>40</td><td>Comment on dit "thank you" en français ?</td><td>Casual</td><td>How do you say "thank you" in French?</td></tr><tr><td>41</td><td>Comment est-ce qu'on va à la gare ?</td><td>Standard</td><td>How do we get to the station?</td></tr><tr><td>42</td><td>C'est comment ?</td><td>Casual</td><td>What's it like? / How is it?</td></tr></tbody></table>
+<p><strong>🧠 Special use of COMMENT:</strong><br>
+→ <strong>Comment tu t'appelles ?</strong> literally = "How do you call yourself?" = "What is your name?"<br>
+→ This is a COMMENT question — not a QUEL question — even though English uses "what"<br>
+→ <strong>Comment ça va ?</strong> = frozen expression → don't analyze it → just use it</p>
+<hr>
+<h2>🔹 BLOCK E — COMBIEN (How Much / How Many): Prices &amp; Quantities</h2>
+<p><em>Scenario: At the market (from Project 3) — you're buying and counting</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>Form Used</th><th>English</th></tr></thead><tbody><tr><td>43</td><td>C'est combien ?</td><td>Casual (most common)</td><td>How much is it?</td></tr><tr><td>44</td><td>Ça coûte combien ?</td><td>Casual</td><td>How much does it cost?</td></tr><tr><td>45</td><td>Combien ça coûte ?</td><td>Standard</td><td>How much does it cost?</td></tr><tr><td>46</td><td>Combien est-ce que ça coûte ?</td><td>Standard (fuller)</td><td>How much does this cost?</td></tr><tr><td>47</td><td>Combien coûte ce fromage ?</td><td>Formal</td><td>How much does this cheese cost?</td></tr><tr><td>48</td><td>Tu as combien de frères ?</td><td>Casual</td><td>How many brothers do you have?</td></tr><tr><td>49</td><td>Combien de personnes il y a ?</td><td>Standard</td><td>How many people are there?</td></tr><tr><td>50</td><td>Il y a combien de chambres ?</td><td>Casual</td><td>How many rooms are there?</td></tr><tr><td>51</td><td>Combien de temps ça prend ?</td><td>Standard</td><td>How long does it take?</td></tr><tr><td>52</td><td>Vous êtes combien ?</td><td>Casual</td><td>How many of you are there?</td></tr></tbody></table>
+<p><strong>🧠 COMBIEN structure:</strong></p>
+<table><thead><tr><th>Asking about</th><th>Pattern</th><th>Example</th></tr></thead><tbody><tr><td><strong>Price</strong> (how much)</td><td>Combien + verb / C'est combien</td><td>C'est combien ?</td></tr><tr><td><strong>Quantity</strong> (how many)</td><td>Combien <strong>de</strong> + noun</td><td>Combien <strong>de</strong> frères ?</td></tr><tr><td><strong>Duration</strong> (how long)</td><td>Combien <strong>de</strong> temps</td><td>Combien <strong>de</strong> temps ça prend ?</td></tr></tbody></table>
+<p>→ <strong>Combien de</strong> = "how many of" / "how much of" — always followed by <strong>de</strong> (not du/des)<br>
+→ Same rule as after negation (Project 3): quantity expression + <strong>de</strong> + bare noun</p>
+<hr>
+<h2>🔹 BLOCK F — POURQUOI (Why): Understanding Reasons</h2>
+<p><em>Scenario: Things happen — you want to understand WHY</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>Form Used</th><th>English</th></tr></thead><tbody><tr><td>53</td><td>Pourquoi tu es ici ?</td><td>Casual</td><td>Why are you here?</td></tr><tr><td>54</td><td>Pourquoi est-ce que tu es ici ?</td><td>Standard</td><td>Why are you here?</td></tr><tr><td>55</td><td>Pourquoi le magasin est fermé ?</td><td>Casual</td><td>Why is the store closed?</td></tr><tr><td>56</td><td>Pourquoi est-ce qu'il y a du monde ?</td><td>Standard</td><td>Why are there so many people?</td></tr><tr><td>57</td><td>Pourquoi pas ?</td><td>Fixed expression</td><td>Why not?</td></tr><tr><td>58</td><td>Pourquoi tu fais ça ?</td><td>Casual</td><td>Why are you doing that?</td></tr><tr><td>59</td><td>Pourquoi est-ce qu'on attend ?</td><td>Standard</td><td>Why are we waiting?</td></tr><tr><td>60</td><td>Pourquoi c'est cher ?</td><td>Casual</td><td>Why is it expensive?</td></tr><tr><td>61</td><td>Pourquoi est-ce que c'est fermé le lundi ?</td><td>Standard</td><td>Why is it closed on Mondays?</td></tr><tr><td>62</td><td>Tu pars pourquoi ?</td><td>Very casual (pourquoi at end — rare but exists)</td><td>Why are you leaving?</td></tr></tbody></table>
+<p><strong>🧠 POURQUOI behavior:</strong><br>
+→ Unlike other question words, <strong>pourquoi almost always stays at the START</strong><br>
+→ Putting pourquoi at the end (sentence 62) is very informal and less common<br>
+→ <strong>Pourquoi + inversion</strong> exists formally but sounds very stiff in daily speech<br>
+→ Most common daily pattern: <strong>Pourquoi + statement (casual)</strong> or <strong>Pourquoi est-ce que + statement (standard)</strong></p>
+<p><strong>🧠 Answer structure preview:</strong><br>
+→ Pourquoi ? → <strong>Parce que...</strong> (Because...)<br>
+→ This cause/reason connector will be explored deeply in Project 28</p>
+<hr>
+<h2>🔹 BLOCK G — QUI (Who): Identifying People</h2>
+<p><em>Scenario: Someone knocks on the door, you see someone, you hear a name</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>Form Used</th><th>English</th></tr></thead><tbody><tr><td>63</td><td>C'est qui ?</td><td>Casual (extremely common)</td><td>Who is it?</td></tr><tr><td>64</td><td>Qui est-ce ?</td><td>Standard</td><td>Who is it?</td></tr><tr><td>65</td><td>Qui c'est ?</td><td>Casual (alternate order)</td><td>Who is that?</td></tr><tr><td>66</td><td>Tu connais qui ici ?</td><td>Casual</td><td>Who do you know here?</td></tr><tr><td>67</td><td>Qui est-ce que tu connais ?</td><td>Standard</td><td>Who do you know?</td></tr><tr><td>68</td><td>Qui parle français ici ?</td><td>Direct (qui = subject)</td><td>Who speaks French here?</td></tr><tr><td>69</td><td>C'est pour qui ?</td><td>Casual</td><td>Who is it for?</td></tr><tr><td>70</td><td>Tu attends qui ?</td><td>Casual</td><td>Who are you waiting for?</td></tr><tr><td>71</td><td>Qui est-ce que tu attends ?</td><td>Standard</td><td>Who are you waiting for?</td></tr><tr><td>72</td><td>Qui veut du café ?</td><td>Direct (qui = subject)</td><td>Who wants coffee?</td></tr></tbody></table>
+<p><strong>🧠 QUI has TWO different behaviors:</strong></p>
+<table><thead><tr><th>Qui = SUBJECT (who does the action)</th><th>Qui = OBJECT (who receives the action)</th></tr></thead><tbody><tr><td><strong>Qui</strong> parle ? (Who speaks?)</td><td>Tu attends <strong>qui</strong> ? (You're waiting for whom?)</td></tr><tr><td><strong>Qui</strong> veut du café ? (Who wants coffee?)</td><td><strong>Qui est-ce que</strong> tu attends ? (Who are you waiting for?)</td></tr><tr><td>→ Qui + verb directly (no subject needed)</td><td>→ Qui at end (casual) or Qui est-ce que at start (standard)</td></tr></tbody></table>
+<p>→ When <strong>qui IS the subject</strong> → verb follows directly → <strong>Qui parle ?</strong> (no "est-ce que" needed)<br>
+→ When <strong>qui IS the object</strong> → you still need a subject → <strong>Qui est-ce que TU connais ?</strong></p>
+<hr>
+<h2>🔹 BLOCK H — QUE / QUOI (What): The Trickiest Question Word</h2>
+<p><em>Scenario: You don't understand something — you need clarification</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>Form Used</th><th>English</th></tr></thead><tbody><tr><td>73</td><td>Tu fais quoi ?</td><td>Casual</td><td>What are you doing?</td></tr><tr><td>74</td><td>Qu'est-ce que tu fais ?</td><td>Standard</td><td>What are you doing?</td></tr><tr><td>75</td><td>Que fais-tu ?</td><td>Formal</td><td>What are you doing?</td></tr><tr><td>76</td><td>C'est quoi, ça ?</td><td>Casual (extremely common)</td><td>What is this?</td></tr><tr><td>77</td><td>Qu'est-ce que c'est ?</td><td>Standard</td><td>What is this?</td></tr><tr><td>78</td><td>Quoi ?</td><td>Ultra casual (alone = "What?")</td><td>What? / Huh?</td></tr><tr><td>79</td><td>Comment ?</td><td>Polite alternative to "Quoi ?"</td><td>Pardon? / What did you say?</td></tr><tr><td>80</td><td>Tu veux quoi ?</td><td>Casual</td><td>What do you want?</td></tr><tr><td>81</td><td>Qu'est-ce que tu veux ?</td><td>Standard</td><td>What do you want?</td></tr><tr><td>82</td><td>Que voulez-vous ?</td><td>Formal</td><td>What do you want?</td></tr><tr><td>83</td><td>Tu manges quoi ce soir ?</td><td>Casual</td><td>What are you eating tonight?</td></tr><tr><td>84</td><td>Qu'est-ce qu'on fait ?</td><td>Standard</td><td>What do we do? / What shall we do?</td></tr></tbody></table>
+<p><strong>🧠 QUE vs. QUOI — The rule:</strong></p>
+<table><thead><tr><th>Position</th><th>Use</th><th>Example</th></tr></thead><tbody><tr><td><strong>Start of sentence</strong> (before est-ce que)</td><td><strong>Qu'est-ce que</strong></td><td><strong>Qu'est-ce que</strong> tu fais ?</td></tr><tr><td><strong>Start of sentence</strong> (before inverted verb)</td><td><strong>Que</strong></td><td><strong>Que</strong> fais-tu ?</td></tr><tr><td><strong>End of sentence</strong> (casual)</td><td><strong>Quoi</strong></td><td>Tu fais <strong>quoi</strong> ?</td></tr><tr><td><strong>Standalone</strong> (alone, informal)</td><td><strong>Quoi ?</strong></td><td>Quoi ? (= Huh? What?)</td></tr></tbody></table>
+<p>→ <strong>Quoi</strong> = casual / end of sentence / standalone<br>
+→ <strong>Que</strong> = formal / start of sentence before inversion<br>
+→ <strong>Qu'est-ce que</strong> = standard / start of sentence in neutral register<br>
+→ They ALL mean "what" — the difference is <strong>register and position</strong></p>
+<p><strong>🧠 Social note on sentence 78:</strong><br>
+→ Saying <strong>"Quoi ?"</strong> alone is considered <strong>rude</strong> in polite company<br>
+→ Better alternative: <strong>"Comment ?"</strong> or <strong>"Pardon ?"</strong> (sentence 79)<br>
+→ Among friends → "Quoi ?" is totally fine</p>
+<hr>
+<h2>🔹 BLOCK I — QUEL(LE)(S) (Which / What): Specifying Choices</h2>
+<p><em>Scenario: You need to specify — which one, what kind, what time</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>Quel Form</th><th>English</th></tr></thead><tbody><tr><td>85</td><td>Quelle heure il est ?</td><td><strong>Quelle</strong> (fem sing)</td><td>What time is it?</td></tr><tr><td>86</td><td>Quelle est votre adresse ?</td><td><strong>Quelle</strong> (fem sing)</td><td>What is your address?</td></tr><tr><td>87</td><td>Quel est ton nom ?</td><td><strong>Quel</strong> (masc sing)</td><td>What is your name?</td></tr><tr><td>88</td><td>Quel jour on est ?</td><td><strong>Quel</strong> (masc sing)</td><td>What day is it?</td></tr><tr><td>89</td><td>Quel âge tu as ?</td><td><strong>Quel</strong> (masc sing)</td><td>How old are you?</td></tr><tr><td>90</td><td>Quel temps il fait ?</td><td><strong>Quel</strong> (masc sing)</td><td>What's the weather like?</td></tr><tr><td>91</td><td>Quelle est la différence ?</td><td><strong>Quelle</strong> (fem sing)</td><td>What is the difference?</td></tr><tr><td>92</td><td>Quels sont vos horaires ?</td><td><strong>Quels</strong> (masc plural)</td><td>What are your hours?</td></tr><tr><td>93</td><td>Quelles langues tu parles ?</td><td><strong>Quelles</strong> (fem plural)</td><td>What languages do you speak?</td></tr><tr><td>94</td><td>Tu préfères quel restaurant ?</td><td><strong>Quel</strong> (masc sing)</td><td>Which restaurant do you prefer?</td></tr></tbody></table>
+<p><strong>🧠 QUEL agrees in gender and number with the noun it modifies:</strong></p>
+<table><thead><tr><th></th><th>Masculine</th><th>Feminine</th></tr></thead><tbody><tr><td><strong>Singular</strong></td><td><strong>Quel</strong> jour ?</td><td><strong>Quelle</strong> heure ?</td></tr><tr><td><strong>Plural</strong></td><td><strong>Quels</strong> films ?</td><td><strong>Quelles</strong> langues ?</td></tr></tbody></table>
+<p>→ <strong>Quel</strong> ALWAYS accompanies a <strong>noun</strong> (or asks "quel est...")<br>
+→ It means "which" or "what" when asking to <strong>specify among options</strong><br>
+→ Different from <strong>que/quoi</strong> which ask about actions or unknown things</p>
+<p><strong>🧠 Quel vs. Que — when learners confuse them:</strong></p>
+<table><thead><tr><th>Question</th><th>Correct</th><th>Why</th></tr></thead><tbody><tr><td>What is your name?</td><td><strong>Quel</strong> est ton nom ?</td><td>Asking to SPECIFY a noun (name)</td></tr><tr><td>What are you doing?</td><td><strong>Qu'est-ce que</strong> tu fais ?</td><td>Asking about an ACTION</td></tr><tr><td>What time is it?</td><td><strong>Quelle</strong> heure il est ?</td><td>Asking to SPECIFY a noun (hour)</td></tr><tr><td>What do you want?</td><td><strong>Qu'est-ce que</strong> tu veux ?</td><td>Asking about a THING/ACTION</td></tr></tbody></table>
+<p>→ <strong>Quel + noun</strong> = asking someone to SPECIFY which noun<br>
+→ <strong>Que/Quoi</strong> = asking about an action or unknown thing (no specific noun)</p>
+<hr>
+<h2>🔹 BLOCK J — Real Conversation Flow: A Day of Asking Questions</h2>
+<p><em>Scenario: Your complete day — every interaction requires a question</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>Question Word</th><th>Situation</th></tr></thead><tbody><tr><td>95</td><td>Quelle heure il est ?</td><td>Quel</td><td>Waking up</td></tr><tr><td>96</td><td>Il y a du café ? (from Project 3)</td><td>— (yes/no)</td><td>Kitchen</td></tr><tr><td>97</td><td>On mange quoi ce matin ?</td><td>Quoi</td><td>Breakfast</td></tr><tr><td>98</td><td>Où est la station de métro ?</td><td>Où</td><td>Leaving the house</td></tr><tr><td>99</td><td>C'est combien, un ticket ?</td><td>Combien</td><td>Buying metro ticket</td></tr><tr><td>100</td><td>Pardon, comment on va à Bellecour ?</td><td>Comment</td><td>Asking directions</td></tr><tr><td>101</td><td>Le musée ouvre quand ?</td><td>Quand</td><td>Planning the morning</td></tr><tr><td>102</td><td>C'est qui sur cette photo ?</td><td>Qui</td><td>At the museum</td></tr><tr><td>103</td><td>Pourquoi c'est fermé aujourd'hui ?</td><td>Pourquoi</td><td>Restaurant door</td></tr><tr><td>104</td><td>Qu'est-ce qu'on fait maintenant ?</td><td>Que</td><td>Deciding next step</td></tr><tr><td>105</td><td>Quel restaurant tu préfères ?</td><td>Quel</td><td>Choosing where to eat</td></tr><tr><td>106</td><td>Vous avez une table pour deux ?</td><td>— (yes/no)</td><td>At the restaurant</td></tr><tr><td>107</td><td>C'est quoi, le plat du jour ?</td><td>Quoi</td><td>Ordering</td></tr><tr><td>108</td><td>Est-ce que je peux avoir l'addition ?</td><td>Est-ce que (yes/no)</td><td>Paying</td></tr></tbody></table>
+<hr>
+<h1>✅ WHAT SHOULD DO</h1>
+<p>→ <strong>Default to Form 2 (Est-ce que)</strong> in the beginning — it's always correct, never rude, never too formal<br>
+→ <strong>Learn Form 1 (Intonation)</strong> for friends and casual situations — it's the most natural in spoken French<br>
+→ <strong>Recognize Form 3 (Inversion)</strong> when you hear or read it — but don't force yourself to produce it daily<br>
+→ <strong>Memorize the fixed expressions:</strong> C'est combien ? / C'est quoi ? / C'est qui ? / C'est où ? — these are the <strong>survival questions</strong><br>
+→ <strong>Match quel to the noun's gender</strong> — always check: is the noun masculine or feminine?<br>
+→ <strong>Connect to Project 3:</strong> questions often contain articles → "Où est <strong>la</strong> pharmacie ?" / "Il y a <strong>du</strong> café ?"</p>
+<hr>
+<h1>❌ WHAT SHOULD NOT DO</h1>
+<p>→ ❌ Do NOT use "Quoi ?" alone in polite or formal settings → use "Comment ?" or "Pardon ?"<br>
+→ ❌ Do NOT mix up <strong>que</strong> and <strong>quel</strong> → "Que est ton nom ?" ❌ → "<strong>Quel</strong> est ton nom ?" ✅<br>
+→ ❌ Do NOT put <strong>quoi</strong> at the start of a standard sentence → "Quoi tu fais ?" ❌ → "<strong>Qu'est-ce que</strong> tu fais ?" ✅ or "Tu fais <strong>quoi</strong> ?" ✅<br>
+→ ❌ Do NOT use inversion in casual conversation with friends → it sounds unnatural and stiff<br>
+→ ❌ Do NOT forget the <strong>-t-</strong> bridge in inversion → "A-il ?" ❌ → "A-<strong>t</strong>-il ?" ✅<br>
+→ ❌ Do NOT say "Qu'est-ce que c'est ça ?" (mixing two structures) → either "C'est quoi, ça ?" OR "Qu'est-ce que c'est ?"<br>
+→ ❌ Do NOT use "quel" without a noun reference → "Quel tu fais ?" makes no sense</p>
+<hr>
+<h1>🔀 WHEN TO USE WHAT</h1>
+<table><thead><tr><th>Situation</th><th>Best Form</th><th>Why</th></tr></thead><tbody><tr><td>Talking to friends, family</td><td><strong>Form 1</strong> (Intonation)</td><td>Natural, relaxed</td></tr><tr><td>Talking to strangers, shopkeepers</td><td><strong>Form 2</strong> (Est-ce que)</td><td>Polite, neutral</td></tr><tr><td>Writing emails, formal meetings</td><td><strong>Form 3</strong> (Inversion)</td><td>Professional, elegant</td></tr><tr><td>Quick survival question</td><td><strong>Fixed casual forms</strong> (C'est combien ?)</td><td>Fast, universally understood</td></tr><tr><td>Asking at a restaurant</td><td><strong>Form 2</strong> or polite <strong>Form 1</strong></td><td>Standard customer register</td></tr><tr><td>Job interview</td><td><strong>Form 3</strong> or careful <strong>Form 2</strong></td><td>Shows language competence</td></tr></tbody></table>
+<table><thead><tr><th>Information Needed</th><th>Question Word</th><th>Example</th></tr></thead><tbody><tr><td>Person</td><td><strong>Qui</strong></td><td>C'est qui ?</td></tr><tr><td>Thing / Action</td><td><strong>Que / Quoi</strong></td><td>C'est quoi ? / Qu'est-ce que c'est ?</td></tr><tr><td>Place</td><td><strong>Où</strong></td><td>Où est la gare ?</td></tr><tr><td>Time</td><td><strong>Quand</strong></td><td>Tu pars quand ?</td></tr><tr><td>Method / Manner</td><td><strong>Comment</strong></td><td>Comment on fait ?</td></tr><tr><td>Reason</td><td><strong>Pourquoi</strong></td><td>Pourquoi c'est fermé ?</td></tr><tr><td>Price / Quantity</td><td><strong>Combien (de)</strong></td><td>C'est combien ? / Combien de temps ?</td></tr><tr><td>Specification / Choice</td><td><strong>Quel(le)(s)</strong></td><td>Quelle heure il est ?</td></tr></tbody></table>
+<hr>
+<h1>🚫 WHEN NOT TO USE</h1>
+<p>→ Do NOT use <strong>inversion</strong> when speaking casually → you'll sound like a textbook from 1950<br>
+→ Do NOT use <strong>pourquoi at the end</strong> of sentences → unlike other question words, it strongly prefers the start<br>
+→ Do NOT use <strong>quel</strong> when you're asking about an action → quel is for NOUNS only<br>
+→ Do NOT use <strong>Form 3 (inversion) with "je"</strong> in most cases → "Parlé-je ?" sounds archaic<br>
+→ → Exception: "Puis-je ?" (May I?) — this specific inversion with "je" is still used formally<br>
+→ Do NOT answer <strong>pourquoi</strong> with <strong>pourquoi</strong> → answer with <strong>parce que</strong> (because)<br>
+→ Do NOT confuse <strong>comment</strong> (how) with <strong>quoi</strong> (what) → "Comment ?" alone = "What did you say?" (polite) — but "Comment tu fais ?" = "How do you do it?"</p>
+<hr>
+<h1>⚠️ COMMON PITFALLS AND FAILURE MODES</h1>
+<table><thead><tr><th>Pitfall</th><th>What Learners Do Wrong</th><th>Correct Version</th><th>Why</th></tr></thead><tbody><tr><td><strong>Que vs. Quel confusion</strong></td><td>"Que est ton nom ?"</td><td><strong>Quel</strong> est ton nom ?</td><td>Asking to specify a noun → quel</td></tr><tr><td><strong>Quoi at the start</strong></td><td>"Quoi tu manges ?"</td><td>Tu manges <strong>quoi</strong> ? OR <strong>Qu'est-ce que</strong> tu manges ?</td><td>Quoi only goes at END or ALONE</td></tr><tr><td><strong>Missing -t- in inversion</strong></td><td>"A-il un chat ?"</td><td>A-<strong>t</strong>-il un chat ?</td><td>Phonetic bridge between vowels</td></tr><tr><td><strong>Inversion with nouns</strong></td><td>"Le train part-il quand ?" (awkward)</td><td><strong>Quand</strong> est-ce que le train part ?</td><td>With noun subjects, inversion is complex — use est-ce que</td></tr><tr><td><strong>Pourquoi at end</strong></td><td>"Tu fais ça pourquoi ?"</td><td><strong>Pourquoi</strong> tu fais ça ?</td><td>Pourquoi strongly prefers sentence start</td></tr><tr><td><strong>Quel gender mismatch</strong></td><td>"Quel heure il est ?"</td><td><strong>Quelle</strong> heure il est ?</td><td>Heure = feminine → quelle</td></tr><tr><td><strong>"Quoi ?" rudeness</strong></td><td>Saying "Quoi ?" to a boss or elder</td><td><strong>Pardon ?</strong> / <strong>Comment ?</strong></td><td>Quoi alone = informal / can be rude</td></tr><tr><td><strong>Mixing two systems</strong></td><td>"Qu'est-ce que c'est quoi ?"</td><td><strong>Qu'est-ce que c'est ?</strong> OR <strong>C'est quoi ?</strong></td><td>Pick ONE system — don't combine</td></tr><tr><td><strong>Using "est-ce que" with qui-subject</strong></td><td>"Est-ce que qui parle ?"</td><td><strong>Qui</strong> parle ?</td><td>When qui = subject → direct: Qui + verb</td></tr><tr><td><strong>Combien without de</strong></td><td>"Combien frères tu as ?"</td><td><strong>Combien de</strong> frères tu as ?</td><td>Combien + noun requires <strong>de</strong> between them</td></tr></tbody></table>
+<hr>
+<h1>🔑 KEY TAKEAWAY</h1>
+<blockquote>
+<p><strong>Project 1 → You exist and possess.</strong><br>
+<strong>Project 2 → You act and describe your routine.</strong><br>
+<strong>Project 3 → You point at and identify the world.</strong><br>
+<strong>Project 4 → You ASK about the world — requesting any information you need.</strong></p>
+<p>The <strong>3-form system</strong> is your social GPS:<br>
+→ Intonation = casual / spoken<br>
+→ Est-ce que = safe / neutral / always correct<br>
+→ Inversion = formal / written / professional</p>
+<p>The <strong>8 question words</strong> cover every possible type of information:<br>
+→ Person, thing, place, time, method, reason, quantity, specification</p>
+<p><strong>You can now have basic two-way interactions:</strong><br>
+→ You state things (Projects 1-3) AND ask things (Project 4)</p>
+<p><strong>But there's a gap:</strong><br>
+→ Someone says something wrong about you → you need to DENY it<br>
+→ Someone offers you something you don't want → you need to REFUSE<br>
+→ You can only say "yes" to questions — you cannot yet say "no" properly</p>
+</blockquote>
+<hr>
+<h1>🌉 BRIDGE TO PROJECT 5</h1>
+<blockquote>
+<p>You can now <strong>ask</strong> questions — but you can't properly <strong>deny, refuse, or correct</strong><br>
+Someone says "Tu es français ?" → You need to say "No, I am not French"<br>
+Someone offers wine → You need to say "No thank you, I don't drink wine"<br>
+→ Project 5: <strong>"Saying No in 10 Ways"</strong> unlocks the <strong>negative sentence structure</strong><br>
+→ ne...pas, ne...plus, ne...jamais — and how spoken French drops the "ne"<br>
+→ You will learn to <strong>refuse politely, deny firmly, and correct misunderstandings</strong></p>
+</blockquote>
+<hr>
+<h1>✅ PROJECT 4 COMPLETE</h1>
+<blockquote>
+<p><strong>Are you ready for PROJECT 5: "Saying No in 10 Ways"?</strong><br>
+→ ~100 sentences covering negation structures from basic to nuanced<br>
+→ Scenario: Someone assumes things about you, offers things you don't want, says things that aren't true<br>
+→ Builds on all structures from Projects 1-4</p>
+</blockquote>
+</div>
+</div>
+
+<!-- ========== data-index="11" ========== -->
+
+        </div>
+
+        <div class="nav-bar">
+            <a href="project-3.html" class="nav-button prev">← Previous Chapter</a>
+            <div class="page-info">
+                <a href="index.html" class="nav-button home">📚 Table of Contents</a><br>
+                <span style="margin-top:8px;display:block">Chapter 4 of 50</span>
+            </div>
+            <a href="project-5.html" class="nav-button next">Next Chapter →</a>
+        </div>
+    </div>
+
+    
+    <div id="progress-track"><div id="progress-fill"></div></div>
+    <div id="progress-pct">0%</div>
+
+
+    <script>
+    const fill = document.getElementById('progress-fill');
+    const pct  = document.getElementById('progress-pct');
+    function updateProgress() {
+        const scrollTop = window.scrollY;
+        const docHeight = document.body.scrollHeight - window.innerHeight;
+        const scrolled  = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+        fill.style.height = scrolled + '%';
+        pct.textContent   = Math.round(scrolled) + '%';
+    }
+    window.addEventListener('scroll', updateProgress);
+    updateProgress();
+
+    document.addEventListener('keydown', function(e) {
+        if (['INPUT','TEXTAREA'].includes(document.activeElement.tagName)) return;
+        if (e.key === 'ArrowLeft') {
+            const b = document.querySelector('.nav-button.prev');
+            if (b && !b.classList.contains('disabled')) window.location.href = b.href;
+        }
+        if (e.key === 'ArrowRight') {
+            const b = document.querySelector('.nav-button.next');
+            if (b && !b.classList.contains('disabled')) window.location.href = b.href;
+        }
+    });
+    </script>
+
+</body>
+</html>

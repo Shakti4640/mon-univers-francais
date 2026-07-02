@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="images/favicon.png">
+    <title>Project 20: "The Two Magic Words: Y and En" — French Daily Sentences</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.75;
+            color: #1a202c;
+            background-color: #f7fafc;
+        }
+        .container {
+            max-width: 1800px;
+            margin: 0 auto;
+            background: white;
+            min-height: 100vh;
+            box-shadow: 0 0 30px rgba(0,0,0,0.08);
+            padding: 48px 52px;
+        }
+        
+        .content { max-width: 1700px; margin: 0 auto; color: #1a202c; }
+        .content h1 {
+            color: #1a202c; margin: 32px 0 20px;
+            padding-bottom: 12px;
+            border-bottom: 4px solid #3b82f6;
+            font-size: 2.1em;
+            font-weight: 700;
+        }
+        .content h2 {
+            color: #1a202c; margin: 28px 0 16px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #60a5fa;
+            font-size: 1.6em;
+            font-weight: 600;
+        }
+        .content h3 { color: #1a202c; margin: 22px 0 12px; font-size: 1.3em; font-weight: 600; }
+        .content h4 { color: #2d3748; margin: 18px 0 10px; font-size: 1.1em; font-weight: 600; }
+        .content p  { margin-bottom: 16px; line-height: 1.8; color: #1a202c; }
+        .content ul, .content ol { margin: 12px 0 18px 30px; color: #1a202c; }
+        .content li { margin-bottom: 8px; line-height: 1.75; color: #1a202c; }
+        .content hr { border: none; border-top: 2px solid #e2e8f0; margin: 26px 0; }
+        .content pre {
+            background: #f7fafc !important;
+            border: 1px solid #cbd5e0 !important;
+            border-left: 4px solid #3b82f6 !important;
+            padding: 18px !important; overflow-x: auto; margin: 18px 0; border-radius: 6px;
+            font-family: 'Consolas','Monaco','Courier New',monospace !important;
+            font-size: 0.9em !important;
+        }
+        .content pre:not([style*="color"]) { color: #1a202c !important; }
+        .content code {
+            font-family: 'Consolas','Monaco','Courier New',monospace !important;
+            font-size: 0.88em !important;
+        }
+        .content code:not(pre code) {
+            background: #dbeafe !important;
+            color: #1a202c !important;
+            padding: 2px 6px;
+            border-radius: 3px;
+        }
+        .content pre code { background: transparent !important; padding: 0; }
+        .content table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+        .content th {
+            background: linear-gradient(135deg, #3b82f6 0%, #60a5fa 100%);
+            color: white; padding: 12px 16px; text-align: left;
+            font-weight: 600;
+        }
+        .content td { padding: 11px 16px; border: 1px solid #e2e8f0; color: #1a202c; }
+        .content tr:nth-child(even) td { background: #eff6ff; }
+        .content blockquote {
+            border-left: 4px solid #3b82f6; background: #eff6ff;
+            padding: 14px 20px; margin: 18px 0; border-radius: 0 6px 6px 0;
+            color: #1a202c;
+        }
+        .content strong { color: #1a202c; font-weight: 600; }
+        .px-2 { padding: 0; }
+        .chat-message { background: transparent; padding: 0; margin: 0; }
+
+        /* Bottom nav bar only */
+        .nav-bar {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 24px 0;
+            margin-top: 50px;
+            border-top: 3px solid #60a5fa;
+        }
+        .nav-button {
+            display: inline-flex; align-items: center; gap: 8px;
+            padding: 12px 26px;
+            background: linear-gradient(135deg, #3b82f6 0%, #60a5fa 100%);
+            color: white !important; text-decoration: none;
+            border-radius: 8px; font-weight: 600; font-size: 0.95em;
+            transition: all 0.2s;
+            box-shadow: 0 2px 8px rgba(59,130,246,0.35);
+        }
+        .nav-button:hover { transform: translateY(-2px); box-shadow: 0 4px 14px rgba(59,130,246,0.5); }
+        .nav-button.disabled { background: #cbd5e1; box-shadow: none; pointer-events: none; }
+        .nav-button.home {
+            background: linear-gradient(135deg, #ef4444 0%, #f87171 100%);
+            box-shadow: 0 2px 8px rgba(239,68,68,0.35);
+        }
+        .nav-button.home:hover { box-shadow: 0 4px 14px rgba(239,68,68,0.5); }
+        .page-info { color: #718096; font-size: 0.9em; text-align: center; }
+
+        /* Progress bar */
+        #progress-track {
+            position: fixed; top: 20px; right: 20px;
+            width: 10px; height: 150px;
+            background: rgba(59,130,246,0.2);
+            border: 2px solid #3b82f6;
+            border-radius: 6px; overflow: hidden; z-index: 1000;
+        }
+        #progress-fill {
+            width: 100%;
+            background: linear-gradient(180deg, #3b82f6, #2563eb);
+            height: 0%;
+            transition: height 0.15s ease;
+        }
+        #progress-pct {
+            position: fixed; top: 0px; right: 16px;
+            color: #2563eb; font-size: 14px; font-weight: bold;
+            z-index: 1001;
+            text-shadow: 0 1px 2px rgba(255,255,255,0.9);
+            line-height: 20px;
+        }
+
+    </style>
+<link rel="stylesheet" href="assets/chapters.css?v=20260421203847"><script src="assets/chapters.js?v=20260421203847" defer></script>
+</head>
+<body>
+    <div class="container">
+        <div class="content">
+            <div class="chat-message" data-index="9">
+<div class="px-2"><h1>🟡 PROJECT 20: "The Two Magic Words: Y and En"</h1>
+<h2><em>You keep saying the full place or quantity — natives don't</em></h2>
+<hr>
+<h1>🎯 THE HYPOTHETICAL PROBLEM</h1>
+<p>→ You're living in France — your French is getting better every week<br>
+→ You use COD/COI pronouns from Project 19 — people and things get replaced<br>
+→ But you still sound <strong>heavy</strong> in two specific situations:</p>
+<p><strong>Situation 1 — Places:</strong></p>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>❌ Tu vas à Paris ? — Oui, je vais à Paris demain.
+</span>❌ Tu es allé au supermarché ? — Oui, je suis allé au supermarché.</code></pre></div>
+<p>→ A French person would say:</p>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>✅ Tu vas à Paris ? — Oui, j'y vais demain.
+</span>✅ Tu es allé au supermarché ? — Oui, j'y suis allé.</code></pre></div>
+<p><strong>Situation 2 — Quantities and "de + noun":</strong></p>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>❌ Tu veux du café ? — Oui, je veux du café.
+</span>❌ Tu as des enfants ? — Oui, j'ai trois enfants.
+❌ Tu reviens de Paris ? — Oui, je reviens de Paris.</code></pre></div>
+<p>→ A French person would say:</p>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>✅ Tu veux du café ? — Oui, j'en veux.
+</span>✅ Tu as des enfants ? — Oui, j'en ai trois.
+✅ Tu reviens de Paris ? — Oui, j'en reviens.</code></pre></div>
+<p>→ <strong>Y</strong> and <strong>En</strong> are the two most frequently used <strong>compression words</strong> in spoken French<br>
+→ You hear them in <strong>every single conversation</strong> — dozens of times per minute<br>
+→ Without them, you sound like a foreigner reading from a textbook<br>
+→ With them, you sound like someone who <strong>thinks in French</strong></p>
+<p><strong>The core realization:</strong><br>
+→ Project 19 gave you pronouns for <strong>people and things</strong> (le, la, les, lui, leur)<br>
+→ Project 20 gives you pronouns for <strong>places, abstract "à" references, quantities, and "de" references</strong><br>
+→ Together, these cover <strong>every possible noun replacement</strong> in French<br>
+→ After this project, you will never need to repeat a noun again</p>
+<hr>
+<h1>🔍 HOW TO APPROACH IT</h1>
+<p>→ Think of <strong>Y</strong> and <strong>En</strong> as <strong>two vacuum cleaners</strong> — each one sucks up a specific type of phrase:</p>
+<table><thead><tr><th>Pronoun</th><th>Sucks Up</th><th>Replaces</th></tr></thead><tbody><tr><td><strong>Y</strong></td><td><strong>à + place</strong></td><td>Je vais <strong>à Paris</strong> → J'<strong>y</strong> vais</td></tr><tr><td><strong>Y</strong></td><td><strong>à + thing/idea</strong></td><td>Je pense <strong>à mon travail</strong> → J'<strong>y</strong> pense</td></tr><tr><td><strong>Y</strong></td><td><strong>location words</strong> (dans, sur, en, chez)</td><td>Je suis <strong>dans ma chambre</strong> → J'<strong>y</strong> suis</td></tr><tr><td><strong>En</strong></td><td><strong>de + noun</strong></td><td>Je parle <strong>de mon voyage</strong> → J'<strong>en</strong> parle</td></tr><tr><td><strong>En</strong></td><td><strong>du / de la / des</strong> (partitive)</td><td>Je veux <strong>du pain</strong> → J'<strong>en</strong> veux</td></tr><tr><td><strong>En</strong></td><td><strong>quantity + noun</strong></td><td>J'ai <strong>trois chats</strong> → J'<strong>en</strong> ai <strong>trois</strong></td></tr><tr><td><strong>En</strong></td><td><strong>un / une + noun</strong></td><td>J'ai <strong>une voiture</strong> → J'<strong>en</strong> ai <strong>une</strong></td></tr><tr><td><strong>En</strong></td><td><strong>de + place</strong> (coming FROM)</td><td>Je viens <strong>de Lyon</strong> → J'<strong>en</strong> viens</td></tr></tbody></table>
+<p>→ <strong>Position rule:</strong> SAME as COD/COI (Project 19) — before the conjugated verb or before the infinitif</p>
+<hr>
+<h1>🔧 HOW CAN WE SOLVE IT</h1>
+<h2>THE Y SYSTEM — Complete Map</h2>
+<h3>What Y Replaces:</h3>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>1. à + PLACE       → J'habite à Lyon → J'y habite
+</span>2. à + THING/IDEA  → Je pense à ça → J'y pense
+3. Location preps   → Je suis dans le jardin → J'y suis
+   (dans, sur, en, chez, sous, devant, derrière)</code></pre></div>
+<h3>What Y Does NOT Replace:</h3>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>❌ à + PERSON → Do NOT use Y for people
+</span>   Je pense à Marie → Je pense à ELLE (stress pronoun — NOT j'y pense)
+   Exception: some speakers DO say "j'y pense" for people in casual speech
+   but the formal rule says NO</code></pre></div>
+<hr>
+<h2>THE EN SYSTEM — Complete Map</h2>
+<h3>What En Replaces:</h3>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>1. de + NOUN              → Je parle de mon travail → J'en parle
+</span>2. du / de la / de l' / des (partitive)  → Je mange du pain → J'en mange
+3. QUANTITY + noun         → J'ai deux frères → J'en ai deux
+4. un / une + noun         → J'ai une voiture → J'en ai une
+5. de + PLACE (origin)     → Je viens de Paris → J'en viens
+6. expressions with "de"   → J'ai besoin de repos → J'en ai besoin</code></pre></div>
+<h3>What En Does NOT Replace:</h3>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>❌ de + SPECIFIC PERSON → Do NOT use En for specific people
+</span>   Je parle de Marie → Je parle d'ELLE (stress pronoun — NOT j'en parle)
+   But: Je parle de mes problèmes → J'en parle ✅ (things = OK)</code></pre></div>
+<hr>
+<h2>POSITION RULES — Same Framework as Project 19</h2>
+<table><thead><tr><th>Tense/Structure</th><th>Y / En Position</th><th>Example</th></tr></thead><tbody><tr><td>Présent</td><td>Before conjugated verb</td><td>J'<strong>y</strong> vais / J'<strong>en</strong> veux</td></tr><tr><td>Négatif</td><td>ne + Y/En + verb + pas</td><td>Je n'<strong>y</strong> vais pas / Je n'<strong>en</strong> veux pas</td></tr><tr><td>Passé composé</td><td>Before auxiliary</td><td>J'<strong>y</strong> suis allé / J'<strong>en</strong> ai mangé</td></tr><tr><td>Futur proche</td><td>Before infinitif</td><td>Je vais <strong>y</strong> aller / Je vais <strong>en</strong> prendre</td></tr><tr><td>Futur simple</td><td>Before conjugated verb</td><td>J'<strong>y</strong> irai / J'<strong>en</strong> prendrai</td></tr><tr><td>Conditionnel</td><td>Before conjugated verb</td><td>J'<strong>y</strong> irais / J'<strong>en</strong> voudrais</td></tr><tr><td>Impératif (+)</td><td>After verb + hyphen</td><td>Vas-<strong>y</strong> ! / Prends-<strong>en</strong> !</td></tr><tr><td>Impératif (−)</td><td>Before verb</td><td>N'<strong>y</strong> va pas ! / N'<strong>en</strong> prends pas !</td></tr></tbody></table>
+<hr>
+<h1>✅ WHAT COULD BE DONE — THE 100 SENTENCES</h1>
+<hr>
+<h2>🔹 BLOCK A — Y Replacing Places (à + place / location)</h2>
+<p><em>Scenario: Someone asks where you go, where you are, whether you've been somewhere</em></p>
+<table><thead><tr><th>#</th><th>Without Y</th><th>With Y</th><th>English</th><th>What Y Replaces</th></tr></thead><tbody><tr><td>1</td><td>Je vais à Paris.</td><td>J'<strong>y</strong> vais.</td><td>I'm going there.</td><td>à Paris</td></tr><tr><td>2</td><td>Tu habites à Lyon ?</td><td>Tu <strong>y</strong> habites ?</td><td>Do you live there?</td><td>à Lyon</td></tr><tr><td>3</td><td>Il travaille au bureau.</td><td>Il <strong>y</strong> travaille.</td><td>He works there.</td><td>au bureau</td></tr><tr><td>4</td><td>Elle est à la maison.</td><td>Elle <strong>y</strong> est.</td><td>She's there.</td><td>à la maison</td></tr><tr><td>5</td><td>Nous allons au restaurant ce soir.</td><td>Nous <strong>y</strong> allons ce soir.</td><td>We're going there tonight.</td><td>au restaurant</td></tr><tr><td>6</td><td>Vous restez à l'hôtel ?</td><td>Vous <strong>y</strong> restez ?</td><td>Are you staying there?</td><td>à l'hôtel</td></tr><tr><td>7</td><td>Ils retournent en France.</td><td>Ils <strong>y</strong> retournent.</td><td>They're going back there.</td><td>en France</td></tr><tr><td>8</td><td>On mange dans ce restaurant souvent.</td><td>On <strong>y</strong> mange souvent.</td><td>We eat there often.</td><td>dans ce restaurant</td></tr><tr><td>9</td><td>Je suis chez le médecin.</td><td>J'<strong>y</strong> suis.</td><td>I'm there (at the doctor's).</td><td>chez le médecin</td></tr><tr><td>10</td><td>Tu passes devant la boulangerie ?</td><td>Tu <strong>y</strong> passes ?</td><td>Do you pass by there?</td><td>devant la boulangerie</td></tr></tbody></table>
+<p><strong>🧠 Structure unlocked:</strong> <code>Subject + Y + verb (present)</code><br>
+→ Y replaces <strong>any place expression</strong> — à, au, à la, à l', dans, sur, en, chez, devant, derrière</p>
+<hr>
+<h2>🔹 BLOCK B — Y Replacing Abstract "à + thing/idea"</h2>
+<p><em>Scenario: Talking about things you think about, participate in, respond to</em></p>
+<table><thead><tr><th>#</th><th>Without Y</th><th>With Y</th><th>English</th><th>What Y Replaces</th></tr></thead><tbody><tr><td>11</td><td>Je pense à mon examen.</td><td>J'<strong>y</strong> pense.</td><td>I'm thinking about it.</td><td>à mon examen</td></tr><tr><td>12</td><td>Tu crois à cette histoire ?</td><td>Tu <strong>y</strong> crois ?</td><td>Do you believe it?</td><td>à cette histoire</td></tr><tr><td>13</td><td>Elle s'intéresse à la politique.</td><td>Elle s'<strong>y</strong> intéresse.</td><td>She's interested in it.</td><td>à la politique</td></tr><tr><td>14</td><td>Il participe au projet.</td><td>Il <strong>y</strong> participe.</td><td>He participates in it.</td><td>au projet</td></tr><tr><td>15</td><td>Nous réfléchissons à cette idée.</td><td>Nous <strong>y</strong> réfléchissons.</td><td>We're thinking about it.</td><td>à cette idée</td></tr><tr><td>16</td><td>Vous tenez à ce plan ?</td><td>Vous <strong>y</strong> tenez ?</td><td>Do you care about it?</td><td>à ce plan</td></tr><tr><td>17</td><td>Je m'habitue à la vie ici.</td><td>Je m'<strong>y</strong> habitue.</td><td>I'm getting used to it.</td><td>à la vie ici</td></tr><tr><td>18</td><td>On s'attend à des problèmes.</td><td>On s'<strong>y</strong> attend.</td><td>We expect them (problems).</td><td>à des problèmes</td></tr><tr><td>19</td><td>Tu fais attention à la route ?</td><td>Tu <strong>y</strong> fais attention ?</td><td>Are you paying attention to it?</td><td>à la route</td></tr><tr><td>20</td><td>Je ne comprends rien à ce sujet.</td><td>Je n'<strong>y</strong> comprends rien.</td><td>I understand nothing about it.</td><td>à ce sujet</td></tr></tbody></table>
+<p><strong>🧠 Structure unlocked:</strong> Y replaces "à + THING/IDEA" — not just physical places<br>
+→ Common verbs that trigger Y for abstract ideas:<br>
+→ penser à, croire à, s'intéresser à, participer à, réfléchir à, tenir à, s'habituer à, s'attendre à, faire attention à</p>
+<p><strong>🧠 CRITICAL REMINDER from Project 19:</strong><br>
+→ penser <strong>à + PERSON</strong> → stress pronoun (je pense <strong>à elle</strong>) — NOT y<br>
+→ penser <strong>à + THING</strong> → Y (j'<strong>y</strong> pense) — YES</p>
+<hr>
+<h2>🔹 BLOCK C — En Replacing Partitive Articles (du, de la, de l', des)</h2>
+<p><em>Scenario: Talking about food, drinks, abstract quantities — the daily partitive</em></p>
+<table><thead><tr><th>#</th><th>Without En</th><th>With En</th><th>English</th><th>What En Replaces</th></tr></thead><tbody><tr><td>21</td><td>Tu veux du café ?</td><td>Tu <strong>en</strong> veux ?</td><td>Do you want some?</td><td>du café</td></tr><tr><td>22</td><td>Je mange du pain tous les matins.</td><td>J'<strong>en</strong> mange tous les matins.</td><td>I eat some every morning.</td><td>du pain</td></tr><tr><td>23</td><td>Elle boit de l'eau.</td><td>Elle <strong>en</strong> boit.</td><td>She drinks some.</td><td>de l'eau</td></tr><tr><td>24</td><td>Il achète de la viande.</td><td>Il <strong>en</strong> achète.</td><td>He buys some.</td><td>de la viande</td></tr><tr><td>25</td><td>Nous avons des nouvelles.</td><td>Nous <strong>en</strong> avons.</td><td>We have some (news).</td><td>des nouvelles</td></tr><tr><td>26</td><td>Vous prenez du sucre ?</td><td>Vous <strong>en</strong> prenez ?</td><td>Do you take some (sugar)?</td><td>du sucre</td></tr><tr><td>27</td><td>Ils font du sport.</td><td>Ils <strong>en</strong> font.</td><td>They do some (sport).</td><td>du sport</td></tr><tr><td>28</td><td>On a des problèmes.</td><td>On <strong>en</strong> a.</td><td>We have some (problems).</td><td>des problèmes</td></tr><tr><td>29</td><td>Tu manges des légumes ?</td><td>Tu <strong>en</strong> manges ?</td><td>Do you eat some (vegetables)?</td><td>des légumes</td></tr><tr><td>30</td><td>Je ne bois pas de vin.</td><td>Je n'<strong>en</strong> bois pas.</td><td>I don't drink any (wine).</td><td>de vin</td></tr></tbody></table>
+<p><strong>🧠 Structure unlocked:</strong> <code>Subject + EN + verb</code><br>
+→ En replaces the <strong>entire partitive phrase</strong> (du café, de la viande, des légumes, de l'eau)<br>
+→ In negative: "pas <strong>de</strong>" also gets absorbed by en → "Je n'en bois pas"</p>
+<hr>
+<h2>🔹 BLOCK D — En Replacing Quantities (numbers, beaucoup, assez, etc.)</h2>
+<p><em>Scenario: Someone asks "how many?" — you answer with en + the number</em></p>
+<table><thead><tr><th>#</th><th>Without En</th><th>With En</th><th>English</th><th>Key Rule</th></tr></thead><tbody><tr><td>31</td><td>J'ai deux enfants.</td><td>J'<strong>en</strong> ai <strong>deux</strong>.</td><td>I have two (of them).</td><td>En + verb + NUMBER stays</td></tr><tr><td>32</td><td>Tu as combien de frères ? J'ai trois frères.</td><td>J'<strong>en</strong> ai <strong>trois</strong>.</td><td>I have three.</td><td>Number remains after verb</td></tr><tr><td>33</td><td>Elle a acheté cinq livres.</td><td>Elle <strong>en</strong> a acheté <strong>cinq</strong>.</td><td>She bought five.</td><td>En + passé composé + number</td></tr><tr><td>34</td><td>Il veut une bière.</td><td>Il <strong>en</strong> veut <strong>une</strong>.</td><td>He wants one.</td><td>"une" stays as number</td></tr><tr><td>35</td><td>Nous avons beaucoup de travail.</td><td>Nous <strong>en</strong> avons <strong>beaucoup</strong>.</td><td>We have a lot.</td><td>Quantity word stays</td></tr><tr><td>36</td><td>Vous avez assez d'argent ?</td><td>Vous <strong>en</strong> avez <strong>assez</strong> ?</td><td>Do you have enough?</td><td>Quantity word stays</td></tr><tr><td>37</td><td>Ils ont trop de bagages.</td><td>Ils <strong>en</strong> ont <strong>trop</strong>.</td><td>They have too many.</td><td>Quantity word stays</td></tr><tr><td>38</td><td>Je veux un peu de fromage.</td><td>J'<strong>en</strong> veux <strong>un peu</strong>.</td><td>I want a little.</td><td>Quantity expression stays</td></tr><tr><td>39</td><td>On a plusieurs options.</td><td>On <strong>en</strong> a <strong>plusieurs</strong>.</td><td>We have several.</td><td>Quantity word stays</td></tr><tr><td>40</td><td>Tu n'as pas assez de temps.</td><td>Tu n'<strong>en</strong> as pas <strong>assez</strong>.</td><td>You don't have enough.</td><td>Negative + en + quantity</td></tr></tbody></table>
+<p><strong>🧠 CRITICAL RULE — QUANTITY STAYS BEHIND:</strong></p>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>When EN replaces a noun with a quantity:
+</span>→ The NOUN disappears
+→ The QUANTITY WORD remains at the end
+
+J'ai trois CHATS → J'en ai trois.
+        ↑ gone      ↑ stays
+
+J'ai beaucoup de TRAVAIL → J'en ai beaucoup.
+              ↑ gone         ↑ stays</code></pre></div>
+<p>→ This is unique to <strong>en</strong> — no other pronoun works this way</p>
+<hr>
+<h2>🔹 BLOCK E — En Replacing "de + noun" in Expressions</h2>
+<p><em>Scenario: Daily expressions that use "de" — avoir besoin de, avoir envie de, parler de, etc.</em></p>
+<table><thead><tr><th>#</th><th>Without En</th><th>With En</th><th>English</th><th>Expression</th></tr></thead><tbody><tr><td>41</td><td>J'ai besoin de repos.</td><td>J'<strong>en</strong> ai besoin.</td><td>I need some (rest).</td><td>avoir besoin <strong>de</strong></td></tr><tr><td>42</td><td>Tu as envie de chocolat ?</td><td>Tu <strong>en</strong> as envie ?</td><td>Do you feel like some?</td><td>avoir envie <strong>de</strong></td></tr><tr><td>43</td><td>Elle a peur des araignées.</td><td>Elle <strong>en</strong> a peur.</td><td>She's afraid of them.</td><td>avoir peur <strong>de</strong></td></tr><tr><td>44</td><td>Il parle de son voyage.</td><td>Il <strong>en</strong> parle.</td><td>He talks about it.</td><td>parler <strong>de</strong></td></tr><tr><td>45</td><td>Nous sommes contents de cette nouvelle.</td><td>Nous <strong>en</strong> sommes contents.</td><td>We're happy about it.</td><td>être content <strong>de</strong></td></tr><tr><td>46</td><td>Vous vous souvenez de cette histoire ?</td><td>Vous vous <strong>en</strong> souvenez ?</td><td>Do you remember it?</td><td>se souvenir <strong>de</strong></td></tr><tr><td>47</td><td>Je m'occupe de cette affaire.</td><td>Je m'<strong>en</strong> occupe.</td><td>I'm taking care of it.</td><td>s'occuper <strong>de</strong></td></tr><tr><td>48</td><td>Tu es sûr de ta décision ?</td><td>Tu <strong>en</strong> es sûr ?</td><td>Are you sure about it?</td><td>être sûr <strong>de</strong></td></tr><tr><td>49</td><td>On a marre de ce bruit.</td><td>On <strong>en</strong> a marre.</td><td>We're fed up with it.</td><td>avoir marre <strong>de</strong></td></tr><tr><td>50</td><td>Je me souviens de mon enfance.</td><td>Je m'<strong>en</strong> souviens.</td><td>I remember it.</td><td>se souvenir <strong>de</strong></td></tr></tbody></table>
+<p><strong>🧠 Structure unlocked:</strong> Any expression built on <strong>verb/adjective + DE + noun</strong> → EN replaces the "de + noun" part</p>
+<p>→ <strong>Massive list of common "de" expressions that use en:</strong><br>
+→ avoir besoin <strong>de</strong> / avoir envie <strong>de</strong> / avoir peur <strong>de</strong> / avoir marre <strong>de</strong><br>
+→ parler <strong>de</strong> / s'occuper <strong>de</strong> / se souvenir <strong>de</strong> / se moquer <strong>de</strong><br>
+→ être content <strong>de</strong> / être sûr <strong>de</strong> / être fier <strong>de</strong> / être satisfait <strong>de</strong><br>
+→ profiter <strong>de</strong> / rêver <strong>de</strong> / se servir <strong>de</strong> / se plaindre <strong>de</strong></p>
+<hr>
+<h2>🔹 BLOCK F — En Replacing "de + place" (Coming From)</h2>
+<p><em>Scenario: Saying where you're coming from — origin, departure point</em></p>
+<table><thead><tr><th>#</th><th>Without En</th><th>With En</th><th>English</th><th>What En Replaces</th></tr></thead><tbody><tr><td>51</td><td>Je viens de Paris.</td><td>J'<strong>en</strong> viens.</td><td>I'm coming from there.</td><td>de Paris</td></tr><tr><td>52</td><td>Tu reviens du bureau ?</td><td>Tu <strong>en</strong> reviens ?</td><td>Are you coming back from there?</td><td>du bureau</td></tr><tr><td>53</td><td>Elle sort de la réunion.</td><td>Elle <strong>en</strong> sort.</td><td>She's coming out of it.</td><td>de la réunion</td></tr><tr><td>54</td><td>Il rentre de vacances.</td><td>Il <strong>en</strong> rentre.</td><td>He's coming back from them.</td><td>de vacances</td></tr><tr><td>55</td><td>Nous revenons du supermarché.</td><td>Nous <strong>en</strong> revenons.</td><td>We're coming back from there.</td><td>du supermarché</td></tr><tr><td>56</td><td>Vous partez de l'hôtel à quelle heure ?</td><td>Vous <strong>en</strong> partez à quelle heure ?</td><td>What time are you leaving from there?</td><td>de l'hôtel</td></tr><tr><td>57</td><td>Ils sortent du cinéma.</td><td>Ils <strong>en</strong> sortent.</td><td>They're coming out of there.</td><td>du cinéma</td></tr><tr><td>58</td><td>On arrive de l'aéroport.</td><td>On <strong>en</strong> arrive.</td><td>We're arriving from there.</td><td>de l'aéroport</td></tr><tr><td>59</td><td>Je descends du train.</td><td>J'<strong>en</strong> descends.</td><td>I'm getting off (it).</td><td>du train</td></tr><tr><td>60</td><td>Tu es sorti de chez le médecin ?</td><td>Tu <strong>en</strong> es sorti ?</td><td>Did you leave from there?</td><td>de chez le médecin</td></tr></tbody></table>
+<p><strong>🧠 Y vs. En — The Direction Split:</strong></p>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>GOING TO a place     → Y    (Je vais à Paris → J'y vais)
+</span>COMING FROM a place  → EN   (Je viens de Paris → J'en viens)
+
+Y  = DESTINATION  (→ toward)
+EN = ORIGIN       (← from)</code></pre></div>
+<p>→ This is one of the <strong>cleanest patterns</strong> in French — destination = Y, origin = En</p>
+<hr>
+<h2>🔹 BLOCK G — Y and En in Passé Composé</h2>
+<p><em>Scenario: Talking about past events — replacing places and quantities from the past</em><br>
+<em>Connection to Projects 9-11: Past tense structures now compressed</em></p>
+<table><thead><tr><th>#</th><th>French with Y/En</th><th>English</th><th>Pronoun</th><th>Tense</th></tr></thead><tbody><tr><td>61</td><td>J'<strong>y</strong> suis allé hier.</td><td>I went there yesterday.</td><td>Y + être auxiliary</td><td>Passé composé</td></tr><tr><td>62</td><td>Tu <strong>y</strong> as habité longtemps ?</td><td>Did you live there long?</td><td>Y + avoir auxiliary</td><td>Passé composé</td></tr><tr><td>63</td><td>Elle <strong>y</strong> a travaillé pendant trois ans.</td><td>She worked there for three years.</td><td>Y + avoir</td><td>Passé composé</td></tr><tr><td>64</td><td>On n'<strong>y</strong> est jamais allé.</td><td>We've never been there.</td><td>ne + Y + être + jamais</td><td>PC negative</td></tr><tr><td>65</td><td>J'<strong>en</strong> ai acheté trois.</td><td>I bought three (of them).</td><td>En + avoir + number</td><td>Passé composé</td></tr><tr><td>66</td><td>Tu <strong>en</strong> as mangé ?</td><td>Did you eat some?</td><td>En + avoir</td><td>Passé composé</td></tr><tr><td>67</td><td>Elle <strong>en</strong> a parlé au directeur.</td><td>She talked about it to the director.</td><td>En + avoir</td><td>Passé composé</td></tr><tr><td>68</td><td>Nous <strong>en</strong> sommes revenus hier.</td><td>We came back from there yesterday.</td><td>En + être (revenir)</td><td>Passé composé</td></tr><tr><td>69</td><td>Ils <strong>en</strong> ont pris deux.</td><td>They took two (of them).</td><td>En + avoir + number</td><td>Passé composé</td></tr><tr><td>70</td><td>On n'<strong>en</strong> a pas eu assez.</td><td>We didn't have enough.</td><td>ne + en + avoir + pas + quantity</td><td>PC negative</td></tr></tbody></table>
+<p><strong>🧠 CRITICAL RULE — NO AGREEMENT WITH EN + AVOIR:</strong></p>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>Normal COD (Project 19):
+</span>→ Les pommes ? Je LES ai achetéES. (agreement with "les" = fem plural)
+
+With EN:
+→ Des pommes ? J'EN ai acheté. (NO agreement — en blocks it)
+→ J'en ai acheté trois. (still no agreement)
+
+WHY? → En is considered "indefinite" — it doesn't carry gender/number clearly
+→ Therefore the past participle stays UNCHANGED
+→ This is the OPPOSITE of COD pronouns from Project 19</code></pre></div>
+<p>→ <strong>Exception alert:</strong> Some strict grammarians argue for agreement with en — but in practice and in modern French, <strong>no agreement</strong> is standard</p>
+<hr>
+<h2>🔹 BLOCK H — Y and En in Futur Proche, Futur Simple, Conditionnel</h2>
+<p><em>Scenario: Future plans and hypothetical situations involving places and quantities</em><br>
+<em>Connection to Projects 12, 16, 17, 18: All future/conditional structures compressed</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English</th><th>Structure</th></tr></thead><tbody><tr><td>71</td><td>Je vais <strong>y</strong> aller demain.</td><td>I'm going to go there tomorrow.</td><td>Futur proche: aller + <strong>y</strong> + infinitif</td></tr><tr><td>72</td><td>Tu vas <strong>en</strong> prendre combien ?</td><td>How many are you going to take?</td><td>Futur proche: aller + <strong>en</strong> + infinitif</td></tr><tr><td>73</td><td>Elle va <strong>y</strong> réfléchir.</td><td>She's going to think about it.</td><td>Futur proche: aller + <strong>y</strong> + infinitif</td></tr><tr><td>74</td><td>On va <strong>en</strong> avoir besoin.</td><td>We're going to need some.</td><td>Futur proche: aller + <strong>en</strong> + infinitif</td></tr><tr><td>75</td><td>J'<strong>y</strong> irai la semaine prochaine.</td><td>I'll go there next week.</td><td>Futur simple: <strong>y</strong> + verb</td></tr><tr><td>76</td><td>Tu <strong>en</strong> prendras un peu ?</td><td>Will you have a little?</td><td>Futur simple: <strong>en</strong> + verb + quantity</td></tr><tr><td>77</td><td>Nous <strong>y</strong> resterons trois jours.</td><td>We'll stay there three days.</td><td>Futur simple: <strong>y</strong> + verb</td></tr><tr><td>78</td><td>Ils <strong>en</strong> achèteront plus.</td><td>They'll buy more.</td><td>Futur simple: <strong>en</strong> + verb + quantity</td></tr><tr><td>79</td><td>J'<strong>y</strong> irais si j'avais le temps.</td><td>I'd go there if I had time.</td><td>Conditionnel: <strong>y</strong> + verb (preview P33)</td></tr><tr><td>80</td><td>On <strong>en</strong> prendrait bien un peu.</td><td>We'd gladly have some.</td><td>Conditionnel: <strong>en</strong> + verb + quantity</td></tr></tbody></table>
+<p><strong>🧠 POSITION SUMMARY across all tenses:</strong></p>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>PRÉSENT:        J'y vais / J'en veux
+</span>PASSÉ COMPOSÉ:  J'y suis allé / J'en ai pris
+FUTUR PROCHE:   Je vais y aller / Je vais en prendre
+                        ↑ before infinitif, NOT before "vais"
+FUTUR SIMPLE:   J'y irai / J'en prendrai
+CONDITIONNEL:   J'y irais / J'en prendrais</code></pre></div>
+<p>→ Rule is identical to COD/COI from Project 19 — <strong>before the verb it depends on</strong></p>
+<hr>
+<h2>🔹 BLOCK I — Y and En in Impératif</h2>
+<p><em>Scenario: Giving commands involving places and quantities</em><br>
+<em>Connection to Project 13: Impératif now with Y and En</em></p>
+<table><thead><tr><th>#</th><th>Affirmative Command</th><th>English</th><th>Negative Command</th><th>English</th></tr></thead><tbody><tr><td>81</td><td>Vas-<strong>y</strong> !</td><td>Go (there) / Go ahead!</td><td>N'<strong>y</strong> va pas !</td><td>Don't go there!</td></tr><tr><td>82</td><td>Allons-<strong>y</strong> !</td><td>Let's go!</td><td>N'<strong>y</strong> allons pas !</td><td>Let's not go there!</td></tr><tr><td>83</td><td>Allez-<strong>y</strong> !</td><td>Go ahead! (vous)</td><td>N'<strong>y</strong> allez pas !</td><td>Don't go there!</td></tr><tr><td>84</td><td>Restes-<strong>y</strong> !</td><td>Stay there!</td><td>N'<strong>y</strong> reste pas !</td><td>Don't stay there!</td></tr><tr><td>85</td><td>Prends-<strong>en</strong> !</td><td>Take some!</td><td>N'<strong>en</strong> prends pas !</td><td>Don't take any!</td></tr><tr><td>86</td><td>Mange-<strong>en</strong> un peu !</td><td>Eat some!</td><td>N'<strong>en</strong> mange pas !</td><td>Don't eat any!</td></tr><tr><td>87</td><td>Achète-<strong>en</strong> trois !</td><td>Buy three!</td><td>N'<strong>en</strong> achète pas !</td><td>Don't buy any!</td></tr><tr><td>88</td><td>Parlons-<strong>en</strong> !</td><td>Let's talk about it!</td><td>N'<strong>en</strong> parlons pas !</td><td>Let's not talk about it!</td></tr><tr><td>89</td><td>Prenez-<strong>en</strong> assez !</td><td>Take enough!</td><td>N'<strong>en</strong> prenez pas trop !</td><td>Don't take too much!</td></tr><tr><td>90</td><td>Occupe-t'<strong>en</strong> !</td><td>Take care of it!</td><td>Ne t'<strong>en</strong> occupe pas !</td><td>Don't worry about it!</td></tr></tbody></table>
+<p><strong>🧠 CRITICAL SPELLING RULES FOR IMPÉRATIF + Y/EN:</strong></p>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>1. "Va" normally has NO -s → but before Y:
+</span>   → Va ! (normal) → Vas-y ! (add -s for pronunciation flow)
+
+2. "Mange" normally has NO -s → but before en:
+   → Mange ! (normal) → Manges-en ! (some sources) OR Mange-en ! (debated)
+   → In practice, the -s is added for SOUND — "vas-y" is universal
+
+3. Negative impératif → Y/En jump BACK before the verb:
+   → AFFIRMATIVE: Vas-y ! Prends-en !
+   → NEGATIVE:    N'y va pas ! N'en prends pas !
+   → Same pattern as COD/COI from Project 19</code></pre></div>
+<p><strong>🧠 "VAS-Y" and "ALLONS-Y" — The Most Common Expressions in Spoken French:</strong><br>
+→ Vas-y ! = Go ahead / Do it / Come on / Let's do this<br>
+→ Allons-y ! = Let's go / Let's start<br>
+→ These are used <strong>hundreds of times daily</strong> — far beyond their literal meaning of "go there"</p>
+<hr>
+<h2>🔹 BLOCK J — Y and En in Full Conversational Dialogues</h2>
+<p><em>Scenario: Real flowing conversations where Y and En appear naturally between speakers</em></p>
+<table><thead><tr><th>#</th><th>Speaker</th><th>French</th><th>English</th><th>Analysis</th></tr></thead><tbody><tr><td>91</td><td>A:</td><td>Tu es déjà allé au Japon ?</td><td>Have you ever been to Japan?</td><td>Full noun — first mention</td></tr><tr><td>92</td><td>B:</td><td>Non, je n'<strong>y</strong> suis jamais allé, mais j'aimerais <strong>y</strong> aller.</td><td>No, I've never been there, but I'd like to go there.</td><td>Y × 2 — passé composé + conditionnel</td></tr><tr><td>93</td><td>A:</td><td>Moi, j'<strong>y</strong> suis allé l'année dernière. C'était incroyable.</td><td>I went there last year. It was incredible.</td><td>Y + passé composé</td></tr><tr><td>94</td><td>B:</td><td>Tu as mangé des sushis là-bas ?</td><td>Did you eat sushi there?</td><td>Full noun — first mention</td></tr><tr><td>95</td><td>A:</td><td>Oui, j'<strong>en</strong> ai mangé tous les jours !</td><td>Yes, I ate some every day!</td><td>En replaces "des sushis"</td></tr><tr><td>96</td><td>B:</td><td>Tu <strong>en</strong> as rapporté pour moi ?</td><td>Did you bring some back for me?</td><td>En = sushis/souvenirs</td></tr><tr><td>97</td><td>A:</td><td>J'<strong>en</strong> ai rapporté quelques-uns, oui.</td><td>I brought a few back, yes.</td><td>En + quantity (quelques-uns)</td></tr><tr><td>98</td><td>B:</td><td>Super. Et tu as besoin de vacances encore ?</td><td>Great. And do you need vacation again?</td><td>Full expression — first mention</td></tr><tr><td>99</td><td>A:</td><td>Oh oui, j'<strong>en</strong> ai vraiment besoin !</td><td>Oh yes, I really need some!</td><td>En replaces "de vacances" (avoir besoin de)</td></tr><tr><td>100</td><td>B:</td><td>Alors vas-<strong>y</strong>, réserve un billet !</td><td>Then go ahead, book a ticket!</td><td>Vas-y = "go ahead" (idiomatic)</td></tr></tbody></table>
+<p><strong>🧠 Notice the natural flow:</strong><br>
+→ First mention = full noun<br>
+→ Second mention = Y or En<br>
+→ Natives <strong>never</strong> repeat the full noun after the first mention<br>
+→ The conversation sounds <strong>light, fast, compressed</strong> — this is real French</p>
+<hr>
+<h1>✅ WHAT SHOULD DO</h1>
+<p>→ <strong>Train the reflex:</strong> Every time you see "à + place" → think <strong>Y</strong><br>
+→ <strong>Train the reflex:</strong> Every time you see "de + noun" or a quantity → think <strong>EN</strong><br>
+→ <strong>Use "vas-y" and "allons-y" immediately</strong> — they are universal and always appropriate<br>
+→ <strong>Practice the quantity pattern:</strong> "J'en ai trois" — noun disappears, number stays<br>
+→ <strong>Review all structures from Projects 1-19</strong> and insert Y/En where nouns repeat<br>
+→ <strong>Listen to French conversations</strong> — count how many times you hear "y" and "en" — it will be dozens</p>
+<hr>
+<h1>❌ WHAT SHOULD NOT DO</h1>
+<p>→ ❌ Do NOT use Y for people</p>
+<table><thead><tr><th>Wrong</th><th>Correct</th></tr></thead><tbody><tr><td><del>J'<strong>y</strong> pense</del> (meaning "I think about Marie")</td><td>Je pense <strong>à elle</strong></td></tr><tr><td><del>J'<strong>y</strong> téléphone</del> (meaning "I call Pierre")</td><td>Je <strong>lui</strong> téléphone (COI — P19)</td></tr></tbody></table>
+<p>→ ❌ Do NOT use En for specific people</p>
+<table><thead><tr><th>Wrong</th><th>Correct</th></tr></thead><tbody><tr><td><del>J'<strong>en</strong> parle</del> (meaning "I talk about Sophie")</td><td>Je parle <strong>d'elle</strong></td></tr></tbody></table>
+<p>→ ❌ Do NOT put Y/En after the verb in declarative sentences</p>
+<table><thead><tr><th>Wrong</th><th>Correct</th></tr></thead><tbody><tr><td><del>Je vais y</del></td><td>J'<strong>y</strong> vais</td></tr><tr><td><del>Je veux en</del></td><td>J'<strong>en</strong> veux</td></tr></tbody></table>
+<p>→ ❌ Do NOT make agreement with en + avoir in passé composé</p>
+<table><thead><tr><th>Wrong</th><th>Correct</th></tr></thead><tbody><tr><td><del>J'en ai pris<strong>es</strong></del> (des pommes)</td><td>J'en ai pris</td></tr><tr><td><del>J'en ai acheté<strong>s</strong></del> (des livres)</td><td>J'en ai acheté</td></tr></tbody></table>
+<p>→ ❌ Do NOT forget the -s in "vas-y"</p>
+<table><thead><tr><th>Wrong</th><th>Correct</th></tr></thead><tbody><tr><td><del>Va-y</del></td><td><strong>Vas-y</strong></td></tr></tbody></table>
+<p>→ ❌ Do NOT confuse Y (destination) and En (origin) for places</p>
+<table><thead><tr><th>Wrong</th><th>Correct</th></tr></thead><tbody><tr><td><del>J'<strong>en</strong> vais</del> (going TO a place)</td><td>J'<strong>y</strong> vais</td></tr><tr><td><del>J'<strong>y</strong> viens</del> (coming FROM a place)</td><td>J'<strong>en</strong> viens</td></tr></tbody></table>
+<hr>
+<h1>🔀 WHEN TO USE WHAT — THE COMPLETE PRONOUN MAP</h1>
+<p><em>Combining Project 19 (COD/COI) with Project 20 (Y/En):</em></p>
+<table><thead><tr><th>What You're Replacing</th><th>Pronoun</th><th>Example</th></tr></thead><tbody><tr><td>Direct object — thing (masc)</td><td><strong>le</strong></td><td>Je <strong>le</strong> vois</td></tr><tr><td>Direct object — thing (fem)</td><td><strong>la</strong></td><td>Je <strong>la</strong> prends</td></tr><tr><td>Direct object — things (plural)</td><td><strong>les</strong></td><td>Je <strong>les</strong> mange</td></tr><tr><td>Indirect object — to him/her</td><td><strong>lui</strong></td><td>Je <strong>lui</strong> parle</td></tr><tr><td>Indirect object — to them</td><td><strong>leur</strong></td><td>Je <strong>leur</strong> écris</td></tr><tr><td><strong>à + place</strong> or <strong>à + thing</strong></td><td><strong>Y</strong></td><td>J'<strong>y</strong> vais / J'<strong>y</strong> pense</td></tr><tr><td><strong>de + noun</strong> or <strong>quantity</strong></td><td><strong>EN</strong></td><td>J'<strong>en</strong> veux / J'<strong>en</strong> ai trois</td></tr><tr><td><strong>de + place</strong> (origin)</td><td><strong>EN</strong></td><td>J'<strong>en</strong> viens</td></tr><tr><td>à + <strong>person</strong></td><td><strong>stress pronoun</strong> (à lui, à elle)</td><td>Je pense <strong>à elle</strong></td></tr><tr><td>de + <strong>specific person</strong></td><td><strong>stress pronoun</strong> (de lui, d'elle)</td><td>Je parle <strong>d'elle</strong></td></tr></tbody></table>
+<hr>
+<h1>🚫 WHEN NOT TO USE</h1>
+<table><thead><tr><th>Situation</th><th>Do NOT Use</th><th>Use Instead</th><th>Why</th></tr></thead><tbody><tr><td>First mention of a noun</td><td>Y or En</td><td>Full noun</td><td>Listener doesn't know what you're referring to</td></tr><tr><td>Referring to a specific person with "à"</td><td>Y</td><td>Stress pronoun (à lui/elle)</td><td>Y is for things and places</td></tr><tr><td>Referring to a specific person with "de"</td><td>En</td><td>Stress pronoun (de lui/d'elle)</td><td>En is for things and quantities</td></tr><tr><td>Replacing a COD noun (specific thing)</td><td>En</td><td>le / la / les (Project 19)</td><td>En is for indefinite / partitive / quantity</td></tr><tr><td>Wanting to emphasize</td><td>Y or En</td><td>Full noun repeated for emphasis</td><td>Pronouns compress — emphasis requires weight</td></tr></tbody></table>
+<hr>
+<h1>⚠️ COMMON PITFALLS AND FAILURE MODES</h1>
+<table><thead><tr><th>Pitfall</th><th>What Learners Do</th><th>Why It's Wrong</th><th>Fix</th></tr></thead><tbody><tr><td><strong>Y for people</strong></td><td>J'y pense (about a person)</td><td>Y replaces things/places, NOT people</td><td>Je pense à lui / à elle</td></tr><tr><td><strong>En for specific people</strong></td><td>J'en parle (about Marie)</td><td>En replaces things, NOT specific people</td><td>Je parle d'elle</td></tr><tr><td><strong>Forgetting quantity after en</strong></td><td>J'en ai. (asked "combien?")</td><td>The number must stay visible</td><td>J'en ai <strong>trois</strong></td></tr><tr><td><strong>Agreement with en</strong></td><td>J'en ai achetées</td><td>En does NOT trigger agreement</td><td>J'en ai acheté</td></tr><tr><td><strong>Wrong position in futur proche</strong></td><td>J'y vais aller / J'en vais prendre</td><td>Y/En go before INFINITIF in futur proche</td><td>Je vais <strong>y</strong> aller / Je vais <strong>en</strong> prendre</td></tr><tr><td><strong>Y and En confused for places</strong></td><td>J'en vais (going TO) / J'y viens (coming FROM)</td><td>Y = to / En = from</td><td>J'<strong>y</strong> vais / J'<strong>en</strong> viens</td></tr><tr><td><strong>Missing vas-y spelling</strong></td><td>Va-y</td><td>Need -s before y for pronunciation</td><td><strong>Vas-y</strong></td></tr><tr><td><strong>Using en when le/la/les needed</strong></td><td>J'en vois (about "le film")</td><td>Specific known object → COD pronoun</td><td>Je <strong>le</strong> vois</td></tr><tr><td><strong>Double compression too fast</strong></td><td>Trying Y + En + COD in one sentence</td><td>Master each separately first — combinations in P36</td><td>One pronoun at a time</td></tr><tr><td><strong>Forgetting en in responses</strong></td><td>"Tu as des enfants?" → "Oui, j'ai deux."</td><td>Number alone sounds incomplete without en</td><td>Oui, j'<strong>en</strong> ai deux</td></tr></tbody></table>
+<hr>
+<h1>🔑 KEY TAKEAWAY</h1>
+<blockquote>
+<p><strong>Y and En complete your pronoun toolkit.</strong></p>
+<p>→ Project 19 gave you tools to replace <strong>people and specific things</strong> (le, la, les, lui, leur)<br>
+→ Project 20 gave you tools to replace <strong>places, abstract "à" ideas, quantities, and "de" expressions</strong> (Y, En)<br>
+→ Together, these <strong>six categories</strong> cover every possible noun replacement in French:</p>
+<table><thead><tr><th>Category</th><th>Pronouns</th></tr></thead><tbody><tr><td>Direct objects</td><td>le, la, l', les</td></tr><tr><td>Indirect objects (people)</td><td>lui, leur</td></tr><tr><td>Me/you/us</td><td>me, te, nous, vous</td></tr><tr><td>Places &amp; "à + thing"</td><td><strong>Y</strong></td></tr><tr><td>Quantities &amp; "de + thing"</td><td><strong>EN</strong></td></tr><tr><td>"à/de + specific person"</td><td>Stress pronouns (à lui, d'elle, etc.)</td></tr></tbody></table>
+<p>→ You now have the <strong>full compression engine</strong> of French<br>
+→ Every sentence from Projects 1-18 can now be <strong>shortened and naturalized</strong><br>
+→ But you've been replacing <strong>one noun at a time</strong><br>
+→ What happens when you need to replace <strong>two nouns in the same sentence?</strong><br>
+→ "I gave <strong>it</strong> to <strong>him</strong>" = "Je <strong>le lui</strong> ai donné" — that's <strong>double pronoun stacking</strong> (Project 36)</p>
+<p>→ Before that, you need more structural tools — starting with <strong>describing within sentences</strong></p>
+</blockquote>
+<hr>
+<h1>🌉 BRIDGE TO PROJECT 21</h1>
+<blockquote>
+<p>You can now compress nouns into pronouns — your sentences are lighter<br>
+But you still describe things in <strong>separate sentences</strong>:</p>
+<p>→ "J'ai un ami. Cet ami habite à Paris. Cet ami parle trois langues."</p>
+<p>A French person would combine all of this into <strong>one sentence</strong>:<br>
+→ "J'ai un ami <strong>qui</strong> habite à Paris et <strong>qui</strong> parle trois langues."</p>
+<p>→ <strong>Qui, que, où, dont</strong> — these are <strong>relative pronouns</strong><br>
+→ They let you <strong>build complex sentences</strong> by connecting ideas within a single structure<br>
+→ This is the difference between speaking like a child and speaking like an adult</p>
+<p>→ Project 21: <strong>"The Person Who, The Thing That"</strong></p>
+</blockquote>
+<hr>
+<h1>✅ PROJECT 20 COMPLETE</h1>
+<blockquote>
+<p><strong>Are you ready for PROJECT 21: "The Person Who, The Thing That"?</strong><br>
+→ ~100 sentences covering relative pronouns (qui, que, où, dont)<br>
+→ Scenario: You need to describe someone or something using a sub-sentence inside your main sentence<br>
+→ Builds on all pronoun knowledge — now connecting full clauses instead of just replacing nouns</p>
+</blockquote>
+</div>
+</div>
+
+<!-- ========== data-index="11" ========== -->
+
+        </div>
+
+        <div class="nav-bar">
+            <a href="project-19.html" class="nav-button prev">← Previous Chapter</a>
+            <div class="page-info">
+                <a href="index.html" class="nav-button home">📚 Table of Contents</a><br>
+                <span style="margin-top:8px;display:block">Chapter 20 of 50</span>
+            </div>
+            <a href="project-21.html" class="nav-button next">Next Chapter →</a>
+        </div>
+    </div>
+
+    
+    <div id="progress-track"><div id="progress-fill"></div></div>
+    <div id="progress-pct">0%</div>
+
+
+    <script>
+    const fill = document.getElementById('progress-fill');
+    const pct  = document.getElementById('progress-pct');
+    function updateProgress() {
+        const scrollTop = window.scrollY;
+        const docHeight = document.body.scrollHeight - window.innerHeight;
+        const scrolled  = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+        fill.style.height = scrolled + '%';
+        pct.textContent   = Math.round(scrolled) + '%';
+    }
+    window.addEventListener('scroll', updateProgress);
+    updateProgress();
+
+    document.addEventListener('keydown', function(e) {
+        if (['INPUT','TEXTAREA'].includes(document.activeElement.tagName)) return;
+        if (e.key === 'ArrowLeft') {
+            const b = document.querySelector('.nav-button.prev');
+            if (b && !b.classList.contains('disabled')) window.location.href = b.href;
+        }
+        if (e.key === 'ArrowRight') {
+            const b = document.querySelector('.nav-button.next');
+            if (b && !b.classList.contains('disabled')) window.location.href = b.href;
+        }
+    });
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="images/favicon.png">
+    <title>Project 15: "Better, Worse, the Same" — French Daily Sentences</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.75;
+            color: #1a202c;
+            background-color: #f7fafc;
+        }
+        .container {
+            max-width: 1800px;
+            margin: 0 auto;
+            background: white;
+            min-height: 100vh;
+            box-shadow: 0 0 30px rgba(0,0,0,0.08);
+            padding: 48px 52px;
+        }
+        
+        .content { max-width: 1700px; margin: 0 auto; color: #1a202c; }
+        .content h1 {
+            color: #1a202c; margin: 32px 0 20px;
+            padding-bottom: 12px;
+            border-bottom: 4px solid #3b82f6;
+            font-size: 2.1em;
+            font-weight: 700;
+        }
+        .content h2 {
+            color: #1a202c; margin: 28px 0 16px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #60a5fa;
+            font-size: 1.6em;
+            font-weight: 600;
+        }
+        .content h3 { color: #1a202c; margin: 22px 0 12px; font-size: 1.3em; font-weight: 600; }
+        .content h4 { color: #2d3748; margin: 18px 0 10px; font-size: 1.1em; font-weight: 600; }
+        .content p  { margin-bottom: 16px; line-height: 1.8; color: #1a202c; }
+        .content ul, .content ol { margin: 12px 0 18px 30px; color: #1a202c; }
+        .content li { margin-bottom: 8px; line-height: 1.75; color: #1a202c; }
+        .content hr { border: none; border-top: 2px solid #e2e8f0; margin: 26px 0; }
+        .content pre {
+            background: #f7fafc !important;
+            border: 1px solid #cbd5e0 !important;
+            border-left: 4px solid #3b82f6 !important;
+            padding: 18px !important; overflow-x: auto; margin: 18px 0; border-radius: 6px;
+            font-family: 'Consolas','Monaco','Courier New',monospace !important;
+            font-size: 0.9em !important;
+        }
+        .content pre:not([style*="color"]) { color: #1a202c !important; }
+        .content code {
+            font-family: 'Consolas','Monaco','Courier New',monospace !important;
+            font-size: 0.88em !important;
+        }
+        .content code:not(pre code) {
+            background: #dbeafe !important;
+            color: #1a202c !important;
+            padding: 2px 6px;
+            border-radius: 3px;
+        }
+        .content pre code { background: transparent !important; padding: 0; }
+        .content table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+        .content th {
+            background: linear-gradient(135deg, #3b82f6 0%, #60a5fa 100%);
+            color: white; padding: 12px 16px; text-align: left;
+            font-weight: 600;
+        }
+        .content td { padding: 11px 16px; border: 1px solid #e2e8f0; color: #1a202c; }
+        .content tr:nth-child(even) td { background: #eff6ff; }
+        .content blockquote {
+            border-left: 4px solid #3b82f6; background: #eff6ff;
+            padding: 14px 20px; margin: 18px 0; border-radius: 0 6px 6px 0;
+            color: #1a202c;
+        }
+        .content strong { color: #1a202c; font-weight: 600; }
+        .px-2 { padding: 0; }
+        .chat-message { background: transparent; padding: 0; margin: 0; }
+
+        /* Bottom nav bar only */
+        .nav-bar {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 24px 0;
+            margin-top: 50px;
+            border-top: 3px solid #60a5fa;
+        }
+        .nav-button {
+            display: inline-flex; align-items: center; gap: 8px;
+            padding: 12px 26px;
+            background: linear-gradient(135deg, #3b82f6 0%, #60a5fa 100%);
+            color: white !important; text-decoration: none;
+            border-radius: 8px; font-weight: 600; font-size: 0.95em;
+            transition: all 0.2s;
+            box-shadow: 0 2px 8px rgba(59,130,246,0.35);
+        }
+        .nav-button:hover { transform: translateY(-2px); box-shadow: 0 4px 14px rgba(59,130,246,0.5); }
+        .nav-button.disabled { background: #cbd5e1; box-shadow: none; pointer-events: none; }
+        .nav-button.home {
+            background: linear-gradient(135deg, #ef4444 0%, #f87171 100%);
+            box-shadow: 0 2px 8px rgba(239,68,68,0.35);
+        }
+        .nav-button.home:hover { box-shadow: 0 4px 14px rgba(239,68,68,0.5); }
+        .page-info { color: #718096; font-size: 0.9em; text-align: center; }
+
+        /* Progress bar */
+        #progress-track {
+            position: fixed; top: 20px; right: 20px;
+            width: 10px; height: 150px;
+            background: rgba(59,130,246,0.2);
+            border: 2px solid #3b82f6;
+            border-radius: 6px; overflow: hidden; z-index: 1000;
+        }
+        #progress-fill {
+            width: 100%;
+            background: linear-gradient(180deg, #3b82f6, #2563eb);
+            height: 0%;
+            transition: height 0.15s ease;
+        }
+        #progress-pct {
+            position: fixed; top: 0px; right: 16px;
+            color: #2563eb; font-size: 14px; font-weight: bold;
+            z-index: 1001;
+            text-shadow: 0 1px 2px rgba(255,255,255,0.9);
+            line-height: 20px;
+        }
+
+    </style>
+<link rel="stylesheet" href="assets/chapters.css?v=20260421203847"><script src="assets/chapters.js?v=20260421203847" defer></script>
+</head>
+<body>
+    <div class="container">
+        <div class="content">
+            <div class="chat-message" data-index="31">
+<div class="px-2"><h1>🔵 PROJECT 15: "Better, Worse, the Same"</h1>
+<h2><em>You're comparing restaurants, cities, people — how do you express more, less, equal, and the best?</em></h2>
+<hr>
+<h1>🎯 THE HYPOTHETICAL PROBLEM</h1>
+<p>→ It's <strong>Sunday afternoon</strong> — you're walking through Lyon with two classmates, Sofia and Kenji<br>
+→ You've just finished lunch at a bistrot and you're discussing the meal<br>
+→ Sofia says: <strong>"C'était bon, mais le restaurant de la semaine dernière était meilleur."</strong> (It was good, but last week's restaurant was better.)<br>
+→ Kenji adds: <strong>"Oui, et c'était moins cher aussi."</strong> (Yes, and it was less expensive too.)<br>
+→ You want to join the conversation, but you're stuck:<br>
+→ → You can describe things: "The restaurant <strong>is</strong> good." (C'est bon.) ✅<br>
+→ → But you CANNOT compare: "This restaurant <strong>is better than</strong> that one." ❌<br>
+→ → You CANNOT rank: "This is <strong>the best</strong> restaurant in Lyon." ❌<br>
+→ → You CANNOT equalize: "This restaurant is <strong>as good as</strong> that one." ❌<br>
+→ Every conversation involves comparison — food, weather, cities, people, prices, experiences<br>
+→ Without comparisons, you can only describe things in isolation — never in relation to each other</p>
+<p><strong>The core realization:</strong><br>
+→ English comparisons are chaotic:<br>
+→ → Some add "-er": tall<strong>er</strong>, fast<strong>er</strong>, cheap<strong>er</strong><br>
+→ → Some use "more": <strong>more</strong> beautiful, <strong>more</strong> expensive, <strong>more</strong> interesting<br>
+→ → Some are irregular: good → <strong>better</strong>, bad → <strong>worse</strong><br>
+→ French comparisons are <strong>MORE SYSTEMATIC</strong> — almost everything follows ONE pattern:<br>
+→ → <strong>Plus</strong> + adjective + <strong>que</strong> = more... than<br>
+→ → <strong>Moins</strong> + adjective + <strong>que</strong> = less... than<br>
+→ → <strong>Aussi</strong> + adjective + <strong>que</strong> = as... as<br>
+→ Only TWO adjectives are irregular: <strong>bon</strong> (good) and <strong>mauvais</strong> (bad)<br>
+→ Master the pattern + the two irregulars → you can compare ANYTHING</p>
+<hr>
+<h1>🔍 HOW TO APPROACH IT</h1>
+<p>→ French comparisons have <strong>three degrees:</strong></p>
+<table><thead><tr><th>Degree</th><th>What It Does</th><th>French Tool</th><th>English Equivalent</th></tr></thead><tbody><tr><td><strong>Comparatif</strong></td><td>Compares TWO things</td><td>plus/moins/aussi...que</td><td>more/less/as...than/as</td></tr><tr><td><strong>Superlatif</strong></td><td>Ranks ONE thing as the TOP or BOTTOM</td><td>le/la/les plus/moins</td><td>the most/the least</td></tr><tr><td><strong>Égalité</strong></td><td>Says two things are THE SAME</td><td>aussi...que / autant...que</td><td>as...as / as much...as</td></tr></tbody></table>
+<p>→ These tools work with:<br>
+→ → <strong>Adjectives</strong> (tall, beautiful, expensive)<br>
+→ → <strong>Adverbs</strong> (quickly, often, well)<br>
+→ → <strong>Nouns</strong> (more money, less time, as many friends)<br>
+→ → <strong>Verbs</strong> (works more, eats less, sleeps as much)</p>
+<hr>
+<h1>🔧 HOW CAN WE SOLVE IT</h1>
+<h2>Step 1 — Comparing with Adjectives (The Core Pattern)</h2>
+<h3>MORE... THAN = PLUS + adjective + QUE</h3>
+<code>Subject + ÊTRE + PLUS + ADJECTIVE + QUE + comparison point</code>
+<p>→ Paris est <strong>plus grand que</strong> Lyon. (Paris is bigger than Lyon.)<br>
+→ This film est <strong>plus intéressant que</strong> l'autre. (This film is more interesting than the other.)</p>
+<h3>LESS... THAN = MOINS + adjective + QUE</h3>
+<code>Subject + ÊTRE + MOINS + ADJECTIVE + QUE + comparison point</code>
+<p>→ Lyon est <strong>moins grand que</strong> Paris. (Lyon is less big than Paris.)<br>
+→ Ce restaurant est <strong>moins cher que</strong> l'autre. (This restaurant is less expensive than the other.)</p>
+<h3>AS... AS = AUSSI + adjective + QUE</h3>
+<code>Subject + ÊTRE + AUSSI + ADJECTIVE + QUE + comparison point</code>
+<p>→ Lyon est <strong>aussi beau que</strong> Paris. (Lyon is as beautiful as Paris.)<br>
+→ Ce restaurant est <strong>aussi bon que</strong> l'autre. (This restaurant is as good as the other.)</p>
+<p><strong>🧠 THE GOLDEN FORMULA:</strong></p>
+<table><thead><tr><th>Comparison Type</th><th>Formula</th></tr></thead><tbody><tr><td>More</td><td><strong>PLUS</strong> + adj + <strong>QUE</strong></td></tr><tr><td>Less</td><td><strong>MOINS</strong> + adj + <strong>QUE</strong></td></tr><tr><td>Equal</td><td><strong>AUSSI</strong> + adj + <strong>QUE</strong></td></tr></tbody></table>
+<p>→ This works for <strong>EVERY adjective</strong> in French (except bon and mauvais — Step 3)<br>
+→ No "-er" endings like English — French ALWAYS uses plus/moins/aussi<br>
+→ → English: tall<strong>er</strong> / <strong>more</strong> beautiful (two systems)<br>
+→ → French: <strong>plus</strong> grand / <strong>plus</strong> beau (one system — always "plus")</p>
+<hr>
+<h2>Step 2 — Adjective Agreement in Comparisons</h2>
+<p>→ The adjective still agrees in <strong>gender and number</strong> with the SUBJECT (recall Project 1)</p>
+<table><thead><tr><th>Subject</th><th>Example</th><th>Agreement</th></tr></thead><tbody><tr><td>Masculine singular</td><td>Il est <strong>plus grand</strong> que moi.</td><td>grand (masc sing)</td></tr><tr><td>Feminine singular</td><td>Elle est <strong>plus grande</strong> que moi.</td><td>grand<strong>e</strong> (fem sing)</td></tr><tr><td>Masculine plural</td><td>Ils sont <strong>plus grands</strong> que nous.</td><td>grand<strong>s</strong> (masc plural)</td></tr><tr><td>Feminine plural</td><td>Elles sont <strong>plus grandes</strong> que nous.</td><td>grand<strong>es</strong> (fem plural)</td></tr></tbody></table>
+<p>→ Plus/moins/aussi NEVER change — they are invariable<br>
+→ Only the adjective changes for agreement<br>
+→ "Que" never changes either</p>
+<hr>
+<h2>Step 3 — The Two Irregulars: BON and MAUVAIS</h2>
+<h3>BON (good) → MEILLEUR (better) → LE MEILLEUR (the best)</h3>
+<table><thead><tr><th>Degree</th><th>Masculine Sing</th><th>Feminine Sing</th><th>Masculine Plural</th><th>Feminine Plural</th></tr></thead><tbody><tr><td><strong>Good</strong></td><td>bon</td><td>bonne</td><td>bons</td><td>bonnes</td></tr><tr><td><strong>Better</strong></td><td><strong>meilleur</strong></td><td><strong>meilleure</strong></td><td><strong>meilleurs</strong></td><td><strong>meilleures</strong></td></tr><tr><td><strong>The best</strong></td><td><strong>le meilleur</strong></td><td><strong>la meilleure</strong></td><td><strong>les meilleurs</strong></td><td><strong>les meilleures</strong></td></tr></tbody></table>
+<p>→ ✅ Ce restaurant est <strong>meilleur que</strong> l'autre. (This restaurant is better than the other.)<br>
+→ ❌ <del>Ce restaurant est <strong>plus bon que</strong> l'autre.</del> (WRONG — never say "plus bon")<br>
+→ <strong>"Plus bon" does NOT exist</strong> — always use <strong>"meilleur"</strong></p>
+<h3>MAUVAIS (bad) → PIRE (worse) → LE PIRE (the worst)</h3>
+<table><thead><tr><th>Degree</th><th>Form</th><th>Notes</th></tr></thead><tbody><tr><td><strong>Bad</strong></td><td>mauvais(e)</td><td>Normal adjective</td></tr><tr><td><strong>Worse</strong></td><td><strong>pire</strong> OR <strong>plus mauvais(e)</strong></td><td>Both are acceptable</td></tr><tr><td><strong>The worst</strong></td><td><strong>le/la pire</strong> OR <strong>le/la plus mauvais(e)</strong></td><td>Both are acceptable</td></tr></tbody></table>
+<p>→ ✅ Ce film est <strong>pire que</strong> l'autre. (This film is worse than the other.)<br>
+→ ✅ Ce film est <strong>plus mauvais que</strong> l'autre. (Also correct — both work)<br>
+→ <strong>"Pire"</strong> is more common and more natural in speech<br>
+→ Unlike "bon" → "meilleur" (mandatory), "mauvais" → "pire" is preferred but "plus mauvais" is acceptable</p>
+<hr>
+<h2>Step 4 — The Superlative: THE MOST / THE LEAST / THE BEST</h2>
+<h3>Formula:</h3>
+<code>Subject + ÊTRE + LE/LA/LES + PLUS/MOINS + ADJECTIVE + (DE + group)</code>
+<p>→ C'est <strong>le plus grand</strong> restaurant <strong>de</strong> Lyon. (It's the biggest restaurant in Lyon.)<br>
+→ C'est <strong>la plus belle</strong> ville <strong>de</strong> France. (It's the most beautiful city in France.)<br>
+→ C'est <strong>le moins cher</strong>. (It's the least expensive.)</p>
+<p><strong>🧠 KEY DETAILS:</strong></p>
+<table><thead><tr><th>Element</th><th>Rule</th></tr></thead><tbody><tr><td><strong>Le/La/Les</strong></td><td>Matches the gender/number of the noun being described</td></tr><tr><td><strong>De</strong></td><td>= "in" or "of" for the group → "de Lyon" = "in Lyon" / "de la classe" = "in the class"</td></tr><tr><td><strong>Adjective</strong></td><td>Still agrees in gender/number with the noun</td></tr></tbody></table>
+<h3>Superlative of BON and MAUVAIS:</h3>
+<table><thead><tr><th>Adjective</th><th>Superlative</th><th>Example</th></tr></thead><tbody><tr><td><strong>Bon</strong></td><td><strong>le/la meilleur(e)</strong></td><td>C'est <strong>le meilleur</strong> restaurant. (the best)</td></tr><tr><td><strong>Mauvais</strong></td><td><strong>le/la pire</strong></td><td>C'est <strong>le pire</strong> film. (the worst)</td></tr></tbody></table>
+<p>→ NEVER say <del>"le plus bon"</del> → always <strong>"le meilleur"</strong></p>
+<hr>
+<h2>Step 5 — Comparing with Adverbs (How You Do Things)</h2>
+<h3>BIEN (well) → MIEUX (better) → LE MIEUX (the best)</h3>
+<table><thead><tr><th>Degree</th><th>Adverb</th><th>Example</th></tr></thead><tbody><tr><td><strong>Well</strong></td><td><strong>bien</strong></td><td>Il parle <strong>bien</strong>.</td></tr><tr><td><strong>Better</strong></td><td><strong>mieux</strong></td><td>Il parle <strong>mieux</strong> que moi.</td></tr><tr><td><strong>The best</strong></td><td><strong>le mieux</strong></td><td>C'est lui qui parle <strong>le mieux</strong>.</td></tr></tbody></table>
+<p>→ ✅ Elle chante <strong>mieux que</strong> moi. (She sings better than me.)<br>
+→ ❌ <del>Elle chante <strong>plus bien que</strong> moi.</del> (WRONG — never say "plus bien")<br>
+→ <strong>"Plus bien" does NOT exist</strong> — always use <strong>"mieux"</strong></p>
+<p><strong>🧠 MEILLEUR vs. MIEUX — The #1 confusion:</strong></p>
+<table><thead><tr><th>Word</th><th>Type</th><th>Modifies</th><th>Example</th></tr></thead><tbody><tr><td><strong>Meilleur(e)</strong></td><td>ADJECTIVE</td><td>A NOUN</td><td>Ce restaurant est <strong>meilleur</strong>. (This restaurant is better.)</td></tr><tr><td><strong>Mieux</strong></td><td>ADVERB</td><td>A VERB</td><td>Il cuisine <strong>mieux</strong>. (He cooks better.)</td></tr></tbody></table>
+<p>→ <strong>Meilleur</strong> = describes a THING (adjective → agrees in gender/number)<br>
+→ <strong>Mieux</strong> = describes an ACTION (adverb → never changes form)<br>
+→ → "The food is <strong>better</strong>" = La nourriture est <strong>meilleure</strong>. (adjective — describes noun)<br>
+→ → "He cooks <strong>better</strong>" = Il cuisine <strong>mieux</strong>. (adverb — describes verb)</p>
+<h3>Regular adverb comparisons:</h3>
+<table><thead><tr><th>Adverb</th><th>More</th><th>Less</th><th>As</th></tr></thead><tbody><tr><td><strong>vite</strong> (fast)</td><td><strong>plus vite que</strong></td><td><strong>moins vite que</strong></td><td><strong>aussi vite que</strong></td></tr><tr><td><strong>souvent</strong> (often)</td><td><strong>plus souvent que</strong></td><td><strong>moins souvent que</strong></td><td><strong>aussi souvent que</strong></td></tr><tr><td><strong>tard</strong> (late)</td><td><strong>plus tard que</strong></td><td><strong>moins tard que</strong></td><td><strong>aussi tard que</strong></td></tr><tr><td><strong>tôt</strong> (early)</td><td><strong>plus tôt que</strong></td><td><strong>moins tôt que</strong></td><td><strong>aussi tôt que</strong></td></tr><tr><td><strong>loin</strong> (far)</td><td><strong>plus loin que</strong></td><td><strong>moins loin que</strong></td><td><strong>aussi loin que</strong></td></tr></tbody></table>
+<p>→ Same formula: plus/moins/aussi + adverb + que<br>
+→ Regular adverbs follow the same pattern as adjectives — no irregulars (except bien → mieux)</p>
+<hr>
+<h2>Step 6 — Comparing with Nouns (More/Less/As Much OF Something)</h2>
+<h3>Formula:</h3>
+<table><thead><tr><th>Comparison</th><th>Structure</th><th>Example</th></tr></thead><tbody><tr><td><strong>More of</strong></td><td><strong>PLUS DE</strong> + noun + <strong>QUE</strong></td><td>Il a **plus d'**argent <strong>que</strong> moi. (He has more money than me.)</td></tr><tr><td><strong>Less of</strong></td><td><strong>MOINS DE</strong> + noun + <strong>QUE</strong></td><td>J'ai <strong>moins de</strong> temps <strong>que</strong> toi. (I have less time than you.)</td></tr><tr><td><strong>As much of</strong></td><td><strong>AUTANT DE</strong> + noun + <strong>QUE</strong></td><td>Elle a **autant d'**amis <strong>que</strong> moi. (She has as many friends as me.)</td></tr></tbody></table>
+<p>→ Notice: with nouns, equality uses <strong>AUTANT DE</strong> (not "aussi de")<br>
+→ <strong>Aussi</strong> = for adjectives and adverbs<br>
+→ <strong>Autant</strong> = for nouns and verbs</p>
+<hr>
+<h2>Step 7 — Comparing with Verbs (Do Something More/Less/As Much)</h2>
+<h3>Formula:</h3>
+<table><thead><tr><th>Comparison</th><th>Structure</th><th>Example</th></tr></thead><tbody><tr><td><strong>More</strong></td><td>VERB + <strong>PLUS QUE</strong></td><td>Il travaille <strong>plus que</strong> moi. (He works more than me.)</td></tr><tr><td><strong>Less</strong></td><td>VERB + <strong>MOINS QUE</strong></td><td>Je dors <strong>moins que</strong> toi. (I sleep less than you.)</td></tr><tr><td><strong>As much</strong></td><td>VERB + <strong>AUTANT QUE</strong></td><td>Elle mange <strong>autant que</strong> lui. (She eats as much as him.)</td></tr></tbody></table>
+<p>→ With verbs: plus/moins/autant go <strong>AFTER</strong> the verb<br>
+→ Same as frequency word placement (Project 8)<br>
+→ <strong>Autant</strong> (not aussi) for verbs — same rule as nouns</p>
+<hr>
+<h1>✅ WHAT COULD BE DONE — THE 100 SENTENCES</h1>
+<h2>🔹 BLOCK A — PLUS...QUE: More Than (Adjectives)</h2>
+<p><em>Scenario: Comparing Lyon and Paris — cities, restaurants, experiences</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English Meaning</th><th>Adjective Used</th></tr></thead><tbody><tr><td>1</td><td>Paris est plus grand que Lyon.</td><td>Paris is bigger than Lyon.</td><td>grand</td></tr><tr><td>2</td><td>Lyon est plus calme que Paris.</td><td>Lyon is calmer than Paris.</td><td>calme</td></tr><tr><td>3</td><td>Ce restaurant est plus cher que l'autre.</td><td>This restaurant is more expensive than the other.</td><td>cher</td></tr><tr><td>4</td><td>Cette rue est plus large que celle-là.</td><td>This street is wider than that one.</td><td>large</td></tr><tr><td>5</td><td>Le métro est plus rapide que le bus.</td><td>The metro is faster than the bus.</td><td>rapide</td></tr><tr><td>6</td><td>L'été est plus chaud que le printemps.</td><td>Summer is hotter than spring.</td><td>chaud</td></tr><tr><td>7</td><td>Ce film est plus long que le précédent.</td><td>This movie is longer than the previous one.</td><td>long</td></tr><tr><td>8</td><td>Ma chambre est plus petite que la tienne.</td><td>My room is smaller than yours.</td><td>petit(e)</td></tr><tr><td>9</td><td>Le français est plus difficile que l'espagnol.</td><td>French is more difficult than Spanish.</td><td>difficile</td></tr><tr><td>10</td><td>Elle est plus grande que son frère.</td><td>She is taller than her brother.</td><td>grande (fem agreement)</td></tr></tbody></table>
+<p><strong>🧠 Structure confirmed:</strong> <code>Subject + ÊTRE + PLUS + ADJECTIVE (agreed) + QUE + comparison</code></p>
+<p><strong>🧠 Sentence 8 — "LA TIENNE":</strong><br>
+→ = "yours" (feminine — referring to "chambre" which is feminine)<br>
+→ This is a <strong>possessive pronoun</strong> — replaces "ta chambre"<br>
+→ → le mien/la mienne = mine<br>
+→ → le tien/la tienne = yours<br>
+→ → le sien/la sienne = his/hers<br>
+→ Full exploration in later projects — for now, just recognize them in comparisons</p>
+<hr>
+<h2>🔹 BLOCK B — MOINS...QUE: Less Than (Adjectives)</h2>
+<p><em>Scenario: The same comparisons, but from the other direction</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English Meaning</th><th>Adjective Used</th></tr></thead><tbody><tr><td>11</td><td>Lyon est moins grand que Paris.</td><td>Lyon is less big than Paris.</td><td>grand</td></tr><tr><td>12</td><td>Paris est moins calme que Lyon.</td><td>Paris is less calm than Lyon.</td><td>calme</td></tr><tr><td>13</td><td>Ce restaurant est moins cher que le restaurant étoilé.</td><td>This restaurant is less expensive than the starred restaurant.</td><td>cher</td></tr><tr><td>14</td><td>Le bus est moins rapide que le métro.</td><td>The bus is less fast than the metro.</td><td>rapide</td></tr><tr><td>15</td><td>L'hiver est moins agréable que l'été.</td><td>Winter is less pleasant than summer.</td><td>agréable</td></tr><tr><td>16</td><td>Ce livre est moins intéressant que le premier.</td><td>This book is less interesting than the first one.</td><td>intéressant</td></tr><tr><td>17</td><td>Mon appartement est moins grand que le tien.</td><td>My apartment is less big than yours.</td><td>grand</td></tr><tr><td>18</td><td>Cette ville est moins touristique que Paris.</td><td>This city is less touristy than Paris.</td><td>touristique</td></tr><tr><td>19</td><td>Il est moins patient que sa sœur.</td><td>He is less patient than his sister.</td><td>patient</td></tr><tr><td>20</td><td>C'est moins compliqué que je pensais.</td><td>It's less complicated than I thought.</td><td>compliqué</td></tr></tbody></table>
+<p><strong>🧠 Sentence 20 — "QUE JE PENSAIS":</strong><br>
+→ = "than I thought" — <strong>que</strong> can be followed by a full clause, not just a noun/pronoun<br>
+→ "Plus/moins/aussi...que + subject + verb" = comparison with a situation<br>
+→ → C'est plus facile <strong>que je pensais</strong>. (It's easier than I thought.)<br>
+→ → C'est moins loin <strong>que tu crois</strong>. (It's less far than you think.)<br>
+→ → Il fait plus froid <strong>qu'hier</strong>. (It's colder than yesterday.)<br>
+→ <strong>Que</strong> becomes <strong>qu'</strong> before a vowel: que + hier → **qu'**hier</p>
+<p><strong>🧠 FRENCH PREFERENCE: "MOINS" vs. English "NOT AS":</strong><br>
+→ English often says "not as big" instead of "less big"<br>
+→ French uses "moins" naturally and frequently — it doesn't sound awkward like "less big" does in English<br>
+→ → "Lyon est <strong>moins grand</strong> que Paris" = completely natural French<br>
+→ → You can also say: "Lyon <strong>n'est pas aussi grand</strong> que Paris" (is not as big as) — also correct but longer</p>
+<hr>
+<h2>🔹 BLOCK C — AUSSI...QUE: As... As (Equality with Adjectives)</h2>
+<p><em>Scenario: Two things are equal — no difference</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English Meaning</th><th>Adjective Used</th></tr></thead><tbody><tr><td>21</td><td>Lyon est aussi beau que Paris.</td><td>Lyon is as beautiful as Paris.</td><td>beau</td></tr><tr><td>22</td><td>Ce restaurant est aussi bon que l'autre.</td><td>This restaurant is as good as the other.</td><td>bon</td></tr><tr><td>23</td><td>Ma chambre est aussi grande que la tienne.</td><td>My room is as big as yours.</td><td>grande</td></tr><tr><td>24</td><td>Il est aussi intelligent que sa sœur.</td><td>He is as intelligent as his sister.</td><td>intelligent</td></tr><tr><td>25</td><td>Le français est aussi utile que l'anglais.</td><td>French is as useful as English.</td><td>utile</td></tr><tr><td>26</td><td>Cette rue est aussi bruyante que l'autre.</td><td>This street is as noisy as the other.</td><td>bruyante</td></tr><tr><td>27</td><td>Il fait aussi chaud qu'hier.</td><td>It's as hot as yesterday.</td><td>chaud</td></tr><tr><td>28</td><td>Tu es aussi fatigué que moi.</td><td>You are as tired as me.</td><td>fatigué</td></tr><tr><td>29</td><td>Ce film est aussi long que le premier.</td><td>This film is as long as the first.</td><td>long</td></tr><tr><td>30</td><td>La vie ici est aussi agréable que chez moi.</td><td>Life here is as pleasant as at my place.</td><td>agréable</td></tr></tbody></table>
+<p><strong>🧠 NEGATIVE EQUALITY — "NOT AS... AS":</strong><br>
+→ To say something is NOT equal → negate "aussi...que":</p>
+<code>Subject + N'EST PAS AUSSI + adjective + QUE + comparison</code>
+<p>→ Lyon <strong>n'est pas aussi grand que</strong> Paris. (Lyon is not as big as Paris.)<br>
+→ This is an alternative to "moins...que" — same meaning, different structure<br>
+→ → "Lyon est <strong>moins grand que</strong> Paris" = "Lyon <strong>n'est pas aussi grand que</strong> Paris"<br>
+→ Both are correct — "moins" is more direct, "pas aussi" is softer</p>
+<hr>
+<h2>🔹 BLOCK D — MEILLEUR and MIEUX: Better (The Two Irregulars)</h2>
+<p><em>Scenario: Comparing quality — food, experiences, skills</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English Meaning</th><th>Meilleur or Mieux?</th></tr></thead><tbody><tr><td>31</td><td>Ce restaurant est meilleur que l'autre.</td><td>This restaurant is better than the other.</td><td><strong>Meilleur</strong> — adjective (describes noun)</td></tr><tr><td>32</td><td>Cette crêpe est meilleure que celle d'hier.</td><td>This crêpe is better than yesterday's.</td><td><strong>Meilleure</strong> — fem adjective</td></tr><tr><td>33</td><td>Les croissants ici sont meilleurs.</td><td>The croissants here are better.</td><td><strong>Meilleurs</strong> — plural adjective</td></tr><tr><td>34</td><td>La cuisine française est meilleure que la cuisine anglaise.</td><td>French cuisine is better than English cuisine.</td><td><strong>Meilleure</strong> — fem adjective</td></tr><tr><td>35</td><td>C'est la meilleure crêpe de Lyon.</td><td>It's the best crêpe in Lyon.</td><td><strong>La meilleure</strong> — superlative fem</td></tr><tr><td>36</td><td>Il cuisine mieux que moi.</td><td>He cooks better than me.</td><td><strong>Mieux</strong> — adverb (describes verb)</td></tr><tr><td>37</td><td>Elle parle français mieux que l'année dernière.</td><td>She speaks French better than last year.</td><td><strong>Mieux</strong> — adverb</td></tr><tr><td>38</td><td>Tu te sens mieux aujourd'hui ?</td><td>Do you feel better today?</td><td><strong>Mieux</strong> — adverb (with se sentir)</td></tr><tr><td>39</td><td>C'est mieux comme ça.</td><td>It's better this way.</td><td><strong>Mieux</strong> — adverb (general assessment)</td></tr><tr><td>40</td><td>Le mieux, c'est de partir tôt.</td><td>The best thing is to leave early.</td><td><strong>Le mieux</strong> — superlative adverb</td></tr></tbody></table>
+<p><strong>🧠 MEILLEUR vs. MIEUX — DEFINITIVE GUIDE:</strong></p>
+<table><thead><tr><th>Question</th><th>Answer</th><th>Use</th><th>Example</th></tr></thead><tbody><tr><td>Is the <strong>THING</strong> better?</td><td>✅</td><td><strong>MEILLEUR(E)(S)</strong></td><td>Ce gâteau est <strong>meilleur</strong>.</td></tr><tr><td>Does someone <strong>DO</strong> it better?</td><td>✅</td><td><strong>MIEUX</strong></td><td>Il chante <strong>mieux</strong>.</td></tr><tr><td>After <strong>C'EST</strong> (general "it's better")?</td><td>✅</td><td><strong>MIEUX</strong></td><td>C'est <strong>mieux</strong> comme ça.</td></tr><tr><td>After <strong>SE SENTIR</strong> (feel better)?</td><td>✅</td><td><strong>MIEUX</strong></td><td>Je me sens <strong>mieux</strong>.</td></tr><tr><td>Describes a <strong>NOUN</strong> directly?</td><td>✅</td><td><strong>MEILLEUR(E)(S)</strong></td><td>Un <strong>meilleur</strong> résultat.</td></tr><tr><td>Describes a <strong>VERB/ACTION</strong>?</td><td>✅</td><td><strong>MIEUX</strong></td><td>Travailler <strong>mieux</strong>.</td></tr></tbody></table>
+<p><strong>🧠 Quick test:</strong><br>
+→ Can you replace it with "more good" → <strong>MEILLEUR</strong> (adjective replacing "plus bon")<br>
+→ Can you replace it with "more well" → <strong>MIEUX</strong> (adverb replacing "plus bien")</p>
+<hr>
+<h2>🔹 BLOCK E — PIRE and PLUS MAUVAIS: Worse</h2>
+<p><em>Scenario: Comparing negative experiences — bad weather, bad food, bad luck</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English Meaning</th><th>Form Used</th></tr></thead><tbody><tr><td>41</td><td>Ce film est pire que le premier.</td><td>This movie is worse than the first.</td><td>pire (adjective)</td></tr><tr><td>42</td><td>Le temps est pire qu'hier.</td><td>The weather is worse than yesterday.</td><td>pire (adjective)</td></tr><tr><td>43</td><td>La situation est pire que prévu.</td><td>The situation is worse than expected.</td><td>pire (adjective)</td></tr><tr><td>44</td><td>C'est le pire restaurant de la ville.</td><td>It's the worst restaurant in the city.</td><td>le pire (superlative)</td></tr><tr><td>45</td><td>C'est la pire idée du monde.</td><td>It's the worst idea in the world.</td><td>la pire (superlative fem)</td></tr><tr><td>46</td><td>Ce restaurant est plus mauvais que l'autre.</td><td>This restaurant is worse than the other.</td><td>plus mauvais (also correct)</td></tr><tr><td>47</td><td>Le pire, c'est qu'il ne s'excuse pas.</td><td>The worst part is that he doesn't apologize.</td><td>le pire (noun use)</td></tr><tr><td>48</td><td>C'est de pire en pire.</td><td>It's getting worse and worse.</td><td>Fixed expression</td></tr><tr><td>49</td><td>C'est pas pire.</td><td>It's not bad. (understatement)</td><td>Spoken expression</td></tr><tr><td>50</td><td>Ça pourrait être pire.</td><td>It could be worse.</td><td>Common expression</td></tr></tbody></table>
+<p><strong>🧠 PIRE vs. PLUS MAUVAIS:</strong></p>
+<table><thead><tr><th>Form</th><th>Usage</th><th>Example</th></tr></thead><tbody><tr><td><strong>Pire</strong></td><td>More common, natural, preferred</td><td>C'est <strong>pire</strong> qu'avant.</td></tr><tr><td><strong>Plus mauvais</strong></td><td>Also correct, sometimes for concrete quality</td><td>Ce vin est <strong>plus mauvais</strong> que l'autre.</td></tr></tbody></table>
+<p>→ Unlike bon/meilleur (where "plus bon" is WRONG), both "pire" and "plus mauvais" work<br>
+→ <strong>Pire</strong> is preferred in most situations<br>
+→ <strong>Plus mauvais</strong> is sometimes used for tangible quality (food, weather) — but pire works there too</p>
+<p><strong>🧠 Key expressions from this block:</strong><br>
+→ <strong>"De pire en pire"</strong> = worse and worse (getting progressively worse)<br>
+→ <strong>"De mieux en mieux"</strong> = better and better (getting progressively better)<br>
+→ <strong>"De plus en plus"</strong> = more and more<br>
+→ <strong>"De moins en moins"</strong> = less and less<br>
+→ These are VERY common expressions in daily French</p>
+<hr>
+<h2>🔹 BLOCK F — Superlatives: THE MOST / THE LEAST / THE BEST</h2>
+<p><em>Scenario: Ranking things — the best, the worst, the biggest, the most beautiful</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English Meaning</th><th>Superlative Type</th></tr></thead><tbody><tr><td>51</td><td>C'est le plus grand musée de France.</td><td>It's the biggest museum in France.</td><td>le plus + adj + de</td></tr><tr><td>52</td><td>C'est la plus belle ville du monde.</td><td>It's the most beautiful city in the world.</td><td>la plus + adj + de</td></tr><tr><td>53</td><td>Ce sont les plus beaux monuments de Paris.</td><td>These are the most beautiful monuments in Paris.</td><td>les plus + adj + de</td></tr><tr><td>54</td><td>C'est le restaurant le moins cher du quartier.</td><td>It's the least expensive restaurant in the neighborhood.</td><td>le moins + adj + de</td></tr><tr><td>55</td><td>C'est le meilleur café de Lyon.</td><td>It's the best café in Lyon.</td><td>le meilleur + de</td></tr><tr><td>56</td><td>C'est la meilleure boulangerie de la ville.</td><td>It's the best bakery in the city.</td><td>la meilleure + de</td></tr><tr><td>57</td><td>C'est le pire film de l'année.</td><td>It's the worst movie of the year.</td><td>le pire + de</td></tr><tr><td>58</td><td>C'est le jour le plus long de l'année.</td><td>It's the longest day of the year.</td><td>le + noun + le plus + adj</td></tr><tr><td>59</td><td>C'est la personne la plus gentille que je connaisse.</td><td>It's the kindest person I know.</td><td>la plus + adj + que + subjonctif</td></tr><tr><td>60</td><td>C'est le moment le plus important de ma vie.</td><td>It's the most important moment of my life.</td><td>le plus + adj + de</td></tr></tbody></table>
+<p><strong>🧠 SUPERLATIVE STRUCTURE — TWO POSITIONS:</strong></p>
+<h3>Position 1: Before the noun (short common adjectives)</h3>
+<code>LE/LA/LES + PLUS/MOINS + ADJECTIVE + NOUN + DE + group</code>
+<p>→ C'est <strong>le plus grand</strong> musée <strong>de</strong> France.<br>
+→ C'est <strong>la meilleure</strong> boulangerie <strong>de</strong> la ville.</p>
+<h3>Position 2: After the noun (most adjectives)</h3>
+<code>LE/LA/LES + NOUN + LE/LA/LES + PLUS/MOINS + ADJECTIVE + DE + group</code>
+<p>→ C'est le jour <strong>le plus long</strong> <strong>de</strong> l'année.<br>
+→ C'est la personne <strong>la plus gentille</strong> que je connaisse.</p>
+<p><strong>🧠 Which position?</strong><br>
+→ Adjectives that normally go BEFORE the noun (Project 3: bon, grand, petit, beau, jeune, vieux...) → superlative goes BEFORE<br>
+→ Adjectives that normally go AFTER the noun (most adjectives) → superlative goes AFTER<br>
+→ When superlative goes AFTER → the article appears TWICE:<br>
+→ → "Le jour <strong>le</strong> plus long" — first "le" = the day, second "le" = the most<br>
+→ This double article is a key feature of post-noun superlatives</p>
+<p><strong>🧠 "DE" in superlatives = "in" or "of":</strong><br>
+→ Le plus grand <strong>de</strong> France = the biggest <strong>in</strong> France<br>
+→ Le meilleur <strong>du</strong> monde = the best <strong>in</strong> the world (de + le = du — Project 7)<br>
+→ La plus belle <strong>de</strong> la classe = the most beautiful <strong>in</strong> the class</p>
+<hr>
+<h2>🔹 BLOCK G — Comparing Adverbs: How You Do Things</h2>
+<p><em>Scenario: Comparing how people do things — speed, frequency, quality</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English Meaning</th><th>Comparison Type</th></tr></thead><tbody><tr><td>61</td><td>Il court plus vite que moi.</td><td>He runs faster than me.</td><td>plus + adverb + que</td></tr><tr><td>62</td><td>Elle parle moins vite que le professeur.</td><td>She speaks less fast than the teacher.</td><td>moins + adverb + que</td></tr><tr><td>63</td><td>Tu conduis aussi prudemment que lui.</td><td>You drive as carefully as him.</td><td>aussi + adverb + que</td></tr><tr><td>64</td><td>Je me lève plus tôt que toi.</td><td>I get up earlier than you.</td><td>plus + adverb + que</td></tr><tr><td>65</td><td>Il travaille plus souvent que moi.</td><td>He works more often than me.</td><td>plus + adverb + que</td></tr><tr><td>66</td><td>Elle arrive toujours plus tard que tout le monde.</td><td>She always arrives later than everyone.</td><td>plus + adverb + que</td></tr><tr><td>67</td><td>Il parle français mieux que l'année dernière.</td><td>He speaks French better than last year.</td><td>mieux (irregular)</td></tr><tr><td>68</td><td>Elle chante mieux que sa sœur.</td><td>She sings better than her sister.</td><td>mieux</td></tr><tr><td>69</td><td>C'est lui qui parle le plus vite.</td><td>He's the one who speaks the fastest.</td><td>le plus + adverb (superlative)</td></tr><tr><td>70</td><td>C'est elle qui travaille le mieux.</td><td>She's the one who works the best.</td><td>le mieux (superlative)</td></tr></tbody></table>
+<p><strong>🧠 ADVERB COMPARISONS — same formula as adjectives:</strong><br>
+→ <strong>Plus/moins/aussi</strong> + adverb + <strong>que</strong><br>
+→ Adverbs NEVER change form (no gender/number agreement)<br>
+→ Superlative adverbs always use <strong>"le"</strong> (never la/les — adverbs are invariable)<br>
+→ → C'est lui qui court <strong>le</strong> plus vite. (always "le" regardless of subject gender)</p>
+<p><strong>🧠 PRONOUNS AFTER "QUE" IN COMPARISONS:</strong><br>
+→ After "que," use <strong>stress pronouns</strong> (from Project 7):</p>
+<table><thead><tr><th>Subject Pronoun</th><th>Stress Pronoun (after que)</th></tr></thead><tbody><tr><td>je</td><td><strong>moi</strong></td></tr><tr><td>tu</td><td><strong>toi</strong></td></tr><tr><td>il</td><td><strong>lui</strong></td></tr><tr><td>elle</td><td><strong>elle</strong></td></tr><tr><td>nous</td><td><strong>nous</strong></td></tr><tr><td>vous</td><td><strong>vous</strong></td></tr><tr><td>ils</td><td><strong>eux</strong></td></tr><tr><td>elles</td><td><strong>elles</strong></td></tr></tbody></table>
+<p>→ ✅ Il est plus grand que <strong>moi</strong>. (NOT <del>que je</del>)<br>
+→ ✅ Elle court plus vite que <strong>lui</strong>. (NOT <del>que il</del>)<br>
+→ ✅ Nous sommes plus nombreux qu'<strong>eux</strong>. (NOT <del>que ils</del>)</p>
+<hr>
+<h2>🔹 BLOCK H — Comparing Nouns and Verbs: More OF / Less OF / As Much</h2>
+<p><em>Scenario: Comparing quantities — money, time, friends, effort</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English Meaning</th><th>Comparison Type</th></tr></thead><tbody><tr><td>71</td><td>Il a plus d'argent que moi.</td><td>He has more money than me.</td><td>plus de + noun + que</td></tr><tr><td>72</td><td>J'ai moins de temps que toi.</td><td>I have less time than you.</td><td>moins de + noun + que</td></tr><tr><td>73</td><td>Elle a autant d'amis que lui.</td><td>She has as many friends as him.</td><td>autant de + noun + que</td></tr><tr><td>74</td><td>Il y a plus de touristes en été.</td><td>There are more tourists in summer.</td><td>plus de + noun</td></tr><tr><td>75</td><td>Il y a moins de bruit ici.</td><td>There is less noise here.</td><td>moins de + noun</td></tr><tr><td>76</td><td>J'ai plus de patience que lui.</td><td>I have more patience than him.</td><td>plus de + noun + que</td></tr><tr><td>77</td><td>Tu as autant de chance que moi.</td><td>You have as much luck as me.</td><td>autant de + noun + que</td></tr><tr><td>78</td><td>Il travaille plus que moi.</td><td>He works more than me.</td><td>verb + plus que</td></tr><tr><td>79</td><td>Je dors moins que toi.</td><td>I sleep less than you.</td><td>verb + moins que</td></tr><tr><td>80</td><td>Elle mange autant que lui.</td><td>She eats as much as him.</td><td>verb + autant que</td></tr></tbody></table>
+<p><strong>🧠 THE AUSSI vs. AUTANT RULE:</strong></p>
+<table><thead><tr><th>With...</th><th>Equality Word</th><th>Example</th></tr></thead><tbody><tr><td><strong>Adjectives</strong></td><td><strong>AUSSI</strong></td><td>Il est <strong>aussi</strong> grand que moi.</td></tr><tr><td><strong>Adverbs</strong></td><td><strong>AUSSI</strong></td><td>Il court <strong>aussi</strong> vite que moi.</td></tr><tr><td><strong>Nouns</strong></td><td><strong>AUTANT DE</strong></td><td>Il a **autant d'**argent que moi.</td></tr><tr><td><strong>Verbs</strong></td><td><strong>AUTANT</strong></td><td>Il travaille <strong>autant</strong> que moi.</td></tr></tbody></table>
+<p>→ <strong>Aussi</strong> = for qualities (adjectives/adverbs)<br>
+→ <strong>Autant</strong> = for quantities (nouns/verbs)<br>
+→ This distinction is important — mixing them is a common error</p>
+<hr>
+<h2>🔹 BLOCK I — Progressive Comparisons and Fixed Expressions</h2>
+<p><em>Scenario: Things getting better/worse over time — common comparison idioms</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English Meaning</th><th>Expression</th></tr></thead><tbody><tr><td>81</td><td>C'est de mieux en mieux.</td><td>It's getting better and better.</td><td>de mieux en mieux</td></tr><tr><td>82</td><td>C'est de pire en pire.</td><td>It's getting worse and worse.</td><td>de pire en pire</td></tr><tr><td>83</td><td>Il fait de plus en plus chaud.</td><td>It's getting hotter and hotter.</td><td>de plus en plus + adj</td></tr><tr><td>84</td><td>Il y a de moins en moins de neige.</td><td>There is less and less snow.</td><td>de moins en moins de + noun</td></tr><tr><td>85</td><td>Je comprends de mieux en mieux.</td><td>I understand better and better.</td><td>de mieux en mieux (adverb)</td></tr><tr><td>86</td><td>Plus je travaille, plus je suis fatigué.</td><td>The more I work, the more tired I am.</td><td>plus...plus</td></tr><tr><td>87</td><td>Plus c'est simple, mieux c'est.</td><td>The simpler, the better.</td><td>plus...mieux</td></tr><tr><td>88</td><td>Moins je dors, plus je suis fatigué.</td><td>The less I sleep, the more tired I am.</td><td>moins...plus</td></tr><tr><td>89</td><td>Plus on est de fous, plus on rit.</td><td>The more the merrier. (proverb)</td><td>plus...plus (proverb)</td></tr><tr><td>90</td><td>C'est pas mal.</td><td>It's not bad. (= It's quite good.)</td><td>Understatement</td></tr></tbody></table>
+<p><strong>🧠 PROGRESSIVE COMPARISON STRUCTURE:</strong></p>
+<table><thead><tr><th>Pattern</th><th>Meaning</th><th>Example</th></tr></thead><tbody><tr><td><strong>De plus en plus</strong> + adj/adv</td><td>More and more</td><td>De plus en plus <strong>difficile</strong></td></tr><tr><td><strong>De moins en moins</strong> + adj/adv</td><td>Less and less</td><td>De moins en moins <strong>fréquent</strong></td></tr><tr><td><strong>De mieux en mieux</strong></td><td>Better and better</td><td>Je parle <strong>de mieux en mieux</strong></td></tr><tr><td><strong>De pire en pire</strong></td><td>Worse and worse</td><td>C'est <strong>de pire en pire</strong></td></tr></tbody></table>
+<p><strong>🧠 "PLUS...PLUS" / "MOINS...PLUS" STRUCTURE:</strong></p>
+<code>PLUS + clause 1, PLUS + clause 2</code>
+<p>→ <strong>Plus</strong> je mange, <strong>plus</strong> j'ai faim. (The more I eat, the hungrier I get.)<br>
+→ <strong>Moins</strong> je dors, <strong>plus</strong> je suis fatigué. (The less I sleep, the more tired I am.)<br>
+→ <strong>Plus</strong> c'est simple, <strong>mieux</strong> c'est. (The simpler, the better.)</p>
+<p>→ This is an advanced but very common pattern in spoken French<br>
+→ Each "plus/moins" starts a mini-clause<br>
+→ Very natural in conversation — sounds sophisticated</p>
+<p><strong>🧠 Sentence 90 — "C'EST PAS MAL":</strong><br>
+→ Literally: "It's not bad"<br>
+→ Actually means: "It's quite good" / "It's decent" / "Not bad at all"<br>
+→ This is a classic French <strong>understatement</strong> (litote)<br>
+→ French people often express positive opinions through negation of the negative<br>
+→ Full exploration in Project 44 — for now, recognize this as a common compliment</p>
+<hr>
+<h2>🔹 BLOCK J — Full Comparison Conversation: Everything Combined</h2>
+<p><em>Scenario: You and your friends compare your weekend experiences</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>Comparison Type</th><th>Context</th></tr></thead><tbody><tr><td>91</td><td>Le restaurant de samedi était meilleur que celui de vendredi.</td><td>Meilleur (irregular adj)</td><td>Food quality</td></tr><tr><td>92</td><td>Mais il était plus cher aussi.</td><td>Plus + adj</td><td>Price</td></tr><tr><td>93</td><td>La serveuse était plus sympa que le serveur.</td><td>Plus + adj</td><td>Service</td></tr><tr><td>94</td><td>On a attendu moins longtemps que la dernière fois.</td><td>Moins + adv</td><td>Wait time</td></tr><tr><td>95</td><td>Il y avait autant de monde que d'habitude.</td><td>Autant de + noun</td><td>Crowd level</td></tr><tr><td>96</td><td>La terrasse était aussi agréable que l'intérieur.</td><td>Aussi + adj</td><td>Atmosphere</td></tr><tr><td>97</td><td>J'ai mangé plus que toi !</td><td>Verb + plus que</td><td>Quantity eaten</td></tr><tr><td>98</td><td>Oui, mais moi j'ai mieux choisi.</td><td>Mieux (irregular adv)</td><td>Quality of choice</td></tr><tr><td>99</td><td>C'est le meilleur restaurant du quartier.</td><td>Le meilleur (superlative)</td><td>Ranking</td></tr><tr><td>100</td><td>C'est de mieux en mieux à chaque visite.</td><td>De mieux en mieux</td><td>Progressive improvement</td></tr><tr><td>101</td><td>Plus on y va, plus on aime.</td><td>Plus...plus</td><td>Growing appreciation</td></tr><tr><td>102</td><td>C'est moins loin que le restaurant italien.</td><td>Moins + adj + que</td><td>Distance</td></tr><tr><td>103</td><td>Et c'est la moins chère des options.</td><td>La moins + adj (superlative)</td><td>Price ranking</td></tr><tr><td>104</td><td>Bref, c'est le mieux qu'on puisse trouver.</td><td>Le mieux (superlative adv)</td><td>Final assessment</td></tr></tbody></table>
+<hr>
+<h1>✅ WHAT SHOULD DO</h1>
+<p>→ <strong>Master the golden formula:</strong> plus/moins/aussi + adjective + que → this covers 90% of comparisons<br>
+→ <strong>Memorize the two mandatory irregulars:</strong> bon → meilleur (NEVER "plus bon") / bien → mieux (NEVER "plus bien")<br>
+→ <strong>Know the meilleur vs. mieux distinction:</strong> meilleur = adjective (describes nouns) / mieux = adverb (describes verbs/actions)<br>
+→ <strong>Learn the superlative structure:</strong> le/la/les + plus/moins + adj + de + group<br>
+→ <strong>Use aussi for adjectives/adverbs</strong> and <strong>autant for nouns/verbs</strong> in equality comparisons<br>
+→ <strong>Practice progressive expressions:</strong> de plus en plus, de mieux en mieux, de pire en pire<br>
+→ <strong>Use stress pronouns after "que":</strong> que moi, que toi, que lui, que nous...<br>
+→ <strong>Connect to Project 1</strong> — adjective agreement still applies in comparisons (grande, meilleure, etc.)<br>
+→ <strong>Connect to Project 3</strong> — articles in superlatives follow same gender/number rules (le/la/les)<br>
+→ <strong>Connect to Project 7</strong> — "de" in superlatives follows same contraction rules (du, de la, des)</p>
+<hr>
+<h1>❌ WHAT SHOULD NOT DO</h1>
+<p>→ ❌ Do NOT say <del>"plus bon"</del> → always <strong>"meilleur"</strong> — this is the #1 comparison error<br>
+→ ❌ Do NOT say <del>"plus bien"</del> → always <strong>"mieux"</strong> — #2 comparison error<br>
+→ ❌ Do NOT confuse meilleur and mieux → meilleur = adjective / mieux = adverb<br>
+→ ❌ Do NOT use "aussi" with nouns → <del>"aussi d'argent que"</del> → <strong>"autant d'argent que"</strong><br>
+→ ❌ Do NOT use "autant" with adjectives → <del>"autant grand que"</del> → <strong>"aussi grand que"</strong><br>
+→ ❌ Do NOT forget adjective agreement in comparisons → <del>"Elle est plus grand que lui"</del> → "Elle est plus <strong>grande</strong> que lui"<br>
+→ ❌ Do NOT forget "de" in superlatives for the group → <del>"le plus grand en France"</del> → "le plus grand <strong>de</strong> France"<br>
+→ ❌ Do NOT use subject pronouns after "que" → <del>"plus grand que je"</del> → "plus grand que <strong>moi</strong>"<br>
+→ ❌ Do NOT say <del>"le plus bon"</del> → always <strong>"le meilleur"</strong> for superlative of bon<br>
+→ ❌ Do NOT forget the double article in post-noun superlatives → <del>"le jour plus long"</del> → "le jour <strong>le</strong> plus long"</p>
+<hr>
+<h1>🔀 WHEN TO USE WHAT</h1>
+<h2>Complete Comparison System</h2>
+<table><thead><tr><th>What You Compare</th><th>More</th><th>Less</th><th>Equal</th></tr></thead><tbody><tr><td><strong>Adjective</strong></td><td><strong>plus</strong> + adj + <strong>que</strong></td><td><strong>moins</strong> + adj + <strong>que</strong></td><td><strong>aussi</strong> + adj + <strong>que</strong></td></tr><tr><td><strong>Adverb</strong></td><td><strong>plus</strong> + adv + <strong>que</strong></td><td><strong>moins</strong> + adv + <strong>que</strong></td><td><strong>aussi</strong> + adv + <strong>que</strong></td></tr><tr><td><strong>Noun</strong></td><td><strong>plus de</strong> + noun + <strong>que</strong></td><td><strong>moins de</strong> + noun + <strong>que</strong></td><td><strong>autant de</strong> + noun + <strong>que</strong></td></tr><tr><td><strong>Verb</strong></td><td>verb + <strong>plus que</strong></td><td>verb + <strong>moins que</strong></td><td>verb + <strong>autant que</strong></td></tr></tbody></table>
+<h2>Irregular Comparisons</h2>
+<table><thead><tr><th>Base</th><th>Comparative</th><th>Superlative</th><th>Type</th></tr></thead><tbody><tr><td><strong>bon</strong> (good)</td><td><strong>meilleur(e)(s)</strong></td><td><strong>le/la meilleur(e)</strong></td><td>Adjective</td></tr><tr><td><strong>mauvais</strong> (bad)</td><td><strong>pire</strong> / plus mauvais</td><td><strong>le/la pire</strong></td><td>Adjective</td></tr><tr><td><strong>bien</strong> (well)</td><td><strong>mieux</strong></td><td><strong>le mieux</strong></td><td>Adverb</td></tr><tr><td><strong>mal</strong> (badly)</td><td><strong>pire</strong> / plus mal</td><td><strong>le pire</strong> / le plus mal</td><td>Adverb</td></tr><tr><td><strong>beaucoup</strong> (a lot)</td><td><strong>plus</strong></td><td><strong>le plus</strong></td><td>Adverb of quantity</td></tr><tr><td><strong>peu</strong> (little)</td><td><strong>moins</strong></td><td><strong>le moins</strong></td><td>Adverb of quantity</td></tr></tbody></table>
+<h2>Superlative Structure</h2>
+<table><thead><tr><th>Adjective Position</th><th>Structure</th><th>Example</th></tr></thead><tbody><tr><td><strong>Before noun</strong> (grand, bon, beau, petit, jeune, vieux)</td><td>le/la/les + plus/moins + adj + noun + de</td><td><strong>La plus belle</strong> ville <strong>de</strong> France</td></tr><tr><td><strong>After noun</strong> (intéressant, difficile, important, cher)</td><td>le/la/les + noun + le/la/les + plus/moins + adj + de</td><td>Le jour <strong>le plus long</strong> <strong>de</strong> l'année</td></tr></tbody></table>
+<hr>
+<h1>🚫 WHEN NOT TO USE</h1>
+<p>→ Do NOT use comparatives when there's only ONE thing — use superlatives or simple descriptions<br>
+→ Do NOT use "plus bon" or "plus bien" — EVER — these forms don't exist in correct French<br>
+→ Do NOT use superlatives with "que" → superlatives use "de" for the group<br>
+→ → <del>"Le plus grand que la France"</del> → "Le plus grand <strong>de</strong> France"<br>
+→ Do NOT use "moins bon" when "pire" or "moins bien" is more natural<br>
+→ → "Moins bon" is acceptable for food quality → "Ce gâteau est moins bon"<br>
+→ → But for general "worse" → use "pire"<br>
+→ Do NOT use comparisons in every sentence — French often uses simple adjectives + context</p>
+<hr>
+<h1>⚠️ COMMON PITFALLS AND FAILURE MODES</h1>
+<table><thead><tr><th>Pitfall</th><th>What Learners Do Wrong</th><th>Correct Version</th><th>Why</th></tr></thead><tbody><tr><td><strong>Plus bon</strong></td><td>C'est plus bon que l'autre.</td><td>C'est <strong>meilleur</strong> que l'autre.</td><td>Plus bon doesn't exist — meilleur only</td></tr><tr><td><strong>Plus bien</strong></td><td>Il parle plus bien.</td><td>Il parle <strong>mieux</strong>.</td><td>Plus bien doesn't exist — mieux only</td></tr><tr><td><strong>Meilleur/Mieux confusion</strong></td><td>Le film est mieux.</td><td>Le film est <strong>meilleur</strong>.</td><td>Film = noun → adjective → meilleur</td></tr><tr><td><strong>Meilleur/Mieux confusion</strong></td><td>Il joue meilleur.</td><td>Il joue <strong>mieux</strong>.</td><td>Joue = verb → adverb → mieux</td></tr><tr><td><strong>Aussi with nouns</strong></td><td>J'ai aussi d'argent que toi.</td><td>J'ai <strong>autant</strong> d'argent que toi.</td><td>Nouns use autant, not aussi</td></tr><tr><td><strong>Autant with adjectives</strong></td><td>Il est autant grand que moi.</td><td>Il est <strong>aussi</strong> grand que moi.</td><td>Adjectives use aussi, not autant</td></tr><tr><td><strong>Subject pronoun after que</strong></td><td>Plus grand que je.</td><td>Plus grand que <strong>moi</strong>.</td><td>Stress pronouns after que</td></tr><tr><td><strong>Missing "de" in superlative</strong></td><td>Le plus grand en France.</td><td>Le plus grand <strong>de</strong> France.</td><td>Superlatives use de for the group</td></tr><tr><td><strong>Missing double article</strong></td><td>Le jour plus long.</td><td>Le jour <strong>le</strong> plus long.</td><td>Post-noun superlative needs second article</td></tr><tr><td><strong>Adjective agreement forgotten</strong></td><td>Elle est plus grand.</td><td>Elle est plus <strong>grande</strong>.</td><td>Adjective agrees with subject</td></tr><tr><td><strong>"Le plus bon"</strong></td><td>C'est le plus bon.</td><td>C'est <strong>le meilleur</strong>.</td><td>Superlative of bon = le meilleur</td></tr><tr><td><strong>Que vs. De confusion</strong></td><td>Le meilleur que la ville.</td><td>Le meilleur <strong>de</strong> la ville.</td><td>Comparative = que / Superlative = de</td></tr></tbody></table>
+<hr>
+<h1>🔑 KEY TAKEAWAY</h1>
+<blockquote>
+<p><strong>Project 9 → What happened (PC)</strong><br>
+<strong>Project 10 → How things were (IMP)</strong><br>
+<strong>Project 11 → Layered storytelling (PC + IMP)</strong><br>
+<strong>Project 12 → What's going to happen (futur proche)</strong><br>
+<strong>Project 13 → Telling people what to do (impératif)</strong><br>
+<strong>Project 14 → Actions on yourself (reflexive verbs)</strong><br>
+<strong>Project 15 → Comparing things (comparatif &amp; superlatif)</strong></p>
+<p>The comparison system:</p>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>MORE:  plus + adj/adv + que    |  plus de + noun + que    |  verb + plus que
+</span>LESS:  moins + adj/adv + que   |  moins de + noun + que   |  verb + moins que
+EQUAL: aussi + adj/adv + que   |  autant de + noun + que  |  verb + autant que</code></pre></div>
+<p>Two mandatory irregulars:<br>
+→ <strong>bon → meilleur → le meilleur</strong> (NEVER "plus bon")<br>
+→ <strong>bien → mieux → le mieux</strong> (NEVER "plus bien")</p>
+<p><strong>🎉 PHASE 2 IS COMPLETE — EASY LEVEL MASTERED</strong></p>
+<p>You now have ALL the tools for <strong>solid French communication:</strong><br>
+→ Present, past (PC + IMP), near future<br>
+→ Questions, negation, modals, space, time<br>
+→ Commands, reflexive verbs, comparisons</p>
+<p><strong>Phase 3 takes you to PROFESSIONAL French:</strong><br>
+→ Future tense (formal), conditional, subjunctive introduction<br>
+→ Pronouns (COD/COI, y, en), relative clauses<br>
+→ Opinion structures, reported speech, logical connectors<br>
+→ This is where you stop sounding like a student and start sounding like a RESIDENT.</p>
+</blockquote>
+<hr>
+<h1>🌉 BRIDGE TO PHASE 3</h1>
+<blockquote>
+<p><strong>Phase 1 (Projects 1-8) → Foundation: survive in French</strong><br>
+<strong>Phase 2 (Projects 9-15) → Core patterns: tell stories, make plans, give commands, compare</strong><br>
+<strong>Phase 3 (Projects 16-30) → Professional techniques: think, argue, connect, and express complex ideas</strong></p>
+<p>Phase 3 begins with <strong>Project 16: "What Will Happen Someday"</strong><br>
+→ The <strong>futur simple</strong> — formal future tense<br>
+→ Used for predictions, promises, formal plans, and distant future<br>
+→ Different from futur proche (Project 12) — more formal, more distant, more literary<br>
+→ It introduces a NEW conjugation system with its own endings<br>
+→ You'll learn to say: "I <strong>will</strong> work" / "She <strong>will</strong> arrive" / "It <strong>will</strong> rain tomorrow"</p>
+</blockquote>
+<hr>
+<h1>✅ PROJECT 15 COMPLETE — PHASE 2 COMPLETE</h1>
+<blockquote>
+<p><strong>🔵 PHASE 2 SUMMARY:</strong></p>
+<table><thead><tr><th>Project</th><th>Title</th><th>Core Unlock</th></tr></thead><tbody><tr><td>9</td><td>What Happened Yesterday</td><td>Passé composé — completed past events</td></tr><tr><td>10</td><td>How Things Used to Be</td><td>Imparfait — descriptions, states, habits in the past</td></tr><tr><td>11</td><td>The Story Has Two Layers</td><td>PC + IMP together — layered storytelling</td></tr><tr><td>12</td><td>What's About to Happen</td><td>Futur proche — plans, predictions, near future</td></tr><tr><td>13</td><td>Tell Them What to Do</td><td>Impératif — commands, directions, advice</td></tr><tr><td>14</td><td>I Wake Up, I Get Ready</td><td>Reflexive verbs — daily routines, emotions, reciprocal actions</td></tr><tr><td>15</td><td>Better, Worse, the Same</td><td>Comparatif &amp; Superlatif — comparing and ranking</td></tr></tbody></table>
+<p><strong>Total Phase 1+2 sentences: ~1500+</strong><br>
+<strong>You are now ready for Phase 3: MEDIUM — Professional Techniques</strong></p>
+</blockquote>
+<hr>
+<blockquote>
+<p><strong>Are you ready for PROJECT 16: "What Will Happen Someday"?</strong><br>
+→ First project of Phase 3 (Medium)<br>
+→ ~100 sentences covering the <strong>futur simple</strong><br>
+→ Scenario: Talking about future career plans, predictions, promises<br>
+→ Introduces a completely new conjugation pattern with unique endings</p>
+</blockquote>
+</div>
+</div>
+
+<!-- ========== data-index="33" ========== -->
+
+        </div>
+
+        <div class="nav-bar">
+            <a href="project-14.html" class="nav-button prev">← Previous Chapter</a>
+            <div class="page-info">
+                <a href="index.html" class="nav-button home">📚 Table of Contents</a><br>
+                <span style="margin-top:8px;display:block">Chapter 15 of 50</span>
+            </div>
+            <a href="project-16.html" class="nav-button next">Next Chapter →</a>
+        </div>
+    </div>
+
+    
+    <div id="progress-track"><div id="progress-fill"></div></div>
+    <div id="progress-pct">0%</div>
+
+
+    <script>
+    const fill = document.getElementById('progress-fill');
+    const pct  = document.getElementById('progress-pct');
+    function updateProgress() {
+        const scrollTop = window.scrollY;
+        const docHeight = document.body.scrollHeight - window.innerHeight;
+        const scrolled  = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+        fill.style.height = scrolled + '%';
+        pct.textContent   = Math.round(scrolled) + '%';
+    }
+    window.addEventListener('scroll', updateProgress);
+    updateProgress();
+
+    document.addEventListener('keydown', function(e) {
+        if (['INPUT','TEXTAREA'].includes(document.activeElement.tagName)) return;
+        if (e.key === 'ArrowLeft') {
+            const b = document.querySelector('.nav-button.prev');
+            if (b && !b.classList.contains('disabled')) window.location.href = b.href;
+        }
+        if (e.key === 'ArrowRight') {
+            const b = document.querySelector('.nav-button.next');
+            if (b && !b.classList.contains('disabled')) window.location.href = b.href;
+        }
+    });
+    </script>
+
+</body>
+</html>

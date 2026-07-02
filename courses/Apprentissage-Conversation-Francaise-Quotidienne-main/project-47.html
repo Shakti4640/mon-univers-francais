@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="images/favicon.png">
+    <title>Project 47: "How They Actually Talk" — French Daily Sentences</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.75;
+            color: #1a202c;
+            background-color: #f7fafc;
+        }
+        .container {
+            max-width: 1800px;
+            margin: 0 auto;
+            background: white;
+            min-height: 100vh;
+            box-shadow: 0 0 30px rgba(0,0,0,0.08);
+            padding: 48px 52px;
+        }
+        
+        .content { max-width: 1700px; margin: 0 auto; color: #1a202c; }
+        .content h1 {
+            color: #1a202c; margin: 32px 0 20px;
+            padding-bottom: 12px;
+            border-bottom: 4px solid #3b82f6;
+            font-size: 2.1em;
+            font-weight: 700;
+        }
+        .content h2 {
+            color: #1a202c; margin: 28px 0 16px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #60a5fa;
+            font-size: 1.6em;
+            font-weight: 600;
+        }
+        .content h3 { color: #1a202c; margin: 22px 0 12px; font-size: 1.3em; font-weight: 600; }
+        .content h4 { color: #2d3748; margin: 18px 0 10px; font-size: 1.1em; font-weight: 600; }
+        .content p  { margin-bottom: 16px; line-height: 1.8; color: #1a202c; }
+        .content ul, .content ol { margin: 12px 0 18px 30px; color: #1a202c; }
+        .content li { margin-bottom: 8px; line-height: 1.75; color: #1a202c; }
+        .content hr { border: none; border-top: 2px solid #e2e8f0; margin: 26px 0; }
+        .content pre {
+            background: #f7fafc !important;
+            border: 1px solid #cbd5e0 !important;
+            border-left: 4px solid #3b82f6 !important;
+            padding: 18px !important; overflow-x: auto; margin: 18px 0; border-radius: 6px;
+            font-family: 'Consolas','Monaco','Courier New',monospace !important;
+            font-size: 0.9em !important;
+        }
+        .content pre:not([style*="color"]) { color: #1a202c !important; }
+        .content code {
+            font-family: 'Consolas','Monaco','Courier New',monospace !important;
+            font-size: 0.88em !important;
+        }
+        .content code:not(pre code) {
+            background: #dbeafe !important;
+            color: #1a202c !important;
+            padding: 2px 6px;
+            border-radius: 3px;
+        }
+        .content pre code { background: transparent !important; padding: 0; }
+        .content table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+        .content th {
+            background: linear-gradient(135deg, #3b82f6 0%, #60a5fa 100%);
+            color: white; padding: 12px 16px; text-align: left;
+            font-weight: 600;
+        }
+        .content td { padding: 11px 16px; border: 1px solid #e2e8f0; color: #1a202c; }
+        .content tr:nth-child(even) td { background: #eff6ff; }
+        .content blockquote {
+            border-left: 4px solid #3b82f6; background: #eff6ff;
+            padding: 14px 20px; margin: 18px 0; border-radius: 0 6px 6px 0;
+            color: #1a202c;
+        }
+        .content strong { color: #1a202c; font-weight: 600; }
+        .px-2 { padding: 0; }
+        .chat-message { background: transparent; padding: 0; margin: 0; }
+
+        /* Bottom nav bar only */
+        .nav-bar {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 24px 0;
+            margin-top: 50px;
+            border-top: 3px solid #60a5fa;
+        }
+        .nav-button {
+            display: inline-flex; align-items: center; gap: 8px;
+            padding: 12px 26px;
+            background: linear-gradient(135deg, #3b82f6 0%, #60a5fa 100%);
+            color: white !important; text-decoration: none;
+            border-radius: 8px; font-weight: 600; font-size: 0.95em;
+            transition: all 0.2s;
+            box-shadow: 0 2px 8px rgba(59,130,246,0.35);
+        }
+        .nav-button:hover { transform: translateY(-2px); box-shadow: 0 4px 14px rgba(59,130,246,0.5); }
+        .nav-button.disabled { background: #cbd5e1; box-shadow: none; pointer-events: none; }
+        .nav-button.home {
+            background: linear-gradient(135deg, #ef4444 0%, #f87171 100%);
+            box-shadow: 0 2px 8px rgba(239,68,68,0.35);
+        }
+        .nav-button.home:hover { box-shadow: 0 4px 14px rgba(239,68,68,0.5); }
+        .page-info { color: #718096; font-size: 0.9em; text-align: center; }
+
+        /* Progress bar */
+        #progress-track {
+            position: fixed; top: 20px; right: 20px;
+            width: 10px; height: 150px;
+            background: rgba(59,130,246,0.2);
+            border: 2px solid #3b82f6;
+            border-radius: 6px; overflow: hidden; z-index: 1000;
+        }
+        #progress-fill {
+            width: 100%;
+            background: linear-gradient(180deg, #3b82f6, #2563eb);
+            height: 0%;
+            transition: height 0.15s ease;
+        }
+        #progress-pct {
+            position: fixed; top: 0px; right: 16px;
+            color: #2563eb; font-size: 14px; font-weight: bold;
+            z-index: 1001;
+            text-shadow: 0 1px 2px rgba(255,255,255,0.9);
+            line-height: 20px;
+        }
+
+    </style>
+<link rel="stylesheet" href="assets/chapters.css?v=20260421203847"><script src="assets/chapters.js?v=20260421203847" defer></script>
+</head>
+<body>
+    <div class="container">
+        <div class="content">
+            <div class="chat-message" data-index="5">
+<div class="px-2"><h1>🔴 PROJECT 47: "How They Actually Talk"</h1>
+<h2><em>You're listening to a French podcast and can't understand a word — because textbook French and real French are two different languages</em></h2>
+<hr>
+<h1>🎯 THE HYPOTHETICAL PROBLEM</h1>
+<p>→ You have completed 46 projects<br>
+→ You understand French grammar, tenses, conditionals, subjunctive, idioms, argumentation<br>
+→ You sit in a Parisian café<br>
+→ Two French people are talking next to you<br>
+→ You understand <strong>maybe 30%</strong><br>
+→ Not because you lack vocabulary — but because <strong>what they say sounds NOTHING like what you learned</strong><br>
+→ They drop sounds, merge words, skip entire grammatical particles, reshape sentences<br>
+→ You turn on a French podcast — same problem<br>
+→ You watch a French film — same problem<br>
+→ You read the subtitles and think: <strong>"THAT is what they said?!"</strong></p>
+<p><strong>The devastating realization:</strong><br>
+→ Everything from Projects 1–46 was <strong>written French mapped onto speech</strong><br>
+→ Real spoken French is a <strong>compressed, reshaped, accelerated version</strong> of that written system<br>
+→ If you don't learn the compression rules — you will <strong>read French perfectly but understand spoken French poorly</strong><br>
+→ This project bridges that gap — showing you <strong>every major transformation</strong> between written and spoken French</p>
+<hr>
+<h1>🔍 HOW TO APPROACH IT</h1>
+<p>→ Think of written French as <strong>HD uncompressed audio</strong><br>
+→ Think of spoken French as <strong>MP3 — compressed, some frequencies removed, but the message survives</strong><br>
+→ The compression follows <strong>predictable patterns</strong><br>
+→ Once you learn the patterns — you can <strong>decompress</strong> what you hear back into structures you already know</p>
+<p><strong>The 10 Compression Rules of Spoken French:</strong></p>
+<table><thead><tr><th>Rule #</th><th>Compression Type</th><th>Written → Spoken</th></tr></thead><tbody><tr><td>1</td><td><strong>"Ne" drops in negation</strong></td><td>Je ne sais pas → Je sais pas</td></tr><tr><td>2</td><td><strong>"Tu" contracts</strong></td><td>Tu as → T'as / Tu es → T'es</td></tr><tr><td>3</td><td><strong>"Je" contracts</strong></td><td>Je suis → Chuis / Je sais → Chais</td></tr><tr><td>4</td><td><strong>"Il" contracts or drops</strong></td><td>Il y a → Y'a / Il faut → Faut</td></tr><tr><td>5</td><td><strong>"Nous" disappears</strong></td><td>Nous allons → On va</td></tr><tr><td>6</td><td><strong>Questions flatten</strong></td><td>Est-ce que tu viens ? → Tu viens ?</td></tr><tr><td>7</td><td><strong>"Cela" becomes "ça" always</strong></td><td>Cela me plaît → Ça me plaît</td></tr><tr><td>8</td><td><strong>Syllables get eaten</strong></td><td>Je ne sais pas → Chais pas</td></tr><tr><td>9</td><td><strong>Filler words appear everywhere</strong></td><td>(silence) → Euh, bon, ben, enfin, quoi</td></tr><tr><td>10</td><td><strong>Formal words swap for casual ones</strong></td><td>Nous avons → On a / Il y a → Y'a</td></tr></tbody></table>
+<hr>
+<h1>🔧 HOW CAN WE SOLVE IT</h1>
+<p>→ For each compression rule — see the <strong>written version</strong> (what you learned) vs. the <strong>spoken version</strong> (what you'll actually hear)<br>
+→ Every sentence references the PROJECT where the written structure was originally taught<br>
+→ You already KNOW the grammar — now you learn <strong>how it sounds when French people actually use it</strong></p>
+<hr>
+<h1>✅ THE 100 SENTENCES — WRITTEN vs. SPOKEN</h1>
+<hr>
+<h2>🔹 BLOCK A — COMPRESSION RULE 1: "Ne" Drops in Negation</h2>
+<h3><em>(Reference: Project 5 — "Saying No in 10 Ways" + Project 39 — Advanced Negation)</em></h3>
+<p><strong>The rule:</strong><br>
+→ In written French: <strong>ne...pas / ne...jamais / ne...rien / ne...plus</strong><br>
+→ In spoken French: <strong>"ne" is dropped 95% of the time</strong><br>
+→ This is THE most universal spoken French rule — even educated speakers drop "ne"</p>
+<table><thead><tr><th>#</th><th>Written (What You Learned)</th><th>Spoken (What You'll Hear)</th><th>Phonetic Hint</th></tr></thead><tbody><tr><td>1</td><td>Je <strong>ne</strong> sais <strong>pas</strong>.</td><td>Je sais pas.</td><td>"zhuh say pah"</td></tr><tr><td>2</td><td>Je <strong>ne</strong> comprends <strong>pas</strong>.</td><td>Je comprends pas.</td><td>"zhuh com-pron pah"</td></tr><tr><td>3</td><td>Ce **n'**est <strong>pas</strong> vrai.</td><td>C'est pas vrai.</td><td>"say pah vray"</td></tr><tr><td>4</td><td>Il <strong>ne</strong> veut <strong>pas</strong> venir.</td><td>Il veut pas venir.</td><td>"eel vuh pah vuh-neer"</td></tr><tr><td>5</td><td>Elle **n'**a <strong>pas</strong> le temps.</td><td>Elle a pas le temps.</td><td>"el ah pah luh ton"</td></tr><tr><td>6</td><td>Je <strong>ne</strong> mange <strong>jamais</strong> ici.</td><td>Je mange jamais ici.</td><td>"zhuh monzh zhah-may ee-see"</td></tr><tr><td>7</td><td>Il **n'**y a <strong>plus</strong> de pain.</td><td>Y'a plus de pain.</td><td>"yah plew duh pan"</td></tr><tr><td>8</td><td>Je <strong>ne</strong> vois <strong>rien</strong>.</td><td>Je vois rien.</td><td>"zhuh vwah ree-en"</td></tr><tr><td>9</td><td>Il **n'**y a <strong>personne</strong>.</td><td>Y'a personne.</td><td>"yah pair-son"</td></tr><tr><td>10</td><td>Tu <strong>ne</strong> fais <strong>que</strong> dormir.</td><td>Tu fais que dormir.</td><td>"tew fay kuh dor-meer"</td></tr></tbody></table>
+<p><strong>🧠 Decompression skill:</strong> When you hear a sentence with <strong>pas / jamais / rien / plus / personne</strong> but NO "ne" — your brain should automatically insert the "ne" to match the structure you already know from Projects 5 and 39</p>
+<hr>
+<h2>🔹 BLOCK B — COMPRESSION RULE 2: "Tu" Contracts</h2>
+<h3><em>(Reference: All projects using "tu" — especially Projects 1, 2, 4)</em></h3>
+<p><strong>The rule:</strong><br>
+→ "Tu" before a vowel sound → <strong>T'</strong><br>
+→ "Tu" before a consonant → sometimes shortened to just the "t" sound</p>
+<table><thead><tr><th>#</th><th>Written</th><th>Spoken</th><th>Phonetic Hint</th></tr></thead><tbody><tr><td>11</td><td>Tu as faim ?</td><td>T'as faim ?</td><td>"tah fan"</td></tr><tr><td>12</td><td>Tu es prêt ?</td><td>T'es prêt ?</td><td>"tay pray"</td></tr><tr><td>13</td><td>Tu as vu ça ?</td><td>T'as vu ça ?</td><td>"tah vew sah"</td></tr><tr><td>14</td><td>Tu en veux ?</td><td>T'en veux ?</td><td>"ton vuh"</td></tr><tr><td>15</td><td>Tu as raison.</td><td>T'as raison.</td><td>"tah ray-zon"</td></tr><tr><td>16</td><td>Tu es où ?</td><td>T'es où ?</td><td>"tay oo"</td></tr><tr><td>17</td><td>Tu as compris ?</td><td>T'as compris ?</td><td>"tah com-pree"</td></tr><tr><td>18</td><td>Tu imagines ?</td><td>T'imagines ?</td><td>"tee-ma-zheen"</td></tr><tr><td>19</td><td>Tu aurais dû venir.</td><td>T'aurais dû venir.</td><td>"toh-ray dew vuh-neer"</td></tr><tr><td>20</td><td>Tu es sérieux ?</td><td>T'es sérieux ?</td><td>"tay say-ree-uh"</td></tr></tbody></table>
+<p><strong>🧠 Pattern:</strong> Every "Tu + vowel" becomes "T' + vowel" in spoken French — <strong>100% of the time in casual speech</strong></p>
+<hr>
+<h2>🔹 BLOCK C — COMPRESSION RULE 3: "Je" Contracts and Reshapes</h2>
+<h3><em>(Reference: Projects 1, 2, 6 — every project using "je")</em></h3>
+<p><strong>The rule:</strong><br>
+→ "Je" before a consonant → often sounds like "zh" (the "e" gets swallowed)<br>
+→ "Je suis" → <strong>"chuis"</strong> (the most iconic spoken French contraction)<br>
+→ "Je sais" → <strong>"chais"</strong><br>
+→ "Je ne sais pas" → <strong>"chais pas"</strong> (three compressions at once!)</p>
+<table><thead><tr><th>#</th><th>Written</th><th>Spoken</th><th>Phonetic Hint</th></tr></thead><tbody><tr><td>21</td><td>Je suis fatigué.</td><td>Chuis fatigué.</td><td>"shwee fah-tee-gay"</td></tr><tr><td>22</td><td>Je suis là.</td><td>Chuis là.</td><td>"shwee lah"</td></tr><tr><td>23</td><td>Je sais.</td><td>Chais.</td><td>"shay"</td></tr><tr><td>24</td><td>Je ne sais pas.</td><td>Chais pas.</td><td>"shay pah"</td></tr><tr><td>25</td><td>Je suis en retard.</td><td>Chuis en retard.</td><td>"shwee zon ruh-tar"</td></tr><tr><td>26</td><td>Je pense que oui.</td><td>J'pense que oui.</td><td>"zhpons kuh wee"</td></tr><tr><td>27</td><td>Je crois que non.</td><td>J'crois que non.</td><td>"zhkrwah kuh non"</td></tr><tr><td>28</td><td>Je vais y aller.</td><td>J'vais y aller.</td><td>"zhvay ee ah-lay"</td></tr><tr><td>29</td><td>Je te dis la vérité.</td><td>J'te dis la vérité.</td><td>"zhtuh dee lah vay-ree-tay"</td></tr><tr><td>30</td><td>Je me demande pourquoi.</td><td>J'me demande pourquoi.</td><td>"zhmuh duh-mond poor-kwah"</td></tr></tbody></table>
+<p><strong>🧠 Decompression skill:</strong> When you hear "shwee" → that's "je suis" / When you hear "shay pah" → that's "je ne sais pas" — <strong>three words compressed into two syllables</strong></p>
+<hr>
+<h2>🔹 BLOCK D — COMPRESSION RULE 4: "Il" Contracts or Disappears</h2>
+<h3><em>(Reference: Project 3 — "Il y a" / Project 26 — "Il faut" / Project 27 — Impersonal structures)</em></h3>
+<p><strong>The rule:</strong><br>
+→ "Il y a" → <strong>"y'a"</strong> (the "il" vanishes completely)<br>
+→ "Il faut" → <strong>"faut"</strong> (the "il" vanishes)<br>
+→ "Il fait" → <strong>"fait"</strong> (in weather expressions)<br>
+→ "Il" before consonant → sometimes just <strong>"i"</strong></p>
+<table><thead><tr><th>#</th><th>Written</th><th>Spoken</th><th>Phonetic Hint</th></tr></thead><tbody><tr><td>31</td><td>Il y a un problème.</td><td>Y'a un problème.</td><td>"yah un pro-blem"</td></tr><tr><td>32</td><td>Il n'y a pas de place.</td><td>Y'a pas de place.</td><td>"yah pah duh plass"</td></tr><tr><td>33</td><td>Il y a longtemps.</td><td>Y'a longtemps.</td><td>"yah lon-ton"</td></tr><tr><td>34</td><td>Il faut partir.</td><td>Faut partir.</td><td>"foh par-teer"</td></tr><tr><td>35</td><td>Il ne faut pas faire ça.</td><td>Faut pas faire ça.</td><td>"foh pah fair sah"</td></tr><tr><td>36</td><td>Il fait beau aujourd'hui.</td><td>Fait beau aujourd'hui.</td><td>"fay boh oh-zhoor-dwee"</td></tr><tr><td>37</td><td>Il fait froid dehors.</td><td>Fait froid dehors.</td><td>"fay frwah duh-or"</td></tr><tr><td>38</td><td>Il est quelle heure ?</td><td>Il est quelle heure ? / I'est quelle heure ?</td><td>"ee-ay kel ur"</td></tr><tr><td>39</td><td>Il paraît que c'est vrai.</td><td>I'paraît que c'est vrai.</td><td>"ee-pa-ray kuh say vray"</td></tr><tr><td>40</td><td>Il y en a beaucoup.</td><td>Y'en a beaucoup.</td><td>"yon ah boh-koo"</td></tr></tbody></table>
+<p><strong>🧠 Critical insight:</strong> <strong>"Y'a"</strong> is probably the single most frequent sound in spoken French — you will hear it hundreds of times per day — it replaces "il y a" from Project 3 in virtually all spoken contexts</p>
+<hr>
+<h2>🔹 BLOCK E — COMPRESSION RULE 5: "Nous" Disappears Entirely</h2>
+<h3><em>(Reference: Project 1 — Subject pronouns / Every project using "nous")</em></h3>
+<p><strong>The rule:</strong><br>
+→ "Nous" is essentially <strong>dead</strong> in spoken French<br>
+→ 99% of spoken French uses <strong>"on"</strong> instead of "nous"<br>
+→ Verb conjugation shifts: "nous avons" → <strong>"on a"</strong> / "nous sommes" → <strong>"on est"</strong><br>
+→ "Nous" only survives in very formal speeches, legal documents, academic writing</p>
+<table><thead><tr><th>#</th><th>Written / Formal</th><th>Spoken / Real</th><th>Phonetic Hint</th></tr></thead><tbody><tr><td>41</td><td>Nous allons au cinéma.</td><td>On va au ciné.</td><td>"on vah oh see-nay"</td></tr><tr><td>42</td><td>Nous avons mangé.</td><td>On a mangé.</td><td>"on ah mon-zhay"</td></tr><tr><td>43</td><td>Nous sommes arrivés.</td><td>On est arrivés.</td><td>"on ay tah-ree-vay"</td></tr><tr><td>44</td><td>Nous devons partir.</td><td>On doit partir.</td><td>"on dwah par-teer"</td></tr><tr><td>45</td><td>Nous nous sommes trompés.</td><td>On s'est trompés.</td><td>"on say tron-pay"</td></tr><tr><td>46</td><td>Nous ne savions pas.</td><td>On savait pas.</td><td>"on sah-vay pah"</td></tr><tr><td>47</td><td>Nous aurions aimé venir.</td><td>On aurait aimé venir.</td><td>"on oh-ray ay-may vuh-neer"</td></tr><tr><td>48</td><td>Nous pourrions essayer.</td><td>On pourrait essayer.</td><td>"on poo-ray eh-say-yay"</td></tr><tr><td>49</td><td>Est-ce que nous y allons ?</td><td>On y va ?</td><td>"on ee vah"</td></tr><tr><td>50</td><td>Nous nous en occuperons.</td><td>On s'en occupera.</td><td>"on son oh-kew-prah"</td></tr></tbody></table>
+<p><strong>🧠 Reality check:</strong> If you use "nous" in casual conversation — French people will understand you but you'll sound like you're reading from a textbook. <strong>Always default to "on" in speech.</strong></p>
+<p>→ Also notice: "cinéma" becomes <strong>"ciné"</strong> — word truncation is another spoken pattern (see Block I)</p>
+<hr>
+<h2>🔹 BLOCK F — COMPRESSION RULE 6: Questions Flatten</h2>
+<h3><em>(Reference: Project 4 — "Asking Without Sounding Lost")</em></h3>
+<p><strong>The rule:</strong><br>
+→ Project 4 taught three question forms: intonation / est-ce que / inversion<br>
+→ In spoken French: <strong>intonation dominates 80%+</strong><br>
+→ "Est-ce que" → often shortened to just <strong>rising tone</strong><br>
+→ Inversion → almost <strong>never used</strong> in casual speech<br>
+→ Question words often move to the <strong>END</strong> of the sentence (completely opposite of textbook)</p>
+<table><thead><tr><th>#</th><th>Written / Textbook</th><th>Spoken / Real</th><th>Phonetic Hint</th></tr></thead><tbody><tr><td>51</td><td>Qu'est-ce que tu fais ?</td><td>Tu fais quoi ?</td><td>"tew fay kwah"</td></tr><tr><td>52</td><td>Où est-ce que tu vas ?</td><td>Tu vas où ?</td><td>"tew vah oo"</td></tr><tr><td>53</td><td>Quand est-ce que tu arrives ?</td><td>T'arrives quand ?</td><td>"tah-reev kon"</td></tr><tr><td>54</td><td>Comment est-ce que tu t'appelles ?</td><td>Tu t'appelles comment ?</td><td>"tew tah-pel koh-mon"</td></tr><tr><td>55</td><td>Pourquoi est-ce que tu ris ?</td><td>Tu ris pourquoi ? / Pourquoi tu ris ?</td><td>"tew ree poor-kwah"</td></tr><tr><td>56</td><td>Qu'est-ce que c'est ?</td><td>C'est quoi ?</td><td>"say kwah"</td></tr><tr><td>57</td><td>Qu'est-ce qui se passe ?</td><td>I'se passe quoi ?</td><td>"ee spas kwah"</td></tr><tr><td>58</td><td>Est-ce que tu viens ?</td><td>Tu viens ?</td><td>"tew vee-en" (just rising tone)</td></tr><tr><td>59</td><td>À quelle heure est-ce qu'on part ?</td><td>On part à quelle heure ?</td><td>"on par ah kel ur"</td></tr><tr><td>60</td><td>Avec qui est-ce que tu y vas ?</td><td>Tu y vas avec qui ?</td><td>"tew ee vah ah-vek kee"</td></tr></tbody></table>
+<p><strong>🧠 The spoken French question formula:</strong></p>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>TEXTBOOK:  Question Word + est-ce que + Subject + Verb ?
+</span>SPOKEN:    Subject + Verb + Question Word ? (with rising intonation)</code></pre></div>
+<p>→ This is a <strong>complete structural reversal</strong> — and it's how 80% of real questions are asked</p>
+<hr>
+<h2>🔹 BLOCK G — COMPRESSION RULE 7: Vocabulary Swaps — Casual Replaces Formal</h2>
+<h3><em>(Reference: Project 40 — Register Switching / Project 43 — Discourse Markers)</em></h3>
+<p><strong>The rule:</strong><br>
+→ Spoken French has a parallel vocabulary layer — informal words replace formal ones<br>
+→ These aren't slang — they're <strong>standard casual French</strong> used by everyone</p>
+<table><thead><tr><th>#</th><th>Formal / Written Word</th><th>Spoken / Real Word</th><th>In a Sentence (Spoken)</th></tr></thead><tbody><tr><td>61</td><td>Oui</td><td><strong>Ouais</strong></td><td>Ouais, chuis d'accord.</td></tr><tr><td>62</td><td>Cela</td><td><strong>Ça</strong></td><td>Ça m'énerve.</td></tr><tr><td>63</td><td>Il y a</td><td><strong>Y'a</strong></td><td>Y'a rien à manger.</td></tr><tr><td>64</td><td>Petit</td><td><strong>P'tit</strong></td><td>Un p'tit café ?</td></tr><tr><td>65</td><td>Ce matin</td><td><strong>C'matin</strong></td><td>J'ai couru c'matin.</td></tr><tr><td>66</td><td>Quelque chose</td><td><strong>Quèque chose / Un truc</strong></td><td>T'as un truc à me dire ?</td></tr><tr><td>67</td><td>Beaucoup</td><td><strong>Vachement</strong> (informal intensifier)</td><td>C'est vachement bien.</td></tr><tr><td>68</td><td>Très</td><td><strong>Super / Hyper / Trop</strong></td><td>C'est trop cool.</td></tr><tr><td>69</td><td>Maintenant</td><td><strong>Là</strong></td><td>Faut y aller là.</td></tr><tr><td>70</td><td>Un homme / Une femme</td><td><strong>Un mec / Une meuf</strong></td><td>C'est qui ce mec ?</td></tr></tbody></table>
+<p><strong>🧠 Key insight:</strong> "Ça" replaces "cela" in <strong>100% of spoken French</strong> — you will NEVER hear "cela" in casual conversation. Similarly, "ouais" is far more common than "oui" among friends.</p>
+<hr>
+<h2>🔹 BLOCK H — COMPRESSION RULE 8: Multi-Layer Compression (Stacked Rules)</h2>
+<h3><em>(Reference: ALL Previous Chapters — this is where everything compresses simultaneously)</em></h3>
+<p><strong>The rule:</strong><br>
+→ Real spoken French doesn't apply ONE compression at a time<br>
+→ It stacks <strong>2, 3, or even 4 compressions</strong> in a single sentence<br>
+→ This is why beginners can't understand — multiple transformations happen at once</p>
+<table><thead><tr><th>#</th><th>Full Written French</th><th>Every Compression Applied</th><th>Rules Stacked</th></tr></thead><tbody><tr><td>71</td><td>Je ne sais pas ce que c'est.</td><td>Chais pas c'que c'est.</td><td>Rule 1 (ne drop) + Rule 3 (je→ch) + syllable eating</td></tr><tr><td>72</td><td>Il n'y a pas de problème.</td><td>Y'a pas d'problème.</td><td>Rule 1 + Rule 4 (il drop) + syllable eating</td></tr><tr><td>73</td><td>Tu ne vas pas y aller ?</td><td>Tu vas pas y aller ?</td><td>Rule 1 + Rule 2 (intonation question)</td></tr><tr><td>74</td><td>Je ne me souviens plus.</td><td>J'me souviens plus.</td><td>Rule 1 + Rule 3 (je contracts)</td></tr><tr><td>75</td><td>Nous ne sommes pas encore arrivés.</td><td>On est pas encore arrivés.</td><td>Rule 1 + Rule 5 (nous→on)</td></tr><tr><td>76</td><td>Qu'est-ce que tu en penses ?</td><td>T'en penses quoi ?</td><td>Rule 2 (tu→t') + Rule 6 (question flattens)</td></tr><tr><td>77</td><td>Il n'y a personne qui est venu.</td><td>Y'a personne qui est venu.</td><td>Rule 1 + Rule 4</td></tr><tr><td>78</td><td>Je ne suis pas en train de rigoler.</td><td>Chuis pas en train de rigoler.</td><td>Rule 1 + Rule 3</td></tr><tr><td>79</td><td>Est-ce que tu ne voudrais pas essayer ?</td><td>Tu voudrais pas essayer ?</td><td>Rule 1 + Rule 6</td></tr><tr><td>80</td><td>Nous n'aurions jamais dû faire cela.</td><td>On aurait jamais dû faire ça.</td><td>Rule 1 + Rule 5 + Rule 7 (cela→ça)</td></tr></tbody></table>
+<p><strong>🧠 Decompression exercise:</strong> When you hear a sentence you don't understand →</p>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>Step 1: Insert the "ne" back
+</span>Step 2: Expand "t'" back to "tu"
+Step 3: Expand "chuis/chais" back to "je suis / je sais"
+Step 4: Expand "y'a" back to "il y a"
+Step 5: Replace "on" with "nous" mentally
+Step 6: Move the question word back to the front
+Step 7: Replace casual vocabulary with formal equivalents</code></pre></div>
+<p>→ Now you have the <strong>written French</strong> you already know from Projects 1–46</p>
+<hr>
+<h2>🔹 BLOCK I — COMPRESSION RULE 9: Word Truncation</h2>
+<h3><em>(Reference: Project 42 — Idioms / Project 43 — Discourse Markers)</em></h3>
+<p><strong>The rule:</strong><br>
+→ French speakers routinely <strong>chop the end</strong> (or occasionally the beginning) off common words<br>
+→ This is not slang — it's <strong>standard casual French</strong></p>
+<table><thead><tr><th>#</th><th>Full Word</th><th>Truncated (Spoken)</th><th>Example Sentence (Spoken)</th></tr></thead><tbody><tr><td>81</td><td>Restaurant</td><td><strong>Resto</strong></td><td>On va au resto ?</td></tr><tr><td>82</td><td>Cinéma</td><td><strong>Ciné</strong></td><td>Y'a un bon film au ciné.</td></tr><tr><td>83</td><td>Appartement</td><td><strong>Appart</strong></td><td>Son appart est super.</td></tr><tr><td>84</td><td>Sympathique</td><td><strong>Sympa</strong></td><td>Il est sympa ce mec.</td></tr><tr><td>85</td><td>Extraordinaire</td><td><strong>Extra</strong></td><td>C'était extra.</td></tr><tr><td>86</td><td>Professeur</td><td><strong>Prof</strong></td><td>Le prof est pas là.</td></tr><tr><td>87</td><td>Adolescent</td><td><strong>Ado</strong></td><td>C'est un truc d'ado.</td></tr><tr><td>88</td><td>Télévision</td><td><strong>Télé</strong></td><td>T'as regardé la télé ?</td></tr><tr><td>89</td><td>Petit-déjeuner</td><td><strong>P'tit-déj</strong></td><td>On prend le p'tit-déj où ?</td></tr><tr><td>90</td><td>D'accord</td><td><strong>D'acc</strong></td><td>D'acc, on fait comme ça.</td></tr></tbody></table>
+<p><strong>🧠 Pattern:</strong> Most truncations cut after the <strong>second or third syllable</strong> — and everyone uses them, regardless of education level</p>
+<hr>
+<h2>🔹 BLOCK J — FULL REAL CONVERSATION: Written vs. What You Actually Hear</h2>
+<h3><em>(Reference: ALL 46 Previous Chapters — the ultimate decompression test)</em></h3>
+<p><strong>Scenario:</strong> Two friends — Léa and Thomas — discussing weekend plans<br>
+<strong>Left column = what a textbook would write / Right column = what you actually hear</strong></p>
+<table><thead><tr><th>#</th><th>Written / Textbook French</th><th>What You Actually Hear</th></tr></thead><tbody><tr><td>91</td><td>Salut Thomas, qu'est-ce que tu fais ce week-end ?</td><td>Salut Thomas, tu fais quoi ce week-end ?</td></tr><tr><td>92</td><td>Je ne sais pas encore, je n'ai pas de plans.</td><td>Chais pas encore, j'ai pas de plans.</td></tr><tr><td>93</td><td>Est-ce que tu voudrais aller au restaurant ?</td><td>Tu voudrais pas aller au resto ?</td></tr><tr><td>94</td><td>Oui, pourquoi pas, cela me plaît bien.</td><td>Ouais, pourquoi pas, ça me plaît bien.</td></tr><tr><td>95</td><td>Il y a un nouveau restaurant qui est très bien.</td><td>Y'a un nouveau resto qui est vachement bien.</td></tr><tr><td>96</td><td>Tu y es déjà allé ? Comment est-ce que c'est ?</td><td>T'y es déjà allé ? C'est comment ?</td></tr><tr><td>97</td><td>Non, je n'y suis pas encore allé, mais ma sœur y est allée et elle a dit que c'était extraordinaire.</td><td>Non, j'y suis pas encore allé, mais ma sœur y est allée et elle a dit que c'était extra.</td></tr><tr><td>98</td><td>Nous pourrions y aller samedi soir, qu'est-ce que tu en penses ?</td><td>On pourrait y aller samedi soir, t'en penses quoi ?</td></tr><tr><td>99</td><td>Il faudrait que nous réservions, il n'y a peut-être plus de place.</td><td>Faudrait qu'on réserve, y'a peut-être plus de place.</td></tr><tr><td>100</td><td>D'accord, je vais m'en occuper, je te dis cela demain.</td><td>D'acc, j'vais m'en occuper, j'te dis ça demain.</td></tr></tbody></table>
+<hr>
+<h1>✅ WHAT SHOULD DO</h1>
+<p>→ <strong>Read the spoken column aloud</strong> — train your mouth to produce compressed French<br>
+→ <strong>Listen to real French podcasts</strong> (InnerFrench, Français Authentique, France Inter) — and identify which compression rules are active<br>
+→ <strong>Practice decompression</strong> — hear the spoken form → mentally reconstruct the written form you know<br>
+→ <strong>Accept that "ne" is dead in speech</strong> — stop listening for it — it won't be there<br>
+→ <strong>Use "on" by default</strong> — only switch to "nous" in formal/written contexts (as established in Project 40)<br>
+→ <strong>Move question words to the end</strong> when speaking casually — it sounds infinitely more natural</p>
+<hr>
+<h1>❌ WHAT SHOULD NOT DO</h1>
+<p>→ ❌ Do NOT speak textbook French in casual settings — you'll sound robotic<br>
+→ ❌ Do NOT assume spoken French is "wrong" French — it's <strong>standard oral register</strong><br>
+→ ❌ Do NOT try to learn spoken French BEFORE written French — you need the foundation (Projects 1–46) to decompress<br>
+→ ❌ Do NOT use ALL compressions when speaking to a boss, professor, or in formal settings — register matters (Project 40)<br>
+→ ❌ Do NOT use "meuf/mec" with someone you just met professionally<br>
+→ ❌ Do NOT compress so hard that you become unintelligible — even French people have clarity limits<br>
+→ ❌ Do NOT ignore this project thinking "I'll just learn proper French" — you will <strong>fail to understand natives</strong> if you skip this</p>
+<hr>
+<h1>🔀 WHEN TO USE WHAT</h1>
+<table><thead><tr><th>Situation</th><th>Speak Written French</th><th>Speak Compressed French</th></tr></thead><tbody><tr><td>Job interview</td><td>✅ Full sentences, "nous", "ne...pas"</td><td>❌</td></tr><tr><td>Academic presentation</td><td>✅</td><td>❌</td></tr><tr><td>Formal email read aloud</td><td>✅</td><td>❌</td></tr><tr><td>Chatting with friends</td><td>❌ Sounds stiff</td><td>✅ Full compression</td></tr><tr><td>Ordering at a café</td><td>❌</td><td>✅</td></tr><tr><td>Talking to your host family</td><td>❌</td><td>✅</td></tr><tr><td>Calling a customer service line</td><td>⚠️ Semi-formal — light compression</td><td>⚠️</td></tr><tr><td>Speaking to an elderly stranger</td><td>⚠️ Vous + moderate formality</td><td>⚠️ Light compression only</td></tr><tr><td>Texting a friend</td><td>❌</td><td>✅ Maximum compression + abbreviations</td></tr><tr><td>Watching/understanding movies &amp; podcasts</td><td>You need to RECOGNIZE compressed forms even if you don't produce them yet</td><td>✅ Passive comprehension essential</td></tr></tbody></table>
+<hr>
+<h1>🚫 WHEN NOT TO USE</h1>
+<p>→ <strong>Never</strong> use "chuis / chais / t'as" in a formal letter or professional email<br>
+→ <strong>Never</strong> drop "ne" in written academic French<br>
+→ <strong>Never</strong> use "ouais" with someone you address as "vous"<br>
+→ <strong>Never</strong> truncate words in a job application ("resto" → write "restaurant")<br>
+→ <strong>Never</strong> use question-word-at-end in formal inversion contexts ("À quelle heure part le train ?" — not "Le train part à quelle heure ?" in formal announcements)</p>
+<hr>
+<h1>⚠️ COMMON PITFALLS AND FAILURE MODES</h1>
+<table><thead><tr><th>Pitfall</th><th>What Happens</th><th>Fix</th></tr></thead><tbody><tr><td><strong>Hearing "shay pah" and being lost</strong></td><td>You don't recognize "je ne sais pas"</td><td>Memorize: shay pah = chais pas = je ne sais pas</td></tr><tr><td><strong>Hearing "yah" and thinking it's "yes"</strong></td><td>"Y'a" sounds like "yeah" in English</td><td>Context: if followed by a noun → it's "il y a" not "yes"</td></tr><tr><td><strong>Using "nous" with friends</strong></td><td>You sound like a textbook character</td><td>Default to "on" — always — in speech</td></tr><tr><td><strong>Keeping "ne" in casual speech</strong></td><td>You sound overly formal or foreign</td><td>Drop "ne" when speaking to friends — keep "pas/jamais/rien"</td></tr><tr><td><strong>Asking "Qu'est-ce que tu fais ?"</strong></td><td>Grammatically perfect but unnaturally formal for friends</td><td>Say "Tu fais quoi ?" — question word at end</td></tr><tr><td><strong>Not recognizing stacked compressions</strong></td><td>You hear "Chais pas c'qu'y'a" and freeze</td><td>Decompress step by step: je ne sais pas ce qu'il y a</td></tr><tr><td><strong>Over-compressing in formal settings</strong></td><td>You say "Ouais chuis d'acc" to your boss</td><td>Match register to context — Project 40 principles apply</td></tr><tr><td><strong>Thinking truncated words are slang</strong></td><td>You avoid "resto / ciné / sympa" thinking they're informal</td><td>These are STANDARD spoken French — everyone uses them</td></tr><tr><td><strong>Writing spoken French in essays</strong></td><td>You write "y'a" instead of "il y a" in an exam</td><td>Spoken rules are for SPEECH and texting — not formal writing</td></tr><tr><td><strong>Trying to learn compressions before structures</strong></td><td>You memorize "chais pas" without knowing the grammar behind it</td><td>Always know the FULL form first → then learn the compression</td></tr></tbody></table>
+<hr>
+<h1>🔑 KEY TAKEAWAY</h1>
+<blockquote>
+<p><strong>Written French is the skeleton. Spoken French is the living body.</strong><br>
+Every structure from Projects 1–46 exists in spoken French — but <strong>compressed, reshaped, and accelerated.</strong><br>
+You don't need to learn a new language — you need to learn <strong>10 compression rules</strong> that transform what you already know into what French people actually say.</p>
+</blockquote>
+<p>→ The most critical compressions:</p>
+<ul>
+<li><strong>"Ne" drops</strong> → you'll hear "pas/jamais/rien" alone</li>
+<li><strong>"Je suis" → "chuis"</strong> → most common self-reference</li>
+<li><strong>"Il y a" → "y'a"</strong> → most common existence marker</li>
+<li><strong>"Nous" → "on"</strong> → 99% of spoken French</li>
+<li><strong>Questions flip</strong> → question word goes to END</li>
+</ul>
+<p>→ This project taught you to <strong>HEAR</strong> real French<br>
+→ But hearing is passive — Project 48 teaches you to <strong>CALIBRATE</strong> what you say based on who you're talking to</p>
+<hr>
+<h1>🌉 BRIDGE TO PROJECT 48</h1>
+<blockquote>
+<p>You now understand <strong>how French people actually speak</strong><br>
+But knowing compressions isn't enough — you must know <strong>WHICH LEVEL of compression to use WITH WHOM</strong><br>
+→ Saying "Ouais chuis d'acc" to your friend → perfect<br>
+→ Saying "Ouais chuis d'acc" to your boss → career damage<br>
+→ Saying "Oui, nous sommes d'accord" to your friend → socially awkward</p>
+<p><strong>Project 48: "Read the Room"</strong> solves this →<br>
+→ ~100 sentences showing the SAME message delivered across <strong>5 formality levels</strong><br>
+→ Scenario: You navigate a single day — morning with your boss, lunch with colleagues, evening with friends, night texting your partner, formal email to a client<br>
+→ Every structure from ALL Previous Chapters — calibrated to cultural context</p>
+</blockquote>
+<hr>
+<h1>✅ PROJECT 47 COMPLETE</h1>
+<blockquote>
+<p><strong>Are you ready for PROJECT 48: "Read the Room"?</strong><br>
+→ ~100 sentences showing the same ideas expressed at 5 different formality levels<br>
+→ Scenario: One full day navigating boss → colleague → friend → partner → formal client<br>
+→ Builds on Project 40 (register switching) + Project 47 (spoken compression) + all structural knowledge</p>
+
+</blockquote></div>
+</div>
+
+<!-- ========== data-index="7" ========== -->
+
+        </div>
+
+        <div class="nav-bar">
+            <a href="project-46.html" class="nav-button prev">← Previous Chapter</a>
+            <div class="page-info">
+                <a href="index.html" class="nav-button home">📚 Table of Contents</a><br>
+                <span style="margin-top:8px;display:block">Chapter 47 of 50</span>
+            </div>
+            <a href="project-48.html" class="nav-button next">Next Chapter →</a>
+        </div>
+    </div>
+
+    
+    <div id="progress-track"><div id="progress-fill"></div></div>
+    <div id="progress-pct">0%</div>
+
+
+    <script>
+    const fill = document.getElementById('progress-fill');
+    const pct  = document.getElementById('progress-pct');
+    function updateProgress() {
+        const scrollTop = window.scrollY;
+        const docHeight = document.body.scrollHeight - window.innerHeight;
+        const scrolled  = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+        fill.style.height = scrolled + '%';
+        pct.textContent   = Math.round(scrolled) + '%';
+    }
+    window.addEventListener('scroll', updateProgress);
+    updateProgress();
+
+    document.addEventListener('keydown', function(e) {
+        if (['INPUT','TEXTAREA'].includes(document.activeElement.tagName)) return;
+        if (e.key === 'ArrowLeft') {
+            const b = document.querySelector('.nav-button.prev');
+            if (b && !b.classList.contains('disabled')) window.location.href = b.href;
+        }
+        if (e.key === 'ArrowRight') {
+            const b = document.querySelector('.nav-button.next');
+            if (b && !b.classList.contains('disabled')) window.location.href = b.href;
+        }
+    });
+    </script>
+
+</body>
+</html>

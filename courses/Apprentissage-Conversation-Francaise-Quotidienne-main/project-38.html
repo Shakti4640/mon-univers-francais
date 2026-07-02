@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="images/favicon.png">
+    <title>Project 38: "While Doing, By Doing" — French Daily Sentences</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.75;
+            color: #1a202c;
+            background-color: #f7fafc;
+        }
+        .container {
+            max-width: 1800px;
+            margin: 0 auto;
+            background: white;
+            min-height: 100vh;
+            box-shadow: 0 0 30px rgba(0,0,0,0.08);
+            padding: 48px 52px;
+        }
+        
+        .content { max-width: 1700px; margin: 0 auto; color: #1a202c; }
+        .content h1 {
+            color: #1a202c; margin: 32px 0 20px;
+            padding-bottom: 12px;
+            border-bottom: 4px solid #3b82f6;
+            font-size: 2.1em;
+            font-weight: 700;
+        }
+        .content h2 {
+            color: #1a202c; margin: 28px 0 16px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #60a5fa;
+            font-size: 1.6em;
+            font-weight: 600;
+        }
+        .content h3 { color: #1a202c; margin: 22px 0 12px; font-size: 1.3em; font-weight: 600; }
+        .content h4 { color: #2d3748; margin: 18px 0 10px; font-size: 1.1em; font-weight: 600; }
+        .content p  { margin-bottom: 16px; line-height: 1.8; color: #1a202c; }
+        .content ul, .content ol { margin: 12px 0 18px 30px; color: #1a202c; }
+        .content li { margin-bottom: 8px; line-height: 1.75; color: #1a202c; }
+        .content hr { border: none; border-top: 2px solid #e2e8f0; margin: 26px 0; }
+        .content pre {
+            background: #f7fafc !important;
+            border: 1px solid #cbd5e0 !important;
+            border-left: 4px solid #3b82f6 !important;
+            padding: 18px !important; overflow-x: auto; margin: 18px 0; border-radius: 6px;
+            font-family: 'Consolas','Monaco','Courier New',monospace !important;
+            font-size: 0.9em !important;
+        }
+        .content pre:not([style*="color"]) { color: #1a202c !important; }
+        .content code {
+            font-family: 'Consolas','Monaco','Courier New',monospace !important;
+            font-size: 0.88em !important;
+        }
+        .content code:not(pre code) {
+            background: #dbeafe !important;
+            color: #1a202c !important;
+            padding: 2px 6px;
+            border-radius: 3px;
+        }
+        .content pre code { background: transparent !important; padding: 0; }
+        .content table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+        .content th {
+            background: linear-gradient(135deg, #3b82f6 0%, #60a5fa 100%);
+            color: white; padding: 12px 16px; text-align: left;
+            font-weight: 600;
+        }
+        .content td { padding: 11px 16px; border: 1px solid #e2e8f0; color: #1a202c; }
+        .content tr:nth-child(even) td { background: #eff6ff; }
+        .content blockquote {
+            border-left: 4px solid #3b82f6; background: #eff6ff;
+            padding: 14px 20px; margin: 18px 0; border-radius: 0 6px 6px 0;
+            color: #1a202c;
+        }
+        .content strong { color: #1a202c; font-weight: 600; }
+        .px-2 { padding: 0; }
+        .chat-message { background: transparent; padding: 0; margin: 0; }
+
+        /* Bottom nav bar only */
+        .nav-bar {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 24px 0;
+            margin-top: 50px;
+            border-top: 3px solid #60a5fa;
+        }
+        .nav-button {
+            display: inline-flex; align-items: center; gap: 8px;
+            padding: 12px 26px;
+            background: linear-gradient(135deg, #3b82f6 0%, #60a5fa 100%);
+            color: white !important; text-decoration: none;
+            border-radius: 8px; font-weight: 600; font-size: 0.95em;
+            transition: all 0.2s;
+            box-shadow: 0 2px 8px rgba(59,130,246,0.35);
+        }
+        .nav-button:hover { transform: translateY(-2px); box-shadow: 0 4px 14px rgba(59,130,246,0.5); }
+        .nav-button.disabled { background: #cbd5e1; box-shadow: none; pointer-events: none; }
+        .nav-button.home {
+            background: linear-gradient(135deg, #ef4444 0%, #f87171 100%);
+            box-shadow: 0 2px 8px rgba(239,68,68,0.35);
+        }
+        .nav-button.home:hover { box-shadow: 0 4px 14px rgba(239,68,68,0.5); }
+        .page-info { color: #718096; font-size: 0.9em; text-align: center; }
+
+        /* Progress bar */
+        #progress-track {
+            position: fixed; top: 20px; right: 20px;
+            width: 10px; height: 150px;
+            background: rgba(59,130,246,0.2);
+            border: 2px solid #3b82f6;
+            border-radius: 6px; overflow: hidden; z-index: 1000;
+        }
+        #progress-fill {
+            width: 100%;
+            background: linear-gradient(180deg, #3b82f6, #2563eb);
+            height: 0%;
+            transition: height 0.15s ease;
+        }
+        #progress-pct {
+            position: fixed; top: 0px; right: 16px;
+            color: #2563eb; font-size: 14px; font-weight: bold;
+            z-index: 1001;
+            text-shadow: 0 1px 2px rgba(255,255,255,0.9);
+            line-height: 20px;
+        }
+
+    </style>
+<link rel="stylesheet" href="assets/chapters.css?v=20260421203847"><script src="assets/chapters.js?v=20260421203847" defer></script>
+</head>
+<body>
+    <div class="container">
+        <div class="content">
+            <div class="chat-message" data-index="15">
+<div class="px-2"><h1>🟠 PROJECT 38: "While Doing, By Doing"</h1>
+<h2><em>A day of multitasking — doing two things at once, describing how you accomplish tasks</em></h2>
+<hr>
+<h1>🎯 THE HYPOTHETICAL PROBLEM</h1>
+<p>→ You are a freelance journalist in Paris — your days are a whirlwind of simultaneous actions<br>
+→ You eat breakfast <strong>while reading</strong> the news<br>
+→ You make phone calls <strong>while walking</strong> to the metro<br>
+→ You take notes <strong>while listening</strong> to an interview<br>
+→ You improve your French <strong>by practicing</strong> every day<br>
+→ You found your apartment <strong>by asking</strong> friends<br>
+→ You hurt your back <strong>while lifting</strong> a heavy box<br>
+→ In English, all of these use "-ing" — "while reading," "by practicing," "while lifting"<br>
+→ But in French, the "-ing" form works COMPLETELY differently<br>
+→ You try: "Je mange en lisant le journal" — ✅ correct!<br>
+→ You try: "Je suis mangeant" — ❌ completely wrong (French doesn't use -ing for continuous tenses)<br>
+→ You try: "En travaillant dur, j'ai réussi" — ✅ correct!<br>
+→ You try: "J'aime lisant" — ❌ wrong (French doesn't use -ing after verbs like English)<br>
+→ The gérondif is powerful but NARROW — it only works in specific contexts</p>
+<p><strong>The core realization:</strong><br>
+→ English uses "-ing" for EVERYTHING: continuous tenses, gerunds, present participles, after prepositions<br>
+→ French uses "en + participe présent" (gérondif) for ONLY specific situations:</p>
+<ol>
+<li><strong>Simultaneity</strong> — while doing</li>
+<li><strong>Method/Means</strong> — by doing</li>
+<li><strong>Manner</strong> — doing (how)</li>
+<li><strong>Condition</strong> — if doing / provided that doing</li>
+<li><strong>Cause</strong> — because of doing<br>
+→ It NEVER replaces a conjugated verb for ongoing actions ("I am eating" ≠ "Je suis mangeant")<br>
+→ Mastering the gérondif means knowing <strong>when to use it AND when NOT to use it</strong></li>
+</ol>
+<hr>
+<h1>🔍 HOW TO APPROACH IT</h1>
+<p>→ Think of the gérondif as a <strong>verbal adverb</strong> — it modifies HOW, WHEN, or WHY the main action happens<br>
+→ It always refers to the <strong>same subject</strong> as the main verb — both actions done by the SAME person</p>
+<code>MAIN ACTION ← modified by ← GÉRONDIF (en + participe présent)</code>
+<p>→ "Je mange <strong>en lisant</strong>" = I eat (main) + while reading (modifier) → same person does both<br>
+→ ❌ "Je mange <strong>en</strong> Marie <strong>lisant</strong>" → IMPOSSIBLE — gérondif cannot have a different subject</p>
+<h2>Formation of the Gérondif</h2>
+<h3>Step 1 — Find the Participe Présent</h3>
+<code>Take the NOUS form of présent → remove -ONS → add -ANT</code>
+<table><thead><tr><th>Verb</th><th>Nous Form</th><th>Remove -ons</th><th>Add -ant</th><th>Participe Présent</th></tr></thead><tbody><tr><td>parler</td><td>nous parl<strong>ons</strong></td><td>parl-</td><td>parl<strong>ant</strong></td><td>parlant</td></tr><tr><td>finir</td><td>nous finiss<strong>ons</strong></td><td>finiss-</td><td>finiss<strong>ant</strong></td><td>finissant</td></tr><tr><td>prendre</td><td>nous pren<strong>ons</strong></td><td>pren-</td><td>pren<strong>ant</strong></td><td>prenant</td></tr><tr><td>faire</td><td>nous fais<strong>ons</strong></td><td>fais-</td><td>fais<strong>ant</strong></td><td>faisant</td></tr><tr><td>lire</td><td>nous lis<strong>ons</strong></td><td>lis-</td><td>lis<strong>ant</strong></td><td>lisant</td></tr><tr><td>dormir</td><td>nous dorm<strong>ons</strong></td><td>dorm-</td><td>dorm<strong>ant</strong></td><td>dormant</td></tr><tr><td>écrire</td><td>nous écriv<strong>ons</strong></td><td>écriv-</td><td>écriv<strong>ant</strong></td><td>écrivant</td></tr><tr><td>voir</td><td>nous voy<strong>ons</strong></td><td>voy-</td><td>voy<strong>ant</strong></td><td>voyant</td></tr><tr><td>boire</td><td>nous buv<strong>ons</strong></td><td>buv-</td><td>buv<strong>ant</strong></td><td>buvant</td></tr><tr><td>manger</td><td>nous mange<strong>ons</strong></td><td>mange-</td><td>mange<strong>ant</strong></td><td>mangeant</td></tr></tbody></table>
+<h3>Step 2 — Add EN before it</h3>
+<code>EN + PARTICIPE PRÉSENT = GÉRONDIF</code>
+<p>→ en parlant, en finissant, en prenant, en faisant, en lisant...</p>
+<h3>Three Irregular Participes Présents — Memorize These</h3>
+<table><thead><tr><th>Verb</th><th>Expected</th><th>Actual Participe Présent</th><th>Gérondif</th></tr></thead><tbody><tr><td><strong>être</strong></td><td><del>étant</del> from nous sommes?</td><td><strong>étant</strong> (irregular — not from nous form)</td><td>en étant</td></tr><tr><td><strong>avoir</strong></td><td><del>avons</del> → av- → avant?</td><td><strong>ayant</strong> (completely irregular)</td><td>en ayant</td></tr><tr><td><strong>savoir</strong></td><td><del>savons</del> → sav- → savant?</td><td><strong>sachant</strong> (completely irregular)</td><td>en sachant</td></tr></tbody></table>
+<p>→ Only THREE verbs are irregular — everything else follows the nous-form rule</p>
+<hr>
+<h1>🔧 HOW CAN WE SOLVE IT</h1>
+<h2>The Five Meanings of the Gérondif</h2>
+<table><thead><tr><th>Meaning</th><th>English Equivalent</th><th>Question Answered</th><th>Example</th></tr></thead><tbody><tr><td><strong>Simultaneity</strong></td><td>while doing</td><td>WHEN?</td><td>Je mange <strong>en lisant</strong> (I eat while reading)</td></tr><tr><td><strong>Method/Means</strong></td><td>by doing</td><td>HOW?</td><td>J'ai réussi <strong>en travaillant</strong> (I succeeded by working)</td></tr><tr><td><strong>Manner</strong></td><td>doing / -ing</td><td>IN WHAT WAY?</td><td>Il est parti <strong>en courant</strong> (He left running)</td></tr><tr><td><strong>Condition</strong></td><td>if doing / by doing</td><td>UNDER WHAT CONDITION?</td><td><strong>En faisant</strong> attention, tu éviteras les erreurs (By being careful, you'll avoid mistakes)</td></tr><tr><td><strong>Cause</strong></td><td>because of doing</td><td>WHY?</td><td><strong>En arrivant</strong> en retard, il a raté le début (By arriving late, he missed the beginning)</td></tr></tbody></table>
+<p>→ Context determines which meaning applies — the structure is identical for all five<br>
+→ The gérondif can go at the <strong>beginning</strong> or <strong>end</strong> of the sentence</p>
+<hr>
+<h2>Position in the Sentence</h2>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>POSITION A (end — most common):
+</span>    Je travaille en écoutant de la musique.
+
+POSITION B (beginning — emphasis on the gérondif):
+    En écoutant de la musique, je travaille mieux.</code></pre></div>
+<p>→ When the gérondif starts the sentence → comma separates it from the main clause<br>
+→ When it ends the sentence → no comma needed</p>
+<hr>
+<h2>TOUT EN + Participe Présent — Emphasis on Simultaneity or Contrast</h2>
+<code>TOUT EN + participe présent = WHILE (emphasis) / EVEN WHILE / DESPITE doing</code>
+<p>→ "Il sourit <strong>tout en</strong> sachant la vérité" = He smiles even while knowing the truth<br>
+→ Adds emphasis — stresses that BOTH actions happen at the SAME time<br>
+→ Can introduce a <strong>contrast</strong> — doing X even though Y is also happening</p>
+<hr>
+<h1>✅ WHAT COULD BE DONE — THE 100 SENTENCES</h1>
+<h2>🔹 BLOCK A — Simultaneity: "While Doing"</h2>
+<p><em>Scenario: Your multitasking morning — everything happens at the same time</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English Meaning</th><th>Gérondif Function</th></tr></thead><tbody><tr><td>1</td><td>Je prends mon café en lisant le journal.</td><td>I have my coffee while reading the newspaper.</td><td>Simultaneity — two morning actions</td></tr><tr><td>2</td><td>Tu écoutes la radio en te préparant.</td><td>You listen to the radio while getting ready.</td><td>Simultaneity — reflexive verb (P14) in gérondif</td></tr><tr><td>3</td><td>Il mange en marchant vers le métro.</td><td>He eats while walking to the metro.</td><td>Simultaneity — commute multitasking</td></tr><tr><td>4</td><td>Elle répond aux mails en buvant son thé.</td><td>She answers emails while drinking her tea.</td><td>Simultaneity — office morning</td></tr><tr><td>5</td><td>On discute en attendant le bus.</td><td>We chat while waiting for the bus.</td><td>Simultaneity — filling time</td></tr><tr><td>6</td><td>Nous prenons des notes en écoutant la conférence.</td><td>We take notes while listening to the lecture.</td><td>Simultaneity — academic/professional</td></tr><tr><td>7</td><td>Vous souriez en me disant ça.</td><td>You're smiling while telling me that.</td><td>Simultaneity — observation of someone</td></tr><tr><td>8</td><td>Ils parlent en travaillant.</td><td>They talk while working.</td><td>Simultaneity — office behavior</td></tr><tr><td>9</td><td>Je m'endors en regardant la télé.</td><td>I fall asleep while watching TV.</td><td>Simultaneity — evening habit</td></tr><tr><td>10</td><td>Elle chante en cuisinant.</td><td>She sings while cooking.</td><td>Simultaneity — domestic joy</td></tr></tbody></table>
+<p><strong>🧠 Structure unlocked:</strong> <code>Main action + EN + participe présent = doing X while doing Y</code><br>
+→ Both actions happen AT THE SAME TIME<br>
+→ Both actions are performed by THE SAME SUBJECT<br>
+→ Sentence 2: reflexive verbs in gérondif → "en <strong>te</strong> préparant" — pronoun attaches to participe présent</p>
+<hr>
+<h3>⚠️ Reflexive Verbs in the Gérondif</h3>
+<code>en + REFLEXIVE PRONOUN + participe présent</code>
+<table><thead><tr><th>Subject</th><th>Gérondif of "se préparer"</th></tr></thead><tbody><tr><td>Je</td><td>en <strong>me</strong> préparant</td></tr><tr><td>Tu</td><td>en <strong>te</strong> préparant</td></tr><tr><td>Il/Elle/On</td><td>en <strong>se</strong> préparant</td></tr><tr><td>Nous</td><td>en <strong>nous</strong> préparant</td></tr><tr><td>Vous</td><td>en <strong>vous</strong> préparant</td></tr><tr><td>Ils/Elles</td><td>en <strong>se</strong> préparant</td></tr></tbody></table>
+<p>→ The reflexive pronoun MUST match the subject of the main verb<br>
+→ ✅ Il mange en <strong>se</strong> préparant (he eats while getting himself ready)<br>
+→ ❌ <del>Il mange en me préparant</del> (he eats while getting ME ready — different subjects — technically possible but changes meaning entirely)</p>
+<hr>
+<h2>🔹 BLOCK B — Method/Means: "By Doing"</h2>
+<p><em>Scenario: Explaining HOW you achieved results — your strategies, techniques, methods</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English Meaning</th><th>Gérondif Function</th></tr></thead><tbody><tr><td>11</td><td>J'ai appris le français en regardant des films.</td><td>I learned French by watching movies.</td><td>Method — how you learned</td></tr><tr><td>12</td><td>Tu progresseras en pratiquant chaque jour.</td><td>You'll improve by practicing every day.</td><td>Method — future advice (P16)</td></tr><tr><td>13</td><td>Il a trouvé un emploi en envoyant cent CV.</td><td>He found a job by sending a hundred CVs.</td><td>Method — persistence</td></tr><tr><td>14</td><td>Elle a économisé en réduisant ses dépenses.</td><td>She saved money by reducing her expenses.</td><td>Method — financial strategy</td></tr><tr><td>15</td><td>On a résolu le problème en changeant d'approche.</td><td>We solved the problem by changing our approach.</td><td>Method — professional problem-solving</td></tr><tr><td>16</td><td>Nous avons gagné du temps en automatisant le processus.</td><td>We saved time by automating the process.</td><td>Method — efficiency</td></tr><tr><td>17</td><td>Vous réussirez en restant concentré.</td><td>You'll succeed by staying focused.</td><td>Method — motivational advice</td></tr><tr><td>18</td><td>Ils ont amélioré leur service en écoutant les clients.</td><td>They improved their service by listening to clients.</td><td>Method — business improvement</td></tr><tr><td>19</td><td>J'ai perdu cinq kilos en faisant du sport trois fois par semaine.</td><td>I lost five kilos by exercising three times a week.</td><td>Method — health achievement</td></tr><tr><td>20</td><td>On apprend en faisant des erreurs.</td><td>You learn by making mistakes.</td><td>Method — universal wisdom</td></tr></tbody></table>
+<p><strong>🧠 Structure unlocked:</strong> <code>Result + EN + participe présent = achieved result BY doing X</code><br>
+→ This is one of the most USEFUL gérondif functions — explaining HOW things happened<br>
+→ Answers the question: <strong>"Comment ?" (How?)</strong><br>
+→ Sentence 20: "On apprend en faisant des erreurs" — one of the most quoted French proverbs about learning<br>
+→ Works with any tense in the main clause — passé composé (achieved), futur (will achieve), présent (achieves)</p>
+<hr>
+<h2>🔹 BLOCK C — Manner: "Doing / In a [manner]"</h2>
+<p><em>Scenario: Describing HOW someone does something — the style, the way, the physical manner</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English Meaning</th><th>Gérondif Function</th></tr></thead><tbody><tr><td>21</td><td>Il est parti en courant.</td><td>He left running.</td><td>Manner — physical departure style</td></tr><tr><td>22</td><td>Elle est entrée en souriant.</td><td>She came in smiling.</td><td>Manner — facial expression</td></tr><tr><td>23</td><td>Il m'a répondu en criant.</td><td>He answered me shouting.</td><td>Manner — emotional tone</td></tr><tr><td>24</td><td>Elle a accepté en hésitant.</td><td>She accepted hesitantly.</td><td>Manner — reluctance</td></tr><tr><td>25</td><td>Il s'est levé en sursautant.</td><td>He got up with a start.</td><td>Manner — physical reaction</td></tr><tr><td>26</td><td>Tu es arrivé en sifflant.</td><td>You arrived whistling.</td><td>Manner — cheerful behavior</td></tr><tr><td>27</td><td>Elle a raccroché en pleurant.</td><td>She hung up crying.</td><td>Manner — emotional state during action</td></tr><tr><td>28</td><td>On a traversé la rivière en nageant.</td><td>We crossed the river swimming.</td><td>Manner — method of movement</td></tr><tr><td>29</td><td>Il a descendu les escaliers en boitant.</td><td>He went down the stairs limping.</td><td>Manner — physical condition</td></tr><tr><td>30</td><td>Elle est sortie de la réunion en claquant la porte.</td><td>She left the meeting slamming the door.</td><td>Manner — dramatic exit</td></tr></tbody></table>
+<p><strong>🧠 Structure unlocked:</strong> <code>Main movement/action + EN + participe présent = doing X in [this manner]</code><br>
+→ Extremely vivid in storytelling — paints a picture of HOW the action was performed<br>
+→ Often used with <strong>movement verbs</strong>: partir, entrer, sortir, arriver, monter, descendre, traverser<br>
+→ Sentence 21: "Il est parti <strong>en courant</strong>" — one of the most common gérondif sentences in French<br>
+→ Sentence 30: gérondif can describe an accompanying action that isn't strictly the "manner" but adds dramatic detail</p>
+<hr>
+<h2>🔹 BLOCK D — Condition: "By Doing / If You Do"</h2>
+<p><em>Scenario: Giving advice, setting conditions — if you do X, then Y will follow</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English Meaning</th><th>Gérondif Function</th></tr></thead><tbody><tr><td>31</td><td>En faisant attention, tu éviteras les erreurs.</td><td>By being careful, you'll avoid mistakes.</td><td>Condition — if you're careful → result</td></tr><tr><td>32</td><td>En partant maintenant, on arrivera à l'heure.</td><td>By leaving now, we'll arrive on time.</td><td>Condition — if we leave → result</td></tr><tr><td>33</td><td>En travaillant ensemble, nous y arriverons.</td><td>By working together, we'll make it.</td><td>Condition — cooperation → success</td></tr><tr><td>34</td><td>En étant plus organisé, tu gagnerais du temps.</td><td>By being more organized, you'd save time.</td><td>Condition + conditionnel (P17) — softer advice</td></tr><tr><td>35</td><td>En suivant ces instructions, vous ne pouvez pas vous tromper.</td><td>By following these instructions, you can't go wrong.</td><td>Condition — guaranteed outcome</td></tr><tr><td>36</td><td>En réduisant les coûts, l'entreprise retrouverait sa rentabilité.</td><td>By reducing costs, the company would regain profitability.</td><td>Condition — business strategy + conditionnel</td></tr><tr><td>37</td><td>En mangeant mieux, tu te sentirais en pleine forme.</td><td>By eating better, you'd feel great.</td><td>Condition — health advice + conditionnel</td></tr><tr><td>38</td><td>En investissant maintenant, vous pourriez doubler votre capital.</td><td>By investing now, you could double your capital.</td><td>Condition — financial advice + conditionnel</td></tr><tr><td>39</td><td>En acceptant ce poste, tu renonces à ta liberté.</td><td>By accepting this position, you give up your freedom.</td><td>Condition — warning about consequences</td></tr><tr><td>40</td><td>En ne disant rien, tu approuves la situation.</td><td>By saying nothing, you approve the situation.</td><td>Condition — negative gérondif (en <strong>ne</strong> disant <strong>rien</strong>)</td></tr></tbody></table>
+<p><strong>🧠 Structure unlocked:</strong> <code>EN + participe présent (beginning of sentence) = IF you do X / BY doing X → consequence</code><br>
+→ Functions almost like a <strong>si-clause</strong> (P18/P33) but lighter, more conversational<br>
+→ Compare: "<strong>Si tu fais</strong> attention, tu éviteras les erreurs" (P18) = same meaning as sentence 31<br>
+→ The gérondif version is <strong>shorter, more elegant, and more common in advice-giving</strong><br>
+→ Sentence 40: <strong>Negative gérondif</strong> → "en <strong>ne</strong> disant <strong>rien</strong>" — ne...rien wraps around the participe présent</p>
+<hr>
+<h3>⚠️ Negative Gérondif Formation</h3>
+<code>EN + NE + participe présent + PAS / RIEN / JAMAIS / PLUS</code>
+<table><thead><tr><th>Positive</th><th>Negative</th><th>English</th></tr></thead><tbody><tr><td>en parlant</td><td>en <strong>ne</strong> parlant <strong>pas</strong></td><td>by not speaking</td></tr><tr><td>en faisant</td><td>en <strong>ne</strong> faisant <strong>rien</strong></td><td>by doing nothing</td></tr><tr><td>en disant</td><td>en <strong>ne</strong> disant <strong>jamais</strong></td><td>by never saying</td></tr><tr><td>en bougeant</td><td>en <strong>ne</strong> bougeant <strong>plus</strong></td><td>by no longer moving</td></tr></tbody></table>
+<p>→ NE goes immediately after EN<br>
+→ PAS/RIEN/JAMAIS goes after the participe présent<br>
+→ P5 and P39 negation patterns apply inside the gérondif</p>
+<hr>
+<h2>🔹 BLOCK E — Cause: "Because of Doing / Due to Doing"</h2>
+<p><em>Scenario: Explaining WHY something happened — the action that caused the consequence</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English Meaning</th><th>Gérondif Function</th></tr></thead><tbody><tr><td>41</td><td>En arrivant en retard, il a raté le début du film.</td><td>By arriving late, he missed the beginning of the movie.</td><td>Cause → consequence</td></tr><tr><td>42</td><td>En oubliant son passeport, elle n'a pas pu embarquer.</td><td>By forgetting her passport, she couldn't board.</td><td>Cause → consequence</td></tr><tr><td>43</td><td>En ne vérifiant pas les chiffres, nous avons commis une erreur.</td><td>By not checking the numbers, we made a mistake.</td><td>Cause (negative gérondif) → consequence</td></tr><tr><td>44</td><td>En parlant trop vite, tu confonds les gens.</td><td>By speaking too fast, you confuse people.</td><td>Cause → habitual consequence</td></tr><tr><td>45</td><td>En voulant tout faire seul, il s'est épuisé.</td><td>By wanting to do everything alone, he exhausted himself.</td><td>Cause → physical consequence</td></tr><tr><td>46</td><td>En insistant trop, tu risques de l'énerver.</td><td>By insisting too much, you risk annoying him/her.</td><td>Cause → potential consequence</td></tr><tr><td>47</td><td>En négligeant sa santé, elle est tombée malade.</td><td>By neglecting her health, she fell ill.</td><td>Cause → health consequence</td></tr><tr><td>48</td><td>En sous-estimant le projet, on a manqué de ressources.</td><td>By underestimating the project, we lacked resources.</td><td>Cause → professional consequence</td></tr><tr><td>49</td><td>En mentant, tu as perdu sa confiance.</td><td>By lying, you lost his/her trust.</td><td>Cause → relationship consequence</td></tr><tr><td>50</td><td>En ne répondant pas, il a laissé croire qu'il n'était pas intéressé.</td><td>By not responding, he gave the impression he wasn't interested.</td><td>Cause (neg) → misinterpretation — laisser + inf (P37)</td></tr></tbody></table>
+<p><strong>🧠 Structure unlocked:</strong> <code>EN + participe présent = BECAUSE of doing X → consequence</code><br>
+→ Very close to condition (Block D) — but here the consequence has ALREADY happened<br>
+→ Block D: "En faisant attention, tu éviteras..." = future — conditional meaning<br>
+→ Block E: "En arrivant en retard, il a raté..." = past — causal meaning<br>
+→ <strong>The tense of the main verb determines whether it's condition (future) or cause (past)</strong><br>
+→ Sentence 50: combines negative gérondif + laisser + infinitif (P37) + croire + indirect speech (P25)</p>
+<hr>
+<h2>🔹 BLOCK F — TOUT EN + Participe Présent: Emphasis &amp; Contrast</h2>
+<p><em>Scenario: Situations where two things happen simultaneously — with emphasis or irony</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English Meaning</th><th>Why TOUT EN</th></tr></thead><tbody><tr><td>51</td><td>Il sourit tout en sachant la vérité.</td><td>He smiles even while knowing the truth.</td><td>Contrast — smiling despite knowing</td></tr><tr><td>52</td><td>Elle accepte tout en ayant des doutes.</td><td>She accepts even while having doubts.</td><td>Contrast — acceptance despite doubt</td></tr><tr><td>53</td><td>Tu dis oui tout en pensant non.</td><td>You say yes while thinking no.</td><td>Contrast — words vs. thoughts</td></tr><tr><td>54</td><td>Il travaille tout en étant malade.</td><td>He works even while being sick.</td><td>Contrast — perseverance despite illness</td></tr><tr><td>55</td><td>Elle reste calme tout en étant furieuse.</td><td>She stays calm even while being furious.</td><td>Contrast — surface vs. emotion</td></tr><tr><td>56</td><td>On avance tout en sachant que c'est risqué.</td><td>We move forward even while knowing it's risky.</td><td>Contrast — action despite awareness</td></tr><tr><td>57</td><td>Il me critiquait tout en me demandant de l'aide.</td><td>He criticized me while at the same time asking for my help.</td><td>Irony — contradictory actions</td></tr><tr><td>58</td><td>Tout en reconnaissant ses qualités, je dois souligner ses défauts.</td><td>While acknowledging his qualities, I must highlight his faults.</td><td>Formal concession — professional review</td></tr><tr><td>59</td><td>Tout en étant d'accord sur le principe, nous avons des réserves sur la méthode.</td><td>While agreeing in principle, we have reservations about the method.</td><td>Formal diplomatic — P29 (concession)</td></tr><tr><td>60</td><td>Elle réussissait ses examens tout en sortant tous les week-ends.</td><td>She passed her exams even while going out every weekend.</td><td>Contrast — impressive contradiction</td></tr></tbody></table>
+<p><strong>🧠 Structure unlocked:</strong> <code>TOUT EN + participe présent = EVEN WHILE doing / DESPITE doing</code><br>
+→ <strong>TOUT</strong> adds emphasis and usually introduces <strong>contrast or paradox</strong><br>
+→ Without TOUT: "en sachant la vérité" = while knowing the truth (neutral simultaneity)<br>
+→ With TOUT: "<strong>tout en</strong> sachant la vérité" = EVEN THOUGH he knows the truth (emphasized contrast)<br>
+→ Connects to P29 (concession/opposition — bien que, malgré) — tout en is another concession tool<br>
+→ Sentences 58-59: formal/professional register — very common in meetings, reviews, diplomatic speech</p>
+<hr>
+<h2>🔹 BLOCK G — Gérondif vs. Participe Présent (No "EN"): The Critical Difference</h2>
+<p><em>Scenario: Understanding when to use "en + -ant" vs. just "-ant" alone</em></p>
+<h3>The Rule</h3>
+<table><thead><tr><th>Form</th><th>Structure</th><th>Function</th><th>Example</th></tr></thead><tbody><tr><td><strong>Gérondif</strong></td><td><strong>EN</strong> + participe présent</td><td>Verbal adverb — modifies the verb (when/how/why)</td><td>Je mange <strong>en lisant</strong></td></tr><tr><td><strong>Participe présent</strong></td><td>participe présent ALONE (no en)</td><td>Verbal adjective — describes a NOUN</td><td>Un livre <strong>passionnant</strong> / Une personne <strong>parlant</strong> trois langues</td></tr></tbody></table>
+<p>→ The gérondif (with EN) modifies the <strong>ACTION</strong> → when, how, why you do it<br>
+→ The participe présent (without EN) modifies a <strong>NOUN</strong> → which person, which thing</p>
+<table><thead><tr><th>#</th><th>French Sentence — Participe Présent (NO en)</th><th>English Meaning</th><th>Function</th></tr></thead><tbody><tr><td>61</td><td>J'ai vu un homme portant un chapeau noir.</td><td>I saw a man wearing a black hat.</td><td>Describes the man — adjective</td></tr><tr><td>62</td><td>Les personnes souhaitant participer doivent s'inscrire.</td><td>People wishing to participate must register.</td><td>Describes which people — adjective</td></tr><tr><td>63</td><td>Étant fatigué, j'ai décidé de rester chez moi.</td><td>Being tired, I decided to stay home.</td><td>⚠️ Causal — describes subject's state</td></tr><tr><td>64</td><td>Ayant terminé son travail, elle est partie.</td><td>Having finished her work, she left.</td><td>⚠️ Compound participe présent — completed action before main action</td></tr><tr><td>65</td><td>Ne sachant pas quoi dire, il s'est tu.</td><td>Not knowing what to say, he stayed silent.</td><td>Negative participe présent — causal</td></tr></tbody></table>
+<p><strong>Now compare with gérondif:</strong></p>
+<table><thead><tr><th>#</th><th>French Sentence — Gérondif (WITH en)</th><th>English Meaning</th><th>Function</th></tr></thead><tbody><tr><td>66</td><td>En portant ce chapeau, tu auras l'air ridicule.</td><td>By wearing this hat, you'll look ridiculous.</td><td>Condition — modifies verb "auras l'air"</td></tr><tr><td>67</td><td>En souhaitant participer, ils ont envoyé leur candidature.</td><td>Wishing to participate, they sent their application.</td><td>Cause — modifies verb "ont envoyé"</td></tr><tr><td>68</td><td>En étant fatigué, je fais plus d'erreurs.</td><td>When I'm tired, I make more mistakes.</td><td>Condition — modifies verb "fais"</td></tr></tbody></table>
+<p><strong>🧠 Critical distinction unlocked:</strong></p>
+<table><thead><tr><th>Question</th><th>Use Gérondif (en + -ant)</th><th>Use Participe Présent (-ant alone)</th></tr></thead><tbody><tr><td>Modifies a VERB?</td><td>✅</td><td>❌</td></tr><tr><td>Modifies a NOUN?</td><td>❌</td><td>✅</td></tr><tr><td>Must have same subject as main verb?</td><td>✅ Always</td><td>Usually yes, but more flexible</td></tr><tr><td>Can be compound (ayant fait, étant parti)?</td><td>Rarely</td><td>✅ Common</td></tr></tbody></table>
+<p>→ Sentences 63-65: <strong>participe présent without EN</strong> — used for state/cause descriptions<br>
+→ These are <strong>literary/formal</strong> — gérondif is more <strong>spoken/everyday</strong><br>
+→ Sentence 64: "<strong>Ayant</strong> terminé" = compound participe présent (avoir in pp + past participle) — signals COMPLETED action before the main verb</p>
+<hr>
+<h2>🔹 BLOCK H — Gérondif in Complex Sentences: Mixing with Other Structures</h2>
+<p><em>Scenario: Advanced real-life sentences combining gérondif with structures from Previous Chapters</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English Meaning</th><th>Structures Combined</th></tr></thead><tbody><tr><td>69</td><td>En arrivant à Paris, j'ai réalisé que je ne parlais pas assez bien français.</td><td>Arriving in Paris, I realized I didn't speak French well enough.</td><td>Gérondif + indirect speech (P25) + imparfait (P10)</td></tr><tr><td>70</td><td>Tu aurais pu éviter cette erreur en vérifiant les données.</td><td>You could have avoided this mistake by checking the data.</td><td>Cond.passé (P35) + gérondif (method)</td></tr><tr><td>71</td><td>En ne lui disant rien, tu lui as fait croire que tout allait bien.</td><td>By not telling him anything, you made him believe everything was fine.</td><td>Negative gérondif + faire causatif (P37) + croire</td></tr><tr><td>72</td><td>Si j'avais su, j'aurais commencé en apprenant les bases.</td><td>If I had known, I would have started by learning the basics.</td><td>Si-clause (P34) + cond.passé (P35) + gérondif</td></tr><tr><td>73</td><td>Il m'a expliqué le chemin en me le dessinant sur une serviette.</td><td>He explained the way to me by drawing it for me on a napkin.</td><td>Gérondif + double pronoun (P36: me + le)</td></tr><tr><td>74</td><td>En se faisant passer pour un client, elle a obtenu les informations.</td><td>By pretending to be a client, she got the information.</td><td>Gérondif + se faire + infinitif (P37)</td></tr><tr><td>75</td><td>Tout en étant convaincu qu'il avait raison, il a accepté le compromis.</td><td>While being convinced he was right, he accepted the compromise.</td><td>Tout en + gérondif + plus-que-parfait (P32) inside subordinate</td></tr><tr><td>76</td><td>C'est en forgeant qu'on devient forgeron.</td><td>It's by forging that one becomes a blacksmith.</td><td>⚠️ Famous French proverb — "practice makes perfect"</td></tr><tr><td>77</td><td>En y réfléchissant bien, je pense que tu as raison.</td><td>Thinking about it carefully, I think you're right.</td><td>Gérondif + Y (P20) inside gérondif</td></tr><tr><td>78</td><td>En m'en parlant plus tôt, tu m'aurais évité beaucoup de stress.</td><td>By telling me about it earlier, you would have saved me a lot of stress.</td><td>Gérondif + double pronoun (P36: m' + en) + cond.passé (P35)</td></tr></tbody></table>
+<p><strong>🧠 Sentence 76 — The Most Famous Gérondif in French:</strong></p>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>C'est en forgeant qu'on devient forgeron.
+</span>       │                │
+    gérondif        main clause
+    (by forging)    (one becomes a blacksmith)</code></pre></div>
+<p>→ Equivalent of "Practice makes perfect" in English<br>
+→ This structure "C'est en [gérondif] que..." is a <strong>common emphatic pattern</strong><br>
+→ "C'est en pratiquant qu'on progresse" = It's by practicing that one improves<br>
+→ Extremely useful for motivational speech, advice, presentations</p>
+<hr>
+<h2>🔹 BLOCK I — Common Errors: What the Gérondif is NOT</h2>
+<p><em>Scenario: Situations where English uses "-ing" but French does NOT use the gérondif</em></p>
+<table><thead><tr><th>#</th><th>English Sentence with -ing</th><th>❌ Wrong French (using gérondif)</th><th>✅ Correct French</th><th>Why</th></tr></thead><tbody><tr><td>79</td><td>I am eating.</td><td><del>Je suis en mangeant.</del></td><td>Je <strong>mange</strong> / Je suis <strong>en train de</strong> manger.</td><td>French has NO continuous tense with -ing — use présent or "en train de"</td></tr><tr><td>80</td><td>I like reading.</td><td><del>J'aime en lisant.</del></td><td>J'aime <strong>lire</strong>.</td><td>After verbs of preference → infinitif, NOT gérondif</td></tr><tr><td>81</td><td>Swimming is good for health.</td><td><del>En nageant est bon.</del></td><td><strong>Nager</strong> est bon pour la santé / <strong>La natation</strong> est bonne...</td><td>Subject position → infinitif or noun, NOT gérondif</td></tr><tr><td>82</td><td>I spent the evening reading.</td><td><del>J'ai passé la soirée en lisant.</del></td><td>J'ai passé la soirée <strong>à lire</strong>.</td><td>After "passer du temps" → à + infinitif</td></tr><tr><td>83</td><td>I saw her crossing the street.</td><td><del>Je l'ai vue en traversant la rue.</del></td><td>Je l'ai vue <strong>traversant</strong> la rue / <strong>qui traversait</strong> la rue.</td><td>Different subjects — gérondif requires SAME subject</td></tr><tr><td>84</td><td>Thank you for coming.</td><td><del>Merci en venant.</del></td><td>Merci <strong>d'être venu(e)</strong>.</td><td>After "merci" → de + infinitif passé</td></tr><tr><td>85</td><td>I'm interested in learning.</td><td><del>Je suis intéressé en apprenant.</del></td><td>Je suis intéressé <strong>par</strong> l'apprentissage / Je m'intéresse <strong>à</strong> apprendre.</td><td>After adjectives → preposition + infinitif or noun</td></tr><tr><td>86</td><td>Instead of working, he plays.</td><td><del>En lieu de en travaillant...</del></td><td><strong>Au lieu de</strong> travailler, il joue.</td><td>"Instead of" → au lieu de + infinitif</td></tr><tr><td>87</td><td>Before leaving, call me.</td><td><del>En partant avant, appelle-moi.</del></td><td><strong>Avant de</strong> partir, appelle-moi.</td><td>"Before doing" → avant de + infinitif</td></tr><tr><td>88</td><td>After eating, I rest.</td><td><del>En mangeant après, je me repose.</del></td><td><strong>Après avoir</strong> mangé, je me repose.</td><td>"After doing" → après + infinitif passé</td></tr></tbody></table>
+<p><strong>🧠 Critical rules unlocked — When NOT to use gérondif:</strong></p>
+<table><thead><tr><th>English Pattern</th><th>French Solution</th><th>NOT Gérondif</th></tr></thead><tbody><tr><td>"I am doing" (continuous)</td><td>présent / en train de + inf</td><td>❌</td></tr><tr><td>"I like doing" (after preference verbs)</td><td>aimer / préférer + infinitif</td><td>❌</td></tr><tr><td>"Doing is good" (subject)</td><td>infinitif or noun</td><td>❌</td></tr><tr><td>"spend time doing"</td><td>passer du temps + à + inf</td><td>❌</td></tr><tr><td>"I saw him doing" (different subjects)</td><td>qui + imparfait or participe présent (no en)</td><td>❌</td></tr><tr><td>"thank you for doing"</td><td>merci + de + inf (passé)</td><td>❌</td></tr><tr><td>"before doing"</td><td>avant de + infinitif</td><td>❌</td></tr><tr><td>"after doing"</td><td>après + infinitif passé</td><td>❌</td></tr><tr><td>"instead of doing"</td><td>au lieu de + infinitif</td><td>❌</td></tr><tr><td>"without doing"</td><td>sans + infinitif</td><td>❌</td></tr></tbody></table>
+<hr>
+<h3>⚠️ Sentence 83 — The Same-Subject Rule</h3>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>❌ Je l'ai vue en traversant la rue.
+</span>   Subject: JE    Gérondif subject: also JE
+   = I saw her WHILE I WAS crossing the street (I crossed, not her)
+
+✅ Je l'ai vue traversant la rue.  (participe présent — no en)
+   OR: Je l'ai vue qui traversait la rue.
+   = I saw her crossing the street (SHE was crossing)</code></pre></div>
+<p>→ The gérondif ALWAYS refers to the main subject<br>
+→ If you use "en traversant" → it means YOU were crossing, not her<br>
+→ To describe what SHE was doing → use participe présent (no en) or "qui + imparfait"<br>
+→ This is the <strong>#1 error</strong> English speakers make with the gérondif</p>
+<hr>
+<h2>🔹 BLOCK J — Full Conversational Flow: A Journalist's Day</h2>
+<p><em>Scenario: You narrate your entire day using gérondif naturally — mixing all five meanings</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English Meaning</th><th>Gérondif Function</th></tr></thead><tbody><tr><td>89</td><td>Ce matin, en me réveillant, j'ai tout de suite vérifié mes messages.</td><td>This morning, upon waking up, I immediately checked my messages.</td><td>Simultaneity / temporal anchor</td></tr><tr><td>90</td><td>En prenant ma douche, j'ai eu une idée pour mon article.</td><td>While showering, I had an idea for my article.</td><td>Simultaneity — eureka moment</td></tr><tr><td>91</td><td>J'ai pris le métro en relisant mes notes.</td><td>I took the metro while rereading my notes.</td><td>Simultaneity — commute</td></tr><tr><td>92</td><td>En arrivant au bureau, j'ai appris qu'on avait changé la deadline.</td><td>Arriving at the office, I learned the deadline had been changed.</td><td>Temporal — "upon arriving"</td></tr><tr><td>93</td><td>J'ai commencé en appelant mes sources, une par une.</td><td>I started by calling my sources, one by one.</td><td>Method — first step</td></tr><tr><td>94</td><td>En posant les bonnes questions, j'ai obtenu des réponses inattendues.</td><td>By asking the right questions, I got unexpected answers.</td><td>Method — interview technique</td></tr><tr><td>95</td><td>Mon collègue est passé en courant — il était en retard pour une réunion.</td><td>My colleague rushed by running — he was late for a meeting.</td><td>Manner — physical description</td></tr><tr><td>96</td><td>Tout en écrivant mon article, je gardais un œil sur les réseaux sociaux.</td><td>While writing my article, I kept an eye on social media.</td><td>TOUT EN — emphasized simultaneity</td></tr><tr><td>97</td><td>En ne vérifiant pas une citation, j'ai failli publier une erreur.</td><td>By not checking a quote, I almost published an error.</td><td>Cause (negative gérondif) — near-mistake</td></tr><tr><td>98</td><td>C'est en relisant pour la troisième fois que j'ai repéré l'incohérence.</td><td>It was by rereading for the third time that I spotted the inconsistency.</td><td>C'est en...que — emphatic method</td></tr><tr><td>99</td><td>En quittant le bureau, j'ai croisé ma rédactrice en chef — elle m'a félicité en souriant.</td><td>Leaving the office, I ran into my editor-in-chief — she congratulated me smiling.</td><td>Temporal + manner — two gérondifs in one sentence</td></tr><tr><td>100</td><td>En rentrant chez moi, j'ai réalisé que c'est en faisant ce métier que je me sens le plus vivant.</td><td>Going home, I realized that it's by doing this job that I feel most alive.</td><td>Temporal + C'est en...que — emotional conclusion</td></tr></tbody></table>
+<hr>
+<h1>✅ WHAT SHOULD DO</h1>
+<p>→ <strong>Memorize the formation rule:</strong> nous form − ons + ant → add EN before it<br>
+→ <strong>Memorize the 3 irregulars:</strong> étant (être), ayant (avoir), sachant (savoir)<br>
+→ <strong>Practice the five meanings</strong> — label each gérondif you encounter:</p>
+<ol>
+<li>Simultaneity (while) — most common</li>
+<li>Method (by) — most useful</li>
+<li>Manner (how) — most vivid</li>
+<li>Condition (if) — most advisory</li>
+<li>Cause (because) — most analytical</li>
+</ol>
+<p>→ <strong>Master the same-subject rule</strong> — the gérondif ALWAYS refers to the subject of the main verb<br>
+→ <strong>Learn the "C'est en...que" pattern</strong> — it's powerful for emphasis and presentations<br>
+→ <strong>Practice "tout en" for contrast</strong> — it's elegant and impressive in formal contexts<br>
+→ <strong>Connect to P37</strong> — faire+infinitif = inseparable unit; gérondif = another verbal tool with strict rules<br>
+→ <strong>Connect to P14</strong> — reflexive verbs in gérondif require matching reflexive pronouns</p>
+<hr>
+<h1>❌ WHAT SHOULD NOT DO</h1>
+<p>→ ❌ <strong>NEVER use gérondif as a continuous tense:</strong></p>
+<ul>
+<li>❌ <del>Je suis en mangeant</del> → ✅ Je mange / Je suis en train de manger</li>
+<li>French has NO "-ing" continuous tense</li>
+</ul>
+<p>→ ❌ <strong>NEVER use gérondif after preference/opinion verbs:</strong></p>
+<ul>
+<li>❌ <del>J'aime en lisant</del> → ✅ J'aime <strong>lire</strong> (infinitif)</li>
+<li>❌ <del>Je déteste en attendant</del> → ✅ Je déteste <strong>attendre</strong></li>
+</ul>
+<p>→ ❌ <strong>NEVER use gérondif as the subject of a sentence:</strong></p>
+<ul>
+<li>❌ <del>En nageant est bon</del> → ✅ <strong>Nager</strong> est bon / <strong>La natation</strong> est bonne</li>
+</ul>
+<p>→ ❌ <strong>NEVER use gérondif when subjects are DIFFERENT:</strong></p>
+<ul>
+<li>❌ <del>Je l'ai vu en traversant</del> (meaning HE crossed) → ✅ Je l'ai vu <strong>qui traversait</strong></li>
+<li>If YOU crossed → then "en traversant" is correct</li>
+</ul>
+<p>→ ❌ <strong>NEVER use gérondif for "before doing" or "after doing":</strong></p>
+<ul>
+<li>❌ <del>En manger avant</del> → ✅ <strong>Avant de</strong> manger</li>
+<li>❌ <del>En manger après</del> → ✅ <strong>Après avoir</strong> mangé</li>
+</ul>
+<p>→ ❌ <strong>NEVER use gérondif for "without doing":</strong></p>
+<ul>
+<li>❌ <del>en ne partant pas</del> (meaning "without leaving") → ✅ <strong>Sans</strong> partir</li>
+<li>Negative gérondif means "by NOT doing" — different from "without doing"</li>
+</ul>
+<p>→ ❌ <strong>NEVER separate EN from the participe présent with non-reflexive pronouns:</strong></p>
+<ul>
+<li>❌ <del>En le faisant</del> → ⚠️ Actually this IS acceptable in some contexts</li>
+<li>Object pronouns of the infinitive embedded in gérondif CAN appear between en and -ant</li>
+<li>But reflexive pronouns ALWAYS go there: en <strong>me</strong> levant, en <strong>se</strong> préparant</li>
+</ul>
+<hr>
+<h1>🔀 WHEN TO USE WHAT</h1>
+<table><thead><tr><th>What You Want to Express</th><th>French Structure</th><th>Example</th></tr></thead><tbody><tr><td>While doing X</td><td>en + participe présent</td><td>Je mange <strong>en lisant</strong></td></tr><tr><td>By doing X (method)</td><td>en + participe présent</td><td>J'ai réussi <strong>en travaillant</strong></td></tr><tr><td>How someone does X (manner)</td><td>en + participe présent</td><td>Il est parti <strong>en courant</strong></td></tr><tr><td>If you do X (condition)</td><td>en + participe présent</td><td><strong>En faisant</strong> attention, tu réussiras</td></tr><tr><td>Because of doing X (cause)</td><td>en + participe présent</td><td><strong>En arrivant</strong> en retard, il a tout raté</td></tr><tr><td>Even while doing X (contrast)</td><td><strong>tout en</strong> + participe présent</td><td>Il sourit <strong>tout en</strong> sachant la vérité</td></tr><tr><td>Emphasis: it's by doing X that...</td><td><strong>C'est en</strong> + pp + <strong>que</strong></td><td>C'est <strong>en forgeant</strong> qu'on devient forgeron</td></tr><tr><td>I am doing X (continuous)</td><td>❌ NOT gérondif → présent / en train de</td><td>Je suis <strong>en train de</strong> manger</td></tr><tr><td>I like doing X</td><td>❌ NOT gérondif → infinitif</td><td>J'aime <strong>lire</strong></td></tr><tr><td>Before doing X</td><td>❌ NOT gérondif → avant de + inf</td><td><strong>Avant de</strong> partir</td></tr><tr><td>After doing X</td><td>❌ NOT gérondif → après avoir + pp</td><td><strong>Après avoir</strong> mangé</td></tr><tr><td>Without doing X</td><td>❌ NOT gérondif → sans + inf</td><td><strong>Sans</strong> hésiter</td></tr><tr><td>Instead of doing X</td><td>❌ NOT gérondif → au lieu de + inf</td><td><strong>Au lieu de</strong> parler</td></tr></tbody></table>
+<hr>
+<h1>🚫 WHEN NOT TO USE</h1>
+<p>→ Summarized from Block I — the <strong>six forbidden zones</strong> for gérondif:</p>
+<table><thead><tr><th>Zone</th><th>English Pattern</th><th>French Solution (NOT gérondif)</th></tr></thead><tbody><tr><td>🚫 Continuous tense</td><td>"I am eating"</td><td>Je mange / Je suis en train de manger</td></tr><tr><td>🚫 After preference verbs</td><td>"I like swimming"</td><td>J'aime nager</td></tr><tr><td>🚫 Subject of sentence</td><td>"Swimming is healthy"</td><td>Nager est sain / La natation est saine</td></tr><tr><td>🚫 Different subjects</td><td>"I saw him running"</td><td>Je l'ai vu qui courait</td></tr><tr><td>🚫 Temporal prepositions</td><td>"before/after/without doing"</td><td>avant de / après avoir / sans + infinitif</td></tr><tr><td>🚫 Other prepositions</td><td>"instead of / for / about doing"</td><td>au lieu de / pour / à propos de + infinitif</td></tr></tbody></table>
+<hr>
+<h1>⚠️ COMMON PITFALLS AND FAILURE MODES</h1>
+<table><thead><tr><th>Pitfall</th><th>What Learners Do Wrong</th><th>Why It Fails</th><th>Correct Version</th></tr></thead><tbody><tr><td><strong>Continuous tense trap</strong></td><td>Je suis en mangeant</td><td>French has no -ing continuous tense</td><td>Je mange / Je suis en train de manger</td></tr><tr><td><strong>Preference verb trap</strong></td><td>J'aime en lisant</td><td>Gérondif doesn't follow preference verbs</td><td>J'aime <strong>lire</strong></td></tr><tr><td><strong>Different-subject error</strong></td><td>Je l'ai vu en traversant (meaning he crossed)</td><td>Gérondif always refers to main subject</td><td>Je l'ai vu <strong>qui traversait</strong></td></tr><tr><td><strong>"Before/After" confusion</strong></td><td>En mangeant avant...</td><td>Gérondif ≠ "before doing"</td><td><strong>Avant de</strong> manger</td></tr><tr><td><strong>"Without" confusion</strong></td><td>En ne faisant pas (meaning "without doing")</td><td>Negative gérondif = "by not doing" ≠ "without doing"</td><td><strong>Sans</strong> faire</td></tr><tr><td><strong>Irregular forms forgotten</strong></td><td><del>en sachant</del> ... wait, that IS correct</td><td>Only 3 irregulars: étant, ayant, sachant</td><td>Memorize these three</td></tr><tr><td><strong>Reflexive pronoun mismatch</strong></td><td><del>Il mange en me préparant</del> (he eats while getting ME ready)</td><td>Reflexive pronoun must match main subject</td><td>Il mange en <strong>se</strong> préparant</td></tr><tr><td><strong>Missing TOUT for contrast</strong></td><td>En sachant la vérité, il sourit</td><td>This is neutral simultaneity — no contrast</td><td><strong>Tout en</strong> sachant la vérité, il sourit (adds "despite" nuance)</td></tr><tr><td><strong>Overusing gérondif</strong></td><td>Every sentence has en + -ant</td><td>Sounds repetitive and unnatural</td><td>Mix with subordinate clauses (quand, pendant que — P30)</td></tr><tr><td><strong>Confusing gérondif with participe présent</strong></td><td>Using "en" when describing a noun</td><td>"En" = verbal adverb (modifies verb); no "en" = adjective (modifies noun)</td><td>Un homme <strong>portant</strong> un chapeau (no en)</td></tr></tbody></table>
+<hr>
+<h1>🔑 KEY TAKEAWAY</h1>
+<blockquote>
+<p><strong>P37 gave you faire + infinitif — causing others to perform actions.</strong><br>
+<strong>P38 gives you en + participe présent — connecting two actions performed by the SAME person.</strong></p>
+<p>The gérondif is one of the most elegant and efficient structures in French:</p>
+<ul>
+<li>It replaces entire subordinate clauses: "pendant que je lisais" → "en lisant"</li>
+<li>It has FIVE distinct meanings — all in one tiny structure</li>
+<li>It has ONE absolute rule: <strong>same subject for both actions</strong></li>
+</ul>
+<p>But it is NOT the French equivalent of English "-ing":</p>
+<ul>
+<li>French has NO continuous tense → "I am eating" ≠ "Je suis en mangeant"</li>
+<li>After preference verbs → infinitif, not gérondif</li>
+<li>Before/after/without → preposition + infinitif, not gérondif</li>
+</ul>
+<p>The proverb says it all:<br>
+<strong>"C'est en forgeant qu'on devient forgeron."</strong><br>
+It's by DOING that you become a DOER.</p>
+<p>You now have three powerful verbal tools:</p>
+<ul>
+<li>P36: Double pronouns → compressing objects</li>
+<li>P37: Faire causatif → delegating actions</li>
+<li>P38: Gérondif → connecting simultaneous actions</li>
+</ul>
+<p>But there's one more structural layer in this phase: what about saying "never," "nothing," "nobody," "nowhere," "only" — all the ways to NEGATE beyond simple "ne...pas"?</p>
+</blockquote>
+<hr>
+<h1>🌉 BRIDGE TO PROJECT 39</h1>
+<blockquote>
+<p>You already know basic negation from P5: "ne...pas" = not<br>
+But real French conversation uses MUCH richer negation:</p>
+<p>→ "I <strong>never</strong> go there" — ne...jamais<br>
+→ "I see <strong>nothing</strong>" — ne...rien<br>
+→ "<strong>Nobody</strong> understands" — ne...personne<br>
+→ "She eats <strong>only</strong> bread" — ne...que<br>
+→ "He has <strong>no</strong> friends" — ne...aucun<br>
+→ "I drink <strong>neither</strong> coffee <strong>nor</strong> tea" — ne...ni...ni<br>
+→ "She <strong>no longer</strong> lives here" — ne...plus</p>
+<p>These negation patterns interact with EVERY structure you've learned:<br>
+→ Double pronouns (P36): "Je ne <strong>le lui</strong> ai <strong>jamais</strong> dit"<br>
+→ Faire causatif (P37): "Il ne **m'**a <strong>rien</strong> fait faire"<br>
+→ Gérondif (P38): "En ne disant <strong>rien</strong>..."</p>
+<p>Project 39 unlocks: <strong>Advanced negation</strong> — the full spectrum of French negative expression<br>
+→ The structures that make your French precise, emphatic, and unmistakably fluent</p>
+</blockquote>
+<hr>
+<h1>✅ PROJECT 38 COMPLETE</h1>
+<blockquote>
+<p><strong>Are you ready for PROJECT 39: "Never, Nothing, Nobody, Only"?</strong><br>
+→ ~100 sentences covering all advanced negation patterns<br>
+→ Scenario: A detective investigating a case where everyone denies everything<br>
+→ Builds on P5 (basic negation), P36 (double pronouns in negative), P37/P38 (negation inside complex structures)</p>
+</blockquote>
+</div>
+</div>
+
+<!-- ========== data-index="17" ========== -->
+
+        </div>
+
+        <div class="nav-bar">
+            <a href="project-37.html" class="nav-button prev">← Previous Chapter</a>
+            <div class="page-info">
+                <a href="index.html" class="nav-button home">📚 Table of Contents</a><br>
+                <span style="margin-top:8px;display:block">Chapter 38 of 50</span>
+            </div>
+            <a href="project-39.html" class="nav-button next">Next Chapter →</a>
+        </div>
+    </div>
+
+    
+    <div id="progress-track"><div id="progress-fill"></div></div>
+    <div id="progress-pct">0%</div>
+
+
+    <script>
+    const fill = document.getElementById('progress-fill');
+    const pct  = document.getElementById('progress-pct');
+    function updateProgress() {
+        const scrollTop = window.scrollY;
+        const docHeight = document.body.scrollHeight - window.innerHeight;
+        const scrolled  = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+        fill.style.height = scrolled + '%';
+        pct.textContent   = Math.round(scrolled) + '%';
+    }
+    window.addEventListener('scroll', updateProgress);
+    updateProgress();
+
+    document.addEventListener('keydown', function(e) {
+        if (['INPUT','TEXTAREA'].includes(document.activeElement.tagName)) return;
+        if (e.key === 'ArrowLeft') {
+            const b = document.querySelector('.nav-button.prev');
+            if (b && !b.classList.contains('disabled')) window.location.href = b.href;
+        }
+        if (e.key === 'ArrowRight') {
+            const b = document.querySelector('.nav-button.next');
+            if (b && !b.classList.contains('disabled')) window.location.href = b.href;
+        }
+    });
+    </script>
+
+</body>
+</html>

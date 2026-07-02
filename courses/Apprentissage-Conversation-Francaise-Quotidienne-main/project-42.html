@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="images/favicon.png">
+    <title>Project 42: "It's Raining Cats — French Style" — French Daily Sentences</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.75;
+            color: #1a202c;
+            background-color: #f7fafc;
+        }
+        .container {
+            max-width: 1800px;
+            margin: 0 auto;
+            background: white;
+            min-height: 100vh;
+            box-shadow: 0 0 30px rgba(0,0,0,0.08);
+            padding: 48px 52px;
+        }
+        
+        .content { max-width: 1700px; margin: 0 auto; color: #1a202c; }
+        .content h1 {
+            color: #1a202c; margin: 32px 0 20px;
+            padding-bottom: 12px;
+            border-bottom: 4px solid #3b82f6;
+            font-size: 2.1em;
+            font-weight: 700;
+        }
+        .content h2 {
+            color: #1a202c; margin: 28px 0 16px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #60a5fa;
+            font-size: 1.6em;
+            font-weight: 600;
+        }
+        .content h3 { color: #1a202c; margin: 22px 0 12px; font-size: 1.3em; font-weight: 600; }
+        .content h4 { color: #2d3748; margin: 18px 0 10px; font-size: 1.1em; font-weight: 600; }
+        .content p  { margin-bottom: 16px; line-height: 1.8; color: #1a202c; }
+        .content ul, .content ol { margin: 12px 0 18px 30px; color: #1a202c; }
+        .content li { margin-bottom: 8px; line-height: 1.75; color: #1a202c; }
+        .content hr { border: none; border-top: 2px solid #e2e8f0; margin: 26px 0; }
+        .content pre {
+            background: #f7fafc !important;
+            border: 1px solid #cbd5e0 !important;
+            border-left: 4px solid #3b82f6 !important;
+            padding: 18px !important; overflow-x: auto; margin: 18px 0; border-radius: 6px;
+            font-family: 'Consolas','Monaco','Courier New',monospace !important;
+            font-size: 0.9em !important;
+        }
+        .content pre:not([style*="color"]) { color: #1a202c !important; }
+        .content code {
+            font-family: 'Consolas','Monaco','Courier New',monospace !important;
+            font-size: 0.88em !important;
+        }
+        .content code:not(pre code) {
+            background: #dbeafe !important;
+            color: #1a202c !important;
+            padding: 2px 6px;
+            border-radius: 3px;
+        }
+        .content pre code { background: transparent !important; padding: 0; }
+        .content table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+        .content th {
+            background: linear-gradient(135deg, #3b82f6 0%, #60a5fa 100%);
+            color: white; padding: 12px 16px; text-align: left;
+            font-weight: 600;
+        }
+        .content td { padding: 11px 16px; border: 1px solid #e2e8f0; color: #1a202c; }
+        .content tr:nth-child(even) td { background: #eff6ff; }
+        .content blockquote {
+            border-left: 4px solid #3b82f6; background: #eff6ff;
+            padding: 14px 20px; margin: 18px 0; border-radius: 0 6px 6px 0;
+            color: #1a202c;
+        }
+        .content strong { color: #1a202c; font-weight: 600; }
+        .px-2 { padding: 0; }
+        .chat-message { background: transparent; padding: 0; margin: 0; }
+
+        /* Bottom nav bar only */
+        .nav-bar {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 24px 0;
+            margin-top: 50px;
+            border-top: 3px solid #60a5fa;
+        }
+        .nav-button {
+            display: inline-flex; align-items: center; gap: 8px;
+            padding: 12px 26px;
+            background: linear-gradient(135deg, #3b82f6 0%, #60a5fa 100%);
+            color: white !important; text-decoration: none;
+            border-radius: 8px; font-weight: 600; font-size: 0.95em;
+            transition: all 0.2s;
+            box-shadow: 0 2px 8px rgba(59,130,246,0.35);
+        }
+        .nav-button:hover { transform: translateY(-2px); box-shadow: 0 4px 14px rgba(59,130,246,0.5); }
+        .nav-button.disabled { background: #cbd5e1; box-shadow: none; pointer-events: none; }
+        .nav-button.home {
+            background: linear-gradient(135deg, #ef4444 0%, #f87171 100%);
+            box-shadow: 0 2px 8px rgba(239,68,68,0.35);
+        }
+        .nav-button.home:hover { box-shadow: 0 4px 14px rgba(239,68,68,0.5); }
+        .page-info { color: #718096; font-size: 0.9em; text-align: center; }
+
+        /* Progress bar */
+        #progress-track {
+            position: fixed; top: 20px; right: 20px;
+            width: 10px; height: 150px;
+            background: rgba(59,130,246,0.2);
+            border: 2px solid #3b82f6;
+            border-radius: 6px; overflow: hidden; z-index: 1000;
+        }
+        #progress-fill {
+            width: 100%;
+            background: linear-gradient(180deg, #3b82f6, #2563eb);
+            height: 0%;
+            transition: height 0.15s ease;
+        }
+        #progress-pct {
+            position: fixed; top: 0px; right: 16px;
+            color: #2563eb; font-size: 14px; font-weight: bold;
+            z-index: 1001;
+            text-shadow: 0 1px 2px rgba(255,255,255,0.9);
+            line-height: 20px;
+        }
+
+    </style>
+<link rel="stylesheet" href="assets/chapters.css?v=20260421203847"><script src="assets/chapters.js?v=20260421203847" defer></script>
+</head>
+<body>
+    <div class="container">
+        <div class="content">
+            <div class="chat-message" data-index="23">
+<div class="px-2"><h1>🔴 PROJECT 42: "It's Raining Cats — French Style"</h1>
+<h2><em>A full week of French life where idioms pop up in every situation</em></h2>
+<hr>
+<h1>🎯 THE HYPOTHETICAL PROBLEM</h1>
+<p>→ You've been living in France for several months now<br>
+→ Your grammar is solid — you can build any sentence, use any tense, switch registers<br>
+→ But every day, French people say things that make ZERO sense when you translate them word-by-word<br>
+→ Monday: Your colleague says "J'ai un poil dans la main aujourd'hui" — you picture a hair in his hand — he means he's feeling <strong>lazy</strong><br>
+→ Tuesday: A friend cancels plans and says "Elle m'a posé un lapin" — you imagine a rabbit being placed — she means she was <strong>stood up</strong><br>
+→ Wednesday: Your boss says "Ce projet, c'est pas la mer à boire" — you think about drinking the sea — he means it's <strong>not that difficult</strong><br>
+→ Thursday: Someone describes a colleague as "avoir un coup de foudre" — you hear lightning — they mean <strong>love at first sight</strong><br>
+→ Friday: At a bar, someone says "On va casser la croûte" — breaking the crust? — they mean <strong>let's grab a bite to eat</strong><br>
+→ You understand every WORD — but the MEANING escapes you completely<br>
+→ You realize: <strong>Idioms are the DNA of native speech — they carry culture, humor, and identity</strong><br>
+→ Without them, you speak correct French — WITH them, you speak REAL French</p>
+<p><strong>The core realization:</strong><br>
+→ Idioms are <strong>fixed expressions</strong> whose meaning CANNOT be deduced from individual words<br>
+→ They must be learned AS COMPLETE UNITS — like vocabulary items, not grammar rules<br>
+→ French has hundreds of daily-use idioms — we'll cover the <strong>100 most essential</strong> organized by life situation<br>
+→ Each idiom will be presented IN a full sentence — because idioms only make sense in context<br>
+→ You already have ALL the grammar needed — idioms are the final layer of <strong>cultural fluency</strong></p>
+<hr>
+<h1>🔍 HOW TO APPROACH IT</h1>
+<p>→ Think of idioms as <strong>pre-built sentence chunks</strong> — like LEGO pieces that snap into your grammar<br>
+→ They follow grammar rules (conjugation, agreement, negation) but their MEANING is fixed<br>
+→ You can conjugate the verb inside an idiom — but you can't change the words</p>
+<p><strong>Example:</strong></p>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>Idiom: "poser un lapin à quelqu'un" = to stand someone up
+</span>
+✅ Elle m'a posé un lapin. (passé composé — P9)
+✅ Il va te poser un lapin. (futur proche — P12)
+✅ Si elle me posait un lapin, je serais furieux. (si-clause — P33)
+✅ Ne me pose pas un lapin ! (impératif — P13)
+
+❌ Elle m'a posé un chat. (changing "lapin" breaks the idiom)
+❌ Elle m'a mis un lapin. (changing "poser" breaks the idiom)</code></pre></div>
+<p>→ The verb conjugates normally — the rest stays FROZEN</p>
+<h2>Organization Strategy</h2>
+<p>→ Instead of random lists, we'll organize idioms by <strong>LIFE DOMAIN</strong> — the situations where you'll encounter them<br>
+→ Each block = one domain of daily life<br>
+→ Each sentence = one idiom used naturally in conversation</p>
+<hr>
+<h1>✅ WHAT COULD BE DONE — THE 100 SENTENCES</h1>
+<h2>🔹 BLOCK A — Emotions &amp; Feelings</h2>
+<p><em>Scenario: Describing how you feel, how others feel — the emotional vocabulary of native speakers</em></p>
+<table><thead><tr><th>#</th><th>French Sentence with Idiom</th><th>Idiom</th><th>Literal Translation</th><th>Actual Meaning</th></tr></thead><tbody><tr><td>1</td><td>J'ai le cafard aujourd'hui, je ne sais pas pourquoi.</td><td>avoir le cafard</td><td>to have the cockroach</td><td>to feel <strong>depressed / down</strong></td></tr><tr><td>2</td><td>Quand il l'a vue pour la première fois, ça a été un coup de foudre.</td><td>un coup de foudre</td><td>a lightning strike</td><td><strong>love at first sight</strong></td></tr><tr><td>3</td><td>Elle a le cœur sur la main — elle aide toujours tout le monde.</td><td>avoir le cœur sur la main</td><td>to have the heart on the hand</td><td>to be <strong>very generous</strong></td></tr><tr><td>4</td><td>Ça me fait chaud au cœur de te revoir après tout ce temps.</td><td>faire chaud au cœur</td><td>to make warm in the heart</td><td>to <strong>warm one's heart</strong></td></tr><tr><td>5</td><td>Il a pété les plombs quand il a appris la nouvelle.</td><td>péter les plombs</td><td>to blow the fuses</td><td>to <strong>lose it / go crazy</strong> (anger)</td></tr><tr><td>6</td><td>Arrête, tu me casses les pieds avec tes questions !</td><td>casser les pieds à qqn</td><td>to break someone's feet</td><td>to <strong>annoy / bug someone</strong></td></tr><tr><td>7</td><td>J'en ai ras le bol de ce temps pourri.</td><td>en avoir ras le bol</td><td>to have the bowl full of it</td><td>to be <strong>fed up</strong></td></tr><tr><td>8</td><td>Elle est tombée dans les pommes en plein milieu de la réunion.</td><td>tomber dans les pommes</td><td>to fall in the apples</td><td>to <strong>faint / pass out</strong></td></tr><tr><td>9</td><td>J'ai eu la chair de poule en écoutant cette chanson.</td><td>avoir la chair de poule</td><td>to have hen flesh</td><td>to have <strong>goosebumps</strong></td></tr><tr><td>10</td><td>Il broie du noir depuis sa rupture.</td><td>broyer du noir</td><td>to grind black</td><td>to be <strong>very depressed / gloomy</strong></td></tr></tbody></table>
+<p><strong>🧠 Domain unlocked: EMOTIONAL IDIOMS</strong><br>
+→ These replace bland adjectives with vivid images<br>
+→ Instead of "Je suis triste" → "J'ai le cafard" (more native, more expressive)<br>
+→ Instead of "Je suis énervé" → "J'en ai ras le bol" (stronger, more visceral)<br>
+→ Sentence 5: "Péter les plombs" = very casual (R2/R1 from P40) — don't use in formal contexts<br>
+→ Sentence 7: "En avoir ras le bol" — "en" refers to the situation (P20) — "en" is part of the idiom</p>
+<hr>
+<h2>🔹 BLOCK B — Work &amp; Professional Life</h2>
+<p><em>Scenario: Office conversations, describing colleagues, talking about career</em></p>
+<table><thead><tr><th>#</th><th>French Sentence with Idiom</th><th>Idiom</th><th>Literal Translation</th><th>Actual Meaning</th></tr></thead><tbody><tr><td>11</td><td>Mon collègue a un poil dans la main — il ne fait jamais rien.</td><td>avoir un poil dans la main</td><td>to have a hair in the hand</td><td>to be <strong>very lazy</strong></td></tr><tr><td>12</td><td>Ce projet, c'est pas la mer à boire — on va y arriver.</td><td>ce n'est pas la mer à boire</td><td>it's not the sea to drink</td><td>it's <strong>not that hard</strong></td></tr><tr><td>13</td><td>Il faut mettre les bouchées doubles si on veut finir à temps.</td><td>mettre les bouchées doubles</td><td>to put the mouthfuls double</td><td>to <strong>work twice as hard / speed up</strong></td></tr><tr><td>14</td><td>Notre patron ne tourne pas autour du pot — il dit les choses directement.</td><td>tourner autour du pot</td><td>to turn around the pot</td><td>to <strong>beat around the bush</strong></td></tr><tr><td>15</td><td>J'ai mis la charrue avant les bœufs en commençant par le design.</td><td>mettre la charrue avant les bœufs</td><td>to put the plow before the oxen</td><td>to <strong>put the cart before the horse</strong></td></tr><tr><td>16</td><td>Ce rapport, je l'ai fait en un clin d'œil.</td><td>en un clin d'œil</td><td>in a blink of an eye</td><td><strong>very quickly / in a flash</strong></td></tr><tr><td>17</td><td>Ma collègue est au four et au moulin — elle gère trois projets à la fois.</td><td>être au four et au moulin</td><td>to be at the oven and the mill</td><td>to be <strong>doing too many things at once</strong></td></tr><tr><td>18</td><td>Le nouveau stagiaire, il apprend vite — il a plus d'un tour dans son sac.</td><td>avoir plus d'un tour dans son sac</td><td>to have more than one trick in one's bag</td><td>to have <strong>more than one trick up one's sleeve</strong></td></tr><tr><td>19</td><td>On a mis cartes sur table pendant la réunion — plus de secrets.</td><td>mettre cartes sur table</td><td>to put cards on the table</td><td>to <strong>lay one's cards on the table / be transparent</strong></td></tr><tr><td>20</td><td>Ce client nous mène en bateau depuis des semaines.</td><td>mener en bateau</td><td>to lead by boat</td><td>to <strong>string someone along / deceive</strong></td></tr></tbody></table>
+<p><strong>🧠 Domain unlocked: PROFESSIONAL IDIOMS</strong><br>
+→ These are used daily in French offices, meetings, and professional conversations<br>
+→ Sentence 12: "C'est pas la mer à boire" — one of the most common reassuring idioms in French<br>
+→ Sentence 14: "Tourner autour du pot" = English equivalent "beat around the bush" — rare case of similar imagery<br>
+→ Sentence 15: "Mettre la charrue avant les bœufs" = English "put the cart before the horse" — similar logic, different animals</p>
+<hr>
+<h2>🔹 BLOCK C — Food, Eating &amp; Social Dining</h2>
+<p><em>Scenario: French life revolves around food — so do many idioms</em></p>
+<table><thead><tr><th>#</th><th>French Sentence with Idiom</th><th>Idiom</th><th>Literal Translation</th><th>Actual Meaning</th></tr></thead><tbody><tr><td>21</td><td>On va casser la croûte avant de reprendre le travail ?</td><td>casser la croûte</td><td>to break the crust</td><td>to <strong>grab a bite to eat</strong></td></tr><tr><td>22</td><td>Ce gâteau ? C'est un jeu d'enfant à faire — c'est du gâteau !</td><td>c'est du gâteau</td><td>it's cake</td><td>it's a <strong>piece of cake / very easy</strong></td></tr><tr><td>23</td><td>Allez, ne tourne pas autour du pot — dis-moi ce que tu veux, c'est pas tes oignons mais bon.</td><td>ce ne sont pas tes oignons</td><td>it's not your onions</td><td>it's <strong>none of your business</strong></td></tr><tr><td>24</td><td>J'ai mis de l'eau dans mon vin — j'ai accepté un compromis.</td><td>mettre de l'eau dans son vin</td><td>to put water in one's wine</td><td>to <strong>compromise / tone it down</strong></td></tr><tr><td>25</td><td>Il raconte toujours des salades — ne le crois pas.</td><td>raconter des salades</td><td>to tell salads</td><td>to <strong>tell lies / make up stories</strong></td></tr><tr><td>26</td><td>La cerise sur le gâteau, c'est qu'il a oublié de nous inviter.</td><td>la cerise sur le gâteau</td><td>the cherry on the cake</td><td>the <strong>cherry on top</strong> (often ironic — the last straw)</td></tr><tr><td>27</td><td>Tu ne peux pas avoir le beurre et l'argent du beurre.</td><td>avoir le beurre et l'argent du beurre</td><td>to have the butter and the butter's money</td><td>to <strong>have your cake and eat it too</strong></td></tr><tr><td>28</td><td>Elle est tombée dans les pommes après avoir couru le marathon.</td><td>tomber dans les pommes</td><td>to fall in the apples</td><td>to <strong>faint</strong> (repeat from Block A — dual domain)</td></tr><tr><td>29</td><td>Ce mec, il a la banane depuis ce matin — il sourit tout le temps.</td><td>avoir la banane</td><td>to have the banana</td><td>to have a <strong>big smile / be very happy</strong></td></tr><tr><td>30</td><td>On ne va pas en faire tout un fromage — c'est juste un petit retard.</td><td>en faire tout un fromage</td><td>to make a whole cheese out of it</td><td>to <strong>make a big deal out of nothing</strong></td></tr></tbody></table>
+<p><strong>🧠 Domain unlocked: FOOD IDIOMS</strong><br>
+→ French culture = food culture → food metaphors are EVERYWHERE<br>
+→ Sentence 26: "La cerise sur le gâteau" — often used <strong>ironically</strong> in French (unlike English where "cherry on top" is usually positive)<br>
+→ Sentence 27: "Le beurre et l'argent du beurre" — quintessentially French — about wanting everything without sacrifice<br>
+→ Sentence 30: "En faire tout un fromage" — very common in daily speech — "Don't make a mountain out of a molehill"</p>
+<hr>
+<h2>🔹 BLOCK D — Weather, Nature &amp; Animals</h2>
+<p><em>Scenario: Describing situations using imagery from the natural world</em></p>
+<table><thead><tr><th>#</th><th>French Sentence with Idiom</th><th>Idiom</th><th>Literal Translation</th><th>Actual Meaning</th></tr></thead><tbody><tr><td>31</td><td>Il pleut des cordes depuis ce matin — impossible de sortir.</td><td>pleuvoir des cordes</td><td>to rain ropes</td><td>to <strong>rain cats and dogs / pour</strong></td></tr><tr><td>32</td><td>Ce n'est pas un temps à mettre un chien dehors.</td><td>un temps à ne pas mettre un chien dehors</td><td>weather to not put a dog outside</td><td><strong>terrible weather</strong></td></tr><tr><td>33</td><td>Il fait un froid de canard — mets ton manteau !</td><td>un froid de canard</td><td>a duck's cold</td><td><strong>bitterly cold</strong></td></tr><tr><td>34</td><td>Quand les poules auront des dents, il rangera sa chambre.</td><td>quand les poules auront des dents</td><td>when hens have teeth</td><td><strong>when pigs fly / never</strong></td></tr><tr><td>35</td><td>Arrête de noyer le poisson — réponds à ma question.</td><td>noyer le poisson</td><td>to drown the fish</td><td>to <strong>dodge the question / be evasive</strong></td></tr><tr><td>36</td><td>Il a d'autres chats à fouetter en ce moment.</td><td>avoir d'autres chats à fouetter</td><td>to have other cats to whip</td><td>to have <strong>other fish to fry</strong></td></tr><tr><td>37</td><td>Elle a une mémoire d'éléphant — elle n'oublie jamais rien.</td><td>avoir une mémoire d'éléphant</td><td>to have an elephant's memory</td><td>to have an <strong>excellent memory</strong></td></tr><tr><td>38</td><td>On a été reçus comme des chiens dans un jeu de quilles.</td><td>être reçu comme un chien dans un jeu de quilles</td><td>to be received like a dog in a bowling game</td><td>to be <strong>very unwelcome</strong></td></tr><tr><td>39</td><td>Il y a anguille sous roche — quelque chose ne va pas.</td><td>il y a anguille sous roche</td><td>there's an eel under the rock</td><td><strong>something fishy is going on</strong></td></tr><tr><td>40</td><td>C'est la goutte d'eau qui fait déborder le vase.</td><td>la goutte d'eau qui fait déborder le vase</td><td>the drop of water that overflows the vase</td><td>the <strong>last straw</strong></td></tr></tbody></table>
+<p><strong>🧠 Domain unlocked: NATURE &amp; ANIMAL IDIOMS</strong><br>
+→ Sentence 31: "Il pleut des cordes" — French rains ROPES, not cats and dogs<br>
+→ Sentence 34: "Quand les poules auront des dents" — French pigs don't fly; hens grow teeth<br>
+→ Sentence 36: "Avoir d'autres chats à fouetter" — French doesn't fry fish; it whips cats<br>
+→ Sentence 40: "La goutte d'eau..." — THE most common "last straw" expression in French — used almost daily</p>
+<hr>
+<h2>🔹 BLOCK E — Body Parts in Idioms</h2>
+<p><em>Scenario: French loves using body parts metaphorically — head, hands, feet, eyes, tongue</em></p>
+<table><thead><tr><th>#</th><th>French Sentence with Idiom</th><th>Idiom</th><th>Literal Translation</th><th>Actual Meaning</th></tr></thead><tbody><tr><td>41</td><td>J'ai la tête dans les nuages aujourd'hui — je n'arrive pas à me concentrer.</td><td>avoir la tête dans les nuages</td><td>to have the head in the clouds</td><td>to be <strong>daydreaming / distracted</strong></td></tr><tr><td>42</td><td>Il a les yeux plus gros que le ventre — il a commandé trois plats.</td><td>avoir les yeux plus gros que le ventre</td><td>to have eyes bigger than the belly</td><td>to <strong>bite off more than you can chew</strong> (food context)</td></tr><tr><td>43</td><td>Elle a la langue bien pendue — elle parle sans arrêt.</td><td>avoir la langue bien pendue</td><td>to have a well-hung tongue</td><td>to be a <strong>chatterbox / very talkative</strong></td></tr><tr><td>44</td><td>Je me suis levé du pied gauche ce matin — tout va mal.</td><td>se lever du pied gauche</td><td>to get up on the left foot</td><td>to <strong>get up on the wrong side of the bed</strong></td></tr><tr><td>45</td><td>Ce film m'a donné la chair de poule du début à la fin.</td><td>donner la chair de poule</td><td>to give hen flesh</td><td>to give <strong>goosebumps</strong></td></tr><tr><td>46</td><td>Il a mis le doigt sur le problème — c'est le budget.</td><td>mettre le doigt sur</td><td>to put the finger on</td><td>to <strong>put your finger on / identify precisely</strong></td></tr><tr><td>47</td><td>On a réussi les doigts dans le nez — c'était facile.</td><td>les doigts dans le nez</td><td>fingers in the nose</td><td><strong>easily / effortlessly</strong> (casual R2)</td></tr><tr><td>48</td><td>Ça coûte les yeux de la tête !</td><td>coûter les yeux de la tête</td><td>to cost the eyes of the head</td><td>to <strong>cost an arm and a leg</strong></td></tr><tr><td>49</td><td>Je connais ce quartier comme ma poche.</td><td>connaître comme sa poche</td><td>to know like one's pocket</td><td>to <strong>know like the back of one's hand</strong></td></tr><tr><td>50</td><td>Il a pris ses jambes à son cou quand il a vu la police.</td><td>prendre ses jambes à son cou</td><td>to take one's legs to one's neck</td><td>to <strong>run away very fast</strong></td></tr></tbody></table>
+<p><strong>🧠 Domain unlocked: BODY PART IDIOMS</strong><br>
+→ French uses body parts MORE than English in idioms — head, eyes, tongue, feet, hands, fingers, legs, belly<br>
+→ Sentence 42: "Les yeux plus gros que le ventre" — used at EVERY French family meal when someone takes too much food<br>
+→ Sentence 47: "Les doigts dans le nez" — very casual / slightly vulgar — use only in R2/R1<br>
+→ Sentence 48: "Coûter les yeux de la tête" — French costs eyes; English costs arms and legs<br>
+→ Sentence 49: "Connaître comme sa poche" — French knows pockets; English knows backs of hands</p>
+<hr>
+<h2>🔹 BLOCK F — Social Relationships &amp; People</h2>
+<p><em>Scenario: Describing friends, enemies, relationships, social dynamics</em></p>
+<table><thead><tr><th>#</th><th>French Sentence with Idiom</th><th>Idiom</th><th>Literal Translation</th><th>Actual Meaning</th></tr></thead><tbody><tr><td>51</td><td>Elle m'a posé un lapin hier soir — je l'ai attendue une heure.</td><td>poser un lapin à qqn</td><td>to put a rabbit on someone</td><td>to <strong>stand someone up</strong></td></tr><tr><td>52</td><td>Ils s'entendent comme chien et chat.</td><td>s'entendre comme chien et chat</td><td>to get along like dog and cat</td><td>to <strong>not get along at all</strong></td></tr><tr><td>53</td><td>C'est un vrai mouton noir dans la famille.</td><td>un mouton noir</td><td>a black sheep</td><td>the <strong>black sheep</strong> (same in English!)</td></tr><tr><td>54</td><td>Il a retourné sa veste dès que le vent a tourné.</td><td>retourner sa veste</td><td>to turn one's jacket</td><td>to be a <strong>turncoat / change sides</strong></td></tr><tr><td>55</td><td>On ne peut pas lui faire confiance — il a une langue de vipère.</td><td>avoir une langue de vipère</td><td>to have a viper's tongue</td><td>to be <strong>sharp-tongued / gossipy</strong></td></tr><tr><td>56</td><td>Mon voisin est un casse-pieds — il se plaint de tout.</td><td>un casse-pieds</td><td>a foot-breaker</td><td>a <strong>nuisance / pain in the neck</strong></td></tr><tr><td>57</td><td>Elle a le bras long — elle connaît tout le monde dans le milieu.</td><td>avoir le bras long</td><td>to have a long arm</td><td>to have <strong>connections / influence</strong></td></tr><tr><td>58</td><td>C'est une poule mouillée — il a peur de tout.</td><td>une poule mouillée</td><td>a wet hen</td><td>a <strong>coward / chicken</strong></td></tr><tr><td>59</td><td>Il fait la tête depuis ce matin — je ne sais pas pourquoi.</td><td>faire la tête</td><td>to make the head</td><td>to <strong>sulk / be in a bad mood</strong></td></tr><tr><td>60</td><td>Elles sont copines comme cochons — elles font tout ensemble.</td><td>copains comme cochons</td><td>friends like pigs</td><td><strong>thick as thieves / best friends</strong></td></tr></tbody></table>
+<p><strong>🧠 Domain unlocked: SOCIAL/RELATIONSHIP IDIOMS</strong><br>
+→ Sentence 51: "Poser un lapin" — THE most common dating idiom in French — used constantly<br>
+→ Sentence 53: "Mouton noir" — rare case where French and English share the SAME image<br>
+→ Sentence 59: "Faire la tête" — you'll hear this multiple times per week in any French household<br>
+→ Sentence 60: "Copains comme cochons" — despite the image, it means BEST friends (the pig reference is about intimacy, not insult)</p>
+<hr>
+<h2>🔹 BLOCK G — Money, Cost &amp; Value</h2>
+<p><em>Scenario: Discussing prices, spending, financial situations — French has rich money idioms</em></p>
+<table><thead><tr><th>#</th><th>French Sentence with Idiom</th><th>Idiom</th><th>Literal Translation</th><th>Actual Meaning</th></tr></thead><tbody><tr><td>61</td><td>Ce restaurant coûte les yeux de la tête — allons ailleurs.</td><td>coûter les yeux de la tête</td><td>to cost the eyes of the head</td><td>to <strong>cost a fortune</strong> (repeat — dual domain)</td></tr><tr><td>62</td><td>J'ai acheté cette veste pour une bouchée de pain aux soldes.</td><td>pour une bouchée de pain</td><td>for a mouthful of bread</td><td>for <strong>next to nothing / dirt cheap</strong></td></tr><tr><td>63</td><td>Il jette l'argent par les fenêtres — il dépense sans compter.</td><td>jeter l'argent par les fenêtres</td><td>to throw money out the windows</td><td>to <strong>waste money / spend recklessly</strong></td></tr><tr><td>64</td><td>On a payé les pots cassés quand le projet a échoué.</td><td>payer les pots cassés</td><td>to pay for the broken pots</td><td>to <strong>pay the price / suffer the consequences</strong></td></tr><tr><td>65</td><td>Ce n'est pas donné, mais ça vaut le coup.</td><td>ce n'est pas donné</td><td>it's not given</td><td>it's <strong>not cheap</strong> (but worth it)</td></tr><tr><td>66</td><td>Il tire le diable par la queue depuis qu'il a perdu son emploi.</td><td>tirer le diable par la queue</td><td>to pull the devil by the tail</td><td>to <strong>struggle financially / barely get by</strong></td></tr><tr><td>67</td><td>Ça ne vaut pas un clou — jette-le.</td><td>ne pas valoir un clou</td><td>to not be worth a nail</td><td>to be <strong>worthless</strong></td></tr><tr><td>68</td><td>Il est radin comme pas deux — il ne paie jamais sa part.</td><td>radin comme pas deux</td><td>stingy like no other</td><td><strong>extremely stingy</strong></td></tr><tr><td>69</td><td>L'argent ne fait pas le bonheur, mais il y contribue.</td><td>l'argent ne fait pas le bonheur</td><td>money doesn't make happiness</td><td><strong>money can't buy happiness</strong> (proverb — P49 preview)</td></tr><tr><td>70</td><td>On a arrondi les fins de mois en faisant des petits boulots.</td><td>arrondir ses fins de mois</td><td>to round off one's month ends</td><td>to <strong>supplement one's income</strong></td></tr></tbody></table>
+<p><strong>🧠 Domain unlocked: MONEY IDIOMS</strong><br>
+→ Sentence 62: "Pour une bouchée de pain" — used constantly when bragging about a good deal<br>
+→ Sentence 63: "Jeter l'argent par les fenêtres" — the go-to expression for criticizing overspending<br>
+→ Sentence 66: "Tirer le diable par la queue" — very evocative of financial struggle — used with sympathy<br>
+→ Sentence 70: "Arrondir ses fins de mois" — essential vocabulary for discussing French economic reality</p>
+<hr>
+<h2>🔹 BLOCK H — Time, Speed &amp; Frequency</h2>
+<p><em>Scenario: Describing when things happen, how fast, how often</em></p>
+<table><thead><tr><th>#</th><th>French Sentence with Idiom</th><th>Idiom</th><th>Literal Translation</th><th>Actual Meaning</th></tr></thead><tbody><tr><td>71</td><td>Il a fait ça en un clin d'œil — incroyable !</td><td>en un clin d'œil</td><td>in a blink of an eye</td><td><strong>in a flash / instantly</strong></td></tr><tr><td>72</td><td>De temps en temps, j'aime bien me balader au bord de la Seine.</td><td>de temps en temps</td><td>from time to time</td><td><strong>from time to time</strong> (same in English)</td></tr><tr><td>73</td><td>Du jour au lendemain, il a tout quitté et il est parti.</td><td>du jour au lendemain</td><td>from one day to the next</td><td><strong>overnight / suddenly</strong></td></tr><tr><td>74</td><td>On verra bien — on traverse le pont quand on y arrive.</td><td>traverser le pont quand on y arrive</td><td>to cross the bridge when you get there</td><td>to <strong>cross that bridge when you come to it</strong></td></tr><tr><td>75</td><td>Il remet toujours tout au lendemain — c'est un champion de la procrastination.</td><td>remettre au lendemain</td><td>to put off until tomorrow</td><td>to <strong>procrastinate</strong></td></tr><tr><td>76</td><td>Mieux vaut tard que jamais — au moins tu es là.</td><td>mieux vaut tard que jamais</td><td>better late than never</td><td><strong>better late than never</strong> (same!)</td></tr><tr><td>77</td><td>Elle est toujours à l'heure — c'est réglé comme du papier à musique.</td><td>réglé comme du papier à musique</td><td>regulated like music paper</td><td>like <strong>clockwork / perfectly timed</strong></td></tr><tr><td>78</td><td>Il a changé d'avis à la dernière minute — ça m'a mis hors de moi.</td><td>à la dernière minute</td><td>at the last minute</td><td><strong>at the last minute</strong> (same!)</td></tr><tr><td>79</td><td>On a attendu des heures — le temps m'a semblé une éternité.</td><td>sembler une éternité</td><td>to seem an eternity</td><td>to <strong>feel like forever</strong></td></tr><tr><td>80</td><td>Tout vient à point à qui sait attendre.</td><td>tout vient à point à qui sait attendre</td><td>everything comes on time to who knows how to wait</td><td><strong>good things come to those who wait</strong> (proverb — P49 preview)</td></tr></tbody></table>
+<p><strong>🧠 Domain unlocked: TIME IDIOMS</strong><br>
+→ Sentence 71: "En un clin d'œil" — used multiple times per day by native speakers<br>
+→ Sentence 73: "Du jour au lendemain" — essential for narrating sudden life changes<br>
+→ Sentence 76: "Mieux vaut tard que jamais" — rare case of near-identical English/French proverb<br>
+→ Sentence 80: Full proverb — preview of P49 — used for patience and consolation</p>
+<hr>
+<h2>🔹 BLOCK I — Idioms in Complex Grammatical Structures</h2>
+<p><em>Scenario: Proving that idioms integrate perfectly with all the grammar you've learned</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>Idiom + Grammar Structure</th><th>Projects Combined</th></tr></thead><tbody><tr><td>81</td><td>Si j'avais su qu'il allait me poser un lapin, je ne serais pas venu.</td><td>poser un lapin + si-clause (P34) + cond.passé (P35)</td><td>Idiom inside unreal past hypothesis</td></tr><tr><td>82</td><td>J'aurais dû mettre les bouchées doubles au lieu de procrastiner.</td><td>mettre les bouchées doubles + aurais dû (P35)</td><td>Idiom inside regret structure</td></tr><tr><td>83</td><td>Bien qu'il ait pété les plombs, je comprends sa frustration.</td><td>péter les plombs + bien que + subj.passé (P41)</td><td>Idiom inside concession + subjonctif</td></tr><tr><td>84</td><td>En tournant autour du pot, tu ne fais que perdre du temps.</td><td>tourner autour du pot + gérondif (P38) + ne...que (P39)</td><td>Idiom inside gérondif + restriction</td></tr><tr><td>85</td><td>C'est le meilleur film que j'aie vu — il m'a donné la chair de poule.</td><td>donner la chair de poule + superlative + subj.passé (P41)</td><td>Idiom following literary superlative</td></tr><tr><td>86</td><td>Il me l'a dit les yeux dans les yeux — il ne tournait pas autour du pot.</td><td>les yeux dans les yeux + ne...pas tourner autour du pot</td><td>Idiom + double pronoun (P36) + imparfait negation</td></tr><tr><td>87</td><td>Si tu pouvais arrêter de me casser les pieds, ce serait génial.</td><td>casser les pieds + si-clause (P33) + conditionnel</td><td>Idiom inside polite hypothetical request</td></tr><tr><td>88</td><td>Personne n'a jamais réussi les doigts dans le nez — il faut toujours travailler.</td><td>les doigts dans le nez + personne ne + jamais (P39)</td><td>Idiom inside double negation</td></tr><tr><td>89</td><td>Je me suis fait poser un lapin — elle ne s'est même pas excusée.</td><td>se faire poser un lapin + se faire causatif (P37)</td><td>Idiom inside se faire + passive experience</td></tr><tr><td>90</td><td>Tout en sachant qu'il avait une langue de vipère, je lui ai fait confiance.</td><td>langue de vipère + tout en + subj.passé logic (P38/P41)</td><td>Idiom inside concessive gérondif</td></tr></tbody></table>
+<p><strong>🧠 Structure unlocked:</strong> Idioms are NOT separate from grammar — they LIVE INSIDE all grammatical structures</p>
+<p>→ Sentence 81: A full P34 si-clause with an idiom as the core event — this is how natives actually speak<br>
+→ Sentence 83: Subjonctif passé (P41) wrapping around a slang idiom — register mixing happens naturally<br>
+→ Sentence 89: "Se faire poser un lapin" — the idiom goes into se faire causatif (P37) — passive experience<br>
+→ <strong>Key insight:</strong> Once you know an idiom, you can deploy it in ANY tense, ANY structure, ANY register</p>
+<hr>
+<h2>🔹 BLOCK J — Full Conversational Flow: A Week of Idiomatic French</h2>
+<p><em>Scenario: One idiom-rich sentence for each situation across a full week</em></p>
+<h3>Monday — At the Office</h3>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>Idiom Used</th><th>Context</th></tr></thead><tbody><tr><td>91</td><td>Lundi matin, j'avais le cafard — je ne voulais pas aller travailler.</td><td>avoir le cafard</td><td>Monday blues</td></tr><tr><td>92</td><td>Mon collègue m'a dit de ne pas en faire tout un fromage — c'était juste un petit retard.</td><td>en faire tout un fromage</td><td>Overreacting to a small problem</td></tr></tbody></table>
+<h3>Tuesday — With Friends</h3>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>Idiom Used</th><th>Context</th></tr></thead><tbody><tr><td>93</td><td>Mardi soir, Sophie m'a posé un lapin — j'ai attendu au restaurant comme un idiot.</td><td>poser un lapin</td><td>Being stood up</td></tr><tr><td>94</td><td>J'en avais ras le bol, alors je lui ai envoyé un message direct — pas de quoi tourner autour du pot.</td><td>en avoir ras le bol / tourner autour du pot</td><td>Fed up + being direct</td></tr></tbody></table>
+<h3>Wednesday — Shopping</h3>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>Idiom Used</th><th>Context</th></tr></thead><tbody><tr><td>95</td><td>Mercredi, j'ai trouvé un super manteau pour une bouchée de pain — c'était incroyable.</td><td>pour une bouchée de pain</td><td>Great deal</td></tr></tbody></table>
+<h3>Thursday — Family Dinner</h3>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>Idiom Used</th><th>Context</th></tr></thead><tbody><tr><td>96</td><td>Jeudi, ma mère m'a dit que je jetais l'argent par les fenêtres — elle n'a pas tort.</td><td>jeter l'argent par les fenêtres</td><td>Mom criticizing spending</td></tr><tr><td>97</td><td>Mon frère, lui, il a un poil dans la main — il n'a toujours pas cherché de boulot.</td><td>avoir un poil dans la main</td><td>Lazy sibling</td></tr></tbody></table>
+<h3>Friday — End of Week</h3>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>Idiom Used</th><th>Context</th></tr></thead><tbody><tr><td>98</td><td>Vendredi, on a mis les bouchées doubles pour finir le projet — et on a réussi les doigts dans le nez !</td><td>mettre les bouchées doubles / les doigts dans le nez</td><td>Working hard then succeeding easily</td></tr></tbody></table>
+<h3>Weekend — Reflection</h3>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>Idiom Used</th><th>Context</th></tr></thead><tbody><tr><td>99</td><td>Ce week-end, j'ai pris le temps de mettre de l'eau dans mon vin — j'étais trop stressé.</td><td>mettre de l'eau dans son vin</td><td>Calming down, compromising</td></tr><tr><td>100</td><td>Au final, c'est pas la mer à boire — la vie est belle quand on arrête d'en faire tout un fromage.</td><td>c'est pas la mer à boire / en faire tout un fromage</td><td>Life philosophy — two idioms combined</td></tr></tbody></table>
+<hr>
+<h1>✅ WHAT SHOULD DO</h1>
+<p>→ <strong>Learn idioms IN CONTEXT</strong> — never as isolated definitions<br>
+→ <strong>Group them by domain</strong> — you'll remember "food idioms" or "body idioms" more easily than random lists<br>
+→ <strong>Practice conjugating the verb inside the idiom</strong> — "il m'a posé un lapin" / "elle va me poser un lapin" / "si elle me posait un lapin..."<br>
+→ <strong>Start with the TOP 20 most useful</strong> — these appear in conversation almost daily:</p>
+<table><thead><tr><th>Rank</th><th>Idiom</th><th>Meaning</th></tr></thead><tbody><tr><td>1</td><td>en avoir ras le bol</td><td>to be fed up</td></tr><tr><td>2</td><td>c'est pas la mer à boire</td><td>it's not that hard</td></tr><tr><td>3</td><td>en faire tout un fromage</td><td>to make a big deal</td></tr><tr><td>4</td><td>poser un lapin</td><td>to stand someone up</td></tr><tr><td>5</td><td>tourner autour du pot</td><td>to beat around the bush</td></tr><tr><td>6</td><td>avoir le cafard</td><td>to feel down</td></tr><tr><td>7</td><td>coûter les yeux de la tête</td><td>to cost a fortune</td></tr><tr><td>8</td><td>il pleut des cordes</td><td>it's pouring</td></tr><tr><td>9</td><td>un coup de foudre</td><td>love at first sight</td></tr><tr><td>10</td><td>la goutte d'eau qui fait déborder le vase</td><td>the last straw</td></tr><tr><td>11</td><td>du jour au lendemain</td><td>overnight</td></tr><tr><td>12</td><td>en un clin d'œil</td><td>in a flash</td></tr><tr><td>13</td><td>avoir la chair de poule</td><td>to have goosebumps</td></tr><tr><td>14</td><td>faire la tête</td><td>to sulk</td></tr><tr><td>15</td><td>mettre les bouchées doubles</td><td>to work extra hard</td></tr><tr><td>16</td><td>jeter l'argent par les fenêtres</td><td>to waste money</td></tr><tr><td>17</td><td>pour une bouchée de pain</td><td>dirt cheap</td></tr><tr><td>18</td><td>se lever du pied gauche</td><td>to wake up grumpy</td></tr><tr><td>19</td><td>péter les plombs</td><td>to lose it</td></tr><tr><td>20</td><td>mettre le doigt sur</td><td>to pinpoint</td></tr></tbody></table>
+<p>→ <strong>Connect to P40</strong> — some idioms are R2/R1 only ("péter les plombs") — others work across registers ("en un clin d'œil")<br>
+→ <strong>Listen for them</strong> in French movies, podcasts, and conversations — once you know them, you'll hear them EVERYWHERE</p>
+<hr>
+<h1>❌ WHAT SHOULD NOT DO</h1>
+<p>→ ❌ <strong>NEVER change the core words of an idiom:</strong></p>
+<ul>
+<li>❌ <del>poser un chat</del> → ✅ poser un <strong>lapin</strong> (the animal is fixed)</li>
+<li>❌ <del>jeter l'argent par les portes</del> → ✅ jeter l'argent par les <strong>fenêtres</strong> (the opening is fixed)</li>
+<li>❌ <del>tourner autour du vase</del> → ✅ tourner autour du <strong>pot</strong> (the container is fixed)</li>
+</ul>
+<p>→ ❌ <strong>NEVER translate idioms word-by-word from English:</strong></p>
+<ul>
+<li>❌ "Il pleut des chats et des chiens" → French doesn't rain cats and dogs</li>
+<li>✅ "Il pleut des <strong>cordes</strong>" — French rains ropes</li>
+<li>❌ "Casser une jambe" (meaning good luck) → In French this literally means "break a leg" (injury!) — French says "<strong>Merde !</strong>" for good luck (yes, really)</li>
+</ul>
+<p>→ ❌ <strong>NEVER use vulgar/casual idioms in formal contexts:</strong></p>
+<ul>
+<li>❌ In a meeting: "Ce projet, on l'a fait les doigts dans le nez" → too casual</li>
+<li>✅ In a meeting: "Ce projet a été réalisé sans difficulté majeure"</li>
+<li>❌ In a formal email: "J'en ai ras le bol de ces retards" → too aggressive</li>
+<li>✅ In a formal email: "Ces retards récurrents posent un véritable problème"</li>
+</ul>
+<p>→ ❌ <strong>NEVER overuse idioms in every sentence:</strong></p>
+<ul>
+<li>Using one idiom per conversation = natural, native-sounding</li>
+<li>Using five idioms in three sentences = sounds like you're performing, not speaking</li>
+<li>Natives use idioms <strong>naturally and sparingly</strong> — not as decoration</li>
+</ul>
+<p>→ ❌ <strong>NEVER assume French and English idioms match:</strong></p>
+<ul>
+<li>Some DO match: "mouton noir" = "black sheep" ✅</li>
+<li>Most DON'T: "coûter les yeux de la tête" ≠ "cost an arm and a leg" (different body parts)</li>
+<li>Always learn the FRENCH version independently</li>
+</ul>
+<hr>
+<h1>🔀 WHEN TO USE WHAT</h1>
+<table><thead><tr><th>Situation</th><th>Recommended Idioms</th><th>Register</th></tr></thead><tbody><tr><td>Expressing frustration</td><td>en avoir ras le bol / péter les plombs / casser les pieds</td><td>R2/R1</td></tr><tr><td>Reassuring someone</td><td>c'est pas la mer à boire / en faire tout un fromage</td><td>R2/R3</td></tr><tr><td>Describing weather</td><td>il pleut des cordes / un froid de canard</td><td>All registers</td></tr><tr><td>Discussing money</td><td>coûter les yeux de la tête / pour une bouchée de pain</td><td>R2/R3</td></tr><tr><td>Describing people</td><td>avoir le cœur sur la main / langue de vipère / mouton noir</td><td>R2/R3</td></tr><tr><td>Telling stories</td><td>du jour au lendemain / en un clin d'œil / coup de foudre</td><td>All registers</td></tr><tr><td>Giving advice</td><td>ne pas tourner autour du pot / mettre les bouchées doubles</td><td>R2/R3</td></tr><tr><td>Expressing surprise</td><td>tomber dans les pommes / avoir la chair de poule</td><td>All registers</td></tr><tr><td>Professional context</td><td>mettre cartes sur table / mettre la charrue avant les bœufs</td><td>R3</td></tr><tr><td>Humor/casual</td><td>les doigts dans le nez / avoir un poil dans la main</td><td>R2/R1 only</td></tr></tbody></table>
+<hr>
+<h1>🚫 WHEN NOT TO USE</h1>
+<p>→ <strong>In academic writing</strong> — idioms are too informal for dissertations and essays (use formal equivalents)<br>
+→ <strong>When you're not 100% sure of the idiom</strong> — a wrong idiom is worse than no idiom — it creates confusion or unintended humor<br>
+→ <strong>In very formal professional communication</strong> — "Veuillez agréer..." emails should NOT contain "c'est pas la mer à boire"<br>
+→ <strong>When speaking to non-native French speakers</strong> — they might not know the idiom — use clear language instead<br>
+→ <strong>When the idiom is region-specific</strong> — some idioms are used only in certain regions of France, Belgium, Switzerland, or Quebec — verify before using</p>
+<hr>
+<h1>⚠️ COMMON PITFALLS AND FAILURE MODES</h1>
+<table><thead><tr><th>Pitfall</th><th>What Learners Do Wrong</th><th>Why It Fails</th><th>Correct Approach</th></tr></thead><tbody><tr><td><strong>Word-for-word translation</strong></td><td>"Il pleut des chats"</td><td>French idioms use different images</td><td>Learn French idiom independently</td></tr><tr><td><strong>Modifying the idiom</strong></td><td>"Poser un canard" instead of "un lapin"</td><td>Changing words destroys the idiom</td><td>Memorize the EXACT words</td></tr><tr><td><strong>Wrong register</strong></td><td>"Péter les plombs" in a formal email</td><td>Too casual for professional context</td><td>Use "perdre son sang-froid" instead</td></tr><tr><td><strong>Overuse</strong></td><td>Three idioms in one sentence</td><td>Sounds forced and unnatural</td><td>One idiom per conversation point</td></tr><tr><td><strong>Misunderstanding irony</strong></td><td>Thinking "la cerise sur le gâteau" is always positive</td><td>Often used IRONICALLY in French</td><td>Check context for sarcasm</td></tr><tr><td><strong>False friends</strong></td><td>Thinking "casser une jambe" = "break a leg" (good luck)</td><td>In French it literally means injury</td><td>French good luck = "Merde !"</td></tr><tr><td><strong>Forgetting conjugation</strong></td><td>"Elle a posé un lapin moi"</td><td>The verb conjugates normally + indirect object</td><td>"Elle <strong>m'a</strong> posé un lapin"</td></tr><tr><td><strong>Using outdated idioms</strong></td><td>Learning archaic expressions</td><td>Some idioms are dying or dead</td><td>Focus on the 100 in this project</td></tr><tr><td><strong>Regional confusion</strong></td><td>Using Quebec idioms in France</td><td>"Avoir du fun" is Quebec — France says "s'amuser"</td><td>Know your audience</td></tr></tbody></table>
+<hr>
+<h1>🔑 KEY TAKEAWAY</h1>
+<blockquote>
+<p><strong>P1–P41 gave you the GRAMMAR of French — the ability to build any sentence.</strong><br>
+<strong>P42 gives you the SOUL of French — the expressions that carry culture, humor, and identity.</strong></p>
+<p>Idioms are not optional decorations — they are the <strong>texture of native speech.</strong><br>
+A French person might say "C'est pas la mer à boire" ten times a week without thinking about it.<br>
+When YOU say it naturally, they recognize you as someone who LIVES in French — not just speaks it.</p>
+<p>The 100 idioms in this project cover the 10 most important life domains:<br>
+Emotions, Work, Food, Nature, Body, Relationships, Money, Time, Grammar Integration, Daily Life</p>
+<p>Each idiom is a <strong>pre-built chunk</strong> that snaps into any grammatical structure from P1–P41.<br>
+Learn them as UNITS. Use them IN CONTEXT. Conjugate the verb. Keep the rest frozen.</p>
+<p>But native speakers don't just use idioms — they also fill their speech with tiny words that have no dictionary meaning: "euh," "bon," "ben," "du coup," "quoi," "genre," "bref," "enfin."<br>
+Without these, your French sounds technically correct but emotionally flat.</p>
+</blockquote>
+<hr>
+<h1>🌉 BRIDGE TO PROJECT 43</h1>
+<blockquote>
+<p>You now speak grammatically perfect French with idiomatic expressions<br>
+But something is still missing — your speech sounds TOO clean, TOO structured<br>
+Real French conversation is full of <strong>discourse markers and filler words</strong> that:</p>
+<ul>
+<li>Buy thinking time ("euh," "ben")</li>
+<li>Connect ideas ("du coup," "en fait," "du coup")</li>
+<li>Signal attitude ("quoi," "genre," "bref")</li>
+<li>Structure speech ("bon," "alors," "enfin")</li>
+</ul>
+<p>Without them, you sound like a textbook — WITH them, you sound like a person</p>
+<p>→ "Bon, ben, du coup, on y va ?" = a perfectly natural French sentence with FOUR fillers<br>
+→ A textbook would say: "Allons-y" — but nobody talks like that</p>
+<p>Project 43 unlocks: <strong>Discourse markers &amp; fillers</strong> — the invisible glue of natural French speech<br>
+→ The words that make you sound human, not robotic<br>
+→ The difference between "speaking French" and "sounding French"</p>
+</blockquote>
+<hr>
+<h1>✅ PROJECT 42 COMPLETE</h1>
+<blockquote>
+<p><strong>Are you ready for PROJECT 43: "Euh, Bon, Ben, Du coup, Quoi"?</strong><br>
+→ ~100 sentences covering French discourse markers, fillers, and conversational glue<br>
+→ Scenario: Recording yourself speaking French and noticing how "empty" it sounds compared to natives<br>
+→ Builds on P40 (register awareness), P42 (idiomatic knowledge), and adds the final layer of natural speech flow</p>
+</blockquote>
+</div>
+</div>
+
+<!-- ========== data-index="25" ========== -->
+
+        </div>
+
+        <div class="nav-bar">
+            <a href="project-41.html" class="nav-button prev">← Previous Chapter</a>
+            <div class="page-info">
+                <a href="index.html" class="nav-button home">📚 Table of Contents</a><br>
+                <span style="margin-top:8px;display:block">Chapter 42 of 50</span>
+            </div>
+            <a href="project-43.html" class="nav-button next">Next Chapter →</a>
+        </div>
+    </div>
+
+    
+    <div id="progress-track"><div id="progress-fill"></div></div>
+    <div id="progress-pct">0%</div>
+
+
+    <script>
+    const fill = document.getElementById('progress-fill');
+    const pct  = document.getElementById('progress-pct');
+    function updateProgress() {
+        const scrollTop = window.scrollY;
+        const docHeight = document.body.scrollHeight - window.innerHeight;
+        const scrolled  = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+        fill.style.height = scrolled + '%';
+        pct.textContent   = Math.round(scrolled) + '%';
+    }
+    window.addEventListener('scroll', updateProgress);
+    updateProgress();
+
+    document.addEventListener('keydown', function(e) {
+        if (['INPUT','TEXTAREA'].includes(document.activeElement.tagName)) return;
+        if (e.key === 'ArrowLeft') {
+            const b = document.querySelector('.nav-button.prev');
+            if (b && !b.classList.contains('disabled')) window.location.href = b.href;
+        }
+        if (e.key === 'ArrowRight') {
+            const b = document.querySelector('.nav-button.next');
+            if (b && !b.classList.contains('disabled')) window.location.href = b.href;
+        }
+    });
+    </script>
+
+</body>
+</html>

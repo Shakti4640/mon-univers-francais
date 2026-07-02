@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="images/favicon.png">
+    <title>Project 7: "Here, There, To, From" — French Daily Sentences</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.75;
+            color: #1a202c;
+            background-color: #f7fafc;
+        }
+        .container {
+            max-width: 1800px;
+            margin: 0 auto;
+            background: white;
+            min-height: 100vh;
+            box-shadow: 0 0 30px rgba(0,0,0,0.08);
+            padding: 48px 52px;
+        }
+        
+        .content { max-width: 1700px; margin: 0 auto; color: #1a202c; }
+        .content h1 {
+            color: #1a202c; margin: 32px 0 20px;
+            padding-bottom: 12px;
+            border-bottom: 4px solid #3b82f6;
+            font-size: 2.1em;
+            font-weight: 700;
+        }
+        .content h2 {
+            color: #1a202c; margin: 28px 0 16px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #60a5fa;
+            font-size: 1.6em;
+            font-weight: 600;
+        }
+        .content h3 { color: #1a202c; margin: 22px 0 12px; font-size: 1.3em; font-weight: 600; }
+        .content h4 { color: #2d3748; margin: 18px 0 10px; font-size: 1.1em; font-weight: 600; }
+        .content p  { margin-bottom: 16px; line-height: 1.8; color: #1a202c; }
+        .content ul, .content ol { margin: 12px 0 18px 30px; color: #1a202c; }
+        .content li { margin-bottom: 8px; line-height: 1.75; color: #1a202c; }
+        .content hr { border: none; border-top: 2px solid #e2e8f0; margin: 26px 0; }
+        .content pre {
+            background: #f7fafc !important;
+            border: 1px solid #cbd5e0 !important;
+            border-left: 4px solid #3b82f6 !important;
+            padding: 18px !important; overflow-x: auto; margin: 18px 0; border-radius: 6px;
+            font-family: 'Consolas','Monaco','Courier New',monospace !important;
+            font-size: 0.9em !important;
+        }
+        .content pre:not([style*="color"]) { color: #1a202c !important; }
+        .content code {
+            font-family: 'Consolas','Monaco','Courier New',monospace !important;
+            font-size: 0.88em !important;
+        }
+        .content code:not(pre code) {
+            background: #dbeafe !important;
+            color: #1a202c !important;
+            padding: 2px 6px;
+            border-radius: 3px;
+        }
+        .content pre code { background: transparent !important; padding: 0; }
+        .content table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+        .content th {
+            background: linear-gradient(135deg, #3b82f6 0%, #60a5fa 100%);
+            color: white; padding: 12px 16px; text-align: left;
+            font-weight: 600;
+        }
+        .content td { padding: 11px 16px; border: 1px solid #e2e8f0; color: #1a202c; }
+        .content tr:nth-child(even) td { background: #eff6ff; }
+        .content blockquote {
+            border-left: 4px solid #3b82f6; background: #eff6ff;
+            padding: 14px 20px; margin: 18px 0; border-radius: 0 6px 6px 0;
+            color: #1a202c;
+        }
+        .content strong { color: #1a202c; font-weight: 600; }
+        .px-2 { padding: 0; }
+        .chat-message { background: transparent; padding: 0; margin: 0; }
+
+        /* Bottom nav bar only */
+        .nav-bar {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 24px 0;
+            margin-top: 50px;
+            border-top: 3px solid #60a5fa;
+        }
+        .nav-button {
+            display: inline-flex; align-items: center; gap: 8px;
+            padding: 12px 26px;
+            background: linear-gradient(135deg, #3b82f6 0%, #60a5fa 100%);
+            color: white !important; text-decoration: none;
+            border-radius: 8px; font-weight: 600; font-size: 0.95em;
+            transition: all 0.2s;
+            box-shadow: 0 2px 8px rgba(59,130,246,0.35);
+        }
+        .nav-button:hover { transform: translateY(-2px); box-shadow: 0 4px 14px rgba(59,130,246,0.5); }
+        .nav-button.disabled { background: #cbd5e1; box-shadow: none; pointer-events: none; }
+        .nav-button.home {
+            background: linear-gradient(135deg, #ef4444 0%, #f87171 100%);
+            box-shadow: 0 2px 8px rgba(239,68,68,0.35);
+        }
+        .nav-button.home:hover { box-shadow: 0 4px 14px rgba(239,68,68,0.5); }
+        .page-info { color: #718096; font-size: 0.9em; text-align: center; }
+
+        /* Progress bar */
+        #progress-track {
+            position: fixed; top: 20px; right: 20px;
+            width: 10px; height: 150px;
+            background: rgba(59,130,246,0.2);
+            border: 2px solid #3b82f6;
+            border-radius: 6px; overflow: hidden; z-index: 1000;
+        }
+        #progress-fill {
+            width: 100%;
+            background: linear-gradient(180deg, #3b82f6, #2563eb);
+            height: 0%;
+            transition: height 0.15s ease;
+        }
+        #progress-pct {
+            position: fixed; top: 0px; right: 16px;
+            color: #2563eb; font-size: 14px; font-weight: bold;
+            z-index: 1001;
+            text-shadow: 0 1px 2px rgba(255,255,255,0.9);
+            line-height: 20px;
+        }
+
+    </style>
+<link rel="stylesheet" href="assets/chapters.css?v=20260421203847"><script src="assets/chapters.js?v=20260421203847" defer></script>
+</head>
+<body>
+    <div class="container">
+        <div class="content">
+            <div class="chat-message" data-index="15">
+<div class="px-2"><h1>🟢 PROJECT 7: "Here, There, To, From"</h1>
+<h2><em>You must explain where you live, where you're going, where you come from</em></h2>
+<hr>
+<h1>🎯 THE HYPOTHETICAL PROBLEM</h1>
+<p>→ You're at a <strong>welcome dinner</strong> organized by a French language school in Paris<br>
+→ Students from all over the world are introducing themselves<br>
+→ Everyone is saying where they <strong>come from</strong>, where they <strong>live now</strong>, and where they <strong>want to go</strong><br>
+→ You hear:<br>
+→ → "Je viens <strong>du</strong> Brésil." / "J'habite <strong>en</strong> France." / "Je vais <strong>à</strong> Lyon."<br>
+→ → "Elle habite <strong>au</strong> Japon." / "Il vient <strong>des</strong> États-Unis." / "On va <strong>chez</strong> Pierre."<br>
+→ You're confused — why is it sometimes <strong>à</strong>, sometimes <strong>en</strong>, sometimes <strong>au</strong>, sometimes <strong>aux</strong>?<br>
+→ Why <strong>du</strong> sometimes and <strong>de</strong> other times?<br>
+→ What is <strong>chez</strong> — you've never seen it in English<br>
+→ You try to say "I live in France" and you say <del>"J'habite à France"</del> — <strong>WRONG</strong><br>
+→ You try to say "I'm going to the office" and say <del>"Je vais à le bureau"</del> — <strong>WRONG</strong><br>
+→ The preposition system for places is one of the <strong>most error-prone areas</strong> for learners<br>
+→ It has clear rules — but the rules depend on the <strong>type of place</strong> (city, country, continent, building, person's home)</p>
+<p><strong>The core realization:</strong><br>
+→ English uses "in" and "to" for almost everything → "I live <strong>in</strong> France" / "I'm going <strong>to</strong> France"<br>
+→ French uses <strong>DIFFERENT prepositions depending on:</strong><br>
+→ → Is it a <strong>city</strong> or a <strong>country</strong>?<br>
+→ → Is the country <strong>masculine</strong> or <strong>feminine</strong>?<br>
+→ → Does the country start with a <strong>vowel</strong>?<br>
+→ → Is it <strong>plural</strong> (like "les États-Unis")?<br>
+→ → Are you going <strong>TO</strong> a place or coming <strong>FROM</strong> a place?<br>
+→ → Is it a <strong>building</strong> or a <strong>person's home</strong>?</p>
+<hr>
+<h1>🔍 HOW TO APPROACH IT</h1>
+<p>→ French prepositions of place follow a <strong>decision tree:</strong></p>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>WHAT KIND OF PLACE?
+</span>├── CITY → à (to/in) / de (from)
+├── COUNTRY
+│   ├── Feminine or vowel-start → en (to/in) / de/d' (from)
+│   ├── Masculine consonant-start → au (to/in) / du (from)
+│   └── Plural → aux (to/in) / des (from)
+├── BUILDING / SPECIFIC PLACE → à + article / de + article
+└── PERSON'S HOME → chez</code></pre></div>
+<p>→ You also need <strong>location words</strong> (here, there, near, far, next to, in front of, behind)<br>
+→ These attach to the end of sentences and tell you WHERE exactly</p>
+<hr>
+<h1>🔧 HOW CAN WE SOLVE IT</h1>
+<h2>Step 1 — Prepositions with CITIES</h2>
+<p><strong>Rule: Cities are SIMPLE</strong></p>
+<table><thead><tr><th>Direction</th><th>Preposition</th><th>Example</th></tr></thead><tbody><tr><td><strong>To / In</strong> a city</td><td><strong>à</strong></td><td>Je vais <strong>à</strong> Paris. / J'habite <strong>à</strong> Lyon.</td></tr><tr><td><strong>From</strong> a city</td><td><strong>de</strong> (or <strong>d'</strong> before vowel)</td><td>Je viens <strong>de</strong> Paris. / Je viens **d'**Amsterdam.</td></tr></tbody></table>
+<p>→ No gender, no article — just <strong>à</strong> and <strong>de</strong><br>
+→ Exception: very few cities have built-in articles: <strong>Le Havre, Le Caire, La Nouvelle-Orléans</strong><br>
+→ → Je vais <strong>au</strong> Havre. (à + Le = au)<br>
+→ → Je viens <strong>du</strong> Caire. (de + Le = du)<br>
+→ At this level: focus on standard cities — exceptions are rare</p>
+<hr>
+<h2>Step 2 — Prepositions with COUNTRIES</h2>
+<p><strong>Rule: Countries have GENDER — and gender determines the preposition</strong></p>
+<h3>How to know a country's gender:</h3>
+<table><thead><tr><th>Pattern</th><th>Gender</th><th>Examples</th></tr></thead><tbody><tr><td>Ends in <strong>-e</strong></td><td>Usually <strong>feminine</strong></td><td>La France, La Chine, L'Italie, La Russie</td></tr><tr><td>Ends in anything else</td><td>Usually <strong>masculine</strong></td><td>Le Japon, Le Brésil, Le Canada, Le Maroc</td></tr><tr><td><strong>Exception</strong></td><td>Masculine despite -e</td><td>Le Mexique, Le Mozambique, Le Cambodge</td></tr><tr><td>Plural countries</td><td><strong>Plural</strong></td><td>Les États-Unis, Les Pays-Bas, Les Philippines</td></tr></tbody></table>
+<h3>The preposition rules:</h3>
+<table><thead><tr><th>Country Type</th><th>TO / IN</th><th>FROM</th><th>Example TO</th><th>Example FROM</th></tr></thead><tbody><tr><td><strong>Feminine</strong> (or starts with vowel)</td><td><strong>en</strong></td><td><strong>de / d'</strong></td><td>Je vais <strong>en</strong> France.</td><td>Je viens <strong>de</strong> France.</td></tr><tr><td><strong>Masculine</strong> (consonant start)</td><td><strong>au</strong></td><td><strong>du</strong></td><td>Je vais <strong>au</strong> Japon.</td><td>Je viens <strong>du</strong> Japon.</td></tr><tr><td><strong>Plural</strong></td><td><strong>aux</strong></td><td><strong>des</strong></td><td>Je vais <strong>aux</strong> États-Unis.</td><td>Je viens <strong>des</strong> États-Unis.</td></tr></tbody></table>
+<p>→ <strong>Continents</strong> follow the SAME rules as feminine countries (all continents are feminine):<br>
+→ → en Europe, en Asie, en Afrique, en Amérique</p>
+<hr>
+<h2>Step 3 — Prepositions with BUILDINGS / SPECIFIC PLACES</h2>
+<p><strong>Rule: Use À + ARTICLE</strong></p>
+<p>→ Recall from Project 3: articles are le, la, l', les<br>
+→ When <strong>à</strong> meets <strong>le</strong> or <strong>les</strong> → they CONTRACT:</p>
+<table><thead><tr><th>Combination</th><th>Contraction</th><th>Example</th></tr></thead><tbody><tr><td><strong>à + le</strong></td><td><strong>au</strong></td><td>Je vais <strong>au</strong> bureau. (to the office)</td></tr><tr><td><strong>à + la</strong></td><td><strong>à la</strong> (no change)</td><td>Je vais <strong>à la</strong> boulangerie. (to the bakery)</td></tr><tr><td><strong>à + l'</strong></td><td><strong>à l'</strong> (no change)</td><td>Je vais **à l'**hôpital. (to the hospital)</td></tr><tr><td><strong>à + les</strong></td><td><strong>aux</strong></td><td>Je vais <strong>aux</strong> toilettes. (to the restrooms)</td></tr></tbody></table>
+<p>→ Same logic for <strong>FROM</strong> with <strong>de</strong>:</p>
+<table><thead><tr><th>Combination</th><th>Contraction</th><th>Example</th></tr></thead><tbody><tr><td><strong>de + le</strong></td><td><strong>du</strong></td><td>Je viens <strong>du</strong> bureau. (from the office)</td></tr><tr><td><strong>de + la</strong></td><td><strong>de la</strong> (no change)</td><td>Je viens <strong>de la</strong> boulangerie. (from the bakery)</td></tr><tr><td><strong>de + l'</strong></td><td><strong>de l'</strong> (no change)</td><td>Je viens **de l'**hôpital. (from the hospital)</td></tr><tr><td><strong>de + les</strong></td><td><strong>des</strong></td><td>Je viens <strong>des</strong> toilettes. (from the restrooms)</td></tr></tbody></table>
+<p>→ These contractions are <strong>mandatory</strong> — you CANNOT say <del>"à le"</del> or <del>"de le"</del><br>
+→ You already saw this in Project 3 (articles) and Project 2 (aller au cinéma) — now it's formalized</p>
+<hr>
+<h2>Step 4 — CHEZ: At Someone's Place</h2>
+<p><strong>Rule: CHEZ = at/to someone's home or place</strong></p>
+<p>→ English has NO equivalent preposition<br>
+→ "Chez" + person's name OR pronoun = at/to their home/place</p>
+<table><thead><tr><th>French</th><th>English</th></tr></thead><tbody><tr><td><strong>Chez</strong> moi</td><td>At/to <strong>my</strong> place</td></tr><tr><td><strong>Chez</strong> toi</td><td>At/to <strong>your</strong> place</td></tr><tr><td><strong>Chez</strong> lui</td><td>At/to <strong>his</strong> place</td></tr><tr><td><strong>Chez</strong> elle</td><td>At/to <strong>her</strong> place</td></tr><tr><td><strong>Chez</strong> nous</td><td>At/to <strong>our</strong> place</td></tr><tr><td><strong>Chez</strong> vous</td><td>At/to <strong>your</strong> place (formal/plural)</td></tr><tr><td><strong>Chez</strong> eux</td><td>At/to <strong>their</strong> place (masc/mixed)</td></tr><tr><td><strong>Chez</strong> elles</td><td>At/to <strong>their</strong> place (fem)</td></tr><tr><td><strong>Chez</strong> Pierre</td><td>At/to <strong>Pierre's</strong> place</td></tr><tr><td><strong>Chez</strong> le médecin</td><td>At/to <strong>the doctor's</strong> (office)</td></tr></tbody></table>
+<p>→ Chez can also mean "at the business of" → <strong>chez le dentiste</strong> = at the dentist's</p>
+<hr>
+<h2>Step 5 — Location Words (Where Exactly)</h2>
+<table><thead><tr><th>French</th><th>English</th><th>Type</th></tr></thead><tbody><tr><td><strong>ici</strong></td><td>here</td><td>Basic</td></tr><tr><td><strong>là</strong></td><td>here / there</td><td>Basic (very common for "here" in speech)</td></tr><tr><td><strong>là-bas</strong></td><td>over there</td><td>Basic</td></tr><tr><td><strong>près (de)</strong></td><td>near / close (to)</td><td>Proximity</td></tr><tr><td><strong>loin (de)</strong></td><td>far (from)</td><td>Distance</td></tr><tr><td><strong>à côté (de)</strong></td><td>next to</td><td>Adjacency</td></tr><tr><td><strong>en face (de)</strong></td><td>across from / facing</td><td>Position</td></tr><tr><td><strong>devant</strong></td><td>in front of</td><td>Position</td></tr><tr><td><strong>derrière</strong></td><td>behind</td><td>Position</td></tr><tr><td><strong>entre</strong></td><td>between</td><td>Position</td></tr><tr><td><strong>dans</strong></td><td>in / inside</td><td>Containment</td></tr><tr><td><strong>sur</strong></td><td>on / on top of</td><td>Surface</td></tr><tr><td><strong>sous</strong></td><td>under</td><td>Below</td></tr><tr><td><strong>à gauche (de)</strong></td><td>to the left (of)</td><td>Direction</td></tr><tr><td><strong>à droite (de)</strong></td><td>to the right (of)</td><td>Direction</td></tr></tbody></table>
+<hr>
+<h1>✅ WHAT COULD BE DONE — THE 100 SENTENCES</h1>
+<h2>🔹 BLOCK A — Cities: À and DE</h2>
+<p><em>Scenario: Students at the welcome dinner introduce where they're from and where they live</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English Meaning</th><th>Structure</th></tr></thead><tbody><tr><td>1</td><td>J'habite à Paris.</td><td>I live in Paris.</td><td>habiter + à + city</td></tr><tr><td>2</td><td>Tu habites à Lyon ?</td><td>Do you live in Lyon?</td><td>habiter + à + city + ?</td></tr><tr><td>3</td><td>Il habite à Marseille.</td><td>He lives in Marseille.</td><td>habiter + à + city</td></tr><tr><td>4</td><td>Elle habite à Bordeaux.</td><td>She lives in Bordeaux.</td><td>habiter + à + city</td></tr><tr><td>5</td><td>On habite à Toulouse.</td><td>We live in Toulouse.</td><td>habiter + à + city</td></tr><tr><td>6</td><td>Je viens de Paris.</td><td>I come from Paris.</td><td>venir + de + city</td></tr><tr><td>7</td><td>Tu viens de Londres ?</td><td>Do you come from London?</td><td>venir + de + city + ?</td></tr><tr><td>8</td><td>Il vient de Berlin.</td><td>He comes from Berlin.</td><td>venir + de + city</td></tr><tr><td>9</td><td>Elle vient d'Amsterdam.</td><td>She comes from Amsterdam.</td><td>venir + d' + city (vowel)</td></tr><tr><td>10</td><td>On vient d'Istanbul.</td><td>We come from Istanbul.</td><td>venir + d' + city (vowel)</td></tr></tbody></table>
+<p><strong>🧠 Structure confirmed:</strong> Cities → always <strong>à</strong> (to/in) and <strong>de/d'</strong> (from) — no exceptions for standard cities</p>
+<hr>
+<h2>🔹 BLOCK B — Feminine Countries: EN and DE</h2>
+<p><em>Scenario: Students from countries ending in -e (mostly feminine)</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English Meaning</th><th>Country Gender</th></tr></thead><tbody><tr><td>11</td><td>J'habite en France.</td><td>I live in France.</td><td>Feminine</td></tr><tr><td>12</td><td>Tu habites en Espagne ?</td><td>Do you live in Spain?</td><td>Feminine</td></tr><tr><td>13</td><td>Il habite en Italie.</td><td>He lives in Italy.</td><td>Feminine</td></tr><tr><td>14</td><td>Elle habite en Allemagne.</td><td>She lives in Germany.</td><td>Feminine</td></tr><tr><td>15</td><td>On habite en Angleterre.</td><td>We live in England.</td><td>Feminine</td></tr><tr><td>16</td><td>Je viens de France.</td><td>I come from France.</td><td>de + feminine</td></tr><tr><td>17</td><td>Tu viens d'Espagne ?</td><td>Do you come from Spain?</td><td>d' + vowel</td></tr><tr><td>18</td><td>Il vient d'Italie.</td><td>He comes from Italy.</td><td>d' + vowel</td></tr><tr><td>19</td><td>Elle vient de Russie.</td><td>She comes from Russia.</td><td>de + feminine</td></tr><tr><td>20</td><td>On vient de Chine.</td><td>We come from China.</td><td>de + feminine</td></tr></tbody></table>
+<p><strong>🧠 Pattern confirmed:</strong> Feminine countries → <strong>en</strong> (to/in) → <strong>de/d'</strong> (from)</p>
+<p><strong>🧠 Why no article?</strong><br>
+→ You might expect "en <strong>la</strong> France" — but NO<br>
+→ <strong>En</strong> replaces the article entirely → en France (NOT <del>en la France</del>)<br>
+→ <strong>De</strong> also absorbs the article → de France (NOT <del>de la France</del>) for countries</p>
+<hr>
+<h2>🔹 BLOCK C — Masculine Countries: AU and DU</h2>
+<p><em>Scenario: Students from countries NOT ending in -e (mostly masculine)</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English Meaning</th><th>Country Gender</th></tr></thead><tbody><tr><td>21</td><td>J'habite au Japon.</td><td>I live in Japan.</td><td>Masculine</td></tr><tr><td>22</td><td>Tu habites au Brésil ?</td><td>Do you live in Brazil?</td><td>Masculine</td></tr><tr><td>23</td><td>Il habite au Canada.</td><td>He lives in Canada.</td><td>Masculine</td></tr><tr><td>24</td><td>Elle habite au Maroc.</td><td>She lives in Morocco.</td><td>Masculine</td></tr><tr><td>25</td><td>On habite au Portugal.</td><td>We live in Portugal.</td><td>Masculine</td></tr><tr><td>26</td><td>Je viens du Japon.</td><td>I come from Japan.</td><td>du + masculine</td></tr><tr><td>27</td><td>Tu viens du Brésil ?</td><td>Do you come from Brazil?</td><td>du + masculine</td></tr><tr><td>28</td><td>Il vient du Canada.</td><td>He comes from Canada.</td><td>du + masculine</td></tr><tr><td>29</td><td>Elle vient du Sénégal.</td><td>She comes from Senegal.</td><td>du + masculine</td></tr><tr><td>30</td><td>On vient du Mexique.</td><td>We come from Mexico.</td><td>du + masculine</td></tr></tbody></table>
+<p><strong>🧠 Pattern confirmed:</strong> Masculine countries → <strong>au</strong> (to/in) → <strong>du</strong> (from)</p>
+<p><strong>🧠 Sentence 30 — Le Mexique:</strong><br>
+→ Mexique ends in <strong>-e</strong> but is <strong>masculine</strong> (exception!)<br>
+→ Le Mexique → <strong>au</strong> Mexique (not "en Mexique")<br>
+→ Other masculine -e exceptions: Le Cambodge, Le Mozambique, Le Zimbabwe</p>
+<hr>
+<h2>🔹 BLOCK D — Plural Countries &amp; Masculine Vowel-Start Countries</h2>
+<p><em>Scenario: Special cases that don't fit the simple masculine/feminine pattern</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English Meaning</th><th>Rule Applied</th></tr></thead><tbody><tr><td>31</td><td>J'habite aux États-Unis.</td><td>I live in the United States.</td><td>Plural → aux</td></tr><tr><td>32</td><td>Tu habites aux Pays-Bas ?</td><td>Do you live in the Netherlands?</td><td>Plural → aux</td></tr><tr><td>33</td><td>Il vient des États-Unis.</td><td>He comes from the United States.</td><td>Plural → des</td></tr><tr><td>34</td><td>Elle vient des Philippines.</td><td>She comes from the Philippines.</td><td>Plural → des</td></tr><tr><td>35</td><td>On va aux Antilles cet été.</td><td>We're going to the Antilles this summer.</td><td>Plural → aux</td></tr><tr><td>36</td><td>J'habite en Iran.</td><td>I live in Iran.</td><td>Masculine + vowel → en</td></tr><tr><td>37</td><td>Il habite en Irak.</td><td>He lives in Iraq.</td><td>Masculine + vowel → en</td></tr><tr><td>38</td><td>Elle vient d'Iran.</td><td>She comes from Iran.</td><td>Masculine + vowel → d'</td></tr><tr><td>39</td><td>On habite en Israël.</td><td>We live in Israel.</td><td>Masculine + vowel → en</td></tr><tr><td>40</td><td>Tu viens d'Ouganda ?</td><td>Do you come from Uganda?</td><td>Masculine + vowel → d'</td></tr></tbody></table>
+<p><strong>🧠 SPECIAL RULE DISCOVERED — Sentences 36-40:</strong><br>
+→ Masculine countries that <strong>START with a vowel</strong> behave like feminine countries!<br>
+→ → L'Iran (masculine) → <strong>en</strong> Iran (not "au Iran")<br>
+→ → L'Irak (masculine) → <strong>en</strong> Irak (not "au Irak")<br>
+→ Why? Because <strong>"au"</strong> before a vowel would sound awkward<br>
+→ French prioritizes <strong>smooth sound flow</strong> over rigid gender rules</p>
+<hr>
+<h2>🔹 BLOCK E — Buildings and Specific Places: À + Article</h2>
+<p><em>Scenario: You describe where you go during a typical day in Paris</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English Meaning</th><th>Contraction</th></tr></thead><tbody><tr><td>41</td><td>Je vais au bureau.</td><td>I go to the office.</td><td>à + le = <strong>au</strong></td></tr><tr><td>42</td><td>Tu vas à la banque ?</td><td>Are you going to the bank?</td><td>à + la = <strong>à la</strong></td></tr><tr><td>43</td><td>Il va à l'école.</td><td>He goes to school.</td><td>à + l' = <strong>à l'</strong></td></tr><tr><td>44</td><td>Elle va à l'hôpital.</td><td>She goes to the hospital.</td><td>à + l' = <strong>à l'</strong></td></tr><tr><td>45</td><td>On va au supermarché.</td><td>We go to the supermarket.</td><td>à + le = <strong>au</strong></td></tr><tr><td>46</td><td>Nous allons à la poste.</td><td>We go to the post office.</td><td>à + la = <strong>à la</strong></td></tr><tr><td>47</td><td>Vous allez au cinéma ?</td><td>Are you going to the cinema?</td><td>à + le = <strong>au</strong></td></tr><tr><td>48</td><td>Ils vont à la pharmacie.</td><td>They go to the pharmacy.</td><td>à + la = <strong>à la</strong></td></tr><tr><td>49</td><td>Elles vont aux toilettes.</td><td>They (f) go to the restrooms.</td><td>à + les = <strong>aux</strong></td></tr><tr><td>50</td><td>Je vais à l'aéroport.</td><td>I go to the airport.</td><td>à + l' = <strong>à l'</strong></td></tr></tbody></table>
+<p><strong>🧠 Contraction summary (recall from Step 3):</strong></p>
+<table><thead><tr><th>à + le</th><th>à + la</th><th>à + l'</th><th>à + les</th></tr></thead><tbody><tr><td><strong>au</strong></td><td>à la (no change)</td><td>à l' (no change)</td><td><strong>aux</strong></td></tr></tbody></table>
+<p>→ Only <strong>à + le</strong> and <strong>à + les</strong> contract<br>
+→ <strong>à + la</strong> and <strong>à + l'</strong> stay as they are</p>
+<hr>
+<h2>🔹 BLOCK F — Coming FROM Buildings: DE + Article</h2>
+<p><em>Scenario: You describe where you're coming from</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English Meaning</th><th>Contraction</th></tr></thead><tbody><tr><td>51</td><td>Je viens du bureau.</td><td>I come from the office.</td><td>de + le = <strong>du</strong></td></tr><tr><td>52</td><td>Tu viens de la banque ?</td><td>Are you coming from the bank?</td><td>de + la = <strong>de la</strong></td></tr><tr><td>53</td><td>Il vient de l'école.</td><td>He comes from school.</td><td>de + l' = <strong>de l'</strong></td></tr><tr><td>54</td><td>Elle vient de l'hôpital.</td><td>She comes from the hospital.</td><td>de + l' = <strong>de l'</strong></td></tr><tr><td>55</td><td>On vient du supermarché.</td><td>We come from the supermarket.</td><td>de + le = <strong>du</strong></td></tr><tr><td>56</td><td>Nous venons de la poste.</td><td>We come from the post office.</td><td>de + la = <strong>de la</strong></td></tr><tr><td>57</td><td>Vous venez du cinéma ?</td><td>Are you coming from the cinema?</td><td>de + le = <strong>du</strong></td></tr><tr><td>58</td><td>Ils viennent de la pharmacie.</td><td>They come from the pharmacy.</td><td>de + la = <strong>de la</strong></td></tr><tr><td>59</td><td>Elles viennent des toilettes.</td><td>They (f) come from the restrooms.</td><td>de + les = <strong>des</strong></td></tr><tr><td>60</td><td>Je viens de l'aéroport.</td><td>I come from the airport.</td><td>de + l' = <strong>de l'</strong></td></tr></tbody></table>
+<p><strong>🧠 Contraction summary:</strong></p>
+<table><thead><tr><th>de + le</th><th>de + la</th><th>de + l'</th><th>de + les</th></tr></thead><tbody><tr><td><strong>du</strong></td><td>de la (no change)</td><td>de l' (no change)</td><td><strong>des</strong></td></tr></tbody></table>
+<p>→ Only <strong>de + le</strong> and <strong>de + les</strong> contract<br>
+→ <strong>de + la</strong> and <strong>de + l'</strong> stay as they are<br>
+→ <strong>Identical logic</strong> to the "à" contractions — symmetrical system</p>
+<hr>
+<h2>🔹 BLOCK G — CHEZ: At Someone's Place</h2>
+<p><em>Scenario: Visiting friends, going to the doctor, staying at someone's home</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English Meaning</th><th>Chez + What</th></tr></thead><tbody><tr><td>61</td><td>Je suis chez moi.</td><td>I am at my place / at home.</td><td>chez + stress pronoun</td></tr><tr><td>62</td><td>Tu es chez toi ?</td><td>Are you at home?</td><td>chez + stress pronoun + ?</td></tr><tr><td>63</td><td>Il est chez lui.</td><td>He is at his place.</td><td>chez + stress pronoun</td></tr><tr><td>64</td><td>Elle est chez elle.</td><td>She is at her place.</td><td>chez + stress pronoun</td></tr><tr><td>65</td><td>On est chez nous.</td><td>We are at our place.</td><td>chez + stress pronoun</td></tr><tr><td>66</td><td>Je vais chez Pierre.</td><td>I'm going to Pierre's place.</td><td>chez + name</td></tr><tr><td>67</td><td>Tu viens chez moi ce soir ?</td><td>Are you coming to my place tonight?</td><td>chez + stress pronoun + time</td></tr><tr><td>68</td><td>Il va chez le médecin.</td><td>He goes to the doctor's.</td><td>chez + le + profession</td></tr><tr><td>69</td><td>Elle va chez le dentiste.</td><td>She goes to the dentist's.</td><td>chez + le + profession</td></tr><tr><td>70</td><td>On mange chez mes parents.</td><td>We eat at my parents' place.</td><td>chez + possessive + noun</td></tr></tbody></table>
+<p><strong>🧠 CHEZ uses STRESS PRONOUNS — not regular subject pronouns:</strong></p>
+<table><thead><tr><th>Subject Pronoun</th><th>Stress Pronoun (after chez)</th></tr></thead><tbody><tr><td>je</td><td><strong>moi</strong></td></tr><tr><td>tu</td><td><strong>toi</strong></td></tr><tr><td>il</td><td><strong>lui</strong></td></tr><tr><td>elle</td><td><strong>elle</strong></td></tr><tr><td>nous</td><td><strong>nous</strong></td></tr><tr><td>vous</td><td><strong>vous</strong></td></tr><tr><td>ils</td><td><strong>eux</strong></td></tr><tr><td>elles</td><td><strong>elles</strong></td></tr></tbody></table>
+<p>→ Stress pronouns appear after <strong>prepositions</strong> (chez, pour, avec, sans...)<br>
+→ They also appear for <strong>emphasis</strong> → "Moi, je suis français." (ME, I am French.)<br>
+→ This is the first time you see them — they will return in many future projects</p>
+<p><strong>🧠 CHEZ vs. À LA MAISON:</strong></p>
+<table><thead><tr><th>Expression</th><th>Meaning</th><th>Nuance</th></tr></thead><tbody><tr><td><strong>Chez moi</strong></td><td>At my place</td><td>Emphasizes it's YOUR space — personal</td></tr><tr><td><strong>À la maison</strong></td><td>At home / at the house</td><td>More neutral — focuses on the building</td></tr></tbody></table>
+<p>→ Both are correct for "at home" — <strong>chez moi</strong> is more common in conversation<br>
+→ "Je rentre <strong>chez moi</strong>" = I'm going home (very natural)<br>
+→ "Je rentre <strong>à la maison</strong>" = I'm going home (also natural, slightly more neutral)</p>
+<hr>
+<h2>🔹 BLOCK H — Location Words in Sentences</h2>
+<p><em>Scenario: Giving and understanding directions in the neighborhood</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English Meaning</th><th>Location Word</th></tr></thead><tbody><tr><td>71</td><td>La pharmacie est ici.</td><td>The pharmacy is here.</td><td>ici</td></tr><tr><td>72</td><td>Le métro est là.</td><td>The metro is here / there.</td><td>là</td></tr><tr><td>73</td><td>Le restaurant est là-bas.</td><td>The restaurant is over there.</td><td>là-bas</td></tr><tr><td>74</td><td>La banque est près d'ici.</td><td>The bank is near here.</td><td>près de</td></tr><tr><td>75</td><td>L'aéroport est loin d'ici.</td><td>The airport is far from here.</td><td>loin de</td></tr><tr><td>76</td><td>La boulangerie est à côté de la pharmacie.</td><td>The bakery is next to the pharmacy.</td><td>à côté de</td></tr><tr><td>77</td><td>L'hôtel est en face du restaurant.</td><td>The hotel is across from the restaurant.</td><td>en face de (+ du = de + le)</td></tr><tr><td>78</td><td>Le parking est derrière le bâtiment.</td><td>The parking is behind the building.</td><td>derrière</td></tr><tr><td>79</td><td>L'arrêt de bus est devant l'école.</td><td>The bus stop is in front of the school.</td><td>devant</td></tr><tr><td>80</td><td>Le café est entre la banque et la poste.</td><td>The café is between the bank and the post office.</td><td>entre</td></tr></tbody></table>
+<p><strong>🧠 Location words that use DE:</strong><br>
+→ Several location words require <strong>de</strong> to connect to the next noun:<br>
+→ → près <strong>de</strong>, loin <strong>de</strong>, à côté <strong>de</strong>, en face <strong>de</strong>, à gauche <strong>de</strong>, à droite <strong>de</strong><br>
+→ When <strong>de</strong> meets <strong>le</strong> → <strong>du</strong> (sentence 77: en face <strong>du</strong> restaurant)<br>
+→ When <strong>de</strong> meets <strong>les</strong> → <strong>des</strong> (en face <strong>des</strong> magasins)<br>
+→ Same contraction rules as Block F</p>
+<hr>
+<h2>🔹 BLOCK I — DANS, SUR, SOUS + Directions</h2>
+<p><em>Scenario: Finding things inside rooms, on tables, giving left/right directions</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English Meaning</th><th>Preposition</th></tr></thead><tbody><tr><td>81</td><td>Le passeport est dans le sac.</td><td>The passport is in the bag.</td><td>dans</td></tr><tr><td>82</td><td>Les clés sont sur la table.</td><td>The keys are on the table.</td><td>sur</td></tr><tr><td>83</td><td>Le chat est sous le lit.</td><td>The cat is under the bed.</td><td>sous</td></tr><tr><td>84</td><td>Le livre est dans la chambre.</td><td>The book is in the room.</td><td>dans</td></tr><tr><td>85</td><td>Le téléphone est sur le bureau.</td><td>The phone is on the desk.</td><td>sur</td></tr><tr><td>86</td><td>Tournez à gauche.</td><td>Turn left.</td><td>à gauche</td></tr><tr><td>87</td><td>Tournez à droite.</td><td>Turn right.</td><td>à droite</td></tr><tr><td>88</td><td>C'est à gauche de la banque.</td><td>It's to the left of the bank.</td><td>à gauche de</td></tr><tr><td>89</td><td>C'est à droite du cinéma.</td><td>It's to the right of the cinema.</td><td>à droite de (+ du)</td></tr><tr><td>90</td><td>C'est tout droit.</td><td>It's straight ahead.</td><td>tout droit</td></tr></tbody></table>
+<p><strong>🧠 DANS vs. EN vs. À — "In" confusion solved:</strong></p>
+<table><thead><tr><th>Preposition</th><th>Used For</th><th>Example</th></tr></thead><tbody><tr><td><strong>dans</strong></td><td>Physical containment — inside a specific object/room</td><td>Le livre est <strong>dans</strong> le sac.</td></tr><tr><td><strong>en</strong></td><td>Countries (feminine) / abstract states</td><td>J'habite <strong>en</strong> France. / Je suis <strong>en</strong> retard.</td></tr><tr><td><strong>à</strong></td><td>Cities / buildings with articles</td><td>J'habite <strong>à</strong> Paris. / Je vais <strong>au</strong> bureau.</td></tr></tbody></table>
+<p>→ <strong>Dans</strong> = physically INSIDE something you can touch/enter<br>
+→ <strong>En</strong> = inside a country OR in a state/condition<br>
+→ <strong>À</strong> = at/to a city or specific place with article</p>
+<hr>
+<h2>🔹 BLOCK J — Full Conversation: Where Everything Connects</h2>
+<p><em>Scenario: Complete exchange at the welcome dinner — all preposition types combined</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>Preposition Type</th><th>Context</th></tr></thead><tbody><tr><td>91</td><td>Je viens du Brésil.</td><td>du + masculine country</td><td>Origin</td></tr><tr><td>92</td><td>J'habite en France maintenant.</td><td>en + feminine country</td><td>Current residence</td></tr><tr><td>93</td><td>J'habite à Paris.</td><td>à + city</td><td>Specific city</td></tr><tr><td>94</td><td>J'habite dans le cinquième arrondissement.</td><td>dans + specific area</td><td>Neighborhood</td></tr><tr><td>95</td><td>Mon appartement est près de la Seine.</td><td>près de + landmark</td><td>Location detail</td></tr><tr><td>96</td><td>Je travaille au centre-ville.</td><td>au + place</td><td>Workplace area</td></tr><tr><td>97</td><td>Mon bureau est en face d'un parc.</td><td>en face de + place</td><td>Office location</td></tr><tr><td>98</td><td>Je vais chez le médecin demain.</td><td>chez + profession</td><td>Tomorrow's plan</td></tr><tr><td>99</td><td>Ce soir, je mange chez des amis.</td><td>chez + people</td><td>Evening plan</td></tr><tr><td>100</td><td>Après, je rentre chez moi.</td><td>chez + stress pronoun</td><td>Going home</td></tr><tr><td>101</td><td>Le restaurant est à côté du métro.</td><td>à côté de + place</td><td>Giving directions</td></tr><tr><td>102</td><td>C'est entre la banque et la poste.</td><td>entre + place + et + place</td><td>Precise location</td></tr><tr><td>103</td><td>Tu tournes à gauche après le feu.</td><td>à gauche + après + landmark</td><td>Directions</td></tr><tr><td>104</td><td>L'école est à droite, là-bas.</td><td>à droite + là-bas</td><td>Pointing</td></tr></tbody></table>
+<hr>
+<h1>✅ WHAT SHOULD DO</h1>
+<p>→ <strong>Memorize the country gender rule:</strong> ends in -e = feminine (en/de) → everything else = masculine (au/du) → plural = aux/des<br>
+→ <strong>Memorize the contractions</strong> — à + le = au / de + le = du / à + les = aux / de + les = des — these are MANDATORY<br>
+→ <strong>Learn "chez" with stress pronouns</strong> — chez moi, chez toi, chez lui... — you will use these daily<br>
+→ <strong>Distinguish dans/en/à</strong> for "in" — physical container (dans), country (en), city or building (à)<br>
+→ <strong>Practice location words with de</strong> — près de, loin de, à côté de, en face de — and apply contraction rules<br>
+→ <strong>Connect to Project 2</strong> — aller (je vais <strong>au</strong> bureau), habiter (j'habite <strong>à</strong> Paris), venir (je viens <strong>du</strong> Brésil)<br>
+→ <strong>Connect to Project 3</strong> — articles (le, la, l', les) are the same ones that contract with à and de<br>
+→ <strong>Connect to Project 6</strong> — modals + prepositions: "Je veux aller <strong>en</strong> France" / "Je dois aller <strong>chez</strong> le médecin"</p>
+<hr>
+<h1>❌ WHAT SHOULD NOT DO</h1>
+<p>→ ❌ Do NOT say <del>"à le"</del> → always contract to <strong>"au"</strong><br>
+→ ❌ Do NOT say <del>"de le"</del> → always contract to <strong>"du"</strong><br>
+→ ❌ Do NOT say <del>"J'habite à France"</del> → France is feminine → "J'habite <strong>en</strong> France"<br>
+→ ❌ Do NOT say <del>"J'habite en Paris"</del> → Paris is a city → "J'habite <strong>à</strong> Paris"<br>
+→ ❌ Do NOT say <del>"Je vais à chez Pierre"</del> → chez is already a preposition → "Je vais <strong>chez</strong> Pierre" (no à)<br>
+→ ❌ Do NOT say <del>"en le Japon"</del> → masculine country → "<strong>au</strong> Japon"<br>
+→ ❌ Do NOT use "dans" for countries → <del>"dans la France"</del> → "<strong>en</strong> France"<br>
+→ ❌ Do NOT use regular subject pronouns after chez → <del>"chez je"</del> → "chez <strong>moi</strong>"<br>
+→ ❌ Do NOT forget <strong>de</strong> in location expressions → <del>"à côté la banque"</del> → "à côté <strong>de</strong> la banque"</p>
+<hr>
+<h1>🔀 WHEN TO USE WHAT</h1>
+<h2>Master Decision Table: Going TO a Place</h2>
+<table><thead><tr><th>Place Type</th><th>Preposition</th><th>Example</th></tr></thead><tbody><tr><td><strong>City</strong></td><td><strong>à</strong></td><td>Je vais <strong>à</strong> Paris.</td></tr><tr><td><strong>Feminine country / vowel-start</strong></td><td><strong>en</strong></td><td>Je vais <strong>en</strong> France. / <strong>en</strong> Iran.</td></tr><tr><td><strong>Masculine country (consonant)</strong></td><td><strong>au</strong></td><td>Je vais <strong>au</strong> Japon.</td></tr><tr><td><strong>Plural country</strong></td><td><strong>aux</strong></td><td>Je vais <strong>aux</strong> États-Unis.</td></tr><tr><td><strong>Building (masc)</strong></td><td><strong>au</strong> (à + le)</td><td>Je vais <strong>au</strong> bureau.</td></tr><tr><td><strong>Building (fem)</strong></td><td><strong>à la</strong></td><td>Je vais <strong>à la</strong> banque.</td></tr><tr><td><strong>Building (vowel)</strong></td><td><strong>à l'</strong></td><td>Je vais **à l'**hôpital.</td></tr><tr><td><strong>Building (plural)</strong></td><td><strong>aux</strong> (à + les)</td><td>Je vais <strong>aux</strong> toilettes.</td></tr><tr><td><strong>Person's home</strong></td><td><strong>chez</strong></td><td>Je vais <strong>chez</strong> Pierre.</td></tr><tr><td><strong>My/your/their home</strong></td><td><strong>chez</strong> + stress pronoun</td><td>Je vais <strong>chez</strong> moi.</td></tr><tr><td><strong>Professional's office</strong></td><td><strong>chez</strong> + le/la + profession</td><td>Je vais <strong>chez le</strong> médecin.</td></tr></tbody></table>
+<h2>Master Decision Table: Coming FROM a Place</h2>
+<table><thead><tr><th>Place Type</th><th>Preposition</th><th>Example</th></tr></thead><tbody><tr><td><strong>City</strong></td><td><strong>de / d'</strong></td><td>Je viens <strong>de</strong> Paris. / **d'**Amsterdam.</td></tr><tr><td><strong>Feminine country / vowel-start</strong></td><td><strong>de / d'</strong></td><td>Je viens <strong>de</strong> France. / **d'**Italie.</td></tr><tr><td><strong>Masculine country (consonant)</strong></td><td><strong>du</strong></td><td>Je viens <strong>du</strong> Japon.</td></tr><tr><td><strong>Plural country</strong></td><td><strong>des</strong></td><td>Je viens <strong>des</strong> États-Unis.</td></tr><tr><td><strong>Building (masc)</strong></td><td><strong>du</strong> (de + le)</td><td>Je viens <strong>du</strong> bureau.</td></tr><tr><td><strong>Building (fem)</strong></td><td><strong>de la</strong></td><td>Je viens <strong>de la</strong> banque.</td></tr><tr><td><strong>Building (vowel)</strong></td><td><strong>de l'</strong></td><td>Je viens **de l'**hôpital.</td></tr><tr><td><strong>Building (plural)</strong></td><td><strong>des</strong> (de + les)</td><td>Je viens <strong>des</strong> toilettes.</td></tr><tr><td><strong>Person's home</strong></td><td><strong>de chez</strong></td><td>Je viens <strong>de chez</strong> Pierre.</td></tr></tbody></table>
+<hr>
+<h1>🚫 WHEN NOT TO USE</h1>
+<p>→ Do NOT use <strong>en</strong> for cities → en is for countries/continents only<br>
+→ Do NOT use <strong>à</strong> for feminine countries → à is for cities and buildings only<br>
+→ Do NOT use <strong>au</strong> for feminine countries → au is for masculine countries and masculine buildings<br>
+→ Do NOT use <strong>dans</strong> for countries → dans is for physical containers (rooms, bags, boxes, neighborhoods)<br>
+→ Do NOT use <strong>chez</strong> for buildings → chez is for people → "chez le restaurant" ❌ → "<strong>au</strong> restaurant" ✅<br>
+→ Do NOT use <strong>chez</strong> without a person reference → chez always needs a person, name, or pronoun after it<br>
+→ Do NOT use location words (près de, en face de) without <strong>de</strong> → the "de" is mandatory</p>
+<hr>
+<h1>⚠️ COMMON PITFALLS AND FAILURE MODES</h1>
+<table><thead><tr><th>Pitfall</th><th>What Learners Do Wrong</th><th>Correct Version</th><th>Why</th></tr></thead><tbody><tr><td><strong>City vs. Country confusion</strong></td><td>J'habite en Paris.</td><td>J'habite <strong>à</strong> Paris.</td><td>Paris = city → à</td></tr><tr><td><strong>Feminine country with au</strong></td><td>Je vais au France.</td><td>Je vais <strong>en</strong> France.</td><td>France = feminine → en</td></tr><tr><td><strong>Masculine country with en</strong></td><td>Je vais en Japon.</td><td>Je vais <strong>au</strong> Japon.</td><td>Japon = masculine → au</td></tr><tr><td><strong>Missing contraction</strong></td><td>Je vais à le bureau.</td><td>Je vais <strong>au</strong> bureau.</td><td>à + le = au (mandatory)</td></tr><tr><td><strong>Missing contraction</strong></td><td>Je viens de le cinéma.</td><td>Je viens <strong>du</strong> cinéma.</td><td>de + le = du (mandatory)</td></tr><tr><td><strong>Chez + building</strong></td><td>Je vais chez le restaurant.</td><td>Je vais <strong>au</strong> restaurant.</td><td>Chez = people only</td></tr><tr><td><strong>Chez + subject pronoun</strong></td><td>Je vais chez je.</td><td>Je vais <strong>chez moi</strong>.</td><td>Must use stress pronouns</td></tr><tr><td><strong>Dans for countries</strong></td><td>J'habite dans la France.</td><td>J'habite <strong>en</strong> France.</td><td>Countries use en/au/aux</td></tr><tr><td><strong>Le Mexique trap</strong></td><td>J'habite en Mexique.</td><td>J'habite <strong>au</strong> Mexique.</td><td>Le Mexique = masculine exception</td></tr><tr><td><strong>Location word missing de</strong></td><td>À côté la banque.</td><td>À côté <strong>de</strong> la banque.</td><td>Most location words need de</td></tr><tr><td><strong>Masculine vowel-start country</strong></td><td>Je vais au Iran.</td><td>Je vais <strong>en</strong> Iran.</td><td>Masc + vowel → en (sound rule)</td></tr><tr><td><strong>Plural country with au</strong></td><td>Je vais au États-Unis.</td><td>Je vais <strong>aux</strong> États-Unis.</td><td>Plural → aux</td></tr></tbody></table>
+<hr>
+<h1>🔑 KEY TAKEAWAY</h1>
+<blockquote>
+<p><strong>Project 1 → You exist and possess.</strong><br>
+<strong>Project 2 → You act.</strong><br>
+<strong>Project 3 → You identify the world.</strong><br>
+<strong>Project 4 → You ask questions.</strong><br>
+<strong>Project 5 → You deny and refuse.</strong><br>
+<strong>Project 6 → You express desire, ability, obligation, need.</strong><br>
+<strong>Project 7 → You anchor everything in SPACE — where you are, where you go, where you come from.</strong></p>
+<p>The <strong>preposition system</strong> is a decision tree:<br>
+→ City? → <strong>à / de</strong><br>
+→ Country? → Check gender → <strong>en/de</strong> (fem) or <strong>au/du</strong> (masc) or <strong>aux/des</strong> (plural)<br>
+→ Building? → <strong>à + article</strong> (with mandatory contractions)<br>
+→ Person's place? → <strong>chez</strong> + stress pronoun or name<br>
+→ Physical inside? → <strong>dans</strong></p>
+<p><strong>Contractions (au, du, aux, des) are not optional</strong> — they are mandatory fusions.</p>
+<p><strong>You can now place every action in space:</strong><br>
+→ "I want to go <strong>to Japan</strong>" = Je veux aller <strong>au Japon</strong>.<br>
+→ "I must leave <strong>from the office</strong>" = Je dois partir <strong>du bureau</strong>.<br>
+→ "I can't sleep <strong>at my place</strong>" = Je ne peux pas dormir <strong>chez moi</strong>.</p>
+<p><strong>But all your sentences are locked in the PRESENT moment.</strong><br>
+→ You can say where you ARE — but not what time it is<br>
+→ You can say where you GO — but not WHEN exactly<br>
+→ You need <strong>time markers</strong> to schedule your life in French.</p>
+</blockquote>
+<hr>
+<h1>🌉 BRIDGE TO PROJECT 8</h1>
+<blockquote>
+<p>You can now say <strong>"I live in France"</strong> and <strong>"I'm going to the office"</strong> and <strong>"I come from Brazil"</strong><br>
+But someone asks: <strong>"When? What time? What day? What month?"</strong><br>
+→ "I work <strong>on Mondays</strong>" — is it "le lundi" or "lundi" or "au lundi"?<br>
+→ "I leave <strong>at 8 o'clock</strong>" — is it "à huit heures" or "en huit heures"?<br>
+→ "I arrived <strong>in March</strong>" — is it "en mars" or "au mars" or "dans mars"?<br>
+→ Project 8: <strong>"When Things Happen"</strong> unlocks <strong>time markers</strong> — hours, days, months, seasons, and frequency expressions<br>
+→ This completes your <strong>Foundation Phase</strong> — after Project 8, you can locate any action in <strong>space AND time</strong></p>
+</blockquote>
+<hr>
+<h1>✅ PROJECT 7 COMPLETE</h1>
+<blockquote>
+<p><strong>Are you ready for PROJECT 8: "When Things Happen"?</strong><br>
+→ ~100 sentences covering time markers — hours, days, months, seasons, frequency<br>
+→ Scenario: You're scheduling your life — classes, appointments, routines, plans<br>
+→ Last project of Phase 1 — completes the foundation before unlocking past tense in Phase 2</p>
+</blockquote>
+</div>
+</div>
+
+<!-- ========== data-index="17" ========== -->
+
+        </div>
+
+        <div class="nav-bar">
+            <a href="project-6.html" class="nav-button prev">← Previous Chapter</a>
+            <div class="page-info">
+                <a href="index.html" class="nav-button home">📚 Table of Contents</a><br>
+                <span style="margin-top:8px;display:block">Chapter 7 of 50</span>
+            </div>
+            <a href="project-8.html" class="nav-button next">Next Chapter →</a>
+        </div>
+    </div>
+
+    
+    <div id="progress-track"><div id="progress-fill"></div></div>
+    <div id="progress-pct">0%</div>
+
+
+    <script>
+    const fill = document.getElementById('progress-fill');
+    const pct  = document.getElementById('progress-pct');
+    function updateProgress() {
+        const scrollTop = window.scrollY;
+        const docHeight = document.body.scrollHeight - window.innerHeight;
+        const scrolled  = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+        fill.style.height = scrolled + '%';
+        pct.textContent   = Math.round(scrolled) + '%';
+    }
+    window.addEventListener('scroll', updateProgress);
+    updateProgress();
+
+    document.addEventListener('keydown', function(e) {
+        if (['INPUT','TEXTAREA'].includes(document.activeElement.tagName)) return;
+        if (e.key === 'ArrowLeft') {
+            const b = document.querySelector('.nav-button.prev');
+            if (b && !b.classList.contains('disabled')) window.location.href = b.href;
+        }
+        if (e.key === 'ArrowRight') {
+            const b = document.querySelector('.nav-button.next');
+            if (b && !b.classList.contains('disabled')) window.location.href = b.href;
+        }
+    });
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="images/favicon.png">
+    <title>Project 25: "He Said That, She Told Me" — French Daily Sentences</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.75;
+            color: #1a202c;
+            background-color: #f7fafc;
+        }
+        .container {
+            max-width: 1800px;
+            margin: 0 auto;
+            background: white;
+            min-height: 100vh;
+            box-shadow: 0 0 30px rgba(0,0,0,0.08);
+            padding: 48px 52px;
+        }
+        
+        .content { max-width: 1700px; margin: 0 auto; color: #1a202c; }
+        .content h1 {
+            color: #1a202c; margin: 32px 0 20px;
+            padding-bottom: 12px;
+            border-bottom: 4px solid #3b82f6;
+            font-size: 2.1em;
+            font-weight: 700;
+        }
+        .content h2 {
+            color: #1a202c; margin: 28px 0 16px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #60a5fa;
+            font-size: 1.6em;
+            font-weight: 600;
+        }
+        .content h3 { color: #1a202c; margin: 22px 0 12px; font-size: 1.3em; font-weight: 600; }
+        .content h4 { color: #2d3748; margin: 18px 0 10px; font-size: 1.1em; font-weight: 600; }
+        .content p  { margin-bottom: 16px; line-height: 1.8; color: #1a202c; }
+        .content ul, .content ol { margin: 12px 0 18px 30px; color: #1a202c; }
+        .content li { margin-bottom: 8px; line-height: 1.75; color: #1a202c; }
+        .content hr { border: none; border-top: 2px solid #e2e8f0; margin: 26px 0; }
+        .content pre {
+            background: #f7fafc !important;
+            border: 1px solid #cbd5e0 !important;
+            border-left: 4px solid #3b82f6 !important;
+            padding: 18px !important; overflow-x: auto; margin: 18px 0; border-radius: 6px;
+            font-family: 'Consolas','Monaco','Courier New',monospace !important;
+            font-size: 0.9em !important;
+        }
+        .content pre:not([style*="color"]) { color: #1a202c !important; }
+        .content code {
+            font-family: 'Consolas','Monaco','Courier New',monospace !important;
+            font-size: 0.88em !important;
+        }
+        .content code:not(pre code) {
+            background: #dbeafe !important;
+            color: #1a202c !important;
+            padding: 2px 6px;
+            border-radius: 3px;
+        }
+        .content pre code { background: transparent !important; padding: 0; }
+        .content table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+        .content th {
+            background: linear-gradient(135deg, #3b82f6 0%, #60a5fa 100%);
+            color: white; padding: 12px 16px; text-align: left;
+            font-weight: 600;
+        }
+        .content td { padding: 11px 16px; border: 1px solid #e2e8f0; color: #1a202c; }
+        .content tr:nth-child(even) td { background: #eff6ff; }
+        .content blockquote {
+            border-left: 4px solid #3b82f6; background: #eff6ff;
+            padding: 14px 20px; margin: 18px 0; border-radius: 0 6px 6px 0;
+            color: #1a202c;
+        }
+        .content strong { color: #1a202c; font-weight: 600; }
+        .px-2 { padding: 0; }
+        .chat-message { background: transparent; padding: 0; margin: 0; }
+
+        /* Bottom nav bar only */
+        .nav-bar {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 24px 0;
+            margin-top: 50px;
+            border-top: 3px solid #60a5fa;
+        }
+        .nav-button {
+            display: inline-flex; align-items: center; gap: 8px;
+            padding: 12px 26px;
+            background: linear-gradient(135deg, #3b82f6 0%, #60a5fa 100%);
+            color: white !important; text-decoration: none;
+            border-radius: 8px; font-weight: 600; font-size: 0.95em;
+            transition: all 0.2s;
+            box-shadow: 0 2px 8px rgba(59,130,246,0.35);
+        }
+        .nav-button:hover { transform: translateY(-2px); box-shadow: 0 4px 14px rgba(59,130,246,0.5); }
+        .nav-button.disabled { background: #cbd5e1; box-shadow: none; pointer-events: none; }
+        .nav-button.home {
+            background: linear-gradient(135deg, #ef4444 0%, #f87171 100%);
+            box-shadow: 0 2px 8px rgba(239,68,68,0.35);
+        }
+        .nav-button.home:hover { box-shadow: 0 4px 14px rgba(239,68,68,0.5); }
+        .page-info { color: #718096; font-size: 0.9em; text-align: center; }
+
+        /* Progress bar */
+        #progress-track {
+            position: fixed; top: 20px; right: 20px;
+            width: 10px; height: 150px;
+            background: rgba(59,130,246,0.2);
+            border: 2px solid #3b82f6;
+            border-radius: 6px; overflow: hidden; z-index: 1000;
+        }
+        #progress-fill {
+            width: 100%;
+            background: linear-gradient(180deg, #3b82f6, #2563eb);
+            height: 0%;
+            transition: height 0.15s ease;
+        }
+        #progress-pct {
+            position: fixed; top: 0px; right: 16px;
+            color: #2563eb; font-size: 14px; font-weight: bold;
+            z-index: 1001;
+            text-shadow: 0 1px 2px rgba(255,255,255,0.9);
+            line-height: 20px;
+        }
+
+    </style>
+<link rel="stylesheet" href="assets/chapters.css?v=20260421203847"><script src="assets/chapters.js?v=20260421203847" defer></script>
+</head>
+<body>
+    <div class="container">
+        <div class="content">
+            <div class="chat-message" data-index="19">
+<div class="px-2"><h1>🟡 PROJECT 25: "He Said That, She Told Me"</h1>
+<h2><em>You're reporting what someone else said to a third person — and the tenses shift beneath you</em></h2>
+<hr>
+<h1>🎯 THE HYPOTHETICAL PROBLEM</h1>
+<p>→ You're at work in France — your boss tells you something in the morning:</p>
+<code>BOSS (at 9am): "La réunion est à 15h. J'ai déjà envoyé l'email. Nous partirons à 14h30."</code>
+<p>→ At lunch, your colleague asks: "Qu'est-ce que le chef a dit ?"<br>
+→ You need to REPORT what the boss said — but you can't just repeat his exact words<br>
+→ You try:</p>
+<code>❌ "Il a dit: la réunion est à 15h, j'ai déjà envoyé l'email, nous partirons à 14h30."</code>
+<p>→ This sounds like you're <strong>quoting</strong> — it works in writing with quotation marks<br>
+→ But in <strong>spoken French</strong>, people report speech INDIRECTLY:</p>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>✅ "Il a dit que la réunion ÉTAIT à 15h."
+</span>✅ "Il a dit qu'il AVAIT déjà envoyé l'email."
+✅ "Il a dit que nous PARTIRIONS à 14h30."</code></pre></div>
+<p>→ Notice: <strong>every tense shifted backward</strong><br>
+→ "est" (présent) → "était" (imparfait)<br>
+→ "ai envoyé" (passé composé) → "avait envoyé" (plus-que-parfait)<br>
+→ "partirons" (futur simple) → "partirions" (conditionnel)</p>
+<p>→ Your friend tells you about her weekend:</p>
+<code>FRIEND: "Je suis allée à Lyon. C'était magnifique. J'y retournerai bientôt."</code>
+<p>→ You tell another friend:</p>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>✅ "Elle a dit qu'elle ÉTAIT allée à Lyon."
+</span>✅ "Elle a dit que c'AVAIT ÉTÉ magnifique." (or "que c'était magnifique")
+✅ "Elle a dit qu'elle Y RETOURNERAIT bientôt."</code></pre></div>
+<p>→ This is <strong>DISCOURS INDIRECT</strong> (reported speech / indirect speech)<br>
+→ It's one of the <strong>most used structures in daily conversation</strong><br>
+→ Every time you say "Il a dit que...", "Elle m'a demandé si...", "Ils ont répondu que..." — you're using it<br>
+→ Without mastering the <strong>tense shift</strong>, your reported speech will be grammatically broken</p>
+<p><strong>The core realization:</strong><br>
+→ When you report speech in the <strong>present</strong> ("Il dit que...") → NO tense shift needed<br>
+→ When you report speech in the <strong>past</strong> ("Il a dit que...") → ALL tenses shift backward<br>
+→ This shift is called <strong>la concordance des temps</strong> (tense agreement/sequence of tenses)<br>
+→ It follows a <strong>strict, predictable pattern</strong> — learn the pattern once, apply it forever</p>
+<hr>
+<h1>🔍 HOW TO APPROACH IT</h1>
+<p>→ Reported speech has <strong>three transformations</strong> that happen simultaneously:</p>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>TRANSFORMATION 1: REPORTING VERB + QUE
+</span>   Direct:    "Je suis fatigué."
+   Indirect:  Il a dit QU'il était fatigué.
+
+TRANSFORMATION 2: TENSE SHIFT (when reporting verb is past)
+   "est" → "était"
+   "ai fait" → "avait fait"
+   "ferai" → "ferait"
+
+TRANSFORMATION 3: PRONOUN / POSSESSIVE SHIFT
+   "je" → "il/elle"
+   "mon" → "son"
+   "ici" → "là" / "là-bas"
+   "aujourd'hui" → "ce jour-là"
+   "demain" → "le lendemain"</code></pre></div>
+<p>→ Think of it as <strong>moving the camera</strong> — you're no longer IN the scene<br>
+→ You're reporting it from OUTSIDE — so perspective and time shift</p>
+<hr>
+<h1>🔧 HOW CAN WE SOLVE IT</h1>
+<h2>THE TENSE SHIFT TABLE — The Core Engine</h2>
+<h3>When the reporting verb is in the PAST (il a dit, elle a raconté, ils ont répondu):</h3>
+<table><thead><tr><th>Original Tense (Direct Speech)</th><th>Shifts To (Indirect Speech)</th><th>Example</th></tr></thead><tbody><tr><td><strong>Présent</strong></td><td>→ <strong>Imparfait</strong></td><td>"Je <strong>suis</strong> fatigué" → Il a dit qu'il <strong>était</strong> fatigué</td></tr><tr><td><strong>Passé composé</strong></td><td>→ <strong>Plus-que-parfait</strong></td><td>"J'<strong>ai mangé</strong>" → Il a dit qu'il <strong>avait mangé</strong></td></tr><tr><td><strong>Futur simple</strong></td><td>→ <strong>Conditionnel présent</strong></td><td>"Je <strong>viendrai</strong>" → Il a dit qu'il <strong>viendrait</strong></td></tr><tr><td><strong>Futur proche</strong></td><td>→ <strong>Aller (imparfait) + infinitif</strong></td><td>"Je <strong>vais partir</strong>" → Il a dit qu'il <strong>allait partir</strong></td></tr><tr><td><strong>Imparfait</strong></td><td>→ <strong>Imparfait</strong> (NO CHANGE)</td><td>"J'<strong>étais</strong> content" → Il a dit qu'il <strong>était</strong> content</td></tr><tr><td><strong>Plus-que-parfait</strong></td><td>→ <strong>Plus-que-parfait</strong> (NO CHANGE)</td><td>"J'<strong>avais fini</strong>" → Il a dit qu'il <strong>avait fini</strong></td></tr><tr><td><strong>Conditionnel</strong></td><td>→ <strong>Conditionnel</strong> (NO CHANGE)</td><td>"Je <strong>voudrais</strong>" → Il a dit qu'il <strong>voudrait</strong></td></tr><tr><td><strong>Subjonctif</strong></td><td>→ <strong>Subjonctif</strong> (NO CHANGE)</td><td>"Il faut que je <strong>parte</strong>" → Il a dit qu'il fallait qu'il <strong>parte</strong></td></tr><tr><td><strong>Impératif</strong></td><td>→ <strong>de + infinitif</strong></td><td>"<strong>Pars</strong> !" → Il m'a dit <strong>de partir</strong></td></tr></tbody></table>
+<h3>When the reporting verb is in the PRESENT (il dit, elle raconte):</h3>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>→ NO TENSE SHIFT — everything stays the same
+</span>→ "Il dit qu'il EST fatigué." (present reporting = no change)
+→ "Elle raconte qu'elle A VU un film." (present reporting = no change)</code></pre></div>
+<hr>
+<h2>THE PRONOUN / REFERENCE SHIFT TABLE</h2>
+<table><thead><tr><th>Direct Speech</th><th>Indirect Speech</th><th>Example</th></tr></thead><tbody><tr><td><strong>je</strong></td><td>→ <strong>il / elle</strong></td><td>"<strong>Je</strong> suis content" → Il a dit qu'<strong>il</strong> était content</td></tr><tr><td><strong>tu</strong> (if talking to you)</td><td>→ <strong>je</strong> or <strong>il/elle</strong> (depends on context)</td><td>"<strong>Tu</strong> es en retard" → Il m'a dit que **j'**étais en retard</td></tr><tr><td><strong>mon, ma, mes</strong></td><td>→ <strong>son, sa, ses</strong></td><td>"<strong>Ma</strong> voiture" → Il a dit que <strong>sa</strong> voiture...</td></tr><tr><td><strong>ton, ta, tes</strong></td><td>→ <strong>mon/son</strong> (depends)</td><td>Context-dependent</td></tr><tr><td><strong>nous</strong></td><td>→ <strong>ils/elles</strong> or <strong>nous</strong></td><td>Depends on who's included</td></tr><tr><td><strong>ici</strong></td><td>→ <strong>là / là-bas</strong></td><td>"<strong>Ici</strong>" → Il a dit que c'était <strong>là</strong></td></tr><tr><td><strong>aujourd'hui</strong></td><td>→ <strong>ce jour-là</strong></td><td>"<strong>Aujourd'hui</strong>" → Il a dit que <strong>ce jour-là</strong>...</td></tr><tr><td><strong>demain</strong></td><td>→ <strong>le lendemain</strong></td><td>"<strong>Demain</strong>" → Il a dit que <strong>le lendemain</strong>...</td></tr><tr><td><strong>hier</strong></td><td>→ <strong>la veille</strong></td><td>"<strong>Hier</strong>" → Il a dit que <strong>la veille</strong>...</td></tr><tr><td><strong>maintenant</strong></td><td>→ <strong>à ce moment-là</strong></td><td>"<strong>Maintenant</strong>" → Il a dit qu'<strong>à ce moment-là</strong>...</td></tr><tr><td><strong>ce matin</strong></td><td>→ <strong>ce matin-là</strong></td><td>"<strong>Ce matin</strong>" → Il a dit que <strong>ce matin-là</strong>...</td></tr><tr><td><strong>cette semaine</strong></td><td>→ <strong>cette semaine-là</strong></td><td>"<strong>Cette semaine</strong>" → Il a dit que <strong>cette semaine-là</strong>...</td></tr></tbody></table>
+<hr>
+<h2>THE THREE REPORTING TYPES</h2>
+<table><thead><tr><th>Type</th><th>Direct Speech</th><th>Reporting Word</th><th>Indirect Speech</th></tr></thead><tbody><tr><td><strong>Statement</strong></td><td>"Je suis fatigué."</td><td><strong>que</strong></td><td>Il a dit **qu'**il était fatigué.</td></tr><tr><td><strong>Yes/No Question</strong></td><td>"Tu viens ?"</td><td><strong>si</strong></td><td>Il m'a demandé <strong>si</strong> je venais.</td></tr><tr><td><strong>Information Question</strong></td><td>"Où vas-tu ?"</td><td><strong>question word</strong> (où, quand, pourquoi, comment, etc.)</td><td>Il m'a demandé <strong>où</strong> j'allais.</td></tr></tbody></table>
+<hr>
+<h1>✅ WHAT COULD BE DONE — THE 100 SENTENCES</h1>
+<hr>
+<h2>🔹 BLOCK A — Reporting Statements: Présent → Imparfait</h2>
+<p><em>Scenario: Someone said something in present tense — you report it later</em></p>
+<table><thead><tr><th>#</th><th>Direct Speech</th><th>Indirect Speech</th><th>English (Indirect)</th></tr></thead><tbody><tr><td>1</td><td>"Je <strong>suis</strong> fatigué."</td><td>Il a dit qu'il <strong>était</strong> fatigué.</td><td>He said he was tired.</td></tr><tr><td>2</td><td>"J'<strong>ai</strong> faim."</td><td>Elle a dit qu'elle <strong>avait</strong> faim.</td><td>She said she was hungry.</td></tr><tr><td>3</td><td>"Il <strong>fait</strong> beau dehors."</td><td>Il a dit qu'il <strong>faisait</strong> beau dehors.</td><td>He said the weather was nice outside.</td></tr><tr><td>4</td><td>"Je ne <strong>comprends</strong> pas."</td><td>Elle a dit qu'elle ne <strong>comprenait</strong> pas.</td><td>She said she didn't understand.</td></tr><tr><td>5</td><td>"Nous <strong>sommes</strong> prêts."</td><td>Ils ont dit qu'ils <strong>étaient</strong> prêts.</td><td>They said they were ready.</td></tr><tr><td>6</td><td>"Je <strong>veux</strong> partir."</td><td>Il a dit qu'il <strong>voulait</strong> partir.</td><td>He said he wanted to leave.</td></tr><tr><td>7</td><td>"Je ne <strong>peux</strong> pas venir."</td><td>Elle a dit qu'elle ne <strong>pouvait</strong> pas venir.</td><td>She said she couldn't come.</td></tr><tr><td>8</td><td>"C'<strong>est</strong> trop cher."</td><td>Il a dit que c'<strong>était</strong> trop cher.</td><td>He said it was too expensive.</td></tr><tr><td>9</td><td>"J'<strong>habite</strong> à Lyon."</td><td>Elle a dit qu'elle <strong>habitait</strong> à Lyon.</td><td>She said she lived in Lyon.</td></tr><tr><td>10</td><td>"Il <strong>y a</strong> un problème."</td><td>Il a dit qu'il <strong>y avait</strong> un problème.</td><td>He said there was a problem.</td></tr></tbody></table>
+<p><strong>🧠 Structure unlocked:</strong> <code>Reporting verb (past) + QUE + [présent → imparfait]</code></p>
+<p>→ This is the <strong>most common tense shift</strong> in daily French<br>
+→ Every présent verb becomes imparfait when reported in the past<br>
+→ <strong>All irregular présent forms shift to their imparfait forms:</strong><br>
+→ est → était / a → avait / fait → faisait / veut → voulait / peut → pouvait / il y a → il y avait</p>
+<hr>
+<h2>🔹 BLOCK B — Reporting Statements: Passé Composé → Plus-que-parfait</h2>
+<p><em>Scenario: Someone told you what they DID — you report the completed action</em><br>
+<em>Connection to Project 32: Plus-que-parfait previewed here in reported speech context</em></p>
+<table><thead><tr><th>#</th><th>Direct Speech</th><th>Indirect Speech</th><th>English (Indirect)</th></tr></thead><tbody><tr><td>11</td><td>"J'<strong>ai fini</strong> mon travail."</td><td>Il a dit qu'il <strong>avait fini</strong> son travail.</td><td>He said he had finished his work.</td></tr><tr><td>12</td><td>"J'<strong>ai vu</strong> Marie hier."</td><td>Elle a dit qu'elle <strong>avait vu</strong> Marie la veille.</td><td>She said she had seen Marie the day before.</td></tr><tr><td>13</td><td>"Nous <strong>avons mangé</strong> au restaurant."</td><td>Ils ont dit qu'ils <strong>avaient mangé</strong> au restaurant.</td><td>They said they had eaten at the restaurant.</td></tr><tr><td>14</td><td>"Je <strong>suis allé</strong> à Paris."</td><td>Il a dit qu'il <strong>était allé</strong> à Paris.</td><td>He said he had gone to Paris.</td></tr><tr><td>15</td><td>"Elle <strong>est partie</strong> ce matin."</td><td>Il a dit qu'elle <strong>était partie</strong> ce matin-là.</td><td>He said she had left that morning.</td></tr><tr><td>16</td><td>"J'<strong>ai oublié</strong> mes clés."</td><td>Elle a dit qu'elle <strong>avait oublié</strong> ses clés.</td><td>She said she had forgotten her keys.</td></tr><tr><td>17</td><td>"On <strong>a trouvé</strong> un appartement."</td><td>Ils ont dit qu'ils <strong>avaient trouvé</strong> un appartement.</td><td>They said they had found an apartment.</td></tr><tr><td>18</td><td>"Je ne l'<strong>ai</strong> pas <strong>fait</strong>."</td><td>Il a dit qu'il ne l'<strong>avait</strong> pas <strong>fait</strong>.</td><td>He said he hadn't done it.</td></tr><tr><td>19</td><td>"J'<strong>ai déjà</strong> répondu."</td><td>Elle a dit qu'elle <strong>avait déjà</strong> répondu.</td><td>She said she had already answered.</td></tr><tr><td>20</td><td>"Nous nous <strong>sommes</strong> bien <strong>amusés</strong>."</td><td>Ils ont dit qu'ils s'<strong>étaient</strong> bien <strong>amusés</strong>.</td><td>They said they had had a great time.</td></tr></tbody></table>
+<p><strong>🧠 Structure unlocked:</strong> <code>Reporting verb (past) + QUE + [passé composé → plus-que-parfait]</code></p>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>PASSÉ COMPOSÉ → PLUS-QUE-PARFAIT:
+</span>
+avoir verbs:   j'ai fait    → j'avais fait
+               j'ai vu      → j'avais vu
+               j'ai mangé   → j'avais mangé
+
+être verbs:    je suis allé  → j'étais allé
+               elle est partie → elle était partie
+               nous nous sommes amusés → nous nous étions amusés
+
+→ Auxiliary shifts to IMPARFAIT (avais/étais instead of ai/suis)
+→ Past participle stays the same
+→ Agreement rules stay the same (être verbs agree with subject)</code></pre></div>
+<p><strong>🧠 NOTE — Time Reference Shifts (Sentences 12, 15):</strong><br>
+→ "hier" → "la veille" (the day before)<br>
+→ "ce matin" → "ce matin-là" (that morning)<br>
+→ These shifts are <strong>often skipped in casual spoken French</strong> — but expected in writing and formal speech</p>
+<hr>
+<h2>🔹 BLOCK C — Reporting Statements: Futur → Conditionnel</h2>
+<p><em>Scenario: Someone told you what they WILL do — you report their future plans</em></p>
+<table><thead><tr><th>#</th><th>Direct Speech</th><th>Indirect Speech</th><th>English (Indirect)</th></tr></thead><tbody><tr><td>21</td><td>"Je <strong>viendrai</strong> demain."</td><td>Il a dit qu'il <strong>viendrait</strong> le lendemain.</td><td>He said he would come the next day.</td></tr><tr><td>22</td><td>"Nous <strong>partirons</strong> à huit heures."</td><td>Ils ont dit qu'ils <strong>partiraient</strong> à huit heures.</td><td>They said they would leave at eight.</td></tr><tr><td>23</td><td>"Je te <strong>téléphonerai</strong> ce soir."</td><td>Elle a dit qu'elle me <strong>téléphonerait</strong> ce soir-là.</td><td>She said she would call me that evening.</td></tr><tr><td>24</td><td>"Il <strong>fera</strong> beau demain."</td><td>Il a dit qu'il <strong>ferait</strong> beau le lendemain.</td><td>He said the weather would be nice the next day.</td></tr><tr><td>25</td><td>"Je ne <strong>pourrai</strong> pas venir."</td><td>Elle a dit qu'elle ne <strong>pourrait</strong> pas venir.</td><td>She said she wouldn't be able to come.</td></tr><tr><td>26</td><td>"On <strong>sera</strong> en retard."</td><td>Il a dit qu'on <strong>serait</strong> en retard.</td><td>He said we would be late.</td></tr><tr><td>27</td><td>"J'<strong>aurai</strong> les résultats lundi."</td><td>Elle a dit qu'elle <strong>aurait</strong> les résultats le lundi suivant.</td><td>She said she would have the results the following Monday.</td></tr><tr><td>28</td><td>"Nous <strong>irons</strong> au restaurant."</td><td>Ils ont dit qu'ils <strong>iraient</strong> au restaurant.</td><td>They said they would go to the restaurant.</td></tr><tr><td>29</td><td>"Tu <strong>verras</strong>, c'est magnifique."</td><td>Il m'a dit que je <strong>verrais</strong>, que c'était magnifique.</td><td>He told me I would see, that it was beautiful.</td></tr><tr><td>30</td><td>"Ça <strong>prendra</strong> du temps."</td><td>Elle a dit que ça <strong>prendrait</strong> du temps.</td><td>She said it would take time.</td></tr></tbody></table>
+<p><strong>🧠 Structure unlocked:</strong> <code>Reporting verb (past) + QUE + [futur simple → conditionnel présent]</code></p>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>FUTUR SIMPLE → CONDITIONNEL PRÉSENT:
+</span>
+viendrai   → viendrait
+partirons  → partirions
+fera       → ferait
+pourrai    → pourrait
+sera       → serait
+aurai      → aurait
+irons      → iraient
+
+→ Same STEM as futur simple
+→ But ENDINGS change to conditionnel (-ais, -ais, -ait, -ions, -iez, -aient)
+→ Connection to Project 17: These conditionnel forms are already familiar
+→ Now you know WHERE they come from in reported speech</code></pre></div>
+<hr>
+<h2>🔹 BLOCK D — Reporting Statements: Futur Proche → Aller (Imparfait) + Infinitif</h2>
+<p><em>Scenario: Someone said "I'm going to..." — you report their near-future plans</em></p>
+<table><thead><tr><th>#</th><th>Direct Speech</th><th>Indirect Speech</th><th>English (Indirect)</th></tr></thead><tbody><tr><td>31</td><td>"Je <strong>vais</strong> partir."</td><td>Il a dit qu'il <strong>allait</strong> partir.</td><td>He said he was going to leave.</td></tr><tr><td>32</td><td>"On <strong>va</strong> manger bientôt."</td><td>Elle a dit qu'on <strong>allait</strong> manger bientôt.</td><td>She said we were going to eat soon.</td></tr><tr><td>33</td><td>"Je <strong>vais</strong> t'appeler."</td><td>Il a dit qu'il <strong>allait</strong> m'appeler.</td><td>He said he was going to call me.</td></tr><tr><td>34</td><td>"Nous <strong>allons</strong> déménager."</td><td>Ils ont dit qu'ils <strong>allaient</strong> déménager.</td><td>They said they were going to move.</td></tr><tr><td>35</td><td>"Elle <strong>va</strong> avoir un bébé."</td><td>Il a dit qu'elle <strong>allait</strong> avoir un bébé.</td><td>He said she was going to have a baby.</td></tr></tbody></table>
+<p><strong>🧠 Structure unlocked:</strong> <code>Reporting verb (past) + QUE + [aller (imparfait) + infinitif]</code></p>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>FUTUR PROCHE: aller (présent) + infinitif
+</span>REPORTED:     aller (imparfait) + infinitif
+
+je vais partir    → j'allais partir
+on va manger      → on allait manger
+nous allons faire → nous allions faire</code></pre></div>
+<hr>
+<h2>🔹 BLOCK E — Reporting Statements: Tenses That DON'T Change</h2>
+<p><em>Scenario: Some tenses stay the same when reported — recognizing what doesn't shift</em></p>
+<table><thead><tr><th>#</th><th>Direct Speech</th><th>Indirect Speech</th><th>English</th><th>Why No Change</th></tr></thead><tbody><tr><td>36</td><td>"J'<strong>étais</strong> content."</td><td>Il a dit qu'il <strong>était</strong> content.</td><td>He said he was happy.</td><td>Imparfait → Imparfait (stays)</td></tr><tr><td>37</td><td>"Il <strong>faisait</strong> froid."</td><td>Elle a dit qu'il <strong>faisait</strong> froid.</td><td>She said it was cold.</td><td>Imparfait → Imparfait (stays)</td></tr><tr><td>38</td><td>"J'<strong>avais déjà</strong> fini."</td><td>Il a dit qu'il <strong>avait déjà</strong> fini.</td><td>He said he had already finished.</td><td>PQP → PQP (stays)</td></tr><tr><td>39</td><td>"Je <strong>voudrais</strong> un café."</td><td>Elle a dit qu'elle <strong>voudrait</strong> un café.</td><td>She said she would like a coffee.</td><td>Conditionnel → Conditionnel (stays)</td></tr><tr><td>40</td><td>"J'<strong>aimerais</strong> voyager."</td><td>Il a dit qu'il <strong>aimerait</strong> voyager.</td><td>He said he would like to travel.</td><td>Conditionnel → Conditionnel (stays)</td></tr></tbody></table>
+<p><strong>🧠 TENSES THAT NEVER SHIFT — Summary:</strong></p>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>IMPARFAIT         → stays IMPARFAIT
+</span>PLUS-QUE-PARFAIT  → stays PLUS-QUE-PARFAIT
+CONDITIONNEL      → stays CONDITIONNEL
+SUBJONCTIF        → stays SUBJONCTIF
+
+WHY? → These tenses are already "past-oriented" or "non-real"
+→ They can't shift further back — they're at their limit
+→ Only PRESENT, PASSÉ COMPOSÉ, and FUTUR shift</code></pre></div>
+<hr>
+<h2>🔹 BLOCK F — Reporting YES/NO Questions: Si</h2>
+<p><em>Scenario: Someone asked you a yes/no question — you report it to someone else</em></p>
+<table><thead><tr><th>#</th><th>Direct Question</th><th>Indirect Question</th><th>English (Indirect)</th></tr></thead><tbody><tr><td>41</td><td>"Tu <strong>viens</strong> ce soir ?"</td><td>Il m'a demandé <strong>si</strong> je <strong>venais</strong> ce soir-là.</td><td>He asked me if I was coming that evening.</td></tr><tr><td>42</td><td>"Vous <strong>avez</strong> compris ?"</td><td>Elle nous a demandé <strong>si</strong> nous <strong>avions</strong> compris.</td><td>She asked us if we had understood.</td></tr><tr><td>43</td><td>"Est-ce que tu <strong>es</strong> libre ?"</td><td>Il m'a demandé <strong>si</strong> j'<strong>étais</strong> libre.</td><td>He asked me if I was free.</td></tr><tr><td>44</td><td>"Tu <strong>as</strong> faim ?"</td><td>Elle m'a demandé <strong>si</strong> j'<strong>avais</strong> faim.</td><td>She asked me if I was hungry.</td></tr><tr><td>45</td><td>"Il <strong>fait</strong> beau dehors ?"</td><td>Il a demandé **s'**il <strong>faisait</strong> beau dehors.</td><td>He asked if the weather was nice outside.</td></tr><tr><td>46</td><td>"Tu <strong>pourras</strong> venir ?"</td><td>Elle m'a demandé <strong>si</strong> je <strong>pourrais</strong> venir.</td><td>She asked me if I could come.</td></tr><tr><td>47</td><td>"Vous <strong>avez réservé</strong> ?"</td><td>Il nous a demandé <strong>si</strong> nous <strong>avions réservé</strong>.</td><td>He asked us if we had booked.</td></tr><tr><td>48</td><td>"Est-ce que tu <strong>vas</strong> rester ?"</td><td>Elle m'a demandé <strong>si</strong> j'<strong>allais</strong> rester.</td><td>She asked me if I was going to stay.</td></tr><tr><td>49</td><td>"C'<strong>est</strong> loin ?"</td><td>Il a demandé <strong>si</strong> c'<strong>était</strong> loin.</td><td>He asked if it was far.</td></tr><tr><td>50</td><td>"Tu <strong>as</strong> aimé le film ?"</td><td>Elle m'a demandé <strong>si</strong> j'<strong>avais</strong> aimé le film.</td><td>She asked me if I had liked the movie.</td></tr></tbody></table>
+<p><strong>🧠 Structure unlocked:</strong> <code>Reporting verb + SI + [tense-shifted statement — NO question mark, NO inversion]</code></p>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>DIRECT QUESTION:     "Tu viens ?"       (question form)
+</span>INDIRECT QUESTION:   ...si je venais.    (statement form — NO question structure)
+
+KEY RULES:
+1. YES/NO questions → SI (never "que")
+2. The reported question becomes a STATEMENT — no "?" no inversion no "est-ce que"
+3. Same tense shift rules apply
+4. SI contracts to S' before IL/ILS:
+   → ...s'il faisait beau (NOT "si il")
+   → ...s'ils avaient compris (NOT "si ils")
+5. SI does NOT contract before ELLE/ELLES/ON:
+   → ...si elle venait ✅ (NOT "s'elle")</code></pre></div>
+<p><strong>🧠 CONNECTION TO PROJECT 18:</strong></p>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>Do NOT confuse:
+</span>→ SI = "if" (conditional — Project 18): Si il pleut, je resterai.
+→ SI = "if/whether" (reported question — Project 25): Il a demandé si je venais.
+
+Same word, different function — context makes it clear</code></pre></div>
+<hr>
+<h2>🔹 BLOCK G — Reporting INFORMATION Questions: Question Words Stay</h2>
+<p><em>Scenario: Someone asked a WH-question — you report it with the same question word</em></p>
+<table><thead><tr><th>#</th><th>Direct Question</th><th>Indirect Question</th><th>English (Indirect)</th></tr></thead><tbody><tr><td>51</td><td>"<strong>Où</strong> vas-tu ?"</td><td>Il m'a demandé <strong>où</strong> j'<strong>allais</strong>.</td><td>He asked me where I was going.</td></tr><tr><td>52</td><td>"<strong>Quand</strong> est-ce que tu pars ?"</td><td>Elle m'a demandé <strong>quand</strong> je <strong>partais</strong>.</td><td>She asked me when I was leaving.</td></tr><tr><td>53</td><td>"<strong>Pourquoi</strong> tu es en retard ?"</td><td>Il m'a demandé <strong>pourquoi</strong> j'<strong>étais</strong> en retard.</td><td>He asked me why I was late.</td></tr><tr><td>54</td><td>"<strong>Comment</strong> tu as fait ?"</td><td>Elle m'a demandé <strong>comment</strong> j'<strong>avais</strong> fait.</td><td>She asked me how I had done it.</td></tr><tr><td>55</td><td>"<strong>Combien</strong> ça coûte ?"</td><td>Il a demandé <strong>combien</strong> ça <strong>coûtait</strong>.</td><td>He asked how much it cost.</td></tr><tr><td>56</td><td>"<strong>Qui</strong> est cette fille ?"</td><td>Il a demandé <strong>qui</strong> <strong>était</strong> cette fille.</td><td>He asked who that girl was.</td></tr><tr><td>57</td><td>"<strong>Qu'est-ce que</strong> tu fais ?"</td><td>Elle m'a demandé <strong>ce que</strong> je <strong>faisais</strong>.</td><td>She asked me what I was doing.</td></tr><tr><td>58</td><td>"<strong>Qu'est-ce qui</strong> se passe ?"</td><td>Il a demandé <strong>ce qui</strong> se <strong>passait</strong>.</td><td>He asked what was happening.</td></tr><tr><td>59</td><td>"<strong>À quelle heure</strong> tu arrives ?"</td><td>Elle m'a demandé <strong>à quelle heure</strong> j'<strong>arrivais</strong>.</td><td>She asked me what time I was arriving.</td></tr><tr><td>60</td><td>"<strong>Quel</strong> film tu as vu ?"</td><td>Il m'a demandé <strong>quel</strong> film j'<strong>avais</strong> vu.</td><td>He asked me which movie I had seen.</td></tr></tbody></table>
+<p><strong>🧠 Structure unlocked:</strong> <code>Reporting verb + QUESTION WORD + [tense-shifted statement]</code></p>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>QUESTION WORD STAYS — but sentence structure becomes a STATEMENT:
+</span>
+DIRECT:    "Où vas-tu ?"           (inversion — question form)
+INDIRECT:  ...où j'allais.          (statement form — NO inversion)
+
+DIRECT:    "Qu'est-ce que tu fais ?"  (est-ce que — question form)
+INDIRECT:  ...ce que je faisais.       (NO est-ce que)
+
+SPECIAL TRANSFORMATIONS:
+→ "Qu'est-ce que..." → CE QUE    (what — object)
+→ "Qu'est-ce qui..." → CE QUI    (what — subject)
+→ These are the same CE QUE / CE QUI from Project 21</code></pre></div>
+<p><strong>🧠 COMPLETE QUESTION WORD MAP:</strong></p>
+<table><thead><tr><th>Direct Question Form</th><th>Indirect Form</th><th>Example</th></tr></thead><tbody><tr><td>Où...?</td><td>où</td><td>...où j'allais</td></tr><tr><td>Quand...?</td><td>quand</td><td>...quand je partais</td></tr><tr><td>Pourquoi...?</td><td>pourquoi</td><td>...pourquoi j'étais en retard</td></tr><tr><td>Comment...?</td><td>comment</td><td>...comment j'avais fait</td></tr><tr><td>Combien...?</td><td>combien</td><td>...combien ça coûtait</td></tr><tr><td>Qui...?</td><td>qui</td><td>...qui était cette fille</td></tr><tr><td>Qu'est-ce que...?</td><td><strong>ce que</strong></td><td>...ce que je faisais</td></tr><tr><td>Qu'est-ce qui...?</td><td><strong>ce qui</strong></td><td>...ce qui se passait</td></tr><tr><td>Quel(le)...?</td><td>quel(le)</td><td>...quel film j'avais vu</td></tr><tr><td>À quelle heure...?</td><td>à quelle heure</td><td>...à quelle heure j'arrivais</td></tr></tbody></table>
+<hr>
+<h2>🔹 BLOCK H — Reporting Commands: Impératif → De + Infinitif</h2>
+<p><em>Scenario: Someone gave you an order or instruction — you report it</em><br>
+<em>Connection to Project 13: Impératif forms now transformed into reported speech</em></p>
+<table><thead><tr><th>#</th><th>Direct Command</th><th>Indirect Report</th><th>English (Indirect)</th></tr></thead><tbody><tr><td>61</td><td>"<strong>Viens</strong> ici !"</td><td>Il m'a dit <strong>de venir</strong> là.</td><td>He told me to come there.</td></tr><tr><td>62</td><td>"<strong>Assieds-toi</strong> !"</td><td>Elle m'a dit <strong>de m'asseoir</strong>.</td><td>She told me to sit down.</td></tr><tr><td>63</td><td>"<strong>Ne parle pas</strong> !"</td><td>Il m'a dit <strong>de ne pas parler</strong>.</td><td>He told me not to speak.</td></tr><tr><td>64</td><td>"<strong>Attendez</strong> un moment."</td><td>Elle nous a demandé <strong>d'attendre</strong> un moment.</td><td>She asked us to wait a moment.</td></tr><tr><td>65</td><td>"<strong>Faites</strong> attention !"</td><td>Il nous a dit <strong>de faire</strong> attention.</td><td>He told us to be careful.</td></tr><tr><td>66</td><td>"<strong>Appelle-moi</strong> demain."</td><td>Elle m'a dit <strong>de l'appeler</strong> le lendemain.</td><td>She told me to call her the next day.</td></tr><tr><td>67</td><td>"<strong>Ne t'inquiète pas.</strong>"</td><td>Il m'a dit <strong>de ne pas m'inquiéter</strong>.</td><td>He told me not to worry.</td></tr><tr><td>68</td><td>"<strong>Fermez</strong> la porte."</td><td>Il nous a demandé <strong>de fermer</strong> la porte.</td><td>He asked us to close the door.</td></tr><tr><td>69</td><td>"<strong>Dépêche-toi</strong> !"</td><td>Elle m'a dit <strong>de me dépêcher</strong>.</td><td>She told me to hurry up.</td></tr><tr><td>70</td><td>"<strong>Ne sois pas</strong> en retard."</td><td>Il m'a dit <strong>de ne pas être</strong> en retard.</td><td>He told me not to be late.</td></tr></tbody></table>
+<p><strong>🧠 Structure unlocked:</strong></p>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>AFFIRMATIVE COMMAND → de + infinitif:
+</span>"Viens !"      → Il m'a dit DE VENIR.
+"Attendez !"   → Il nous a demandé D'ATTENDRE.
+
+NEGATIVE COMMAND → de ne pas + infinitif:
+"Ne parle pas !" → Il m'a dit DE NE PAS PARLER.
+"Ne t'inquiète pas !" → Il m'a dit DE NE PAS M'INQUIÉTER.
+
+KEY RULES:
+1. Impératif disappears entirely — replaced by DE + INFINITIF
+2. Negative: DE + NE PAS + INFINITIF (ne pas stays together BEFORE infinitif)
+3. Reflexive pronouns adjust to match the reported subject:
+   → "Assieds-toi" (tu) → de M'asseoir (me — because I'm the one being told)
+   → "Dépêche-toi" → de ME dépêcher
+4. Object pronouns also adjust:
+   → "Appelle-moi" (moi = her) → de L'appeler (her = elle)</code></pre></div>
+<hr>
+<h2>🔹 BLOCK I — Pronoun and Time Reference Shifts in Context</h2>
+<p><em>Scenario: Full sentences showing how pronouns, possessives, and time words all shift together</em></p>
+<table><thead><tr><th>#</th><th>Direct Speech</th><th>Indirect Speech</th><th>Shifts Applied</th></tr></thead><tbody><tr><td>71</td><td>"<strong>Je</strong> viendrai <strong>ici</strong> <strong>demain</strong> avec <strong>ma</strong> sœur."</td><td>Il a dit qu'<strong>il</strong> viendrait <strong>là</strong> <strong>le lendemain</strong> avec <strong>sa</strong> sœur.</td><td>je→il, ici→là, demain→le lendemain, ma→sa</td></tr><tr><td>72</td><td>"<strong>Tu</strong> m'as vu <strong>hier</strong> ?"</td><td>Elle m'a demandé si je l'avais vue <strong>la veille</strong>.</td><td>tu→je, m'→l', hier→la veille</td></tr><tr><td>73</td><td>"<strong>Nous</strong> allons partir <strong>aujourd'hui</strong>."</td><td>Ils ont dit qu'ils allaient partir <strong>ce jour-là</strong>.</td><td>nous→ils, aujourd'hui→ce jour-là</td></tr><tr><td>74</td><td>"<strong>Mon</strong> père arrive <strong>ce soir</strong>."</td><td>Elle a dit que <strong>son</strong> père arrivait <strong>ce soir-là</strong>.</td><td>mon→son, ce soir→ce soir-là</td></tr><tr><td>75</td><td>"Je te donnerai <strong>mon</strong> numéro <strong>la semaine prochaine</strong>."</td><td>Il m'a dit qu'il me donnerait <strong>son</strong> numéro <strong>la semaine suivante</strong>.</td><td>te→me, mon→son, prochaine→suivante</td></tr><tr><td>76</td><td>"J'habite <strong>ici</strong> depuis <strong>deux ans</strong>."</td><td>Elle a dit qu'elle habitait <strong>là</strong> depuis deux ans.</td><td>j'→elle, ici→là</td></tr><tr><td>77</td><td>"Nous avons fini <strong>avant-hier</strong>."</td><td>Ils ont dit qu'ils avaient fini <strong>l'avant-veille</strong>.</td><td>nous→ils, avant-hier→l'avant-veille</td></tr><tr><td>78</td><td>"Je reviendrai <strong>après-demain</strong>."</td><td>Il a dit qu'il reviendrait <strong>le surlendemain</strong>.</td><td>je→il, après-demain→le surlendemain</td></tr><tr><td>79</td><td>"<strong>Notre</strong> maison est <strong>ici</strong>."</td><td>Ils ont dit que <strong>leur</strong> maison était <strong>là</strong>.</td><td>notre→leur, ici→là</td></tr><tr><td>80</td><td>"C'est <strong>mon</strong> premier jour <strong>aujourd'hui</strong>."</td><td>Elle a dit que c'était <strong>son</strong> premier jour <strong>ce jour-là</strong>.</td><td>mon→son, aujourd'hui→ce jour-là</td></tr></tbody></table>
+<p><strong>🧠 COMPLETE TIME REFERENCE SHIFT TABLE:</strong></p>
+<table><thead><tr><th>Direct Speech</th><th>Indirect Speech</th></tr></thead><tbody><tr><td>aujourd'hui</td><td><strong>ce jour-là</strong></td></tr><tr><td>hier</td><td><strong>la veille</strong></td></tr><tr><td>avant-hier</td><td><strong>l'avant-veille</strong></td></tr><tr><td>demain</td><td><strong>le lendemain</strong></td></tr><tr><td>après-demain</td><td><strong>le surlendemain</strong></td></tr><tr><td>ce matin / ce soir</td><td><strong>ce matin-là / ce soir-là</strong></td></tr><tr><td>cette semaine</td><td><strong>cette semaine-là</strong></td></tr><tr><td>la semaine prochaine</td><td><strong>la semaine suivante</strong></td></tr><tr><td>la semaine dernière</td><td><strong>la semaine précédente</strong></td></tr><tr><td>maintenant</td><td><strong>à ce moment-là</strong></td></tr><tr><td>ici</td><td><strong>là / là-bas</strong></td></tr><tr><td>l'année prochaine</td><td><strong>l'année suivante</strong></td></tr><tr><td>l'année dernière</td><td><strong>l'année précédente</strong></td></tr></tbody></table>
+<p><strong>⚠️ IMPORTANT — In casual spoken French:</strong><br>
+→ Many of these time shifts are <strong>SKIPPED</strong><br>
+→ People say "Il a dit qu'il viendrait <strong>demain</strong>" instead of "le lendemain"<br>
+→ The strict shifts are required in <strong>writing and formal speech</strong><br>
+→ In conversation, context usually makes the time reference clear without shifting</p>
+<hr>
+<h2>🔹 BLOCK J — Full Conversational Reported Speech Flow</h2>
+<p><em>Scenario: Real conversations where you report what multiple people said</em></p>
+<table><thead><tr><th>#</th><th>Context</th><th>French</th><th>English</th><th>Analysis</th></tr></thead><tbody><tr><td>81</td><td>Boss said (statement)</td><td>Le chef a dit que la réunion <strong>était</strong> reportée à lundi.</td><td>The boss said the meeting was postponed to Monday.</td><td>présent → imparfait</td></tr><tr><td>82</td><td>Boss said (command)</td><td>Il nous a demandé <strong>de préparer</strong> le dossier avant vendredi.</td><td>He asked us to prepare the file before Friday.</td><td>impératif → de + infinitif</td></tr><tr><td>83</td><td>Boss said (future)</td><td>Il a ajouté qu'il nous <strong>enverrait</strong> les détails par email.</td><td>He added he would send us the details by email.</td><td>futur → conditionnel</td></tr><tr><td>84</td><td>Colleague asked (yes/no)</td><td>Marie m'a demandé <strong>si</strong> j'<strong>avais</strong> reçu le message.</td><td>Marie asked me if I had received the message.</td><td>PC → PQP + question → si</td></tr><tr><td>85</td><td>Colleague said (PC)</td><td>Elle a dit qu'elle <strong>avait déjà</strong> fini son rapport.</td><td>She said she had already finished her report.</td><td>PC → PQP</td></tr><tr><td>86</td><td>Colleague asked (WH)</td><td>Elle m'a demandé <strong>quand</strong> je <strong>serais</strong> disponible.</td><td>She asked me when I would be available.</td><td>futur → conditionnel</td></tr><tr><td>87</td><td>Friend said (futur proche)</td><td>Mon ami a dit qu'il <strong>allait</strong> déménager le mois prochain.</td><td>My friend said he was going to move next month.</td><td>futur proche → aller (imp) + inf</td></tr><tr><td>88</td><td>Friend asked (WH)</td><td>Il m'a demandé <strong>ce que</strong> je <strong>pensais</strong> de son idée.</td><td>He asked me what I thought of his idea.</td><td>qu'est-ce que → ce que + tense shift</td></tr><tr><td>89</td><td>Doctor said (command)</td><td>Le médecin m'a dit <strong>de me reposer</strong> et <strong>de ne pas travailler</strong> pendant une semaine.</td><td>The doctor told me to rest and not to work for a week.</td><td>impératif → de + inf (double)</td></tr><tr><td>90</td><td>Parent said (mixed)</td><td>Ma mère m'a dit qu'elle <strong>était</strong> inquiète, qu'elle ne <strong>dormait</strong> pas bien et qu'elle <strong>aimerait</strong> que je l'<strong>appelle</strong> plus souvent.</td><td>My mother told me she was worried, she wasn't sleeping well, and she'd like me to call her more often.</td><td>présent→imp, imp→imp, conditionnel→cond, subj→subj</td></tr></tbody></table>
+<hr>
+<h3>Reporting verb VARIETY — Not just "dire":</h3>
+<table><thead><tr><th>#</th><th>French</th><th>English</th><th>Reporting Verb</th></tr></thead><tbody><tr><td>91</td><td>Il m'a <strong>expliqué</strong> que le système <strong>était</strong> compliqué.</td><td>He explained to me that the system was complicated.</td><td>expliquer</td></tr><tr><td>92</td><td>Elle m'a <strong>raconté</strong> qu'elle <strong>avait vécu</strong> en Afrique.</td><td>She told me she had lived in Africa.</td><td>raconter</td></tr><tr><td>93</td><td>Il m'a <strong>assuré</strong> que tout <strong>irait</strong> bien.</td><td>He assured me everything would be fine.</td><td>assurer</td></tr><tr><td>94</td><td>Elle m'a <strong>promis</strong> qu'elle <strong>viendrait</strong>.</td><td>She promised me she would come.</td><td>promettre</td></tr><tr><td>95</td><td>Il m'a <strong>avoué</strong> qu'il n'<strong>avait</strong> pas compris.</td><td>He confessed to me he hadn't understood.</td><td>avouer</td></tr><tr><td>96</td><td>Elle m'a <strong>répondu</strong> qu'elle n'<strong>était</strong> pas intéressée.</td><td>She replied she wasn't interested.</td><td>répondre</td></tr><tr><td>97</td><td>Il m'a <strong>rappelé</strong> que la date limite <strong>était</strong> vendredi.</td><td>He reminded me the deadline was Friday.</td><td>rappeler</td></tr><tr><td>98</td><td>Elle m'a <strong>prévenu</strong> que le restaurant <strong>serait</strong> fermé.</td><td>She warned me the restaurant would be closed.</td><td>prévenir</td></tr><tr><td>99</td><td>Il m'a <strong>confirmé</strong> que le vol <strong>avait été</strong> annulé.</td><td>He confirmed the flight had been cancelled.</td><td>confirmer (+ passive!)</td></tr><tr><td>100</td><td>Elle m'a <strong>suggéré</strong> <strong>de prendre</strong> le train.</td><td>She suggested I take the train.</td><td>suggérer + de + infinitif</td></tr></tbody></table>
+<p><strong>🧠 REPORTING VERB VARIETY — Essential List:</strong></p>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>STATING:
+</span>→ dire que         (to say that)
+→ affirmer que     (to state/affirm that)
+→ déclarer que     (to declare that)
+→ annoncer que     (to announce that)
+→ expliquer que    (to explain that)
+→ raconter que     (to tell/recount that)
+
+PROMISING / ASSURING:
+→ promettre que    (to promise that)
+→ assurer que      (to assure that)
+→ confirmer que    (to confirm that)
+→ jurer que        (to swear that)
+
+CONFESSING / ADMITTING:
+→ avouer que       (to confess that)
+→ admettre que     (to admit that)
+→ reconnaître que  (to acknowledge that)
+
+ANSWERING / RESPONDING:
+→ répondre que     (to reply that)
+→ ajouter que      (to add that)
+→ préciser que     (to specify that)
+
+WARNING / REMINDING:
+→ prévenir que     (to warn that)
+→ rappeler que     (to remind that)
+
+ASKING:
+→ demander si / question word   (to ask if/what/when...)
+→ vouloir savoir si             (to want to know if)
+
+SUGGESTING / ORDERING:
+→ suggérer de + infinitif       (to suggest doing)
+→ proposer de + infinitif       (to propose doing)
+→ ordonner de + infinitif       (to order to do)
+→ conseiller de + infinitif     (to advise to do)
+→ interdire de + infinitif      (to forbid from doing)</code></pre></div>
+<hr>
+<h1>✅ WHAT SHOULD DO</h1>
+<p>→ <strong>Master the three-column shift first:</strong> présent→imparfait, PC→PQP, futur→conditionnel<br>
+→ <strong>Practice with "Il a dit que..."</strong> — the most common reporting structure<br>
+→ <strong>Memorize the question reporting:</strong> YES/NO → si / WH → question word stays + ce que/ce qui<br>
+→ <strong>Memorize the command reporting:</strong> impératif → de + infinitif / de ne pas + infinitif<br>
+→ <strong>Use variety in reporting verbs</strong> — not just "dire" — expliquer, raconter, promettre, avouer<br>
+→ <strong>Learn time shifts for writing</strong> — but don't stress about them in casual speech<br>
+→ <strong>Connect this to ALL previous tense projects</strong> — reported speech USES every tense you've learned</p>
+<hr>
+<h1>❌ WHAT SHOULD NOT DO</h1>
+<p>→ ❌ Do NOT keep the original tense when the reporting verb is past</p>
+<table><thead><tr><th>Wrong</th><th>Correct</th></tr></thead><tbody><tr><td><del>Il a dit qu'il <strong>est</strong> fatigué</del></td><td>Il a dit qu'il <strong>était</strong> fatigué</td></tr><tr><td><del>Elle a dit qu'elle <strong>a vu</strong> Marie</del></td><td>Elle a dit qu'elle <strong>avait vu</strong> Marie</td></tr><tr><td><del>Il a dit qu'il <strong>viendra</strong></del></td><td>Il a dit qu'il <strong>viendrait</strong></td></tr></tbody></table>
+<p>→ ❌ Do NOT use question structure in indirect questions</p>
+<table><thead><tr><th>Wrong</th><th>Correct</th></tr></thead><tbody><tr><td><del>Il m'a demandé <strong>est-ce que</strong> je venais</del></td><td>Il m'a demandé <strong>si</strong> je venais</td></tr><tr><td><del>Elle a demandé <strong>où vas-tu</strong></del></td><td>Elle a demandé <strong>où</strong> j'allais</td></tr><tr><td><del>Il a demandé <strong>qu'est-ce que</strong> je faisais</del></td><td>Il a demandé <strong>ce que</strong> je faisais</td></tr></tbody></table>
+<p>→ ❌ Do NOT put a question mark at the end of reported questions</p>
+<table><thead><tr><th>Wrong</th><th>Correct</th></tr></thead><tbody><tr><td><del>Il m'a demandé si je venais <strong>?</strong></del></td><td>Il m'a demandé si je venais**.**</td></tr></tbody></table>
+<p>→ ❌ Do NOT forget pronoun shifts</p>
+<table><thead><tr><th>Wrong</th><th>Correct</th></tr></thead><tbody><tr><td><del>Il a dit que <strong>je</strong> suis fatigué</del> (quoting himself?)</td><td>Il a dit qu'<strong>il</strong> était fatigué</td></tr><tr><td><del>Elle a dit que <strong>mon</strong> père arrive</del></td><td>Elle a dit que <strong>son</strong> père arrivait</td></tr></tbody></table>
+<p>→ ❌ Do NOT use "que" for yes/no questions</p>
+<table><thead><tr><th>Wrong</th><th>Correct</th></tr></thead><tbody><tr><td><del>Il a demandé <strong>que</strong> je venais</del></td><td>Il a demandé <strong>si</strong> je venais</td></tr></tbody></table>
+<p>→ ❌ Do NOT shift tenses that are already "maxed out"</p>
+<table><thead><tr><th>Wrong</th><th>Correct</th></tr></thead><tbody><tr><td><del>Il a dit qu'il avait été été allé</del> (double shift?)</td><td>Il a dit qu'il <strong>était allé</strong> (PQP — one shift only)</td></tr><tr><td><del>Elle a dit qu'elle aurait voulu</del> (shifting conditionnel)</td><td>Elle a dit qu'elle <strong>voudrait</strong> (conditionnel stays)</td></tr></tbody></table>
+<hr>
+<h1>🔀 WHEN TO USE WHAT</h1>
+<table><thead><tr><th>Reporting Situation</th><th>Structure</th><th>Example</th></tr></thead><tbody><tr><td>Reporting a <strong>statement</strong></td><td>dire que + tense shift</td><td>Il a dit qu'il était fatigué.</td></tr><tr><td>Reporting a <strong>yes/no question</strong></td><td>demander si + tense shift</td><td>Il a demandé si je venais.</td></tr><tr><td>Reporting a <strong>WH-question</strong></td><td>demander + question word + tense shift</td><td>Il a demandé où j'allais.</td></tr><tr><td>Reporting <strong>"what"</strong> (object)</td><td>demander ce que + tense shift</td><td>Il a demandé ce que je faisais.</td></tr><tr><td>Reporting <strong>"what"</strong> (subject)</td><td>demander ce qui + tense shift</td><td>Il a demandé ce qui se passait.</td></tr><tr><td>Reporting a <strong>command</strong> (affirmative)</td><td>dire de + infinitif</td><td>Il m'a dit de venir.</td></tr><tr><td>Reporting a <strong>command</strong> (negative)</td><td>dire de ne pas + infinitif</td><td>Il m'a dit de ne pas parler.</td></tr><tr><td>Reporting in <strong>present</strong> (no shift needed)</td><td>dire que + same tense</td><td>Il dit qu'il est fatigué.</td></tr><tr><td>Reporting with <strong>variety</strong></td><td>expliquer/raconter/promettre/avouer que</td><td>Elle m'a expliqué que c'était compliqué.</td></tr></tbody></table>
+<hr>
+<h1>🚫 WHEN NOT TO USE</h1>
+<table><thead><tr><th>Situation</th><th>Do NOT Use Indirect Speech</th><th>Use Instead</th><th>Why</th></tr></thead><tbody><tr><td><strong>Exact quote needed</strong> (emphasis, humor)</td><td>Indirect speech</td><td>Direct speech with quotes</td><td>"Il a dit : « Je suis le meilleur ! »"</td></tr><tr><td><strong>Present-tense reporting verb</strong></td><td>Tense shift</td><td>No shift needed</td><td>"Il dit qu'il <strong>est</strong> fatigué." (no change)</td></tr><tr><td><strong>Casual retelling</strong></td><td>Strict time shifts</td><td>Keep original time words</td><td>"Il a dit qu'il viendrait <strong>demain</strong>" (spoken French)</td></tr><tr><td><strong>Writing dialogue</strong> in fiction</td><td>Indirect speech</td><td>Direct speech</td><td>Fiction uses quoted dialogue</td></tr><tr><td><strong>Your OWN current thoughts</strong></td><td>Reported speech</td><td>Direct opinion structures (Project 22)</td><td>"Je pense que c'est vrai" — not reporting</td></tr></tbody></table>
+<hr>
+<h1>⚠️ COMMON PITFALLS AND FAILURE MODES</h1>
+<table><thead><tr><th>Pitfall</th><th>What Learners Do</th><th>Why It's Wrong</th><th>Fix</th></tr></thead><tbody><tr><td><strong>No tense shift</strong></td><td>Il a dit qu'il est fatigué</td><td>Past reporting verb requires shift</td><td>Il a dit qu'il <strong>était</strong> fatigué</td></tr><tr><td><strong>Double shift</strong></td><td>Shifting imparfait further</td><td>Imparfait doesn't shift — it's already "back"</td><td>Imparfait stays imparfait</td></tr><tr><td><strong>Est-ce que in indirect</strong></td><td>Il a demandé est-ce que...</td><td>Indirect questions use statement word order</td><td>Il a demandé <strong>si</strong> / <strong>ce que</strong> / <strong>où</strong></td></tr><tr><td><strong>Question mark kept</strong></td><td>Il a demandé si je venais?</td><td>Indirect questions are statements — period, not ?</td><td>Il a demandé si je venais**.**</td></tr><tr><td><strong>Qu'est-ce que → que</strong></td><td>Il a demandé que je faisais</td><td>"Qu'est-ce que" becomes <strong>ce que</strong></td><td>Il a demandé <strong>ce que</strong> je faisais</td></tr><tr><td><strong>Pronoun not shifted</strong></td><td>Il a dit que je suis content (meaning himself)</td><td>"Je" should become "il" when reporting someone else</td><td>Il a dit qu'<strong>il</strong> était content</td></tr><tr><td><strong>Command not transformed</strong></td><td>Il m'a dit "Viens !"</td><td>Commands become de + infinitif</td><td>Il m'a dit <strong>de venir</strong></td></tr><tr><td><strong>Negative command order</strong></td><td>Il m'a dit de pas ne parler</td><td>Ne pas stays together before infinitif</td><td>Il m'a dit <strong>de ne pas</strong> parler</td></tr><tr><td><strong>Si + elle contracted</strong></td><td>Il a demandé s'elle venait</td><td>SI only contracts before IL/ILS</td><td>Il a demandé <strong>si elle</strong> venait</td></tr><tr><td><strong>Forgetting possessive shift</strong></td><td>Elle a dit que mon père... (her father)</td><td>Mon → son when subject changes</td><td>Elle a dit que <strong>son</strong> père...</td></tr></tbody></table>
+<hr>
+<h1>🔑 KEY TAKEAWAY</h1>
+<blockquote>
+<p><strong>Reported speech is the ultimate integration test for all your French tenses.</strong></p>
+<p>→ Every tense from Projects 1-24 now has a <strong>new role</strong> — being shifted inside reported speech<br>
+→ The system is mechanical and predictable:</p>
+<table><thead><tr><th>Original</th><th>Shifts To</th><th>When</th></tr></thead><tbody><tr><td>Présent</td><td>Imparfait</td><td>Reporting verb is past</td></tr><tr><td>Passé composé</td><td>Plus-que-parfait</td><td>Reporting verb is past</td></tr><tr><td>Futur simple</td><td>Conditionnel présent</td><td>Reporting verb is past</td></tr><tr><td>Futur proche</td><td>Aller (imparfait) + infinitif</td><td>Reporting verb is past</td></tr><tr><td>Imparfait</td><td>NO CHANGE</td><td>Already "back"</td></tr><tr><td>Plus-que-parfait</td><td>NO CHANGE</td><td>Already "back"</td></tr><tr><td>Conditionnel</td><td>NO CHANGE</td><td>Already "back"</td></tr><tr><td>Impératif</td><td>De + infinitif</td><td>Always transforms</td></tr></tbody></table>
+<p>→ Three reporting types: <strong>statements (que)</strong>, <strong>yes/no questions (si)</strong>, <strong>WH-questions (question word)</strong><br>
+→ Pronouns, possessives, and time references all shift perspective</p>
+<p>→ You now have the tools to <strong>retell any conversation</strong> you've heard in French<br>
+→ But you've noticed something: many real-life conversations involve <strong>obligation and duty</strong><br>
+→ "You MUST do this", "You HAVE TO finish", "It's REQUIRED"<br>
+→ French has <strong>multiple structures</strong> for expressing obligation — each with different strength</p>
+</blockquote>
+<hr>
+<h1>🌉 BRIDGE TO PROJECT 26</h1>
+<blockquote>
+<p>You can now report what anyone said — statements, questions, commands<br>
+But in daily life, you constantly encounter <strong>rules, duties, and obligations</strong>:</p>
+<p>→ "Il faut que tu finisses avant vendredi." (You must finish before Friday.)<br>
+→ "Tu dois appeler le médecin." (You have to call the doctor.)<br>
+→ "On est obligé de porter un masque." (We're required to wear a mask.)<br>
+→ "Vous n'avez pas le droit de stationner ici." (You're not allowed to park here.)</p>
+<p>→ French has <strong>a full spectrum</strong> of obligation structures — from soft suggestion to absolute rule<br>
+→ Choosing the wrong one makes you sound either <strong>too bossy</strong> or <strong>too weak</strong></p>
+<p>→ Project 26: <strong>"You Must, You Have To"</strong><br>
+→ The complete obligation system in French</p>
+</blockquote>
+<hr>
+<h1>✅ PROJECT 25 COMPLETE</h1>
+<blockquote>
+<p><strong>Are you ready for PROJECT 26: "You Must, You Have To"?</strong><br>
+→ ~100 sentences covering obligation structures (il faut, devoir, être obligé de, avoir à, etc.)<br>
+→ Scenario: You're explaining rules, responsibilities, duties — at work, at home, in society<br>
+→ Builds on all tenses + reported speech — obligation structures appear in every context</p>
+</blockquote>
+</div>
+</div>
+
+<!-- ========== data-index="21" ========== -->
+
+        </div>
+
+        <div class="nav-bar">
+            <a href="project-24.html" class="nav-button prev">← Previous Chapter</a>
+            <div class="page-info">
+                <a href="index.html" class="nav-button home">📚 Table of Contents</a><br>
+                <span style="margin-top:8px;display:block">Chapter 25 of 50</span>
+            </div>
+            <a href="project-26.html" class="nav-button next">Next Chapter →</a>
+        </div>
+    </div>
+
+    
+    <div id="progress-track"><div id="progress-fill"></div></div>
+    <div id="progress-pct">0%</div>
+
+
+    <script>
+    const fill = document.getElementById('progress-fill');
+    const pct  = document.getElementById('progress-pct');
+    function updateProgress() {
+        const scrollTop = window.scrollY;
+        const docHeight = document.body.scrollHeight - window.innerHeight;
+        const scrolled  = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+        fill.style.height = scrolled + '%';
+        pct.textContent   = Math.round(scrolled) + '%';
+    }
+    window.addEventListener('scroll', updateProgress);
+    updateProgress();
+
+    document.addEventListener('keydown', function(e) {
+        if (['INPUT','TEXTAREA'].includes(document.activeElement.tagName)) return;
+        if (e.key === 'ArrowLeft') {
+            const b = document.querySelector('.nav-button.prev');
+            if (b && !b.classList.contains('disabled')) window.location.href = b.href;
+        }
+        if (e.key === 'ArrowRight') {
+            const b = document.querySelector('.nav-button.next');
+            if (b && !b.classList.contains('disabled')) window.location.href = b.href;
+        }
+    });
+    </script>
+
+</body>
+</html>

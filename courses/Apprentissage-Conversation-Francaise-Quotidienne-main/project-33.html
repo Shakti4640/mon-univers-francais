@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="images/favicon.png">
+    <title>Project 33: "If Things Were Different — Part 2" — French Daily Sentences</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.75;
+            color: #1a202c;
+            background-color: #f7fafc;
+        }
+        .container {
+            max-width: 1800px;
+            margin: 0 auto;
+            background: white;
+            min-height: 100vh;
+            box-shadow: 0 0 30px rgba(0,0,0,0.08);
+            padding: 48px 52px;
+        }
+        
+        .content { max-width: 1700px; margin: 0 auto; color: #1a202c; }
+        .content h1 {
+            color: #1a202c; margin: 32px 0 20px;
+            padding-bottom: 12px;
+            border-bottom: 4px solid #3b82f6;
+            font-size: 2.1em;
+            font-weight: 700;
+        }
+        .content h2 {
+            color: #1a202c; margin: 28px 0 16px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #60a5fa;
+            font-size: 1.6em;
+            font-weight: 600;
+        }
+        .content h3 { color: #1a202c; margin: 22px 0 12px; font-size: 1.3em; font-weight: 600; }
+        .content h4 { color: #2d3748; margin: 18px 0 10px; font-size: 1.1em; font-weight: 600; }
+        .content p  { margin-bottom: 16px; line-height: 1.8; color: #1a202c; }
+        .content ul, .content ol { margin: 12px 0 18px 30px; color: #1a202c; }
+        .content li { margin-bottom: 8px; line-height: 1.75; color: #1a202c; }
+        .content hr { border: none; border-top: 2px solid #e2e8f0; margin: 26px 0; }
+        .content pre {
+            background: #f7fafc !important;
+            border: 1px solid #cbd5e0 !important;
+            border-left: 4px solid #3b82f6 !important;
+            padding: 18px !important; overflow-x: auto; margin: 18px 0; border-radius: 6px;
+            font-family: 'Consolas','Monaco','Courier New',monospace !important;
+            font-size: 0.9em !important;
+        }
+        .content pre:not([style*="color"]) { color: #1a202c !important; }
+        .content code {
+            font-family: 'Consolas','Monaco','Courier New',monospace !important;
+            font-size: 0.88em !important;
+        }
+        .content code:not(pre code) {
+            background: #dbeafe !important;
+            color: #1a202c !important;
+            padding: 2px 6px;
+            border-radius: 3px;
+        }
+        .content pre code { background: transparent !important; padding: 0; }
+        .content table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+        .content th {
+            background: linear-gradient(135deg, #3b82f6 0%, #60a5fa 100%);
+            color: white; padding: 12px 16px; text-align: left;
+            font-weight: 600;
+        }
+        .content td { padding: 11px 16px; border: 1px solid #e2e8f0; color: #1a202c; }
+        .content tr:nth-child(even) td { background: #eff6ff; }
+        .content blockquote {
+            border-left: 4px solid #3b82f6; background: #eff6ff;
+            padding: 14px 20px; margin: 18px 0; border-radius: 0 6px 6px 0;
+            color: #1a202c;
+        }
+        .content strong { color: #1a202c; font-weight: 600; }
+        .px-2 { padding: 0; }
+        .chat-message { background: transparent; padding: 0; margin: 0; }
+
+        /* Bottom nav bar only */
+        .nav-bar {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 24px 0;
+            margin-top: 50px;
+            border-top: 3px solid #60a5fa;
+        }
+        .nav-button {
+            display: inline-flex; align-items: center; gap: 8px;
+            padding: 12px 26px;
+            background: linear-gradient(135deg, #3b82f6 0%, #60a5fa 100%);
+            color: white !important; text-decoration: none;
+            border-radius: 8px; font-weight: 600; font-size: 0.95em;
+            transition: all 0.2s;
+            box-shadow: 0 2px 8px rgba(59,130,246,0.35);
+        }
+        .nav-button:hover { transform: translateY(-2px); box-shadow: 0 4px 14px rgba(59,130,246,0.5); }
+        .nav-button.disabled { background: #cbd5e1; box-shadow: none; pointer-events: none; }
+        .nav-button.home {
+            background: linear-gradient(135deg, #ef4444 0%, #f87171 100%);
+            box-shadow: 0 2px 8px rgba(239,68,68,0.35);
+        }
+        .nav-button.home:hover { box-shadow: 0 4px 14px rgba(239,68,68,0.5); }
+        .page-info { color: #718096; font-size: 0.9em; text-align: center; }
+
+        /* Progress bar */
+        #progress-track {
+            position: fixed; top: 20px; right: 20px;
+            width: 10px; height: 150px;
+            background: rgba(59,130,246,0.2);
+            border: 2px solid #3b82f6;
+            border-radius: 6px; overflow: hidden; z-index: 1000;
+        }
+        #progress-fill {
+            width: 100%;
+            background: linear-gradient(180deg, #3b82f6, #2563eb);
+            height: 0%;
+            transition: height 0.15s ease;
+        }
+        #progress-pct {
+            position: fixed; top: 0px; right: 16px;
+            color: #2563eb; font-size: 14px; font-weight: bold;
+            z-index: 1001;
+            text-shadow: 0 1px 2px rgba(255,255,255,0.9);
+            line-height: 20px;
+        }
+
+    </style>
+<link rel="stylesheet" href="assets/chapters.css?v=20260421203847"><script src="assets/chapters.js?v=20260421203847" defer></script>
+</head>
+<body>
+    <div class="container">
+        <div class="content">
+            <div class="chat-message" data-index="5">
+<div class="px-2"><h1>🟠 PROJECT 33: "If Things Were Different — Part 2"</h1>
+<h2><em>Imagining an unreal present — What if your life were completely different right now?</em></h2>
+<hr>
+<h1>🎯 THE HYPOTHETICAL PROBLEM</h1>
+<p>→ You are sitting in a café in Lyon with French friends<br>
+→ The conversation drifts into <strong>imagination territory</strong><br>
+→ Someone says: "What would you do if you won the lottery?"<br>
+→ Another asks: "If you could live anywhere, where would you go?"<br>
+→ You hear: "Si j'étais toi, je ne ferais pas ça."<br>
+→ Everyone is building sentences about <strong>things that are NOT true right now — but they imagine them</strong><br>
+→ You already know how to say "If it rains, I'll stay home" (Project 18 — real possibility)<br>
+→ But this is DIFFERENT — this is about <strong>unreal, imaginary, contrary-to-fact present situations</strong><br>
+→ You try to say "If I were rich, I would travel" but you accidentally say "Si je suis riche, je voyagerai"<br>
+→ Your friends understand — but it sounds like you think <strong>becoming rich is a real possibility soon</strong><br>
+→ The entire emotional and logical meaning <strong>shifts</strong> based on which structure you choose</p>
+<p><strong>The core realization:</strong><br>
+→ Project 18 gave you: <strong>Si + présent → futur</strong> = "If X happens (possible), then Y will happen"<br>
+→ Project 33 gives you: <strong>Si + imparfait → conditionnel</strong> = "If X were true (but it's NOT), then Y would happen"<br>
+→ Same word "si" — completely different <strong>reality level</strong></p>
+<hr>
+<h1>🔍 HOW TO APPROACH IT</h1>
+<p>→ Think of French "si" sentences as having a <strong>reality dial</strong></p>
+<table><thead><tr><th>Reality Level</th><th>Si-Clause Tense</th><th>Result Clause Tense</th><th>Meaning</th><th>Project</th></tr></thead><tbody><tr><td>🟢 REAL / LIKELY</td><td>Si + <strong>présent</strong></td><td><strong>futur simple / présent / impératif</strong></td><td>This might actually happen</td><td>P18</td></tr><tr><td>🟡 UNREAL PRESENT</td><td>Si + <strong>imparfait</strong></td><td><strong>conditionnel présent</strong></td><td>This is NOT true now — but imagine</td><td><strong>P33 (NOW)</strong></td></tr><tr><td>🔴 UNREAL PAST</td><td>Si + <strong>plus-que-parfait</strong></td><td><strong>conditionnel passé</strong></td><td>This did NOT happen — regret</td><td>P34 (NEXT)</td></tr></tbody></table>
+<p>→ You already built the <strong>imparfait</strong> engine in Project 10<br>
+→ You already built the <strong>conditionnel présent</strong> engine in Project 17<br>
+→ Now you are <strong>combining them</strong> into one powerful structure<br>
+→ This is not learning new tenses — this is learning a <strong>new logical architecture</strong></p>
+<hr>
+<h1>🔧 HOW CAN WE SOLVE IT</h1>
+<h2>The Unreal Present Formula</h2>
+<code>SI + SUBJECT + IMPARFAIT  →  SUBJECT + CONDITIONNEL PRÉSENT</code>
+<p>→ The "si" clause sets up the <strong>imaginary condition</strong><br>
+→ The result clause delivers the <strong>imaginary consequence</strong><br>
+→ Order can be reversed — comma rules change</p>
+<p><strong>Order A (most common):</strong></p>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>Si j'avais de l'argent, j'achèterais une maison.
+</span>(If I had money, I would buy a house.)</code></pre></div>
+<p><strong>Order B (emphasis on result):</strong></p>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>J'achèterais une maison si j'avais de l'argent.
+</span>(I would buy a house if I had money.)</code></pre></div>
+<p>→ When "si" clause comes first → <strong>comma</strong> separates the two parts<br>
+→ When "si" clause comes second → <strong>no comma needed</strong></p>
+<hr>
+<h2>Quick Recall — Imparfait Endings (from P10)</h2>
+<table><thead><tr><th>Subject</th><th>Ending</th><th>Example (avoir)</th></tr></thead><tbody><tr><td>Je</td><td>-ais</td><td>j'avais</td></tr><tr><td>Tu</td><td>-ais</td><td>tu avais</td></tr><tr><td>Il/Elle/On</td><td>-ait</td><td>il avait</td></tr><tr><td>Nous</td><td>-ions</td><td>nous avions</td></tr><tr><td>Vous</td><td>-iez</td><td>vous aviez</td></tr><tr><td>Ils/Elles</td><td>-aient</td><td>ils avaient</td></tr></tbody></table>
+<h2>Quick Recall — Conditionnel Présent Endings (from P17)</h2>
+<table><thead><tr><th>Subject</th><th>Ending</th><th>Example (acheter)</th></tr></thead><tbody><tr><td>Je</td><td>-ais</td><td>j'achèterais</td></tr><tr><td>Tu</td><td>-ais</td><td>tu achèterais</td></tr><tr><td>Il/Elle/On</td><td>-ait</td><td>il achèterait</td></tr><tr><td>Nous</td><td>-ions</td><td>nous achèterions</td></tr><tr><td>Vous</td><td>-iez</td><td>vous achèteriez</td></tr><tr><td>Ils/Elles</td><td>-aient</td><td>ils achèteraient</td></tr></tbody></table>
+<p>→ <strong>Notice:</strong> Imparfait and conditionnel share the SAME endings<br>
+→ The STEM is different — that's how you tell them apart<br>
+→ Imparfait stem = <strong>nous form of présent minus -ons</strong><br>
+→ Conditionnel stem = <strong>infinitive</strong> (or irregular future stem from P16)</p>
+<hr>
+<h1>✅ WHAT COULD BE DONE — THE 100 SENTENCES</h1>
+<h2>🔹 BLOCK A — Imaginary Financial Situations</h2>
+<p><em>Scenario: Friends fantasizing about money, wealth, lottery</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English Meaning</th><th>Structure Breakdown</th></tr></thead><tbody><tr><td>1</td><td>Si j'étais riche, je voyagerais partout.</td><td>If I were rich, I would travel everywhere.</td><td>si + être(imp) → voyager(cond)</td></tr><tr><td>2</td><td>Si tu avais un million d'euros, qu'est-ce que tu ferais ?</td><td>If you had a million euros, what would you do?</td><td>si + avoir(imp) → faire(cond) + question</td></tr><tr><td>3</td><td>Si elle gagnait au loto, elle quitterait son travail.</td><td>If she won the lottery, she would quit her job.</td><td>si + gagner(imp) → quitter(cond)</td></tr><tr><td>4</td><td>Si on avait plus d'argent, on déménagerait.</td><td>If we had more money, we would move.</td><td>si + avoir(imp) → déménager(cond)</td></tr><tr><td>5</td><td>Si nous étions millionnaires, nous achèterions un château.</td><td>If we were millionaires, we would buy a castle.</td><td>si + être(imp) → acheter(cond)</td></tr><tr><td>6</td><td>Si vous héritiez d'une fortune, vous la partageriez ?</td><td>If you inherited a fortune, would you share it?</td><td>si + hériter(imp) → partager(cond)</td></tr><tr><td>7</td><td>Si ils n'avaient pas de dettes, ils investiraient en immobilier.</td><td>If they had no debts, they would invest in real estate.</td><td>si + avoir(imp/neg) → investir(cond)</td></tr><tr><td>8</td><td>Si je ne devais pas travailler, je passerais mes journées à lire.</td><td>If I didn't have to work, I would spend my days reading.</td><td>si + devoir(imp/neg) → passer(cond)</td></tr><tr><td>9</td><td>Si l'argent n'existait pas, le monde serait différent.</td><td>If money didn't exist, the world would be different.</td><td>si + exister(imp/neg) → être(cond)</td></tr><tr><td>10</td><td>Si on gagnait assez, on prendrait notre retraite tôt.</td><td>If we earned enough, we would retire early.</td><td>si + gagner(imp) → prendre(cond)</td></tr></tbody></table>
+<p><strong>🧠 Structure unlocked:</strong> <code>Si + [financial condition in imparfait] → [life-change consequence in conditionnel]</code></p>
+<hr>
+<h2>🔹 BLOCK B — Imaginary Life Choices (Location, Lifestyle)</h2>
+<p><em>Scenario: Dreaming about living somewhere else, doing something else</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English Meaning</th><th>Structure Breakdown</th></tr></thead><tbody><tr><td>11</td><td>Si j'habitais à Paris, je prendrais le métro tous les jours.</td><td>If I lived in Paris, I would take the metro every day.</td><td>si + habiter(imp) → prendre(cond)</td></tr><tr><td>12</td><td>Si tu vivais au Japon, tu apprendrais le japonais.</td><td>If you lived in Japan, you would learn Japanese.</td><td>si + vivre(imp) → apprendre(cond)</td></tr><tr><td>13</td><td>Si elle déménageait à la campagne, elle aurait un jardin immense.</td><td>If she moved to the countryside, she would have a huge garden.</td><td>si + déménager(imp) → avoir(cond)</td></tr><tr><td>14</td><td>Si on vivait au bord de la mer, on se baignerait chaque matin.</td><td>If we lived by the sea, we would swim every morning.</td><td>si + vivre(imp) → se baigner(cond)</td></tr><tr><td>15</td><td>Si nous habitions en Suisse, la vie serait plus chère.</td><td>If we lived in Switzerland, life would be more expensive.</td><td>si + habiter(imp) → être(cond)</td></tr><tr><td>16</td><td>Si vous quittiez la ville, vous respireriez mieux.</td><td>If you left the city, you would breathe better.</td><td>si + quitter(imp) → respirer(cond)</td></tr><tr><td>17</td><td>Si ils s'installaient à l'étranger, ils devraient apprendre une nouvelle langue.</td><td>If they settled abroad, they would have to learn a new language.</td><td>si + s'installer(imp) → devoir(cond)</td></tr><tr><td>18</td><td>Si je pouvais choisir, je vivrais dans un petit village.</td><td>If I could choose, I would live in a small village.</td><td>si + pouvoir(imp) → vivre(cond)</td></tr><tr><td>19</td><td>Si on avait le choix, on resterait ici.</td><td>If we had the choice, we would stay here.</td><td>si + avoir(imp) → rester(cond)</td></tr><tr><td>20</td><td>Si tu n'avais aucune contrainte, où irais-tu ?</td><td>If you had no constraints, where would you go?</td><td>si + avoir(imp/neg) → aller(cond) + question</td></tr></tbody></table>
+<p><strong>🧠 Structure unlocked:</strong> <code>Si + [imaginary location/life in imparfait] → [imaginary daily reality in conditionnel]</code></p>
+<hr>
+<h2>🔹 BLOCK C — Giving Advice: "If I Were You"</h2>
+<p><em>Scenario: A friend has a problem — you give hypothetical advice by putting yourself in their place</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English Meaning</th><th>Structure Breakdown</th></tr></thead><tbody><tr><td>21</td><td>Si j'étais toi, je lui parlerais franchement.</td><td>If I were you, I would speak to him honestly.</td><td>si + être(imp) + toi → parler(cond)</td></tr><tr><td>22</td><td>Si j'étais à ta place, je ne signerais pas ce contrat.</td><td>If I were in your place, I wouldn't sign that contract.</td><td>si + être(imp) + à ta place → signer(cond/neg)</td></tr><tr><td>23</td><td>Si j'étais vous, je consulterais un avocat.</td><td>If I were you (formal), I would consult a lawyer.</td><td>si + être(imp) + vous → consulter(cond)</td></tr><tr><td>24</td><td>Si j'étais à votre place, je demanderais une augmentation.</td><td>If I were in your place, I would ask for a raise.</td><td>si + être(imp) + à votre place → demander(cond)</td></tr><tr><td>25</td><td>Si j'étais elle, je romprais immédiatement.</td><td>If I were her, I would break up immediately.</td><td>si + être(imp) + elle → rompre(cond)</td></tr><tr><td>26</td><td>Si j'étais dans ta situation, je prendrais du recul.</td><td>If I were in your situation, I would step back.</td><td>si + être(imp) + dans ta situation → prendre(cond)</td></tr><tr><td>27</td><td>Si j'étais lui, je m'excuserais.</td><td>If I were him, I would apologize.</td><td>si + être(imp) + lui → s'excuser(cond)</td></tr><tr><td>28</td><td>Si j'étais toi, je n'accepterais jamais ça.</td><td>If I were you, I would never accept that.</td><td>si + être(imp) → accepter(cond/neg) + jamais</td></tr><tr><td>29</td><td>Si j'étais à ta place, j'en parlerais à quelqu'un de confiance.</td><td>If I were in your place, I would talk about it to someone I trust.</td><td>si + être(imp) → parler(cond) + en (P20)</td></tr><tr><td>30</td><td>Si j'étais dans ton cas, je réfléchirais avant d'agir.</td><td>If I were in your case, I would think before acting.</td><td>si + être(imp) → réfléchir(cond) + avant de + infinitif</td></tr></tbody></table>
+<p><strong>🧠 Structure unlocked:</strong> <code>Si j'étais toi / à ta place / à votre place → je + [conditionnel]</code><br>
+→ This is THE most common advice-giving structure in spoken French<br>
+→ Softer than imperative (P13) — you're not commanding, you're <strong>suggesting through imagination</strong></p>
+<hr>
+<h2>🔹 BLOCK D — Imaginary Professional / Career Scenarios</h2>
+<p><em>Scenario: Discussing dream jobs, career changes, workplace fantasies</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English Meaning</th><th>Structure Breakdown</th></tr></thead><tbody><tr><td>31</td><td>Si je n'avais pas ce travail, je serais perdu.</td><td>If I didn't have this job, I would be lost.</td><td>si + avoir(imp/neg) → être(cond)</td></tr><tr><td>32</td><td>Si tu étais le patron, tu changerais quoi en premier ?</td><td>If you were the boss, what would you change first?</td><td>si + être(imp) → changer(cond) + question</td></tr><tr><td>33</td><td>Si elle avait plus d'expérience, elle obtiendrait le poste.</td><td>If she had more experience, she would get the position.</td><td>si + avoir(imp) → obtenir(cond)</td></tr><tr><td>34</td><td>Si on travaillait moins, on serait plus productifs.</td><td>If we worked less, we would be more productive.</td><td>si + travailler(imp) → être(cond)</td></tr><tr><td>35</td><td>Si nous avions de meilleurs outils, nous irions plus vite.</td><td>If we had better tools, we would go faster.</td><td>si + avoir(imp) → aller(cond)</td></tr><tr><td>36</td><td>Si vous dirigiez cette entreprise, que feriez-vous différemment ?</td><td>If you ran this company, what would you do differently?</td><td>si + diriger(imp) → faire(cond) + question (inversion)</td></tr><tr><td>37</td><td>Si les salaires augmentaient, les employés seraient plus motivés.</td><td>If salaries increased, employees would be more motivated.</td><td>si + augmenter(imp) → être(cond)</td></tr><tr><td>38</td><td>Si je pouvais reprendre mes études, je choisirais l'architecture.</td><td>If I could go back to school, I would choose architecture.</td><td>si + pouvoir(imp) → choisir(cond)</td></tr><tr><td>39</td><td>Si on avait un meilleur manager, l'ambiance serait différente.</td><td>If we had a better manager, the atmosphere would be different.</td><td>si + avoir(imp) → être(cond)</td></tr><tr><td>40</td><td>Si tu suivais cette formation, tu progresserais rapidement.</td><td>If you took that training, you would progress quickly.</td><td>si + suivre(imp) → progresser(cond)</td></tr></tbody></table>
+<p><strong>🧠 Structure unlocked:</strong> <code>Si + [imaginary professional condition] → [imaginary professional consequence]</code></p>
+<hr>
+<h2>🔹 BLOCK E — Imaginary Relationship &amp; Social Scenarios</h2>
+<p><em>Scenario: Talking about friendships, love, family — things that could be different</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English Meaning</th><th>Structure Breakdown</th></tr></thead><tbody><tr><td>41</td><td>Si tu me connaissais mieux, tu comprendrais.</td><td>If you knew me better, you would understand.</td><td>si + connaître(imp) → comprendre(cond)</td></tr><tr><td>42</td><td>Si on se voyait plus souvent, on serait plus proches.</td><td>If we saw each other more often, we would be closer.</td><td>si + se voir(imp) → être(cond)</td></tr><tr><td>43</td><td>Si elle lui faisait confiance, leur relation s'améliorerait.</td><td>If she trusted him, their relationship would improve.</td><td>si + faire confiance(imp) → s'améliorer(cond)</td></tr><tr><td>44</td><td>Si je savais ce qu'il pense, je réagirais autrement.</td><td>If I knew what he thinks, I would react differently.</td><td>si + savoir(imp) → réagir(cond)</td></tr><tr><td>45</td><td>Si nous passions plus de temps ensemble, ce serait formidable.</td><td>If we spent more time together, it would be wonderful.</td><td>si + passer(imp) → être(cond)</td></tr><tr><td>46</td><td>Si vous étiez plus honnête avec elle, elle vous respecterait davantage.</td><td>If you were more honest with her, she would respect you more.</td><td>si + être(imp) → respecter(cond)</td></tr><tr><td>47</td><td>Si mes parents habitaient plus près, je les verrais chaque semaine.</td><td>If my parents lived closer, I would see them every week.</td><td>si + habiter(imp) → voir(cond)</td></tr><tr><td>48</td><td>Si il n'était pas si têtu, on s'entendrait mieux.</td><td>If he weren't so stubborn, we would get along better.</td><td>si + être(imp/neg) → s'entendre(cond)</td></tr><tr><td>49</td><td>Si tu lui disais la vérité, il apprécierait ta franchise.</td><td>If you told him the truth, he would appreciate your honesty.</td><td>si + dire(imp) → apprécier(cond)</td></tr><tr><td>50</td><td>Si on communiquait davantage, il y aurait moins de malentendus.</td><td>If we communicated more, there would be fewer misunderstandings.</td><td>si + communiquer(imp) → il y aurait(cond)</td></tr></tbody></table>
+<p><strong>🧠 Structure unlocked:</strong> <code>Si + [imaginary social/emotional condition] → [imaginary relational consequence]</code><br>
+→ Note: <strong>"il y aurait"</strong> = conditionnel of "il y a" — extremely useful in hypotheticals</p>
+<hr>
+<h2>🔹 BLOCK F — Imaginary World / Society / Abstract Scenarios</h2>
+<p><em>Scenario: Philosophical café conversations — reimagining the world</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English Meaning</th><th>Structure Breakdown</th></tr></thead><tbody><tr><td>51</td><td>Si tout le monde était égal, la société fonctionnerait différemment.</td><td>If everyone were equal, society would function differently.</td><td>si + être(imp) → fonctionner(cond)</td></tr><tr><td>52</td><td>Si la guerre n'existait plus, on investirait dans l'éducation.</td><td>If war no longer existed, we would invest in education.</td><td>si + exister(imp/neg) → investir(cond)</td></tr><tr><td>53</td><td>Si les humains respectaient la nature, le climat ne se dégraderait pas.</td><td>If humans respected nature, the climate wouldn't deteriorate.</td><td>si + respecter(imp) → se dégrader(cond/neg)</td></tr><tr><td>54</td><td>Si on pouvait voyager dans le temps, où irais-tu ?</td><td>If we could travel through time, where would you go?</td><td>si + pouvoir(imp) → aller(cond) + question</td></tr><tr><td>55</td><td>Si la technologie disparaissait, la plupart des gens ne sauraient pas survivre.</td><td>If technology disappeared, most people wouldn't know how to survive.</td><td>si + disparaître(imp) → savoir(cond/neg)</td></tr><tr><td>56</td><td>Si l'éducation était gratuite partout, le monde serait plus juste.</td><td>If education were free everywhere, the world would be fairer.</td><td>si + être(imp) → être(cond)</td></tr><tr><td>57</td><td>Si les frontières n'existaient pas, les gens circuleraient librement.</td><td>If borders didn't exist, people would move freely.</td><td>si + exister(imp/neg) → circuler(cond)</td></tr><tr><td>58</td><td>Si on découvrait une vie extraterrestre, cela changerait tout.</td><td>If we discovered extraterrestrial life, it would change everything.</td><td>si + découvrir(imp) → changer(cond)</td></tr><tr><td>59</td><td>Si chacun faisait un petit effort, l'impact serait énorme.</td><td>If everyone made a small effort, the impact would be enormous.</td><td>si + faire(imp) → être(cond)</td></tr><tr><td>60</td><td>Si les politiciens tenaient leurs promesses, les citoyens auraient plus confiance.</td><td>If politicians kept their promises, citizens would have more trust.</td><td>si + tenir(imp) → avoir(cond)</td></tr></tbody></table>
+<p><strong>🧠 Structure unlocked:</strong> <code>Si + [imaginary societal/world condition] → [imaginary global consequence]</code><br>
+→ This is how French people discuss politics, philosophy, ethics in daily conversation</p>
+<hr>
+<h2>🔹 BLOCK G — Reversed Order: Result First, Condition Second</h2>
+<p><em>Scenario: Emphasizing what you WOULD do — the condition is secondary</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English Meaning</th><th>Structure Note</th></tr></thead><tbody><tr><td>61</td><td>Je démissionnerais si mon patron me manquait de respect.</td><td>I would resign if my boss disrespected me.</td><td>Result(cond) + si + condition(imp) — NO comma</td></tr><tr><td>62</td><td>Tu serais plus heureux si tu te reposais davantage.</td><td>You would be happier if you rested more.</td><td>Result first — emphasizes the happiness</td></tr><tr><td>63</td><td>Elle accepterait le poste si les conditions étaient meilleures.</td><td>She would accept the position if the conditions were better.</td><td>Result first — emphasizes acceptance</td></tr><tr><td>64</td><td>On partirait en vacances si on avait le temps.</td><td>We would go on vacation if we had the time.</td><td>Result first — emphasizes the desire</td></tr><tr><td>65</td><td>Nous serions ravis si vous pouviez venir.</td><td>We would be delighted if you could come.</td><td>Result first — polite invitation</td></tr><tr><td>66</td><td>Il réussirait ses examens s'il travaillait régulièrement.</td><td>He would pass his exams if he worked regularly.</td><td>Result first — emphasizes success</td></tr><tr><td>67</td><td>Ils investiraient davantage si le marché était stable.</td><td>They would invest more if the market were stable.</td><td>Result first — business context</td></tr><tr><td>68</td><td>Je te le dirais si je le savais.</td><td>I would tell you if I knew.</td><td>Result first — reassuring someone</td></tr><tr><td>69</td><td>Ce serait plus simple si tu m'écoutais.</td><td>It would be simpler if you listened to me.</td><td>Result first — frustrated tone</td></tr><tr><td>70</td><td>Ça m'étonnerait si elle revenait.</td><td>It would surprise me if she came back.</td><td>Result first — expressing doubt</td></tr></tbody></table>
+<p><strong>🧠 Structure unlocked:</strong> <code>[Result in conditionnel] + si + [condition in imparfait]</code><br>
+→ No comma when si-clause comes second<br>
+→ Emphasis shifts to the <strong>imagined result</strong> rather than the condition<br>
+→ Very natural in spoken French — especially in emotional or conversational contexts</p>
+<hr>
+<h2>🔹 BLOCK H — Negative Hypotheticals: "If... NOT..."</h2>
+<p><em>Scenario: Imagining the absence of something — what wouldn't happen, what would be missing</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English Meaning</th><th>Negation Placement</th></tr></thead><tbody><tr><td>71</td><td>Si je n'avais pas d'amis, je me sentirais seul.</td><td>If I had no friends, I would feel lonely.</td><td>ne...pas in si-clause</td></tr><tr><td>72</td><td>Si tu ne parlais pas français, tu ne comprendrais rien ici.</td><td>If you didn't speak French, you wouldn't understand anything here.</td><td>ne...pas in BOTH clauses</td></tr><tr><td>73</td><td>Si elle ne travaillait pas autant, elle ne serait pas si stressée.</td><td>If she didn't work so much, she wouldn't be so stressed.</td><td>ne...pas in both — cause/effect</td></tr><tr><td>74</td><td>Si on ne faisait rien, la situation empirerait.</td><td>If we did nothing, the situation would worsen.</td><td>ne...rien in si-clause (P39)</td></tr><tr><td>75</td><td>Si personne ne venait, ce serait décevant.</td><td>If nobody came, it would be disappointing.</td><td>personne ne in si-clause (P39)</td></tr><tr><td>76</td><td>Si ce problème n'existait pas, on n'aurait pas besoin de cette réunion.</td><td>If this problem didn't exist, we wouldn't need this meeting.</td><td>ne...pas in both clauses</td></tr><tr><td>77</td><td>Si tu n'étais jamais parti, les choses seraient différentes.</td><td>If you had never left, things would be different.</td><td>⚠️ This sentence MIXES tenses — discussed in P34</td></tr><tr><td>78</td><td>Si je ne te connaissais pas, je ne te ferais pas confiance.</td><td>If I didn't know you, I wouldn't trust you.</td><td>ne...pas in both — relationship context</td></tr><tr><td>79</td><td>Si nous n'avions aucune limite, nous ferions des choses folles.</td><td>If we had no limits, we would do crazy things.</td><td>ne...aucun in si-clause (P39)</td></tr><tr><td>80</td><td>Si rien ne changeait, je finirais par partir.</td><td>If nothing changed, I would end up leaving.</td><td>rien ne in si-clause + finir par (P30)</td></tr></tbody></table>
+<p><strong>🧠 Structure unlocked:</strong> <code>Si + [negative condition in imparfait] → [consequence in conditionnel]</code><br>
+→ Negation follows standard placement rules from P5 and P39<br>
+→ Both clauses can be negative — creating powerful contrary-to-fact statements</p>
+<hr>
+<h2>🔹 BLOCK I — Polite Wishes Disguised as Hypotheticals</h2>
+<p><em>Scenario: You're not directly asking — you're gently expressing what you'd want</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English Meaning</th><th>Pragmatic Function</th></tr></thead><tbody><tr><td>81</td><td>Si tu pouvais m'aider, ce serait génial.</td><td>If you could help me, that would be great.</td><td>Polite request</td></tr><tr><td>82</td><td>Si vous aviez cinq minutes, j'aurais une question.</td><td>If you had five minutes, I'd have a question.</td><td>Soft approach to someone busy</td></tr><tr><td>83</td><td>Si c'était possible, je préférerais un rendez-vous le matin.</td><td>If it were possible, I'd prefer a morning appointment.</td><td>Polite preference</td></tr><tr><td>84</td><td>Si ça ne te dérangeait pas, je viendrais avec un ami.</td><td>If it didn't bother you, I'd come with a friend.</td><td>Asking permission softly</td></tr><tr><td>85</td><td>Si on pouvait remettre ça à demain, ça m'arrangerait.</td><td>If we could postpone it to tomorrow, that would suit me.</td><td>Gentle rescheduling</td></tr><tr><td>86</td><td>Si vous acceptiez de reconsidérer, nous vous en serions reconnaissants.</td><td>If you agreed to reconsider, we would be grateful.</td><td>Formal professional plea</td></tr><tr><td>87</td><td>Si tu avais le temps de relire mon texte, je t'en serais redevable.</td><td>If you had time to reread my text, I'd be indebted.</td><td>Asking a favor formally</td></tr><tr><td>88</td><td>Si ça ne vous ennuyait pas, je souhaiterais changer de place.</td><td>If it didn't bother you, I'd like to change seats.</td><td>Very polite request</td></tr><tr><td>89</td><td>Si je pouvais me permettre une suggestion, je proposerais une autre approche.</td><td>If I could allow myself a suggestion, I'd propose another approach.</td><td>Ultra-formal professional suggestion</td></tr><tr><td>90</td><td>Si tu voulais bien fermer la fenêtre, ce serait gentil.</td><td>If you wouldn't mind closing the window, that would be nice.</td><td>Soft everyday request</td></tr></tbody></table>
+<p><strong>🧠 Structure unlocked:</strong> <code>Si + [softened condition in imparfait] → [softened request/wish in conditionnel]</code><br>
+→ This is WHERE conditionnel (P17) and si-clauses MERGE into <strong>French politeness culture</strong><br>
+→ The more "unreal" you make the request sound, the MORE polite it becomes<br>
+→ Compare: "Ferme la fenêtre" (P13 — command) vs. "Si tu voulais bien fermer la fenêtre..." (gentle, respectful)</p>
+<hr>
+<h2>🔹 BLOCK J — Full Conversational Flow: Mixing Everything</h2>
+<p><em>Scenario: A complete dinner conversation where hypotheticals fly back and forth</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English Meaning</th><th>Context</th></tr></thead><tbody><tr><td>91</td><td>Si tu pouvais dîner avec n'importe qui, tu choisirais qui ?</td><td>If you could have dinner with anyone, who would you choose?</td><td>Conversation starter</td></tr><tr><td>92</td><td>Moi, si je devais choisir, je prendrais Léonard de Vinci.</td><td>Me, if I had to choose, I'd pick Leonardo da Vinci.</td><td>Answering with emphasis on "moi"</td></tr><tr><td>93</td><td>Si on vivait au Moyen Âge, on ne survivrait probablement pas une semaine.</td><td>If we lived in the Middle Ages, we probably wouldn't survive a week.</td><td>Humorous philosophical musing</td></tr><tr><td>94</td><td>Si les animaux pouvaient parler, je suis sûr que les chats ne diraient rien quand même.</td><td>If animals could talk, I'm sure cats wouldn't say anything anyway.</td><td>Joke — mixing si-clause with certainty</td></tr><tr><td>95</td><td>Si j'avais su... ah non, ça c'est autre chose.</td><td>If I had known... oh no, that's something else.</td><td>⚠️ Self-correcting — this is P34 territory (plus-que-parfait)</td></tr><tr><td>96</td><td>Ce serait tellement bien si on pouvait tout recommencer.</td><td>It would be so nice if we could start over.</td><td>Reversed order — emotional wish</td></tr><tr><td>97</td><td>Si je n'étais pas si fatigué, je resterais encore un peu.</td><td>If I weren't so tired, I'd stay a little longer.</td><td>Politely excusing departure</td></tr><tr><td>98</td><td>Si ça te dit, on pourrait refaire ça la semaine prochaine.</td><td>If you're up for it, we could do this again next week.</td><td>Casual suggestion — conditionnel for softness</td></tr><tr><td>99</td><td>Si j'étais toi, je ne conduirais pas ce soir — prends un taxi.</td><td>If I were you, I wouldn't drive tonight — take a taxi.</td><td>Advice + imperative (P13) combined</td></tr><tr><td>100</td><td>Si la soirée ne se terminait jamais, ça ne me dérangerait pas.</td><td>If the evening never ended, I wouldn't mind.</td><td>Warm closing sentiment</td></tr></tbody></table>
+<hr>
+<h1>✅ WHAT SHOULD DO</h1>
+<p>→ <strong>Always pair</strong> si + imparfait with conditionnel présent — they are a locked couple<br>
+→ <strong>Start with "Si j'étais toi"</strong> — practice this one structure until it's automatic — it covers 30% of daily hypothetical use<br>
+→ <strong>Practice reversing order</strong> — result first feels more natural in casual speech<br>
+→ <strong>Use this structure to be POLITE</strong> — not just to fantasize — Block I is the most practically useful<br>
+→ <strong>Connect to P17</strong> — conditionnel was introduced for politeness; now you see it inside its natural habitat (si-clauses)<br>
+→ <strong>Connect to P10</strong> — imparfait was introduced for past description; now you see its second life as the "unreality marker"</p>
+<hr>
+<h1>❌ WHAT SHOULD NOT DO</h1>
+<p>→ ❌ <strong>NEVER put conditionnel after "si"</strong></p>
+<ul>
+<li>❌ <del>Si je serais riche</del> → absolutely forbidden</li>
+<li>✅ Si j'<strong>étais</strong> riche → always imparfait after si</li>
+</ul>
+<p>→ ❌ <strong>NEVER confuse this with P18 (real conditions)</strong></p>
+<ul>
+<li>P18: Si il pleut, je resterai → real possibility, present + future</li>
+<li>P33: Si il pleuvait, je resterais → imaginary, imparfait + conditionnel</li>
+</ul>
+<p>→ ❌ <strong>NEVER use passé composé after "si" in this structure</strong></p>
+<ul>
+<li>❌ <del>Si j'ai été riche</del></li>
+<li>✅ Si j'étais riche</li>
+</ul>
+<p>→ ❌ <strong>NEVER mix the reality levels randomly</strong></p>
+<ul>
+<li>❌ <del>Si j'étais riche, je voyagerai</del> (imparfait + futur = broken logic)</li>
+<li>✅ Si j'étais riche, je voyager<strong>ais</strong> (imparfait + conditionnel = correct)</li>
+</ul>
+<p>→ ❌ <strong>NEVER think this structure means the past</strong></p>
+<ul>
+<li>"Si j'avais de l'argent" does NOT mean "If I had money (yesterday)"</li>
+<li>It means "If I had money <strong>(right now, but I don't)</strong>"</li>
+<li>The imparfait here marks <strong>unreality</strong> — not past time</li>
+</ul>
+<hr>
+<h1>🔀 WHEN TO USE WHAT</h1>
+<table><thead><tr><th>What You Want to Express</th><th>Structure</th><th>Example</th></tr></thead><tbody><tr><td>Real possibility in the future</td><td>Si + présent → futur (P18)</td><td>Si il pleut, je resterai.</td></tr><tr><td><strong>Unreal present — imagination</strong></td><td><strong>Si + imparfait → conditionnel (P33)</strong></td><td><strong>Si il pleuvait, je resterais.</strong></td></tr><tr><td>Unreal past — regret</td><td>Si + plus-que-parfait → cond. passé (P34)</td><td>Si il avait plu, je serais resté.</td></tr><tr><td>Giving gentle advice</td><td>Si j'étais toi + conditionnel</td><td>Si j'étais toi, je partirais.</td></tr><tr><td>Making a polite request</td><td>Si + imparfait → ce serait + adj</td><td>Si tu pouvais, ce serait gentil.</td></tr><tr><td>Philosophical musing</td><td>Si + imparfait → conditionnel</td><td>Si la guerre n'existait plus...</td></tr><tr><td>Expressing a wish</td><td>Si + seulement + imparfait</td><td>Si seulement j'avais plus de temps...</td></tr><tr><td>Asking "what would you do?"</td><td>Si + imparfait, qu'est-ce que tu ferais ?</td><td>Si tu étais président, tu ferais quoi ?</td></tr></tbody></table>
+<hr>
+<h1>🚫 WHEN NOT TO USE</h1>
+<p>→ <strong>When the condition is REAL and LIKELY</strong> → use P18 (si + présent → futur)</p>
+<ul>
+<li>"If it rains tomorrow" = real weather → Si il pleut demain, je prendrai un parapluie</li>
+<li>NOT: Si il pleuvait demain (this implies rain is imaginary / unlikely)</li>
+</ul>
+<p>→ <strong>When you're talking about something that DID NOT happen in the past</strong> → use P34</p>
+<ul>
+<li>"If I had studied harder" = past regret → Si j'avais étudié plus...</li>
+<li>NOT: Si j'étudiais plus (this is about the present, not the past)</li>
+</ul>
+<p>→ <strong>When stating facts or certainties</strong> → no si-clause needed</p>
+<ul>
+<li>"When it rains, I take an umbrella" = habitual fact → Quand il pleut, je prends un parapluie</li>
+<li>NOT: Si il pleuvait... (this makes it hypothetical when it's just a regular habit)</li>
+</ul>
+<p>→ <strong>When giving a direct order</strong> → use impératif (P13)</p>
+<ul>
+<li>"Close the door!" = Ferme la porte !</li>
+<li>Si-clause softens it: "Si tu pouvais fermer la porte..." — different register, different power dynamic</li>
+</ul>
+<hr>
+<h1>⚠️ COMMON PITFALLS AND FAILURE MODES</h1>
+<table><thead><tr><th>Pitfall</th><th>What Learners Do Wrong</th><th>Why It Fails</th><th>Correct Version</th></tr></thead><tbody><tr><td><strong>The Cardinal Sin</strong></td><td>Si je <strong>serais</strong> riche</td><td>Conditionnel NEVER follows si</td><td>Si j'<strong>étais</strong> riche</td></tr><tr><td><strong>Tense mismatch</strong></td><td>Si j'étais riche, je <strong>voyagerai</strong></td><td>Futur after imparfait = broken pair</td><td>Si j'étais riche, je <strong>voyagerais</strong></td></tr><tr><td><strong>Reality confusion</strong></td><td>Using si + imparfait for real plans</td><td>Makes real plans sound imaginary</td><td>Si il pleut demain (not pleuvait) for real weather</td></tr><tr><td><strong>Past confusion</strong></td><td>Thinking "si j'avais" = "if I had (yesterday)"</td><td>Imparfait after si = unreal present, NOT past</td><td>"Si j'avais" = "if I had (but I don't)"</td></tr><tr><td><strong>Ending confusion</strong></td><td>Confusing imparfait endings with conditionnel</td><td>Both use -ais/-ait/-aient — stems differ</td><td>Imp: je parl<strong>ais</strong> / Cond: je parler<strong>ais</strong></td></tr><tr><td><strong>Forgetting "si" + "il" contraction</strong></td><td>Writing "si il"</td><td>In writing: s'il (but si elle stays)</td><td><strong>S'il</strong> pleuvait... (not "si il")</td></tr><tr><td><strong>Over-using in conversation</strong></td><td>Every sentence becomes hypothetical</td><td>Sounds evasive or uncommitted</td><td>Mix with direct statements</td></tr><tr><td><strong>Forgetting gender agreement</strong></td><td>Si j'étais riche, je serais <strong>content</strong> (spoken by a woman)</td><td>Adjective must agree</td><td>Si j'étais riche, je serais <strong>contente</strong></td></tr></tbody></table>
+<hr>
+<h1>🔑 KEY TAKEAWAY</h1>
+<blockquote>
+<p><strong>Project 18 gave you the REAL conditional — things that might actually happen.</strong><br>
+<strong>Project 33 gives you the UNREAL conditional — things that are NOT true but you imagine them.</strong></p>
+<p>The ONLY difference between "Si il pleut, je resterai" and "Si il pleuvait, je resterais" is <strong>how real you believe the condition is.</strong></p>
+<p>This structure is not just for fantasy — it is the <strong>backbone of French politeness</strong> (Block I), <strong>advice-giving</strong> (Block C), <strong>philosophical discussion</strong> (Block F), and <strong>emotional expression</strong> (Block E).</p>
+<p>The iron rule: <strong>SI + IMPARFAIT → CONDITIONNEL PRÉSENT — never conditionnel after si.</strong></p>
+<p>You now control TWO of the three reality levels:</p>
+<ul>
+<li>🟢 P18: Real → Si + présent → futur</li>
+<li>🟡 P33: Unreal present → Si + imparfait → conditionnel présent</li>
+<li>🔴 P34: ??? → The deepest level — unreal PAST — regret, missed chances, "if only I had..."</li>
+</ul>
+</blockquote>
+<hr>
+<h1>🌉 BRIDGE TO PROJECT 34</h1>
+<blockquote>
+<p>You can now imagine <strong>"If I were rich..."</strong> — but the condition is about the present<br>
+What about the past?<br>
+→ "If I <strong>had studied</strong> medicine, I <strong>would have become</strong> a doctor"<br>
+→ "If she <strong>hadn't left</strong>, we <strong>would have been</strong> happy"<br>
+→ These are things that <strong>DID NOT happen</strong> — and you REGRET them or REFLECT on them</p>
+<p>Project 34 unlocks: <strong>Si + plus-que-parfait (P32) → conditionnel passé (P35 preview)</strong><br>
+→ The third and final reality level<br>
+→ The structure of <strong>regret, reproach, and lost possibilities</strong><br>
+→ The plus-que-parfait you mastered in P32 finally meets its ultimate purpose</p>
+</blockquote>
+<hr>
+<h1>✅ PROJECT 33 COMPLETE</h1>
+<blockquote>
+<p><strong>Are you ready for PROJECT 34: "If Only I Had Known — Part 3"?</strong><br>
+→ ~100 sentences covering si + plus-que-parfait → conditionnel passé<br>
+→ Scenario: Expressing regret about the past — "If I had known...", "If we hadn't moved..."<br>
+→ Builds directly on P32 (plus-que-parfait), P33 (unreal present si-clauses), and previews P35 (conditionnel passé)</p>
+</blockquote>
+</div>
+</div>
+
+<!-- ========== data-index="7" ========== -->
+
+        </div>
+
+        <div class="nav-bar">
+            <a href="project-32.html" class="nav-button prev">← Previous Chapter</a>
+            <div class="page-info">
+                <a href="index.html" class="nav-button home">📚 Table of Contents</a><br>
+                <span style="margin-top:8px;display:block">Chapter 33 of 50</span>
+            </div>
+            <a href="project-34.html" class="nav-button next">Next Chapter →</a>
+        </div>
+    </div>
+
+    
+    <div id="progress-track"><div id="progress-fill"></div></div>
+    <div id="progress-pct">0%</div>
+
+
+    <script>
+    const fill = document.getElementById('progress-fill');
+    const pct  = document.getElementById('progress-pct');
+    function updateProgress() {
+        const scrollTop = window.scrollY;
+        const docHeight = document.body.scrollHeight - window.innerHeight;
+        const scrolled  = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+        fill.style.height = scrolled + '%';
+        pct.textContent   = Math.round(scrolled) + '%';
+    }
+    window.addEventListener('scroll', updateProgress);
+    updateProgress();
+
+    document.addEventListener('keydown', function(e) {
+        if (['INPUT','TEXTAREA'].includes(document.activeElement.tagName)) return;
+        if (e.key === 'ArrowLeft') {
+            const b = document.querySelector('.nav-button.prev');
+            if (b && !b.classList.contains('disabled')) window.location.href = b.href;
+        }
+        if (e.key === 'ArrowRight') {
+            const b = document.querySelector('.nav-button.next');
+            if (b && !b.classList.contains('disabled')) window.location.href = b.href;
+        }
+    });
+    </script>
+
+</body>
+</html>

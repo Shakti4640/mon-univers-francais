@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="images/favicon.png">
+    <title>Project 23: "I'm Happy That, I'm Afraid That" — French Daily Sentences</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.75;
+            color: #1a202c;
+            background-color: #f7fafc;
+        }
+        .container {
+            max-width: 1800px;
+            margin: 0 auto;
+            background: white;
+            min-height: 100vh;
+            box-shadow: 0 0 30px rgba(0,0,0,0.08);
+            padding: 48px 52px;
+        }
+        
+        .content { max-width: 1700px; margin: 0 auto; color: #1a202c; }
+        .content h1 {
+            color: #1a202c; margin: 32px 0 20px;
+            padding-bottom: 12px;
+            border-bottom: 4px solid #3b82f6;
+            font-size: 2.1em;
+            font-weight: 700;
+        }
+        .content h2 {
+            color: #1a202c; margin: 28px 0 16px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #60a5fa;
+            font-size: 1.6em;
+            font-weight: 600;
+        }
+        .content h3 { color: #1a202c; margin: 22px 0 12px; font-size: 1.3em; font-weight: 600; }
+        .content h4 { color: #2d3748; margin: 18px 0 10px; font-size: 1.1em; font-weight: 600; }
+        .content p  { margin-bottom: 16px; line-height: 1.8; color: #1a202c; }
+        .content ul, .content ol { margin: 12px 0 18px 30px; color: #1a202c; }
+        .content li { margin-bottom: 8px; line-height: 1.75; color: #1a202c; }
+        .content hr { border: none; border-top: 2px solid #e2e8f0; margin: 26px 0; }
+        .content pre {
+            background: #f7fafc !important;
+            border: 1px solid #cbd5e0 !important;
+            border-left: 4px solid #3b82f6 !important;
+            padding: 18px !important; overflow-x: auto; margin: 18px 0; border-radius: 6px;
+            font-family: 'Consolas','Monaco','Courier New',monospace !important;
+            font-size: 0.9em !important;
+        }
+        .content pre:not([style*="color"]) { color: #1a202c !important; }
+        .content code {
+            font-family: 'Consolas','Monaco','Courier New',monospace !important;
+            font-size: 0.88em !important;
+        }
+        .content code:not(pre code) {
+            background: #dbeafe !important;
+            color: #1a202c !important;
+            padding: 2px 6px;
+            border-radius: 3px;
+        }
+        .content pre code { background: transparent !important; padding: 0; }
+        .content table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+        .content th {
+            background: linear-gradient(135deg, #3b82f6 0%, #60a5fa 100%);
+            color: white; padding: 12px 16px; text-align: left;
+            font-weight: 600;
+        }
+        .content td { padding: 11px 16px; border: 1px solid #e2e8f0; color: #1a202c; }
+        .content tr:nth-child(even) td { background: #eff6ff; }
+        .content blockquote {
+            border-left: 4px solid #3b82f6; background: #eff6ff;
+            padding: 14px 20px; margin: 18px 0; border-radius: 0 6px 6px 0;
+            color: #1a202c;
+        }
+        .content strong { color: #1a202c; font-weight: 600; }
+        .px-2 { padding: 0; }
+        .chat-message { background: transparent; padding: 0; margin: 0; }
+
+        /* Bottom nav bar only */
+        .nav-bar {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 24px 0;
+            margin-top: 50px;
+            border-top: 3px solid #60a5fa;
+        }
+        .nav-button {
+            display: inline-flex; align-items: center; gap: 8px;
+            padding: 12px 26px;
+            background: linear-gradient(135deg, #3b82f6 0%, #60a5fa 100%);
+            color: white !important; text-decoration: none;
+            border-radius: 8px; font-weight: 600; font-size: 0.95em;
+            transition: all 0.2s;
+            box-shadow: 0 2px 8px rgba(59,130,246,0.35);
+        }
+        .nav-button:hover { transform: translateY(-2px); box-shadow: 0 4px 14px rgba(59,130,246,0.5); }
+        .nav-button.disabled { background: #cbd5e1; box-shadow: none; pointer-events: none; }
+        .nav-button.home {
+            background: linear-gradient(135deg, #ef4444 0%, #f87171 100%);
+            box-shadow: 0 2px 8px rgba(239,68,68,0.35);
+        }
+        .nav-button.home:hover { box-shadow: 0 4px 14px rgba(239,68,68,0.5); }
+        .page-info { color: #718096; font-size: 0.9em; text-align: center; }
+
+        /* Progress bar */
+        #progress-track {
+            position: fixed; top: 20px; right: 20px;
+            width: 10px; height: 150px;
+            background: rgba(59,130,246,0.2);
+            border: 2px solid #3b82f6;
+            border-radius: 6px; overflow: hidden; z-index: 1000;
+        }
+        #progress-fill {
+            width: 100%;
+            background: linear-gradient(180deg, #3b82f6, #2563eb);
+            height: 0%;
+            transition: height 0.15s ease;
+        }
+        #progress-pct {
+            position: fixed; top: 0px; right: 16px;
+            color: #2563eb; font-size: 14px; font-weight: bold;
+            z-index: 1001;
+            text-shadow: 0 1px 2px rgba(255,255,255,0.9);
+            line-height: 20px;
+        }
+
+    </style>
+<link rel="stylesheet" href="assets/chapters.css?v=20260421203847"><script src="assets/chapters.js?v=20260421203847" defer></script>
+</head>
+<body>
+    <div class="container">
+        <div class="content">
+            <div class="chat-message" data-index="15">
+<div class="px-2"><h1>🟡 PROJECT 23: "I'm Happy That, I'm Afraid That"</h1>
+<h2><em>You're reacting emotionally to news — joy, fear, surprise, doubt — and the grammar shifts beneath you</em></h2>
+<hr>
+<h1>🎯 THE HYPOTHETICAL PROBLEM</h1>
+<p>→ You're in France — life is happening around you — people share news constantly<br>
+→ Your friend says: "J'ai trouvé un nouveau travail !" (I found a new job!)<br>
+→ You want to say: "I'm happy that you found a new job!"<br>
+→ You try:</p>
+<code>❌ "Je suis content que tu as trouvé un nouveau travail."</code>
+<p>→ A French person would say:</p>
+<code>✅ "Je suis content que tu AIES trouvé un nouveau travail."</code>
+<p>→ That word — <strong>aies</strong> — is not a typo, not a mistake<br>
+→ It's the <strong>SUBJONCTIF</strong> — a special verb mood that activates when emotions, doubts, wishes, or judgments enter the sentence</p>
+<p>→ Your colleague says: "Marie ne peut pas venir à la réunion."<br>
+→ You want to say: "It's a shame she can't come."<br>
+→ You try:</p>
+<code>❌ "C'est dommage qu'elle ne peut pas venir."</code>
+<p>→ Correct version:</p>
+<code>✅ "C'est dommage qu'elle ne PUISSE pas venir."</code>
+<p>→ <strong>Puisse</strong> — another subjonctif form — replacing the indicatif "peut"</p>
+<p><strong>The core realization:</strong><br>
+→ In Project 22, you stated <strong>opinions</strong> — those used <strong>indicatif</strong> (normal verb forms)<br>
+→ "Je pense que c'est <strong>vrai</strong>" → indicatif — you're stating what you THINK is real<br>
+→ But when you EXPRESS EMOTIONS about something — the grammar shifts<br>
+→ Emotions don't state reality — they react to it <strong>subjectively</strong><br>
+→ French marks this shift with a <strong>different verb mood</strong>: the <strong>SUBJONCTIF</strong><br>
+→ This project introduces the subjonctif through its <strong>most common trigger</strong>: emotional reactions</p>
+<hr>
+<h1>🔍 HOW TO APPROACH IT</h1>
+<p>→ Think of French as having <strong>two lenses</strong> for looking at reality:</p>
+<table><thead><tr><th>Lens</th><th>Name</th><th>When Used</th><th>Example</th></tr></thead><tbody><tr><td>🔍 Objective lens</td><td><strong>INDICATIF</strong></td><td>Facts, opinions stated as beliefs, descriptions</td><td>Je <strong>sais</strong> que tu <strong>es</strong> là.</td></tr><tr><td>💭 Subjective lens</td><td><strong>SUBJONCTIF</strong></td><td>Emotions, doubts, wishes, necessities, judgments</td><td>Je suis content que tu <strong>sois</strong> là.</td></tr></tbody></table>
+<p>→ The subjonctif is NOT a tense — it's a <strong>MOOD</strong><br>
+→ It doesn't tell you WHEN something happens — it tells you HOW the speaker FEELS about it<br>
+→ The structure is always:</p>
+<code>TRIGGER (emotion/doubt/wish/necessity) + QUE + SUBJONCTIF VERB</code>
+<p>→ Your job in Project 23: Learn the <strong>emotional triggers</strong> and the <strong>key subjonctif forms</strong><br>
+→ Full subjonctif mastery (all triggers, all forms, all exceptions) comes in Project 31<br>
+→ This project = <strong>your first solid exposure</strong> through the most natural context: reacting to life</p>
+<hr>
+<h1>🔧 HOW CAN WE SOLVE IT</h1>
+<h2>Step 1 — The Subjonctif Forms You Need NOW</h2>
+<p>→ The subjonctif has its own conjugation — but <strong>many forms look identical to the indicatif présent</strong><br>
+→ For regular verbs, only <strong>nous</strong> and <strong>vous</strong> forms look different<br>
+→ For irregular verbs, the forms are <strong>completely different</strong> — these are the ones to memorize</p>
+<h3>Regular Subjonctif Formation:</h3>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>Take the ILS/ELLES form of présent indicatif → remove -ent → add subjonctif endings:
+</span>
+PARLER: ils parlent → parl-
+que je parle          que nous parlions
+que tu parles         que vous parliez
+qu'il/elle parle      qu'ils/elles parlent
+
+FINIR: ils finissent → finiss-
+que je finisse        que nous finissions
+que tu finisses       que vous finissiez
+qu'il/elle finisse    qu'ils/elles finissent
+
+→ For je, tu, il/elle, ils/elles → forms often LOOK like présent indicatif
+→ For nous, vous → forms look like IMPARFAIT
+→ This is why context (the trigger word) tells you it's subjonctif</code></pre></div>
+<h3>The 10 CRITICAL Irregular Subjonctif Verbs:</h3>
+<table><thead><tr><th>Verb</th><th>Subjonctif Forms</th><th>English</th></tr></thead><tbody><tr><td><strong>ÊTRE</strong></td><td>que je <strong>sois</strong>, tu <strong>sois</strong>, il <strong>soit</strong>, nous <strong>soyons</strong>, vous <strong>soyez</strong>, ils <strong>soient</strong></td><td>be</td></tr><tr><td><strong>AVOIR</strong></td><td>que j'<strong>aie</strong>, tu <strong>aies</strong>, il <strong>ait</strong>, nous <strong>ayons</strong>, vous <strong>ayez</strong>, ils <strong>aient</strong></td><td>have</td></tr><tr><td><strong>ALLER</strong></td><td>que j'<strong>aille</strong>, tu <strong>ailles</strong>, il <strong>aille</strong>, nous <strong>allions</strong>, vous <strong>alliez</strong>, ils <strong>aillent</strong></td><td>go</td></tr><tr><td><strong>FAIRE</strong></td><td>que je <strong>fasse</strong>, tu <strong>fasses</strong>, il <strong>fasse</strong>, nous <strong>fassions</strong>, vous <strong>fassiez</strong>, ils <strong>fassent</strong></td><td>do/make</td></tr><tr><td><strong>POUVOIR</strong></td><td>que je <strong>puisse</strong>, tu <strong>puisses</strong>, il <strong>puisse</strong>, nous <strong>puissions</strong>, vous <strong>puissiez</strong>, ils <strong>puissent</strong></td><td>can/be able</td></tr><tr><td><strong>SAVOIR</strong></td><td>que je <strong>sache</strong>, tu <strong>saches</strong>, il <strong>sache</strong>, nous <strong>sachions</strong>, vous <strong>sachiez</strong>, ils <strong>sachent</strong></td><td>know</td></tr><tr><td><strong>VOULOIR</strong></td><td>que je <strong>veuille</strong>, tu <strong>veuilles</strong>, il <strong>veuille</strong>, nous <strong>voulions</strong>, vous <strong>vouliez</strong>, ils <strong>veuillent</strong></td><td>want</td></tr><tr><td><strong>PRENDRE</strong></td><td>que je <strong>prenne</strong>, tu <strong>prennes</strong>, il <strong>prenne</strong>, nous <strong>prenions</strong>, vous <strong>preniez</strong>, ils <strong>prennent</strong></td><td>take</td></tr><tr><td><strong>VENIR</strong></td><td>que je <strong>vienne</strong>, tu <strong>viennes</strong>, il <strong>vienne</strong>, nous <strong>venions</strong>, vous <strong>veniez</strong>, ils <strong>viennent</strong></td><td>come</td></tr><tr><td><strong>DEVOIR</strong></td><td>que je <strong>doive</strong>, tu <strong>doives</strong>, il <strong>doive</strong>, nous <strong>devions</strong>, vous <strong>deviez</strong>, ils <strong>doivent</strong></td><td>must/have to</td></tr></tbody></table>
+<p>→ <strong>ÊTRE and AVOIR</strong> are used the most — memorize these first<br>
+→ The rest will become natural through repeated exposure in sentences</p>
+<hr>
+<h2>Step 2 — The Trigger Categories for This Project</h2>
+<table><thead><tr><th>Category</th><th>Trigger Type</th><th>Examples</th></tr></thead><tbody><tr><td>🟢 Joy / Happiness</td><td>Positive emotion</td><td>content, heureux, ravi</td></tr><tr><td>🔵 Sadness / Regret</td><td>Negative emotion</td><td>triste, dommage, désolé</td></tr><tr><td>🟡 Fear / Worry</td><td>Anxiety emotion</td><td>peur, craindre, inquiet</td></tr><tr><td>🟠 Surprise / Shock</td><td>Unexpected reaction</td><td>surpris, étonné, bizarre</td></tr><tr><td>🔴 Doubt / Uncertainty</td><td>Mental doubt</td><td>douter, pas sûr, pas certain</td></tr><tr><td>🟣 Desire / Wish</td><td>Wanting something</td><td>vouloir, souhaiter, désirer</td></tr><tr><td>⚫ Necessity / Judgment</td><td>Impersonal judgment</td><td>il faut, il est important, il est nécessaire</td></tr></tbody></table>
+<hr>
+<h1>✅ WHAT COULD BE DONE — THE 100 SENTENCES</h1>
+<hr>
+<h2>🔹 BLOCK A — Joy &amp; Happiness Triggers</h2>
+<p><em>Scenario: Good news arrives — you react with positive emotions</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English</th><th>Trigger</th><th>Subjonctif Form</th></tr></thead><tbody><tr><td>1</td><td>Je suis content que tu <strong>sois</strong> là.</td><td>I'm happy you're here.</td><td>content que</td><td>sois (être)</td></tr><tr><td>2</td><td>Je suis content qu'il <strong>fasse</strong> beau aujourd'hui.</td><td>I'm happy the weather is nice today.</td><td>content que</td><td>fasse (faire)</td></tr><tr><td>3</td><td>Je suis contente que tu <strong>aies</strong> réussi ton examen.</td><td>I'm happy you passed your exam. (fem speaker)</td><td>contente que</td><td>aies (avoir)</td></tr><tr><td>4</td><td>Elle est heureuse que nous <strong>puissions</strong> venir.</td><td>She's happy we can come.</td><td>heureuse que</td><td>puissions (pouvoir)</td></tr><tr><td>5</td><td>Il est heureux que sa fille <strong>aille</strong> mieux.</td><td>He's happy his daughter is doing better.</td><td>heureux que</td><td>aille (aller)</td></tr><tr><td>6</td><td>Nous sommes ravis que vous <strong>soyez</strong> là.</td><td>We're delighted you're here.</td><td>ravis que</td><td>soyez (être)</td></tr><tr><td>7</td><td>Je suis ravi qu'elle <strong>ait</strong> trouvé un travail.</td><td>I'm delighted she found a job.</td><td>ravi que</td><td>ait (avoir)</td></tr><tr><td>8</td><td>Ça me fait plaisir que tu <strong>viennes</strong> ce soir.</td><td>It makes me happy that you're coming tonight.</td><td>ça me fait plaisir que</td><td>viennes (venir)</td></tr><tr><td>9</td><td>C'est bien que tu <strong>saches</strong> la vérité.</td><td>It's good that you know the truth.</td><td>c'est bien que</td><td>saches (savoir)</td></tr><tr><td>10</td><td>C'est super que vous <strong>ayez</strong> cette opportunité.</td><td>It's great that you have this opportunity.</td><td>c'est super que</td><td>ayez (avoir)</td></tr></tbody></table>
+<p><strong>🧠 Joy Triggers Unlocked:</strong></p>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>être content(e) que + subjonctif
+</span>être heureux/heureuse que + subjonctif
+être ravi(e) que + subjonctif
+ça me fait plaisir que + subjonctif
+c'est bien que + subjonctif
+c'est super que + subjonctif
+c'est génial que + subjonctif
+c'est chouette que + subjonctif (casual)</code></pre></div>
+<hr>
+<h2>🔹 BLOCK B — Sadness &amp; Regret Triggers</h2>
+<p><em>Scenario: Bad news arrives — you react with negative emotions</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English</th><th>Trigger</th><th>Subjonctif Form</th></tr></thead><tbody><tr><td>11</td><td>Je suis triste que tu <strong>partes</strong>.</td><td>I'm sad you're leaving.</td><td>triste que</td><td>partes (partir)</td></tr><tr><td>12</td><td>Je suis triste qu'il <strong>soit</strong> malade.</td><td>I'm sad he's sick.</td><td>triste que</td><td>soit (être)</td></tr><tr><td>13</td><td>C'est dommage que tu ne <strong>puisses</strong> pas venir.</td><td>It's a shame you can't come.</td><td>c'est dommage que</td><td>puisses (pouvoir)</td></tr><tr><td>14</td><td>C'est dommage qu'il <strong>fasse</strong> mauvais temps.</td><td>It's a shame the weather is bad.</td><td>c'est dommage que</td><td>fasse (faire)</td></tr><tr><td>15</td><td>C'est triste qu'elle <strong>doive</strong> partir si tôt.</td><td>It's sad she has to leave so early.</td><td>c'est triste que</td><td>doive (devoir)</td></tr><tr><td>16</td><td>Je regrette que vous ne <strong>soyez</strong> pas d'accord.</td><td>I regret you don't agree.</td><td>je regrette que</td><td>soyez (être)</td></tr><tr><td>17</td><td>Je regrette qu'on n'<strong>ait</strong> pas plus de temps.</td><td>I regret we don't have more time.</td><td>je regrette que</td><td>ait (avoir)</td></tr><tr><td>18</td><td>C'est malheureux qu'ils ne <strong>sachent</strong> pas la vérité.</td><td>It's unfortunate they don't know the truth.</td><td>c'est malheureux que</td><td>sachent (savoir)</td></tr><tr><td>19</td><td>Je suis désolé que ça ne <strong>marche</strong> pas.</td><td>I'm sorry it doesn't work.</td><td>désolé que</td><td>marche (marcher — regular)</td></tr><tr><td>20</td><td>Ça m'attriste qu'il n'<strong>aille</strong> pas mieux.</td><td>It saddens me that he's not doing better.</td><td>ça m'attriste que</td><td>aille (aller)</td></tr></tbody></table>
+<p><strong>🧠 Sadness/Regret Triggers Unlocked:</strong></p>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>être triste que + subjonctif
+</span>c'est dommage que + subjonctif
+c'est triste que + subjonctif
+regretter que + subjonctif
+être désolé(e) que + subjonctif
+c'est malheureux que + subjonctif
+ça m'attriste que + subjonctif
+c'est regrettable que + subjonctif</code></pre></div>
+<p><strong>🧠 NOTE — "C'est dommage que" is one of the MOST COMMON subjonctif triggers in daily French:</strong><br>
+→ You'll hear it and use it constantly<br>
+→ "C'est dommage qu'il ne soit pas là." = "It's a shame he's not here."<br>
+→ Memorize this as your <strong>go-to subjonctif entry point</strong></p>
+<hr>
+<h2>🔹 BLOCK C — Fear &amp; Worry Triggers</h2>
+<p><em>Scenario: You're anxious about something — expressing concern</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English</th><th>Trigger</th><th>Subjonctif Form</th></tr></thead><tbody><tr><td>21</td><td>J'ai peur qu'il <strong>soit</strong> trop tard.</td><td>I'm afraid it's too late.</td><td>avoir peur que</td><td>soit (être)</td></tr><tr><td>22</td><td>J'ai peur qu'elle ne <strong>vienne</strong> pas.</td><td>I'm afraid she won't come.</td><td>avoir peur que</td><td>vienne (venir)</td></tr><tr><td>23</td><td>J'ai peur qu'on <strong>ait</strong> un problème.</td><td>I'm afraid we have a problem.</td><td>avoir peur que</td><td>ait (avoir)</td></tr><tr><td>24</td><td>J'ai peur que le train <strong>parte</strong> sans nous.</td><td>I'm afraid the train will leave without us.</td><td>avoir peur que</td><td>parte (partir)</td></tr><tr><td>25</td><td>Je crains qu'il ne <strong>fasse</strong> froid demain.</td><td>I fear it might be cold tomorrow.</td><td>craindre que</td><td>fasse (faire)</td></tr><tr><td>26</td><td>Je crains que ça ne <strong>soit</strong> pas suffisant.</td><td>I fear it might not be enough.</td><td>craindre que</td><td>soit (être)</td></tr><tr><td>27</td><td>Elle a peur que ses enfants ne <strong>sachent</strong> pas nager.</td><td>She's afraid her kids can't swim.</td><td>avoir peur que</td><td>sachent (savoir)</td></tr><tr><td>28</td><td>Nous avons peur que le projet <strong>échoue</strong>.</td><td>We're afraid the project will fail.</td><td>avoir peur que</td><td>échoue (échouer — regular)</td></tr><tr><td>29</td><td>Il est inquiet que sa mère <strong>aille</strong> à l'hôpital.</td><td>He's worried his mother is going to the hospital.</td><td>inquiet que</td><td>aille (aller)</td></tr><tr><td>30</td><td>Je suis inquiète qu'il n'<strong>ait</strong> pas appelé.</td><td>I'm worried he hasn't called. (fem speaker)</td><td>inquiète que</td><td>ait (avoir)</td></tr></tbody></table>
+<p><strong>🧠 Fear/Worry Triggers Unlocked:</strong></p>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>avoir peur que + subjonctif
+</span>craindre que + subjonctif
+être inquiet/inquiète que + subjonctif
+redouter que + subjonctif</code></pre></div>
+<p><strong>⚠️ THE "NE EXPLÉTIF" — A French Peculiarity:</strong></p>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>After FEAR verbs (craindre, avoir peur), you may see an EXTRA "ne" 
+</span>that does NOT mean negation:
+
+→ Je crains qu'il NE fasse froid.
+   = I fear it WILL be cold (not "won't be cold")
+
+→ J'ai peur qu'elle NE vienne pas.
+   = I'm afraid she WON'T come (the "pas" makes it negative — the "ne" before was expletive)
+
+This "ne explétif" is:
+→ OPTIONAL in modern spoken French
+→ More common in WRITTEN / FORMAL French
+→ Does NOT change the meaning — it's a stylistic leftover
+→ For now: IGNORE it in speaking — RECOGNIZE it in reading
+→ Full explanation in Project 31</code></pre></div>
+<hr>
+<h2>🔹 BLOCK D — Surprise &amp; Shock Triggers</h2>
+<p><em>Scenario: Something unexpected happens — you react</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English</th><th>Trigger</th><th>Subjonctif Form</th></tr></thead><tbody><tr><td>31</td><td>Je suis surpris que tu <strong>sois</strong> ici.</td><td>I'm surprised you're here.</td><td>surpris que</td><td>sois (être)</td></tr><tr><td>32</td><td>Je suis surprise qu'il <strong>ait</strong> dit ça.</td><td>I'm surprised he said that. (fem speaker)</td><td>surprise que</td><td>ait (avoir)</td></tr><tr><td>33</td><td>C'est étonnant qu'elle ne <strong>sache</strong> pas ça.</td><td>It's surprising she doesn't know that.</td><td>c'est étonnant que</td><td>sache (savoir)</td></tr><tr><td>34</td><td>C'est bizarre qu'il ne <strong>soit</strong> pas encore là.</td><td>It's strange he's not here yet.</td><td>c'est bizarre que</td><td>soit (être)</td></tr><tr><td>35</td><td>C'est incroyable que tu <strong>aies</strong> réussi.</td><td>It's incredible you succeeded.</td><td>c'est incroyable que</td><td>aies (avoir)</td></tr><tr><td>36</td><td>Ça m'étonne qu'il <strong>fasse</strong> si froid en juin.</td><td>It surprises me it's so cold in June.</td><td>ça m'étonne que</td><td>fasse (faire)</td></tr><tr><td>37</td><td>Ça m'étonne qu'elle ne <strong>veuille</strong> pas venir.</td><td>It surprises me she doesn't want to come.</td><td>ça m'étonne que</td><td>veuille (vouloir)</td></tr><tr><td>38</td><td>C'est rare qu'il <strong>pleuve</strong> autant en été.</td><td>It's rare that it rains this much in summer.</td><td>c'est rare que</td><td>pleuve (pleuvoir)</td></tr><tr><td>39</td><td>C'est curieux qu'on n'<strong>ait</strong> pas eu de réponse.</td><td>It's curious we haven't gotten an answer.</td><td>c'est curieux que</td><td>ait (avoir)</td></tr><tr><td>40</td><td>Je suis étonné qu'ils ne <strong>soient</strong> pas venus.</td><td>I'm surprised they didn't come.</td><td>étonné que</td><td>soient (être)</td></tr></tbody></table>
+<p><strong>🧠 Surprise/Shock Triggers Unlocked:</strong></p>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>être surpris(e) que + subjonctif
+</span>être étonné(e) que + subjonctif
+c'est étonnant que + subjonctif
+c'est bizarre que + subjonctif
+c'est curieux que + subjonctif
+c'est incroyable que + subjonctif
+c'est rare que + subjonctif
+ça m'étonne que + subjonctif
+c'est fou que + subjonctif (casual)</code></pre></div>
+<hr>
+<h2>🔹 BLOCK E — Doubt &amp; Uncertainty Triggers</h2>
+<p><em>Scenario: You're not sure about something — expressing uncertainty</em><br>
+<em>Connection to Project 22: Negative opinion frames (je ne pense pas que) now formalized with subjonctif</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English</th><th>Trigger</th><th>Subjonctif Form</th></tr></thead><tbody><tr><td>41</td><td>Je doute qu'il <strong>vienne</strong> demain.</td><td>I doubt he'll come tomorrow.</td><td>douter que</td><td>vienne (venir)</td></tr><tr><td>42</td><td>Je doute que ce <strong>soit</strong> vrai.</td><td>I doubt it's true.</td><td>douter que</td><td>soit (être)</td></tr><tr><td>43</td><td>Je doute qu'on <strong>puisse</strong> finir à temps.</td><td>I doubt we can finish on time.</td><td>douter que</td><td>puisse (pouvoir)</td></tr><tr><td>44</td><td>Je ne suis pas sûr qu'il <strong>ait</strong> compris.</td><td>I'm not sure he understood.</td><td>ne pas être sûr que</td><td>ait (avoir)</td></tr><tr><td>45</td><td>Je ne suis pas sûre que ce <strong>soit</strong> la bonne réponse.</td><td>I'm not sure it's the right answer. (fem)</td><td>ne pas être sûre que</td><td>soit (être)</td></tr><tr><td>46</td><td>Je ne suis pas certain qu'elle <strong>puisse</strong> venir.</td><td>I'm not certain she can come.</td><td>ne pas être certain que</td><td>puisse (pouvoir)</td></tr><tr><td>47</td><td>Je ne pense pas que ce <strong>soit</strong> une bonne idée.</td><td>I don't think it's a good idea.</td><td>ne pas penser que</td><td>soit (être)</td></tr><tr><td>48</td><td>Je ne crois pas qu'il <strong>ait</strong> raison.</td><td>I don't think he's right.</td><td>ne pas croire que</td><td>ait (avoir)</td></tr><tr><td>49</td><td>Il n'est pas sûr que le magasin <strong>soit</strong> ouvert.</td><td>It's not certain the store is open.</td><td>il n'est pas sûr que</td><td>soit (être)</td></tr><tr><td>50</td><td>Il est peu probable qu'ils <strong>viennent</strong> ce soir.</td><td>It's unlikely they'll come tonight.</td><td>il est peu probable que</td><td>viennent (venir)</td></tr></tbody></table>
+<p><strong>🧠 Doubt/Uncertainty Triggers Unlocked:</strong></p>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>DOUBT VERBS:
+</span>→ douter que + subjonctif
+→ ne pas être sûr(e) que + subjonctif
+→ ne pas être certain(e) que + subjonctif
+
+NEGATIVE OPINION (from Project 22 — now formalized):
+→ ne pas penser que + subjonctif
+→ ne pas croire que + subjonctif
+→ ne pas trouver que + subjonctif
+
+IMPERSONAL DOUBT:
+→ il n'est pas sûr que + subjonctif
+→ il n'est pas certain que + subjonctif
+→ il est peu probable que + subjonctif
+→ il est possible que + subjonctif
+→ il se peut que + subjonctif</code></pre></div>
+<p><strong>🧠 CRITICAL CONTRAST — AFFIRMATIVE vs. NEGATIVE:</strong></p>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>AFFIRMATIVE (certainty → INDICATIF):
+</span>✅ Je suis sûr que c'EST vrai.          (indicatif)
+✅ Je pense que tu AS raison.           (indicatif)
+✅ Je crois qu'il VIENDRA.              (indicatif)
+
+NEGATIVE (doubt → SUBJONCTIF):
+✅ Je ne suis pas sûr que ce SOIT vrai.  (subjonctif)
+✅ Je ne pense pas que tu AIES raison.   (subjonctif)
+✅ Je ne crois pas qu'il VIENNE.         (subjonctif)
+
+WHY? → Affirming = you present it as REAL → indicatif
+     → Denying = you introduce DOUBT → subjonctif
+     → The NEGATION flips the mood</code></pre></div>
+<hr>
+<h2>🔹 BLOCK F — Desire &amp; Wish Triggers</h2>
+<p><em>Scenario: You want something to happen — expressing wishes about others' actions</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English</th><th>Trigger</th><th>Subjonctif Form</th></tr></thead><tbody><tr><td>51</td><td>Je veux que tu <strong>sois</strong> honnête avec moi.</td><td>I want you to be honest with me.</td><td>vouloir que</td><td>sois (être)</td></tr><tr><td>52</td><td>Je veux qu'il <strong>fasse</strong> ses devoirs.</td><td>I want him to do his homework.</td><td>vouloir que</td><td>fasse (faire)</td></tr><tr><td>53</td><td>Je voudrais que tu <strong>viennes</strong> avec moi.</td><td>I'd like you to come with me.</td><td>voudrais que (conditionnel + subj)</td><td>viennes (venir)</td></tr><tr><td>54</td><td>Je voudrais qu'on <strong>puisse</strong> se voir plus souvent.</td><td>I'd like us to be able to see each other more often.</td><td>voudrais que</td><td>puisse (pouvoir)</td></tr><tr><td>55</td><td>J'aimerais que tu <strong>comprennes</strong> ma situation.</td><td>I'd like you to understand my situation.</td><td>aimerais que</td><td>comprennes (comprendre)</td></tr><tr><td>56</td><td>J'aimerais qu'il <strong>ait</strong> plus de patience.</td><td>I'd like him to have more patience.</td><td>aimerais que</td><td>ait (avoir)</td></tr><tr><td>57</td><td>Elle souhaite que tout <strong>aille</strong> bien.</td><td>She wishes everything goes well.</td><td>souhaiter que</td><td>aille (aller)</td></tr><tr><td>58</td><td>Il souhaite que ses enfants <strong>soient</strong> heureux.</td><td>He wishes his children are happy.</td><td>souhaiter que</td><td>soient (être)</td></tr><tr><td>59</td><td>Je désire que ce projet <strong>aboutisse</strong>.</td><td>I desire this project to succeed.</td><td>désirer que</td><td>aboutisse (aboutir)</td></tr><tr><td>60</td><td>Nous souhaitons que vous <strong>passiez</strong> un bon séjour.</td><td>We wish you a pleasant stay.</td><td>souhaiter que</td><td>passiez (passer)</td></tr></tbody></table>
+<p><strong>🧠 Desire/Wish Triggers Unlocked:</strong></p>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>vouloir que + subjonctif        (I want that...)
+</span>voudrais que + subjonctif       (I'd like that... — softer)
+aimer que + subjonctif          (I like it when...)
+aimerais que + subjonctif       (I'd like that... — wish)
+souhaiter que + subjonctif      (I wish that...)
+désirer que + subjonctif        (I desire that... — formal)
+préférer que + subjonctif       (I prefer that...)</code></pre></div>
+<p><strong>🧠 CRITICAL INSIGHT — WHY DESIRE TRIGGERS SUBJONCTIF:</strong></p>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>When you WANT something → it hasn't happened yet → it's NOT reality
+</span>→ You're expressing a WISH about someone else's action
+→ The subjonctif marks this as "desired but not certain"
+
+COMPARE:
+→ Je sais que tu ES honnête.     (fact → indicatif)
+→ Je veux que tu SOIS honnête.   (wish → subjonctif)
+
+The same information — "tu / honnête" — but the LENS changes:
+→ SAIS = I know it's real → indicatif
+→ VEUX = I want it to be real → subjonctif</code></pre></div>
+<p><strong>🧠 IMPORTANT — "Vouloir" with Same Subject:</strong></p>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>When the subject is THE SAME for both verbs → use INFINITIF, NOT subjonctif:
+</span>
+TWO DIFFERENT subjects:
+✅ Je veux que TU viennes.     (I want YOU to come → subjonctif)
+
+SAME subject:
+✅ Je veux venir.              (I want to come → infinitif)
+❌ Je veux que je vienne.      (WRONG — never subjonctif with same subject)
+
+This rule applies to ALL subjonctif triggers:
+→ Je suis content de venir.        (same subject → de + infinitif)
+→ Je suis content que tu viennes.   (different subject → que + subjonctif)</code></pre></div>
+<hr>
+<h2>🔹 BLOCK G — Necessity &amp; Impersonal Judgment Triggers</h2>
+<p><em>Scenario: Expressing what must happen, what's important, what's normal/abnormal</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English</th><th>Trigger</th><th>Subjonctif Form</th></tr></thead><tbody><tr><td>61</td><td>Il faut que tu <strong>sois</strong> à l'heure.</td><td>You must be on time.</td><td>il faut que</td><td>sois (être)</td></tr><tr><td>62</td><td>Il faut que je <strong>fasse</strong> les courses.</td><td>I have to do the shopping.</td><td>il faut que</td><td>fasse (faire)</td></tr><tr><td>63</td><td>Il faut qu'on <strong>parte</strong> maintenant.</td><td>We have to leave now.</td><td>il faut que</td><td>parte (partir)</td></tr><tr><td>64</td><td>Il faut que vous <strong>sachiez</strong> la vérité.</td><td>You must know the truth.</td><td>il faut que</td><td>sachiez (savoir)</td></tr><tr><td>65</td><td>Il faut qu'elle <strong>aille</strong> chez le médecin.</td><td>She needs to go to the doctor.</td><td>il faut que</td><td>aille (aller)</td></tr><tr><td>66</td><td>Il est important que tu <strong>comprennes</strong> ça.</td><td>It's important that you understand this.</td><td>il est important que</td><td>comprennes (comprendre)</td></tr><tr><td>67</td><td>Il est essentiel que nous <strong>soyons</strong> prêts.</td><td>It's essential that we're ready.</td><td>il est essentiel que</td><td>soyons (être)</td></tr><tr><td>68</td><td>Il est nécessaire qu'il <strong>prenne</strong> une décision.</td><td>It's necessary that he makes a decision.</td><td>il est nécessaire que</td><td>prenne (prendre)</td></tr><tr><td>69</td><td>Il est normal que tu <strong>aies</strong> peur.</td><td>It's normal that you're afraid.</td><td>il est normal que</td><td>aies (avoir)</td></tr><tr><td>70</td><td>Il est temps que tu <strong>fasses</strong> un choix.</td><td>It's time you made a choice.</td><td>il est temps que</td><td>fasses (faire)</td></tr></tbody></table>
+<p><strong>🧠 Necessity/Judgment Triggers Unlocked:</strong></p>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>NECESSITY:
+</span>→ il faut que + subjonctif         (the MOST common trigger in French)
+→ il est nécessaire que + subjonctif
+→ il est essentiel que + subjonctif
+→ il est indispensable que + subjonctif
+
+JUDGMENT / EVALUATION:
+→ il est important que + subjonctif
+→ il est normal que + subjonctif
+→ il est juste que + subjonctif
+→ il est injuste que + subjonctif
+→ il est temps que + subjonctif
+→ il est préférable que + subjonctif
+→ il vaut mieux que + subjonctif   (it's better that)</code></pre></div>
+<p><strong>🧠 "IL FAUT QUE" — The King of Subjonctif Triggers:</strong></p>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>"Il faut que" is the SINGLE MOST USED subjonctif trigger in French
+</span>→ You will hear it dozens of times per day
+→ It replaces the simpler "il faut + infinitif" when you specify WHO must act
+
+COMPARE:
+→ Il faut partir.              (One must leave — no specific person → infinitif)
+→ Il faut que JE parte.        (I must leave — specific person → subjonctif)
+→ Il faut que TU fasses ça.    (You must do that — specific person → subjonctif)
+
+Connection to Project 26: Obligation structures — "il faut que" is the subjonctif version</code></pre></div>
+<hr>
+<h2>🔹 BLOCK H — Mixed Emotions in Context: Positive &amp; Negative Combined</h2>
+<p><em>Scenario: Complex emotional reactions where multiple feelings overlap</em></p>
+<table><thead><tr><th>#</th><th>French Sentence</th><th>English</th><th>Trigger</th><th>Subjonctif Form</th></tr></thead><tbody><tr><td>71</td><td>Je suis content que tu <strong>sois</strong> là, mais triste que Marc ne <strong>soit</strong> pas venu.</td><td>I'm happy you're here, but sad Marc didn't come.</td><td>content que + triste que</td><td>sois, soit (être)</td></tr><tr><td>72</td><td>C'est bien que tu <strong>aies</strong> réussi, mais dommage que tu <strong>doives</strong> partir.</td><td>It's good you succeeded, but a shame you have to leave.</td><td>c'est bien que + dommage que</td><td>aies (avoir), doives (devoir)</td></tr><tr><td>73</td><td>J'ai peur qu'il <strong>pleuve</strong>, mais j'espère que ça <strong>ira</strong>.</td><td>I'm afraid it'll rain, but I hope it'll be fine.</td><td>peur que (subj) + espérer que (<strong>indic</strong>!)</td><td>pleuve (subj) + ira (indic)</td></tr><tr><td>74</td><td>Il est normal que tu <strong>sois</strong> fatigué après un tel voyage.</td><td>It's normal you're tired after such a trip.</td><td>il est normal que</td><td>sois (être)</td></tr><tr><td>75</td><td>C'est injuste qu'il <strong>gagne</strong> plus que toi.</td><td>It's unfair he earns more than you.</td><td>c'est injuste que</td><td>gagne (gagner — regular)</td></tr><tr><td>76</td><td>Il vaut mieux que tu <strong>saches</strong> tout maintenant.</td><td>It's better that you know everything now.</td><td>il vaut mieux que</td><td>saches (savoir)</td></tr><tr><td>77</td><td>Je suis furieux que personne ne m'<strong>ait</strong> prévenu.</td><td>I'm furious nobody warned me.</td><td>furieux que</td><td>ait (avoir)</td></tr><tr><td>78</td><td>C'est inadmissible qu'on nous <strong>traite</strong> comme ça.</td><td>It's unacceptable they treat us like that.</td><td>c'est inadmissible que</td><td>traite (traiter — regular)</td></tr><tr><td>79</td><td>Ça m'agace qu'il ne <strong>fasse</strong> jamais la vaisselle.</td><td>It annoys me he never does the dishes.</td><td>ça m'agace que</td><td>fasse (faire)</td></tr><tr><td>80</td><td>Je suis fier que mon fils <strong>ait</strong> obtenu son diplôme.</td><td>I'm proud my son got his degree.</td><td>fier que</td><td>ait (avoir)</td></tr></tbody></table>
+<p><strong>⚠️ CRITICAL EXCEPTION — SENTENCE 73 — "ESPÉRER QUE":</strong></p>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>"ESPÉRER QUE" (to hope that) does NOT take subjonctif
+</span>→ It takes INDICATIF
+
+❌ J'espère qu'il VIENNE.        (WRONG)
+✅ J'espère qu'il VIENDRA.       (CORRECT — futur indicatif)
+✅ J'espère que ça IRA.          (CORRECT — futur indicatif)
+✅ J'espère que tu VAS bien.     (CORRECT — présent indicatif)
+
+WHY? → "Espérer" presents hope as a POSITIVE EXPECTATION — almost a belief
+→ French treats it as closer to "croire" than to "vouloir"
+→ This is THE MOST COMMON exception — memorize it now
+→ Every other "wish/hope" verb (souhaiter, vouloir, aimer) → subjonctif
+→ ESPÉRER alone → indicatif</code></pre></div>
+<p><strong>🧠 More Emotion Triggers from this block:</strong></p>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>être furieux/furieuse que + subjonctif
+</span>être fier/fière que + subjonctif
+c'est inadmissible que + subjonctif
+c'est injuste que + subjonctif
+ça m'agace que + subjonctif
+ça m'énerve que + subjonctif
+ça me gêne que + subjonctif</code></pre></div>
+<hr>
+<h2>🔹 BLOCK I — Same Subject Rule: Subjonctif vs. Infinitif</h2>
+<p><em>Scenario: Comparing when you use subjonctif and when you use infinitif for the same trigger</em></p>
+<table><thead><tr><th>#</th><th>Different Subjects (→ subjonctif)</th><th>Same Subject (→ infinitif)</th><th>English (both)</th></tr></thead><tbody><tr><td>81</td><td>Je suis content que tu <strong>sois</strong> là.</td><td>Je suis content <strong>d'être</strong> là.</td><td>Happy you're here / Happy to be here</td></tr><tr><td>82</td><td>Elle a peur que son fils <strong>soit</strong> malade.</td><td>Elle a peur <strong>d'être</strong> malade.</td><td>Afraid her son is sick / Afraid of being sick</td></tr><tr><td>83</td><td>Il est triste que tu <strong>partes</strong>.</td><td>Il est triste <strong>de partir</strong>.</td><td>Sad you're leaving / Sad to leave</td></tr><tr><td>84</td><td>Je veux que tu <strong>viennes</strong>.</td><td>Je veux <strong>venir</strong>.</td><td>I want you to come / I want to come</td></tr><tr><td>85</td><td>J'aimerais qu'il <strong>fasse</strong> beau.</td><td>J'aimerais <strong>faire</strong> du sport.</td><td>I'd like it to be nice / I'd like to exercise</td></tr><tr><td>86</td><td>C'est important que tu <strong>comprennes</strong>.</td><td>C'est important <strong>de comprendre</strong>.</td><td>Important that you understand / Important to understand</td></tr><tr><td>87</td><td>Je regrette que tu ne <strong>puisses</strong> pas venir.</td><td>Je regrette <strong>de ne pas pouvoir</strong> venir.</td><td>I regret you can't come / I regret not being able to come</td></tr><tr><td>88</td><td>J'ai peur que tu <strong>tombes</strong>.</td><td>J'ai peur <strong>de tomber</strong>.</td><td>Afraid you'll fall / Afraid of falling</td></tr><tr><td>89</td><td>Il préfère que nous <strong>partions</strong> tôt.</td><td>Il préfère <strong>partir</strong> tôt.</td><td>He prefers we leave early / He prefers to leave early</td></tr><tr><td>90</td><td>Je suis surpris qu'elle <strong>soit</strong> là.</td><td>Je suis surpris <strong>d'être</strong> là.</td><td>Surprised she's here / Surprised to be here</td></tr></tbody></table>
+<p><strong>🧠 THE SAME-SUBJECT RULE — FORMALIZED:</strong></p>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>TWO DIFFERENT SUBJECTS → QUE + SUBJONCTIF:
+</span>Je veux    que TU viennes.
+   ↑ je         ↑ tu (different) → subjonctif
+
+SAME SUBJECT → DE + INFINITIF (or just INFINITIF):
+Je veux    venir.
+   ↑ je   ↑ je (same) → infinitif
+
+EMOTIONAL ADJECTIVES use "de" before infinitif:
+→ content DE + infinitif
+→ triste DE + infinitif  
+→ surpris DE + infinitif
+→ fier DE + infinitif
+→ heureux DE + infinitif
+
+VERBS use direct infinitif:
+→ vouloir + infinitif (no "de")
+→ souhaiter + infinitif (no "de")
+→ préférer + infinitif (no "de")
+
+FEAR uses "de" before infinitif:
+→ avoir peur DE + infinitif
+→ craindre DE + infinitif</code></pre></div>
+<p>→ This rule is <strong>non-negotiable</strong> — you CANNOT use subjonctif when both subjects are the same<br>
+→ ❌ <del>Je veux que je vienne</del> → ✅ Je veux venir</p>
+<hr>
+<h2>🔹 BLOCK J — Full Conversational Dialogues with Subjonctif</h2>
+<p><em>Scenario: Real conversations where emotional reactions flow naturally</em></p>
+<table><thead><tr><th>#</th><th>Speaker</th><th>French</th><th>English</th><th>Analysis</th></tr></thead><tbody><tr><td>91</td><td>A:</td><td>Tu sais quoi ? Marie a eu son bébé !</td><td>You know what? Marie had her baby!</td><td>News — no subjonctif</td></tr><tr><td>92</td><td>B:</td><td>C'est vrai ? Je suis tellement contente qu'elle <strong>aille</strong> bien !</td><td>Really? I'm so happy she's doing well!</td><td>contente que → subjonctif</td></tr><tr><td>93</td><td>A:</td><td>Oui, mais c'est dommage que Pierre ne <strong>soit</strong> pas là.</td><td>Yes, but it's a shame Pierre isn't here.</td><td>dommage que → subjonctif</td></tr><tr><td>94</td><td>B:</td><td>J'ai peur qu'il ne <strong>puisse</strong> pas venir avant la semaine prochaine.</td><td>I'm afraid he can't come before next week.</td><td>peur que → subjonctif</td></tr><tr><td>95</td><td>A:</td><td>Il faut qu'il <strong>prenne</strong> l'avion le plus tôt possible.</td><td>He needs to take a plane as soon as possible.</td><td>il faut que → subjonctif</td></tr><tr><td>96</td><td>B:</td><td>Tu as raison. J'espère qu'il <strong>trouvera</strong> un vol.</td><td>You're right. I hope he'll find a flight.</td><td>espérer que → <strong>INDICATIF</strong></td></tr><tr><td>97</td><td>A:</td><td>Je doute qu'il <strong>ait</strong> assez d'argent pour le billet.</td><td>I doubt he has enough money for the ticket.</td><td>douter que → subjonctif</td></tr><tr><td>98</td><td>B:</td><td>C'est triste qu'il <strong>doive</strong> choisir entre le travail et sa famille.</td><td>It's sad he has to choose between work and family.</td><td>triste que → subjonctif</td></tr><tr><td>99</td><td>A:</td><td>Oui. Je voudrais que tout <strong>soit</strong> plus simple.</td><td>Yes. I'd like everything to be simpler.</td><td>voudrais que → subjonctif</td></tr><tr><td>100</td><td>B:</td><td>Moi aussi. Mais je suis sûre que ça <strong>ira</strong> bien.</td><td>Me too. But I'm sure it'll be fine.</td><td>sûre que → <strong>INDICATIF</strong> (certainty)</td></tr></tbody></table>
+<p><strong>🧠 NOTICE THE FLOW — Sentences 96 and 100 use INDICATIF amid subjonctif sentences:</strong><br>
+→ 96: "J'espère qu'il <strong>trouvera</strong>" — espérer = indicatif (the famous exception)<br>
+→ 100: "Je suis sûre que ça <strong>ira</strong>" — être sûr(e) (affirmative) = indicatif (certainty)<br>
+→ In real conversation, indicatif and subjonctif <strong>alternate</strong> based on the trigger<br>
+→ Your brain must learn to <strong>switch automatically</strong> based on the trigger word</p>
+<hr>
+<h1>✅ WHAT SHOULD DO</h1>
+<p>→ <strong>Memorize the 10 irregular subjonctif verbs</strong> — especially être (sois/soit/soient) and avoir (aie/aies/ait/aient)<br>
+→ <strong>Start with "C'est dommage que" and "Il faut que"</strong> — these are the most natural entry points<br>
+→ <strong>Always check: same subject or different?</strong> → Same = infinitif / Different = subjonctif<br>
+→ <strong>Practice converting indicatif to subjonctif</strong> — "tu es" → "que tu sois" / "il a" → "qu'il ait"<br>
+→ <strong>Listen for subjonctif in real French</strong> — you'll start hearing "soit", "ait", "fasse", "puisse" everywhere<br>
+→ <strong>Memorize the espérer exception</strong> — it's the trap that catches everyone</p>
+<hr>
+<h1>❌ WHAT SHOULD NOT DO</h1>
+<p>→ ❌ Do NOT use subjonctif after certainty verbs in affirmative</p>
+<table><thead><tr><th>Wrong</th><th>Correct</th><th>Why</th></tr></thead><tbody><tr><td><del>Je suis sûr que ce <strong>soit</strong> vrai</del></td><td>Je suis sûr que c'<strong>est</strong> vrai</td><td>Affirmative certainty → indicatif</td></tr><tr><td><del>Je sais que tu <strong>sois</strong> là</del></td><td>Je sais que tu <strong>es</strong> là</td><td>Savoir → always indicatif</td></tr></tbody></table>
+<p>→ ❌ Do NOT use subjonctif after "espérer"</p>
+<table><thead><tr><th>Wrong</th><th>Correct</th></tr></thead><tbody><tr><td><del>J'espère qu'il <strong>vienne</strong></del></td><td>J'espère qu'il <strong>viendra</strong></td></tr><tr><td><del>J'espère que tu <strong>sois</strong> bien</del></td><td>J'espère que tu <strong>vas</strong> bien</td></tr></tbody></table>
+<p>→ ❌ Do NOT use subjonctif when both subjects are the same</p>
+<table><thead><tr><th>Wrong</th><th>Correct</th></tr></thead><tbody><tr><td><del>Je veux que je <strong>parte</strong></del></td><td>Je veux <strong>partir</strong></td></tr><tr><td><del>Je suis content que je <strong>sois</strong> là</del></td><td>Je suis content <strong>d'être</strong> là</td></tr></tbody></table>
+<p>→ ❌ Do NOT use indicatif after emotional triggers</p>
+<table><thead><tr><th>Wrong</th><th>Correct</th></tr></thead><tbody><tr><td><del>Je suis content que tu <strong>es</strong> là</del></td><td>Je suis content que tu <strong>sois</strong> là</td></tr><tr><td><del>C'est dommage qu'il <strong>fait</strong> mauvais</del></td><td>C'est dommage qu'il <strong>fasse</strong> mauvais</td></tr><tr><td><del>J'ai peur qu'il <strong>est</strong> trop tard</del></td><td>J'ai peur qu'il <strong>soit</strong> trop tard</td></tr></tbody></table>
+<p>→ ❌ Do NOT forget "que" — it's the bridge between trigger and subjonctif</p>
+<table><thead><tr><th>Wrong</th><th>Correct</th></tr></thead><tbody><tr><td><del>Je veux tu viennes</del></td><td>Je veux <strong>que</strong> tu viennes</td></tr><tr><td><del>C'est dommage il soit malade</del></td><td>C'est dommage <strong>qu'</strong> il soit malade</td></tr></tbody></table>
+<hr>
+<h1>🔀 WHEN TO USE WHAT — THE COMPLETE TRIGGER MAP</h1>
+<table><thead><tr><th>Trigger Category</th><th>Mood After QUE</th><th>Example</th></tr></thead><tbody><tr><td><strong>Joy / Happiness</strong></td><td>SUBJONCTIF</td><td>Je suis content que tu <strong>sois</strong> là</td></tr><tr><td><strong>Sadness / Regret</strong></td><td>SUBJONCTIF</td><td>C'est dommage qu'il <strong>parte</strong></td></tr><tr><td><strong>Fear / Worry</strong></td><td>SUBJONCTIF</td><td>J'ai peur qu'il <strong>soit</strong> tard</td></tr><tr><td><strong>Surprise / Shock</strong></td><td>SUBJONCTIF</td><td>C'est bizarre qu'elle ne <strong>vienne</strong> pas</td></tr><tr><td><strong>Doubt / Uncertainty</strong></td><td>SUBJONCTIF</td><td>Je doute qu'il <strong>ait</strong> raison</td></tr><tr><td><strong>Desire / Wish</strong></td><td>SUBJONCTIF</td><td>Je veux que tu <strong>fasses</strong> ça</td></tr><tr><td><strong>Necessity / Judgment</strong></td><td>SUBJONCTIF</td><td>Il faut que tu <strong>sois</strong> prêt</td></tr><tr><td><strong>Negative opinion</strong></td><td>SUBJONCTIF</td><td>Je ne pense pas que ce <strong>soit</strong> vrai</td></tr><tr><td><strong>Affirmative opinion</strong></td><td>INDICATIF</td><td>Je pense que c'<strong>est</strong> vrai</td></tr><tr><td><strong>Certainty</strong> (affirmative)</td><td>INDICATIF</td><td>Je suis sûr que c'<strong>est</strong> vrai</td></tr><tr><td><strong>Hope</strong> (espérer)</td><td>INDICATIF</td><td>J'espère qu'il <strong>viendra</strong></td></tr><tr><td><strong>Knowledge</strong> (savoir)</td><td>INDICATIF</td><td>Je sais que tu <strong>es</strong> là</td></tr><tr><td><strong>Declaration</strong> (dire, affirmer)</td><td>INDICATIF</td><td>Il dit qu'il <strong>est</strong> content</td></tr><tr><td><strong>Same subject</strong></td><td>INFINITIF</td><td>Je veux <strong>venir</strong> / Je suis content <strong>d'être</strong> là</td></tr></tbody></table>
+<hr>
+<h1>🚫 WHEN NOT TO USE SUBJONCTIF</h1>
+<table><thead><tr><th>Situation</th><th>Use Instead</th><th>Why</th></tr></thead><tbody><tr><td>After <strong>espérer que</strong></td><td>INDICATIF</td><td>Hope = positive expectation, not doubt</td></tr><tr><td>After <strong>savoir que</strong></td><td>INDICATIF</td><td>Knowledge = certainty</td></tr><tr><td>After affirmative <strong>penser / croire / être sûr</strong></td><td>INDICATIF</td><td>Affirmative belief = presenting as real</td></tr><tr><td>After <strong>dire / affirmer / déclarer</strong> (stating)</td><td>INDICATIF</td><td>Stating facts, not emotions</td></tr><tr><td>After <strong>parce que / car / puisque</strong></td><td>INDICATIF</td><td>Cause/reason connectors = factual</td></tr><tr><td>After <strong>quand / lorsque / pendant que</strong></td><td>INDICATIF</td><td>Time connectors = factual</td></tr><tr><td>When <strong>both subjects are the same</strong></td><td>INFINITIF</td><td>Subjonctif requires two different subjects</td></tr><tr><td>After <strong>si</strong> (if)</td><td>INDICATIF (présent/imparfait/PQP)</td><td>Si NEVER takes subjonctif — ever (Project 18)</td></tr><tr><td>After <strong>après que</strong></td><td>INDICATIF (technically)</td><td>Completed action = real → indicatif</td></tr></tbody></table>
+<hr>
+<h1>⚠️ COMMON PITFALLS AND FAILURE MODES</h1>
+<table><thead><tr><th>Pitfall</th><th>What Learners Do</th><th>Why It's Wrong</th><th>Fix</th></tr></thead><tbody><tr><td><strong>Espérer trap</strong></td><td>J'espère qu'il vienne</td><td>Espérer takes indicatif</td><td>J'espère qu'il <strong>viendra</strong></td></tr><tr><td><strong>Same subject trap</strong></td><td>Je veux que je parte</td><td>Can't use subjonctif with same subject</td><td>Je veux <strong>partir</strong></td></tr><tr><td><strong>Affirmative certainty trap</strong></td><td>Je suis sûr que ce soit</td><td>Affirmative sûr = indicatif</td><td>Je suis sûr que c'<strong>est</strong></td></tr><tr><td><strong>Indicatif after emotion</strong></td><td>Je suis content que tu es là</td><td>Emotion triggers subjonctif</td><td>content que tu <strong>sois</strong></td></tr><tr><td><strong>Forgetting irregular forms</strong></td><td>que il est → <del>qu'il est</del> after trigger</td><td>Must use subjonctif form</td><td>qu'il <strong>soit</strong></td></tr><tr><td><strong>Missing "que"</strong></td><td>Je veux tu viennes</td><td>"Que" is mandatory bridge</td><td>Je veux <strong>que</strong> tu viennes</td></tr><tr><td><strong>Overusing subjonctif</strong></td><td>Using it after every "que"</td><td>Only SPECIFIC triggers activate subjonctif</td><td>Check the trigger map above</td></tr><tr><td><strong>Confusing forms</strong></td><td>"qu'il ait" vs "qu'il est"</td><td>ait = subjonctif avoir / est = indicatif être</td><td>Different verbs entirely</td></tr><tr><td><strong>Panic about subjonctif</strong></td><td>Avoiding all triggers out of fear</td><td>Subjonctif forms are limited — memorize the top 10</td><td>Start with être and avoir — covers 60% of cases</td></tr><tr><td><strong>Ne explétif confusion</strong></td><td>"J'ai peur qu'il ne vienne" = he won't come?</td><td>The "ne" is expletive — meaning doesn't change</td><td>Ignore ne explétif in speaking</td></tr></tbody></table>
+<hr>
+<h1>🔑 KEY TAKEAWAY</h1>
+<blockquote>
+<p><strong>The subjonctif is not a monster — it's an emotional lens.</strong></p>
+<p>→ Project 22 taught you to state <strong>opinions</strong> — using the objective indicatif lens<br>
+→ Project 23 teaches you to express <strong>emotional reactions</strong> — using the subjective subjonctif lens</p>
+<p>→ The system is logical:</p>
+<table><thead><tr><th>What you express</th><th>Lens</th><th>Mood</th></tr></thead><tbody><tr><td>Facts, beliefs, certainty</td><td>Objective</td><td>INDICATIF</td></tr><tr><td>Emotions, doubts, wishes, necessities</td><td>Subjective</td><td>SUBJONCTIF</td></tr><tr><td>Same subject doing both actions</td><td>Simplified</td><td>INFINITIF</td></tr></tbody></table>
+<p>→ You now know:<br>
+→ <strong>7 trigger categories</strong> (joy, sadness, fear, surprise, doubt, desire, necessity)<br>
+→ <strong>10 irregular subjonctif verbs</strong> (être, avoir, aller, faire, pouvoir, savoir, vouloir, prendre, venir, devoir)<br>
+→ <strong>The same-subject rule</strong> (infinitif instead of subjonctif)<br>
+→ <strong>The espérer exception</strong> (indicatif, not subjonctif)</p>
+<p>→ This is your <strong>INTRODUCTION</strong> — Project 31 will take subjonctif to full depth<br>
+→ For now, you have enough to <strong>react emotionally</strong> in any French conversation</p>
+<p>→ But what about when things are done TO something — not BY someone?<br>
+→ "The house <strong>was built</strong> in 1900" / "The decision <strong>was made</strong> by the director"<br>
+→ This requires the <strong>passive voice</strong> — a completely different sentence architecture</p>
+</blockquote>
+<hr>
+<h1>🌉 BRIDGE TO PROJECT 24</h1>
+<blockquote>
+<p>You can now express opinions (Project 22) and emotional reactions (Project 23)<br>
+Both are <strong>active</strong> — YOU think, YOU feel, YOU want</p>
+<p>But sometimes the focus is on <strong>WHAT HAPPENED TO SOMETHING</strong> — not who did it:</p>
+<p>→ "Ce restaurant <strong>a été recommandé</strong> par un ami." (This restaurant was recommended by a friend.)<br>
+→ "La décision <strong>a été prise</strong> hier." (The decision was made yesterday.)<br>
+→ "Le bâtiment <strong>sera construit</strong> l'année prochaine." (The building will be built next year.)</p>
+<p>→ The <strong>passive voice</strong> flips the sentence — the object becomes the subject<br>
+→ It's used in news, formal speech, descriptions, and storytelling<br>
+→ French has specific rules about when passive works and when it doesn't</p>
+<p>→ Project 24: <strong>"It Was Done, It Was Built"</strong><br>
+→ The passive voice across all tenses</p>
+</blockquote>
+<hr>
+<h1>✅ PROJECT 23 COMPLETE</h1>
+<blockquote>
+<p><strong>Are you ready for PROJECT 24: "It Was Done, It Was Built"?</strong><br>
+→ ~100 sentences covering passive voice structures (être + participe passé + par)<br>
+→ Scenario: You're at a museum, reading news, hearing formal announcements<br>
+→ Builds on all previous tenses — now each one gets a passive version</p>
+</blockquote>
+</div>
+</div>
+
+<!-- ========== data-index="17" ========== -->
+
+        </div>
+
+        <div class="nav-bar">
+            <a href="project-22.html" class="nav-button prev">← Previous Chapter</a>
+            <div class="page-info">
+                <a href="index.html" class="nav-button home">📚 Table of Contents</a><br>
+                <span style="margin-top:8px;display:block">Chapter 23 of 50</span>
+            </div>
+            <a href="project-24.html" class="nav-button next">Next Chapter →</a>
+        </div>
+    </div>
+
+    
+    <div id="progress-track"><div id="progress-fill"></div></div>
+    <div id="progress-pct">0%</div>
+
+
+    <script>
+    const fill = document.getElementById('progress-fill');
+    const pct  = document.getElementById('progress-pct');
+    function updateProgress() {
+        const scrollTop = window.scrollY;
+        const docHeight = document.body.scrollHeight - window.innerHeight;
+        const scrolled  = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+        fill.style.height = scrolled + '%';
+        pct.textContent   = Math.round(scrolled) + '%';
+    }
+    window.addEventListener('scroll', updateProgress);
+    updateProgress();
+
+    document.addEventListener('keydown', function(e) {
+        if (['INPUT','TEXTAREA'].includes(document.activeElement.tagName)) return;
+        if (e.key === 'ArrowLeft') {
+            const b = document.querySelector('.nav-button.prev');
+            if (b && !b.classList.contains('disabled')) window.location.href = b.href;
+        }
+        if (e.key === 'ArrowRight') {
+            const b = document.querySelector('.nav-button.next');
+            if (b && !b.classList.contains('disabled')) window.location.href = b.href;
+        }
+    });
+    </script>
+
+</body>
+</html>
