@@ -1,0 +1,1453 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>French Gender — Learn It Right</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500;600&display=swap');
+
+:root {
+  --bg: #fdf8f0;
+  --paper: #fffef9;
+  --ink: #1a1410;
+  --dim: #7a6e62;
+  --rule: #e8e0d0;
+
+  --m: #1a56db;      /* masculine — classic blue */
+  --m-bg: #eef3ff;
+  --m-border: #93b4f5;
+
+  --f: #be185d;      /* feminine — deep rose */
+  --f-bg: #fff0f6;
+  --f-border: #f9a8cf;
+
+  --gold: #b45309;
+  --gold-bg: #fef3c7;
+  --green: #065f46;
+  --green-bg: #ecfdf5;
+  --red: #991b1b;
+  --red-bg: #fff1f2;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+/* ── TOP BAR ── */
+.topbar {
+  background: var(--ink);
+  color: #f0ebe0;
+  padding: 0.7rem 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+  position: sticky;
+  top: 0;
+  z-index: 200;
+}
+
+.topbar-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.1rem;
+  font-style: italic;
+  letter-spacing: 0.02em;
+}
+
+.topbar-title span { color: #f59e0b; font-style: normal; font-weight: 700; }
+
+/* Progress bar */
+.progress-wrap {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  flex: 1;
+  max-width: 300px;
+}
+.progress-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.65rem;
+  letter-spacing: 0.1em;
+  color: #a09080;
+  white-space: nowrap;
+}
+.progress-bar {
+  flex: 1;
+  height: 4px;
+  background: #3a3228;
+  border-radius: 2px;
+  overflow: hidden;
+}
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #f59e0b, #f97316);
+  border-radius: 2px;
+  transition: width 0.4s ease;
+  width: 11.1%;
+}
+
+/* ── CHAPTER TABS ── */
+.chapter-bar {
+  background: var(--paper);
+  border-bottom: 2px solid var(--rule);
+  display: flex;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  gap: 0;
+  scrollbar-width: none;
+}
+.chapter-bar::-webkit-scrollbar { display: none; }
+
+.ch-tab {
+  padding: 0.7rem 1.1rem;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-family: 'DM Mono', monospace;
+  font-size: 0.62rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--dim);
+  white-space: nowrap;
+  border-bottom: 3px solid transparent;
+  margin-bottom: -2px;
+  transition: all 0.18s;
+  scroll-snap-align: start;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+.ch-tab:hover { color: var(--ink); }
+.ch-tab.active { color: var(--ink); border-bottom-color: var(--gold); font-weight: 500; }
+.ch-num {
+  background: var(--ink);
+  color: var(--bg);
+  font-size: 0.55rem;
+  width: 16px; height: 16px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.ch-tab.active .ch-num { background: var(--gold); color: #fff; }
+
+/* ── PANELS ── */
+.panel { display: none; }
+.panel.active {
+  display: block;
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 2rem 1.2rem 5rem;
+  animation: fadein 0.25s ease;
+}
+@keyframes fadein { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+
+/* ── SECTION HEADING ── */
+.section-head {
+  margin-bottom: 1.8rem;
+}
+.section-head h2 {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.9rem;
+  font-weight: 700;
+  line-height: 1.2;
+}
+.section-head .tagline {
+  font-size: 0.85rem;
+  color: var(--dim);
+  margin-top: 0.3rem;
+}
+.section-head .rule {
+  height: 2px;
+  background: linear-gradient(90deg, var(--ink), transparent);
+  margin-top: 0.8rem;
+  width: 80px;
+}
+
+/* ── CONCEPT BOX ── */
+.concept {
+  background: var(--paper);
+  border: 1px solid var(--rule);
+  border-left: 4px solid var(--gold);
+  border-radius: 6px;
+  padding: 1.1rem 1.3rem;
+  margin-bottom: 1.5rem;
+  font-size: 0.88rem;
+}
+.concept strong { color: var(--gold); }
+
+/* ── GENDER BADGE ── */
+.badge-m {
+  display: inline-block;
+  background: var(--m-bg);
+  color: var(--m);
+  border: 1px solid var(--m-border);
+  border-radius: 4px;
+  font-family: 'DM Mono', monospace;
+  font-size: 0.65rem;
+  padding: 1px 7px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  vertical-align: middle;
+}
+.badge-f {
+  display: inline-block;
+  background: var(--f-bg);
+  color: var(--f);
+  border: 1px solid var(--f-border);
+  border-radius: 4px;
+  font-family: 'DM Mono', monospace;
+  font-size: 0.65rem;
+  padding: 1px 7px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  vertical-align: middle;
+}
+.badge-both {
+  display: inline-block;
+  background: #f3f4f6;
+  color: #374151;
+  border: 1px solid #d1d5db;
+  border-radius: 4px;
+  font-family: 'DM Mono', monospace;
+  font-size: 0.65rem;
+  padding: 1px 7px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  vertical-align: middle;
+}
+
+/* ── ARTICLE GRID ── */
+.article-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.article-card {
+  border-radius: 10px;
+  padding: 1.2rem;
+  border: 1px solid;
+}
+.article-card.masc { background: var(--m-bg); border-color: var(--m-border); }
+.article-card.fem  { background: var(--f-bg);  border-color: var(--f-border); }
+
+.article-card h3 {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.62rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  margin-bottom: 0.8rem;
+}
+.article-card.masc h3 { color: var(--m); }
+.article-card.fem  h3 { color: var(--f); }
+
+.article-row {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  margin-bottom: 0.4rem;
+  font-size: 0.85rem;
+}
+.art-form {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.5rem;
+  font-weight: 700;
+  line-height: 1;
+}
+.article-card.masc .art-form { color: var(--m); }
+.article-card.fem  .art-form { color: var(--f); }
+.art-label { font-size: 0.78rem; color: var(--dim); }
+
+/* ── ENDING CARDS ── */
+.ending-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+  margin-bottom: 1.5rem;
+}
+
+.ending-card {
+  background: var(--paper);
+  border: 1px solid var(--rule);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.ending-header {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  padding: 0.8rem 1.1rem;
+  cursor: pointer;
+  user-select: none;
+}
+
+.ending-badge {
+  font-family: 'DM Mono', monospace;
+  font-size: 1rem;
+  font-weight: 500;
+  padding: 0.25rem 0.7rem;
+  border-radius: 5px;
+  letter-spacing: 0.03em;
+}
+.ending-card.masc .ending-badge { background: var(--m-bg); color: var(--m); border: 1px solid var(--m-border); }
+.ending-card.fem  .ending-badge { background: var(--f-bg);  color: var(--f); border: 1px solid var(--f-border); }
+
+.ending-note {
+  font-size: 0.8rem;
+  color: var(--dim);
+  flex: 1;
+}
+.ending-reliability {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.65rem;
+  letter-spacing: 0.05em;
+}
+.reliability-high { color: var(--green); }
+.reliability-med  { color: var(--gold); }
+.ending-toggle {
+  font-size: 0.8rem;
+  color: var(--dim);
+  transition: transform 0.2s;
+}
+.ending-card.open .ending-toggle { transform: rotate(180deg); }
+
+.ending-body {
+  display: none;
+  padding: 0 1.1rem 1rem;
+  border-top: 1px solid var(--rule);
+}
+.ending-card.open .ending-body { display: block; }
+
+.word-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 0.8rem 0;
+}
+
+.pill {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.75rem;
+  padding: 0.3rem 0.7rem;
+  border-radius: 20px;
+  cursor: default;
+  transition: transform 0.15s;
+}
+.pill:hover { transform: scale(1.05); }
+.pill.masc { background: var(--m-bg); color: var(--m); border: 1px solid var(--m-border); }
+.pill.fem  { background: var(--f-bg);  color: var(--f); border: 1px solid var(--f-border); }
+
+.example-sentence {
+  font-size: 0.82rem;
+  color: var(--dim);
+  border-left: 2px solid var(--rule);
+  padding-left: 0.8rem;
+  margin-top: 0.6rem;
+  font-style: italic;
+}
+.example-sentence strong { font-style: normal; color: var(--ink); font-weight: 500; }
+
+.exception-note {
+  background: var(--red-bg);
+  border: 1px solid #fca5a5;
+  border-radius: 5px;
+  padding: 0.5rem 0.8rem;
+  font-size: 0.78rem;
+  color: var(--red);
+  margin-top: 0.6rem;
+}
+.exception-note::before { content: '⚠ Exception: '; font-weight: 700; }
+
+/* ── COMPARISON TABLE (masc/fem pairs) ── */
+.pair-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 1.5rem;
+  font-size: 0.84rem;
+}
+.pair-table th {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.6rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 0.6rem 0.8rem;
+  text-align: left;
+  border-bottom: 2px solid var(--rule);
+  color: var(--dim);
+}
+.pair-table td {
+  padding: 0.55rem 0.8rem;
+  border-bottom: 1px solid var(--rule);
+  vertical-align: middle;
+}
+.pair-table tr:last-child td { border-bottom: none; }
+.pair-table .m-cell { color: var(--m); font-family: 'DM Mono', monospace; }
+.pair-table .f-cell { color: var(--f); font-family: 'DM Mono', monospace; }
+.pair-table .en-cell { color: var(--dim); font-size: 0.78rem; }
+.pair-table tr:hover td { background: #faf7f2; }
+
+.pattern-head {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.62rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--dim);
+  margin: 1.2rem 0 0.5rem;
+  padding-bottom: 0.3rem;
+  border-bottom: 1px dashed var(--rule);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.pattern-arrow {
+  background: var(--m-bg);
+  color: var(--m);
+  padding: 1px 8px;
+  border-radius: 3px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+.pattern-arrow.fem { background: var(--f-bg); color: var(--f); }
+
+/* ── QUIZ CARD ── */
+.quiz-wrap {
+  max-width: 500px;
+  margin: 0 auto;
+}
+.quiz-counter {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.65rem;
+  color: var(--dim);
+  letter-spacing: 0.1em;
+  text-align: center;
+  margin-bottom: 1rem;
+}
+.quiz-card {
+  background: var(--paper);
+  border: 1px solid var(--rule);
+  border-radius: 14px;
+  padding: 2rem;
+  text-align: center;
+  margin-bottom: 1.2rem;
+  min-height: 180px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+}
+.quiz-word {
+  font-family: 'Playfair Display', serif;
+  font-size: 2.2rem;
+  font-weight: 700;
+  color: var(--ink);
+}
+.quiz-hint {
+  font-size: 0.78rem;
+  color: var(--dim);
+}
+.quiz-reveal {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.7rem;
+  color: var(--dim);
+  letter-spacing: 0.08em;
+  cursor: pointer;
+  text-decoration: underline;
+  margin-top: 0.5rem;
+}
+.quiz-answer {
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4rem;
+  margin-top: 0.5rem;
+}
+.quiz-answer.shown { display: flex; }
+.quiz-full {
+  font-family: 'DM Mono', monospace;
+  font-size: 1.1rem;
+  font-weight: 500;
+}
+.quiz-full.m { color: var(--m); }
+.quiz-full.f { color: var(--f); }
+.quiz-reason {
+  font-size: 0.75rem;
+  color: var(--dim);
+  font-style: italic;
+}
+
+.quiz-btns {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.8rem;
+  margin-bottom: 1.2rem;
+}
+.quiz-btn {
+  padding: 1rem;
+  border-radius: 10px;
+  border: 2px solid;
+  cursor: pointer;
+  font-family: 'DM Mono', monospace;
+  font-size: 0.85rem;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  transition: all 0.15s;
+}
+.quiz-btn.masc { background: var(--m-bg); border-color: var(--m-border); color: var(--m); }
+.quiz-btn.fem  { background: var(--f-bg);  border-color: var(--f-border); color: var(--f); }
+.quiz-btn:hover { filter: brightness(0.92); transform: translateY(-1px); }
+.quiz-btn:active { transform: translateY(0); }
+.quiz-btn.correct { background: var(--green-bg); border-color: var(--green); color: var(--green); }
+.quiz-btn.wrong   { background: var(--red-bg);   border-color: var(--red);   color: var(--red); }
+
+.quiz-next {
+  width: 100%;
+  padding: 0.75rem;
+  background: var(--ink);
+  color: var(--bg);
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-family: 'DM Mono', monospace;
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  transition: opacity 0.2s;
+}
+.quiz-next:hover { opacity: 0.8; }
+
+.quiz-score {
+  text-align: center;
+  font-family: 'DM Mono', monospace;
+  font-size: 0.7rem;
+  color: var(--dim);
+  letter-spacing: 0.05em;
+}
+
+/* ── CHEAT SHEET ── */
+.cheat-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+.cheat-col h3 {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.62rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  padding: 0.5rem 0.8rem;
+  border-radius: 6px 6px 0 0;
+  margin-bottom: 0;
+}
+.cheat-col.m h3 { background: var(--m); color: #fff; }
+.cheat-col.f h3 { background: var(--f); color: #fff; }
+.cheat-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.45rem 0.8rem;
+  border-bottom: 1px solid var(--rule);
+  font-size: 0.83rem;
+}
+.cheat-col.m .cheat-row:nth-child(odd) { background: #f5f8ff; }
+.cheat-col.f .cheat-row:nth-child(odd) { background: #fff5f9; }
+.cheat-ending { font-family: 'DM Mono', monospace; font-weight: 600; font-size: 0.85rem; }
+.cheat-col.m .cheat-ending { color: var(--m); }
+.cheat-col.f .cheat-ending { color: var(--f); }
+.cheat-ex { color: var(--dim); font-size: 0.75rem; }
+
+/* ── PLURAL BOX ── */
+.plural-rule {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  padding: 0.7rem 1rem;
+  background: var(--paper);
+  border: 1px solid var(--rule);
+  border-radius: 7px;
+  margin-bottom: 0.6rem;
+  font-size: 0.85rem;
+}
+.plural-pattern {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.8rem;
+  background: var(--gold-bg);
+  color: var(--gold);
+  padding: 0.2rem 0.6rem;
+  border-radius: 4px;
+  border: 1px solid #fcd34d;
+  white-space: nowrap;
+  font-weight: 500;
+}
+.plural-ex { font-family: 'DM Mono', monospace; font-size: 0.78rem; color: var(--dim); }
+
+/* ── TIPS ── */
+.tips-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.8rem;
+  margin-bottom: 1.5rem;
+}
+.tip-card {
+  background: var(--paper);
+  border: 1px solid var(--rule);
+  border-radius: 8px;
+  padding: 1rem;
+}
+.tip-num {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--rule);
+  line-height: 1;
+  margin-bottom: 0.3rem;
+}
+.tip-title { font-weight: 600; font-size: 0.88rem; margin-bottom: 0.2rem; }
+.tip-body  { font-size: 0.8rem; color: var(--dim); line-height: 1.5; }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 580px) {
+  .article-grid, .cheat-grid, .tips-grid { grid-template-columns: 1fr; }
+  .quiz-btns { grid-template-columns: 1fr; }
+  .quiz-word { font-size: 1.7rem; }
+}
+</style>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<div class="topbar">
+  <div class="topbar-title">🇫🇷 <span>Le Genre</span> — French Gender</div>
+  <div class="progress-wrap">
+    <div class="progress-label" id="prog-label">CH 1 / 9</div>
+    <div class="progress-bar"><div class="progress-fill" id="prog-fill"></div></div>
+  </div>
+</div>
+
+<!-- CHAPTER TABS -->
+<div class="chapter-bar">
+  <button class="ch-tab active" data-tab="intro">     <span class="ch-num">1</span> The Big Idea </button>
+  <button class="ch-tab"        data-tab="articles">  <span class="ch-num">2</span> Articles </button>
+  <button class="ch-tab"        data-tab="masc-end">  <span class="ch-num">3</span> Masc Endings </button>
+  <button class="ch-tab"        data-tab="fem-end">   <span class="ch-num">4</span> Fem Endings </button>
+  <button class="ch-tab"        data-tab="pairs">     <span class="ch-num">5</span> M/F Pairs </button>
+  <button class="ch-tab"        data-tab="tricky">    <span class="ch-num">6</span> Tricky Words </button>
+  <button class="ch-tab"        data-tab="plural">    <span class="ch-num">7</span> Plurals </button>
+  <button class="ch-tab"        data-tab="cheatsheet"><span class="ch-num">8</span> Cheat Sheet </button>
+  <button class="ch-tab"        data-tab="quiz">      <span class="ch-num">9</span> Quiz </button>
+</div>
+
+<!-- ═══════════════ CH 1: THE BIG IDEA ═══════════════ -->
+<div class="panel active" id="tab-intro">
+  <div class="section-head">
+    <h2>The Big Idea</h2>
+    <div class="tagline">Everything you need to know before you learn anything else</div>
+    <div class="rule"></div>
+  </div>
+
+  <div class="concept">
+    In French, <strong>every single noun is either masculine or feminine</strong>. There is no neutral. 
+    Gender determines which article (the/a) you use, and changes adjective endings. 
+    The gender often has nothing to do with the real world — <em>le livre</em> (book) is masculine, <em>la table</em> (table) is feminine, for no logical reason.
+  </div>
+
+  <div class="article-grid">
+    <div class="article-card masc">
+      <h3>🔵 Masculine</h3>
+      <div class="article-row"><span class="art-form">le</span><span class="art-label">the (singular)</span></div>
+      <div class="article-row"><span class="art-form">un</span><span class="art-label">a / an</span></div>
+      <div class="article-row"><span class="art-form">du</span><span class="art-label">some (de + le)</span></div>
+      <div class="article-row"><span class="art-form">les</span><span class="art-label">the (plural)</span></div>
+    </div>
+    <div class="article-card fem">
+      <h3>🩷 Feminine</h3>
+      <div class="article-row"><span class="art-form">la</span><span class="art-label">the (singular)</span></div>
+      <div class="article-row"><span class="art-form">une</span><span class="art-label">a / an</span></div>
+      <div class="article-row"><span class="art-form">de la</span><span class="art-label">some</span></div>
+      <div class="article-row"><span class="art-form">les</span><span class="art-label">the (plural)</span></div>
+    </div>
+  </div>
+
+  <div class="concept" style="border-left-color:#1a56db">
+    Before any noun starting with a <strong>vowel or silent H</strong>, both <em>le</em> and <em>la</em> become <strong>l'</strong> — you can't tell gender from the article alone.<br>
+    → <em>l'homme</em> (M), <em>l'école</em> (F), <em>l'arbre</em> (M), <em>l'eau</em> (F)
+  </div>
+
+  <div class="tips-grid">
+    <div class="tip-card">
+      <div class="tip-num">01</div>
+      <div class="tip-title">Always learn nouns WITH their article</div>
+      <div class="tip-body">Don't memorize "livre". Memorize "<em>le livre</em>". The article is part of the word.</div>
+    </div>
+    <div class="tip-card">
+      <div class="tip-num">02</div>
+      <div class="tip-title">Use endings as hints, not rules</div>
+      <div class="tip-body">Endings give you ~80–95% accuracy. There are always exceptions — always confirm with a dictionary.</div>
+    </div>
+    <div class="tip-card">
+      <div class="tip-num">03</div>
+      <div class="tip-title">Context rescues you</div>
+      <div class="tip-body">Surrounding adjectives and pronouns reveal the gender: <em>mon <strong>beau</strong> jardin</em> → masculine.</div>
+    </div>
+    <div class="tip-card">
+      <div class="tip-num">04</div>
+      <div class="tip-title">Accept imperfection</div>
+      <div class="tip-body">Native French speakers sometimes hesitate too. Getting the meaning across matters more than perfect gender.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════ CH 2: ARTICLES ═══════════════ -->
+<div class="panel" id="tab-articles">
+  <div class="section-head">
+    <h2>Articles</h2>
+    <div class="tagline">Definite · Indefinite · Partitive — all three types</div>
+    <div class="rule"></div>
+  </div>
+
+  <div class="pattern-head">Definite Articles — "The"</div>
+  <table class="pair-table">
+    <thead><tr><th>Gender</th><th>Singular</th><th>Plural</th><th>Example</th></tr></thead>
+    <tbody>
+      <tr><td><span class="badge-m">Masc</span></td><td class="m-cell">le</td><td class="m-cell">les</td><td><em>le livre → les livres</em></td></tr>
+      <tr><td><span class="badge-f">Fem</span></td><td class="f-cell">la</td><td class="f-cell">les</td><td><em>la table → les tables</em></td></tr>
+      <tr><td><span class="badge-both">Vowel/H</span></td><td style="font-family:'DM Mono',monospace">l'</td><td style="font-family:'DM Mono',monospace">les</td><td><em>l'homme → les hommes</em></td></tr>
+    </tbody>
+  </table>
+
+  <div class="pattern-head">Indefinite Articles — "A / An / Some"</div>
+  <table class="pair-table">
+    <thead><tr><th>Gender</th><th>Singular</th><th>Plural</th><th>Example</th></tr></thead>
+    <tbody>
+      <tr><td><span class="badge-m">Masc</span></td><td class="m-cell">un</td><td class="m-cell">des</td><td><em>un stylo → des stylos</em></td></tr>
+      <tr><td><span class="badge-f">Fem</span></td><td class="f-cell">une</td><td class="f-cell">des</td><td><em>une voiture → des voitures</em></td></tr>
+    </tbody>
+  </table>
+
+  <div class="pattern-head">Partitive Articles — "Some" (uncountable)</div>
+  <table class="pair-table">
+    <thead><tr><th>Gender</th><th>Form</th><th>Example</th><th>Meaning</th></tr></thead>
+    <tbody>
+      <tr><td><span class="badge-m">Masc</span></td><td class="m-cell">du (de+le)</td><td><em>du pain</em></td><td class="en-cell">some bread</td></tr>
+      <tr><td><span class="badge-f">Fem</span></td><td class="f-cell">de la</td><td><em>de la viande</em></td><td class="en-cell">some meat</td></tr>
+      <tr><td><span class="badge-both">Vowel</span></td><td style="font-family:'DM Mono',monospace">de l'</td><td><em>de l'eau</em></td><td class="en-cell">some water</td></tr>
+    </tbody>
+  </table>
+
+  <div class="concept">
+    <strong>Memory trick:</strong> In the plural, <em>des</em> does it all — both masculine and feminine, both indefinite and partitive. "Des" is your plural catch-all. 🎯
+  </div>
+
+  <div class="pattern-head">Quick Examples to Read Aloud</div>
+  <div class="word-pills">
+    <span class="pill masc">le garçon</span><span class="pill masc">le chat</span><span class="pill masc">un livre</span><span class="pill masc">du café</span>
+    <span class="pill fem">la fille</span><span class="pill fem">la maison</span><span class="pill fem">une pomme</span><span class="pill fem">de la soupe</span>
+  </div>
+</div>
+
+<!-- ═══════════════ CH 3: MASCULINE ENDINGS ═══════════════ -->
+<div class="panel" id="tab-masc-end">
+  <div class="section-head">
+    <h2>Masculine Endings</h2>
+    <div class="tagline">Spot these endings → confidently say <em>le / un</em></div>
+    <div class="rule"></div>
+  </div>
+
+  <div class="ending-list">
+
+    <div class="ending-card masc">
+      <div class="ending-header" onclick="toggleEnding(this)">
+        <span class="ending-badge">-age</span>
+        <span class="ending-note">travel, cheese, village…</span>
+        <span class="ending-reliability reliability-high">~90% masc</span>
+        <span class="ending-toggle">▾</span>
+      </div>
+      <div class="ending-body">
+        <div class="word-pills">
+          <span class="pill masc">le voyage</span><span class="pill masc">le fromage</span><span class="pill masc">le village</span>
+          <span class="pill masc">le garage</span><span class="pill masc">le mariage</span><span class="pill masc">le courage</span>
+          <span class="pill masc">le message</span><span class="pill masc">le paysage</span>
+        </div>
+        <div class="example-sentence"><strong>Le voyage</strong> est long. → <strong>Les voyages</strong> sont longs.</div>
+        <div class="exception-note">la page (page), la plage (beach), la cage (cage), l'image (image)</div>
+      </div>
+    </div>
+
+    <div class="ending-card masc">
+      <div class="ending-header" onclick="toggleEnding(this)">
+        <span class="ending-badge">-ment</span>
+        <span class="ending-note">government, moment, feeling…</span>
+        <span class="ending-reliability reliability-high">almost always masc</span>
+        <span class="ending-toggle">▾</span>
+      </div>
+      <div class="ending-body">
+        <div class="word-pills">
+          <span class="pill masc">le gouvernement</span><span class="pill masc">le moment</span><span class="pill masc">le sentiment</span>
+          <span class="pill masc">le mouvement</span><span class="pill masc">le bâtiment</span><span class="pill masc">le changement</span>
+        </div>
+        <div class="example-sentence"><strong>Le moment</strong> est important. → <strong>Les moments</strong> sont importants.</div>
+      </div>
+    </div>
+
+    <div class="ending-card masc">
+      <div class="ending-header" onclick="toggleEnding(this)">
+        <span class="ending-badge">-eau</span>
+        <span class="ending-note">boat, cake, hat, office… (plural adds -x)</span>
+        <span class="ending-reliability reliability-high">almost always masc</span>
+        <span class="ending-toggle">▾</span>
+      </div>
+      <div class="ending-body">
+        <div class="word-pills">
+          <span class="pill masc">le bateau</span><span class="pill masc">le gâteau</span><span class="pill masc">le chapeau</span>
+          <span class="pill masc">le bureau</span><span class="pill masc">le cadeau</span><span class="pill masc">le tableau</span>
+          <span class="pill masc">le château</span><span class="pill masc">le manteau</span>
+        </div>
+        <div class="example-sentence"><strong>Le bateau</strong> est sur la mer. → <strong>Les bateaux</strong> sont sur la mer.</div>
+        <div class="exception-note">l'eau (water) is FEMININE! — one of the most common exceptions.</div>
+      </div>
+    </div>
+
+    <div class="ending-card masc">
+      <div class="ending-header" onclick="toggleEnding(this)">
+        <span class="ending-badge">-in / -ain</span>
+        <span class="ending-note">garden, morning, bread, wine…</span>
+        <span class="ending-reliability reliability-high">mostly masc</span>
+        <span class="ending-toggle">▾</span>
+      </div>
+      <div class="ending-body">
+        <div class="word-pills">
+          <span class="pill masc">le jardin</span><span class="pill masc">le matin</span><span class="pill masc">le pain</span>
+          <span class="pill masc">le vin</span><span class="pill masc">le chemin</span><span class="pill masc">le voisin</span>
+          <span class="pill masc">le médecin</span>
+        </div>
+        <div class="example-sentence"><strong>Le matin</strong>, je bois du café. (In the morning, I drink coffee.)</div>
+      </div>
+    </div>
+
+    <div class="ending-card masc">
+      <div class="ending-header" onclick="toggleEnding(this)">
+        <span class="ending-badge">-isme / -iste*</span>
+        <span class="ending-note">ideologies are always masculine</span>
+        <span class="ending-reliability reliability-high">always masc</span>
+        <span class="ending-toggle">▾</span>
+      </div>
+      <div class="ending-body">
+        <div class="word-pills">
+          <span class="pill masc">le tourisme</span><span class="pill masc">le capitalisme</span><span class="pill masc">le féminisme</span>
+          <span class="pill masc">le journalisme</span><span class="pill masc">le romantisme</span>
+        </div>
+        <div class="example-sentence"><strong>Le tourisme</strong> est important pour l'économie.</div>
+        <div class="exception-note">-iste NOUNS referring to people can be M or F: le/la journaliste, le/la artiste</div>
+      </div>
+    </div>
+
+    <div class="ending-card masc">
+      <div class="ending-header" onclick="toggleEnding(this)">
+        <span class="ending-badge">-ier / -et / -oir</span>
+        <span class="ending-note">paper, ticket, mirror…</span>
+        <span class="ending-reliability reliability-high">mostly masc</span>
+        <span class="ending-toggle">▾</span>
+      </div>
+      <div class="ending-body">
+        <div class="word-pills">
+          <span class="pill masc">le papier</span><span class="pill masc">le cahier</span><span class="pill masc">le quartier</span>
+          <span class="pill masc">le billet</span><span class="pill masc">le projet</span><span class="pill masc">le poulet</span>
+          <span class="pill masc">le miroir</span><span class="pill masc">le soir</span><span class="pill masc">le couloir</span>
+        </div>
+        <div class="example-sentence"><strong>Le soir</strong>, je regarde la télévision. (In the evening, I watch TV.)</div>
+      </div>
+    </div>
+
+    <div class="ending-card masc">
+      <div class="ending-header" onclick="toggleEnding(this)">
+        <span class="ending-badge">-ème / -ème</span>
+        <span class="ending-note">problem, system, poem, theme…</span>
+        <span class="ending-reliability reliability-high">mostly masc</span>
+        <span class="ending-toggle">▾</span>
+      </div>
+      <div class="ending-body">
+        <div class="word-pills">
+          <span class="pill masc">le problème</span><span class="pill masc">le système</span>
+          <span class="pill masc">le thème</span><span class="pill masc">le poème</span>
+        </div>
+        <div class="example-sentence"><strong>Le problème</strong> est grave. → <strong>Les problèmes</strong> sont graves.</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════ CH 4: FEMININE ENDINGS ═══════════════ -->
+<div class="panel" id="tab-fem-end">
+  <div class="section-head">
+    <h2>Feminine Endings</h2>
+    <div class="tagline">Spot these endings → confidently say <em>la / une</em></div>
+    <div class="rule"></div>
+  </div>
+
+  <div class="ending-list">
+
+    <div class="ending-card fem">
+      <div class="ending-header" onclick="toggleEnding(this)">
+        <span class="ending-badge">-tion / -sion</span>
+        <span class="ending-note">nation, question, decision, revolution…</span>
+        <span class="ending-reliability reliability-high">~99% fem</span>
+        <span class="ending-toggle">▾</span>
+      </div>
+      <div class="ending-body">
+        <div class="word-pills">
+          <span class="pill fem">la nation</span><span class="pill fem">la question</span><span class="pill fem">la décision</span>
+          <span class="pill fem">la situation</span><span class="pill fem">la télévision</span><span class="pill fem">la révolution</span>
+          <span class="pill fem">la passion</span><span class="pill fem">l'éducation</span><span class="pill fem">l'information</span>
+        </div>
+        <div class="example-sentence"><strong>La question</strong> est difficile. → <strong>Les questions</strong> sont difficiles.</div>
+      </div>
+    </div>
+
+    <div class="ending-card fem">
+      <div class="ending-header" onclick="toggleEnding(this)">
+        <span class="ending-badge">-té / -tié</span>
+        <span class="ending-note">liberty, beauty, quality — abstract qualities</span>
+        <span class="ending-reliability reliability-high">~95% fem</span>
+        <span class="ending-toggle">▾</span>
+      </div>
+      <div class="ending-body">
+        <div class="word-pills">
+          <span class="pill fem">la liberté</span><span class="pill fem">la beauté</span><span class="pill fem">la qualité</span>
+          <span class="pill fem">la vérité</span><span class="pill fem">la santé</span><span class="pill fem">la société</span>
+          <span class="pill fem">l'université</span><span class="pill fem">la réalité</span><span class="pill fem">l'amitié</span>
+        </div>
+        <div class="example-sentence"><strong>La liberté</strong> est importante. <strong>La santé</strong>, c'est la richesse.</div>
+      </div>
+    </div>
+
+    <div class="ending-card fem">
+      <div class="ending-header" onclick="toggleEnding(this)">
+        <span class="ending-badge">-ure</span>
+        <span class="ending-note">car, nature, culture, reading…</span>
+        <span class="ending-reliability reliability-high">mostly fem</span>
+        <span class="ending-toggle">▾</span>
+      </div>
+      <div class="ending-body">
+        <div class="word-pills">
+          <span class="pill fem">la voiture</span><span class="pill fem">la nature</span><span class="pill fem">la culture</span>
+          <span class="pill fem">la lecture</span><span class="pill fem">la nourriture</span><span class="pill fem">l'aventure</span>
+          <span class="pill fem">la peinture</span><span class="pill fem">la température</span>
+        </div>
+        <div class="example-sentence"><strong>La voiture</strong> est rouge. J'aime <strong>la lecture</strong>.</div>
+      </div>
+    </div>
+
+    <div class="ending-card fem">
+      <div class="ending-header" onclick="toggleEnding(this)">
+        <span class="ending-badge">-ence / -ance</span>
+        <span class="ending-note">difference, science, chance, childhood…</span>
+        <span class="ending-reliability reliability-high">mostly fem</span>
+        <span class="ending-toggle">▾</span>
+      </div>
+      <div class="ending-body">
+        <div class="word-pills">
+          <span class="pill fem">la différence</span><span class="pill fem">l'expérience</span><span class="pill fem">la science</span>
+          <span class="pill fem">la patience</span><span class="pill fem">la chance</span><span class="pill fem">la naissance</span>
+          <span class="pill fem">l'enfance</span><span class="pill fem">la distance</span>
+        </div>
+        <div class="example-sentence"><strong>La science</strong> est fascinante. Quelle <strong>chance</strong>!</div>
+      </div>
+    </div>
+
+    <div class="ending-card fem">
+      <div class="ending-header" onclick="toggleEnding(this)">
+        <span class="ending-badge">-ette</span>
+        <span class="ending-note">diminutives — baguette, fork, sock…</span>
+        <span class="ending-reliability reliability-high">mostly fem</span>
+        <span class="ending-toggle">▾</span>
+      </div>
+      <div class="ending-body">
+        <div class="word-pills">
+          <span class="pill fem">la baguette</span><span class="pill fem">la fourchette</span><span class="pill fem">la serviette</span>
+          <span class="pill fem">la chaussette</span><span class="pill fem">la recette</span><span class="pill fem">l'assiette</span>
+          <span class="pill fem">la bicyclette</span><span class="pill fem">l'omelette</span>
+        </div>
+        <div class="example-sentence"><strong>La baguette</strong> est fraîche. J'ai besoin d'une <strong>serviette</strong>.</div>
+      </div>
+    </div>
+
+    <div class="ending-card fem">
+      <div class="ending-header" onclick="toggleEnding(this)">
+        <span class="ending-badge">-ie / -ée / -ade</span>
+        <span class="ending-note">life, idea, salad, pharmacy…</span>
+        <span class="ending-reliability reliability-high">mostly fem</span>
+        <span class="ending-toggle">▾</span>
+      </div>
+      <div class="ending-body">
+        <div class="word-pills">
+          <span class="pill fem">la vie</span><span class="pill fem">la pharmacie</span><span class="pill fem">la boulangerie</span>
+          <span class="pill fem">l'idée</span><span class="pill fem">la journée</span><span class="pill fem">l'année</span>
+          <span class="pill fem">la salade</span><span class="pill fem">la promenade</span><span class="pill fem">la limonade</span>
+        </div>
+        <div class="example-sentence"><strong>La vie</strong> est belle. J'ai une <strong>idée</strong>!</div>
+        <div class="exception-note">le musée (museum), le lycée (high school), le trophée — these -ée words are masculine!</div>
+      </div>
+    </div>
+
+    <div class="ending-card fem">
+      <div class="ending-header" onclick="toggleEnding(this)">
+        <span class="ending-badge">-esse / -eur (abstract) / -tude</span>
+        <span class="ending-note">richness, color, attitude…</span>
+        <span class="ending-reliability reliability-med">mostly fem</span>
+        <span class="ending-toggle">▾</span>
+      </div>
+      <div class="ending-body">
+        <div class="word-pills">
+          <span class="pill fem">la richesse</span><span class="pill fem">la tendresse</span><span class="pill fem">la tristesse</span>
+          <span class="pill fem">la couleur</span><span class="pill fem">la fleur</span><span class="pill fem">la peur</span>
+          <span class="pill fem">l'attitude</span><span class="pill fem">l'habitude</span><span class="pill fem">la certitude</span>
+        </div>
+        <div class="example-sentence">J'ai <strong>peur</strong>. Quelle <strong>tristesse</strong>! J'adore cette <strong>couleur</strong>.</div>
+        <div class="exception-note">-eur for PEOPLE doing an action is often masculine: le chanteur, le vendeur</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════ CH 5: M/F PAIRS ═══════════════ -->
+<div class="panel" id="tab-pairs">
+  <div class="section-head">
+    <h2>Masculine / Feminine Pairs</h2>
+    <div class="tagline">How to convert nouns when gender changes</div>
+    <div class="rule"></div>
+  </div>
+
+  <div class="concept">
+    For <strong>people and animals</strong>, the same word often has both a masculine and feminine form. 
+    There are 9 main patterns. Learn the pattern, apply it to hundreds of words.
+  </div>
+
+  <div class="pattern-head"><span class="pattern-arrow">masc</span> + e → <span class="pattern-arrow fem">fem</span> &nbsp;· simply add -e</div>
+  <table class="pair-table">
+    <thead><tr><th>Masculine</th><th>Feminine</th><th>English</th></tr></thead>
+    <tbody>
+      <tr><td class="m-cell">l'ami</td><td class="f-cell">l'amie</td><td class="en-cell">friend</td></tr>
+      <tr><td class="m-cell">l'étudiant</td><td class="f-cell">l'étudiante</td><td class="en-cell">student</td></tr>
+      <tr><td class="m-cell">le candidat</td><td class="f-cell">la candidate</td><td class="en-cell">candidate</td></tr>
+      <tr><td class="m-cell">le Français</td><td class="f-cell">la Française</td><td class="en-cell">French person</td></tr>
+    </tbody>
+  </table>
+
+  <div class="pattern-head"><span class="pattern-arrow">-er</span> → <span class="pattern-arrow fem">-ère</span> &nbsp;· bakers, nurses, farmers</div>
+  <table class="pair-table">
+    <thead><tr><th>Masculine</th><th>Feminine</th><th>English</th></tr></thead>
+    <tbody>
+      <tr><td class="m-cell">le boulanger</td><td class="f-cell">la boulangère</td><td class="en-cell">baker</td></tr>
+      <tr><td class="m-cell">l'infirmier</td><td class="f-cell">l'infirmière</td><td class="en-cell">nurse</td></tr>
+      <tr><td class="m-cell">le policier</td><td class="f-cell">la policière</td><td class="en-cell">police officer</td></tr>
+      <tr><td class="m-cell">le cuisinier</td><td class="f-cell">la cuisinière</td><td class="en-cell">cook</td></tr>
+    </tbody>
+  </table>
+
+  <div class="pattern-head"><span class="pattern-arrow">-eur</span> → <span class="pattern-arrow fem">-euse</span> &nbsp;· singers, dancers, sellers</div>
+  <table class="pair-table">
+    <thead><tr><th>Masculine</th><th>Feminine</th><th>English</th></tr></thead>
+    <tbody>
+      <tr><td class="m-cell">le chanteur</td><td class="f-cell">la chanteuse</td><td class="en-cell">singer</td></tr>
+      <tr><td class="m-cell">le danseur</td><td class="f-cell">la danseuse</td><td class="en-cell">dancer</td></tr>
+      <tr><td class="m-cell">le vendeur</td><td class="f-cell">la vendeuse</td><td class="en-cell">salesperson</td></tr>
+      <tr><td class="m-cell">le joueur</td><td class="f-cell">la joueuse</td><td class="en-cell">player</td></tr>
+    </tbody>
+  </table>
+
+  <div class="pattern-head"><span class="pattern-arrow">-teur</span> → <span class="pattern-arrow fem">-trice</span> &nbsp;· actors, directors, producers</div>
+  <table class="pair-table">
+    <thead><tr><th>Masculine</th><th>Feminine</th><th>English</th></tr></thead>
+    <tbody>
+      <tr><td class="m-cell">l'acteur</td><td class="f-cell">l'actrice</td><td class="en-cell">actor</td></tr>
+      <tr><td class="m-cell">le directeur</td><td class="f-cell">la directrice</td><td class="en-cell">director</td></tr>
+      <tr><td class="m-cell">l'animateur</td><td class="f-cell">l'animatrice</td><td class="en-cell">host</td></tr>
+      <tr><td class="m-cell">le créateur</td><td class="f-cell">la créatrice</td><td class="en-cell">creator</td></tr>
+    </tbody>
+  </table>
+
+  <div class="pattern-head"><span class="pattern-arrow">-ien</span> → <span class="pattern-arrow fem">-ienne</span> &nbsp;· musicians, politicians, nationalities</div>
+  <table class="pair-table">
+    <thead><tr><th>Masculine</th><th>Feminine</th><th>English</th></tr></thead>
+    <tbody>
+      <tr><td class="m-cell">le musicien</td><td class="f-cell">la musicienne</td><td class="en-cell">musician</td></tr>
+      <tr><td class="m-cell">le technicien</td><td class="f-cell">la technicienne</td><td class="en-cell">technician</td></tr>
+      <tr><td class="m-cell">le politicien</td><td class="f-cell">la politicienne</td><td class="en-cell">politician</td></tr>
+      <tr><td class="m-cell">l'Italien</td><td class="f-cell">l'Italienne</td><td class="en-cell">Italian person</td></tr>
+    </tbody>
+  </table>
+
+  <div class="pattern-head">🔀 Completely different words — must memorize</div>
+  <table class="pair-table">
+    <thead><tr><th>Masculine</th><th>Feminine</th><th>English</th></tr></thead>
+    <tbody>
+      <tr><td class="m-cell">l'homme</td><td class="f-cell">la femme</td><td class="en-cell">man / woman</td></tr>
+      <tr><td class="m-cell">le père</td><td class="f-cell">la mère</td><td class="en-cell">father / mother</td></tr>
+      <tr><td class="m-cell">le frère</td><td class="f-cell">la sœur</td><td class="en-cell">brother / sister</td></tr>
+      <tr><td class="m-cell">le fils</td><td class="f-cell">la fille</td><td class="en-cell">son / daughter</td></tr>
+      <tr><td class="m-cell">le roi</td><td class="f-cell">la reine</td><td class="en-cell">king / queen</td></tr>
+      <tr><td class="m-cell">le neveu</td><td class="f-cell">la nièce</td><td class="en-cell">nephew / niece</td></tr>
+      <tr><td class="m-cell">le taureau</td><td class="f-cell">la vache</td><td class="en-cell">bull / cow</td></tr>
+      <tr><td class="m-cell">le cheval</td><td class="f-cell">la jument</td><td class="en-cell">horse / mare</td></tr>
+    </tbody>
+  </table>
+
+  <div class="pattern-head">⚖ Same form for both genders — article changes only</div>
+  <div class="word-pills">
+    <span class="pill masc" title="le/la journaliste">le/la journaliste</span>
+    <span class="pill masc" title="le/la artiste">le/la artiste</span>
+    <span class="pill masc" title="le/la dentiste">le/la dentiste</span>
+    <span class="pill masc" title="le/la touriste">le/la touriste</span>
+    <span class="pill masc" title="le/la pilote">le/la pilote</span>
+    <span class="pill masc" title="le/la enfant">le/la enfant</span>
+    <span class="pill masc" title="le/la collègue">le/la collègue</span>
+  </div>
+</div>
+
+<!-- ═══════════════ CH 6: TRICKY WORDS ═══════════════ -->
+<div class="panel" id="tab-tricky">
+  <div class="section-head">
+    <h2>Tricky Words &amp; Common Mistakes</h2>
+    <div class="tagline">The exceptions that catch everyone out</div>
+    <div class="rule"></div>
+  </div>
+
+  <div class="concept">
+    These words <strong>look like</strong> they should be one gender but are actually the other. 
+    Bookmark this page. These come up constantly.
+  </div>
+
+  <div class="pattern-head">🚨 Looks masculine, is actually FEMININE</div>
+  <table class="pair-table">
+    <thead><tr><th>Word</th><th>Meaning</th><th>Why tricky</th></tr></thead>
+    <tbody>
+      <tr><td class="f-cell">l'eau (F)</td><td class="en-cell">water</td><td class="en-cell">Ends in -eau like le bateau — but feminine!</td></tr>
+      <tr><td class="f-cell">la mer (F)</td><td class="en-cell">sea</td><td class="en-cell">Short, simple — many guess masculine</td></tr>
+      <tr><td class="f-cell">la nuit (F)</td><td class="en-cell">night</td><td class="en-cell">Very common, often guessed wrong</td></tr>
+      <tr><td class="f-cell">la dent (F)</td><td class="en-cell">tooth</td><td class="en-cell">Ends in consonant → looks masculine</td></tr>
+      <tr><td class="f-cell">la forêt (F)</td><td class="en-cell">forest</td><td class="en-cell">Ends in -et which is masculine in many words</td></tr>
+      <tr><td class="f-cell">la couleur (F)</td><td class="en-cell">color</td><td class="en-cell">-eur is masculine for people, feminine for abstract</td></tr>
+      <tr><td class="f-cell">la fleur (F)</td><td class="en-cell">flower</td><td class="en-cell">-eur → people are masc, things often aren't</td></tr>
+      <tr><td class="f-cell">la page (F)</td><td class="en-cell">page</td><td class="en-cell">Ends in -age like le voyage — exception!</td></tr>
+      <tr><td class="f-cell">la plage (F)</td><td class="en-cell">beach</td><td class="en-cell">Another -age exception to memorize</td></tr>
+    </tbody>
+  </table>
+
+  <div class="pattern-head">🚨 Looks feminine, is actually MASCULINE</div>
+  <table class="pair-table">
+    <thead><tr><th>Word</th><th>Meaning</th><th>Why tricky</th></tr></thead>
+    <tbody>
+      <tr><td class="m-cell">le musée (M)</td><td class="en-cell">museum</td><td class="en-cell">-ée ending looks like l'idée (F) but masculine</td></tr>
+      <tr><td class="m-cell">le lycée (M)</td><td class="en-cell">high school</td><td class="en-cell">Same -ée trap</td></tr>
+      <tr><td class="m-cell">le silence (M)</td><td class="en-cell">silence</td><td class="en-cell">-ence is usually feminine, but not here</td></tr>
+      <tr><td class="m-cell">le service (M)</td><td class="en-cell">service</td><td class="en-cell">Ends in -ice, but masculine</td></tr>
+      <tr><td class="m-cell">le sourire (M)</td><td class="en-cell">smile</td><td class="en-cell">-ire ending, masculine</td></tr>
+    </tbody>
+  </table>
+
+  <div class="pattern-head">🔄 Words that CHANGE MEANING with gender</div>
+  <table class="pair-table">
+    <thead><tr><th>Masculine</th><th>Feminine</th></tr></thead>
+    <tbody>
+      <tr><td><em>le livre</em> — book</td><td><em>la livre</em> — pound (currency/weight)</td></tr>
+      <tr><td><em>le tour</em> — tour, turn</td><td><em>la tour</em> — tower</td></tr>
+      <tr><td><em>le poêle</em> — stove</td><td><em>la poêle</em> — frying pan</td></tr>
+      <tr><td><em>le mode</em> — mode, method</td><td><em>la mode</em> — fashion</td></tr>
+      <tr><td><em>le manche</em> — handle</td><td><em>la Manche</em> — English Channel</td></tr>
+      <tr><td><em>le voile</em> — veil</td><td><em>la voile</em> — sail, sailing</td></tr>
+    </tbody>
+  </table>
+
+  <div class="pattern-head">🔡 Words starting with vowel / silent H (gender hidden)</div>
+  <div class="concept" style="border-left-color:#7c3aed">
+    When you see <strong>l'</strong>, you can't tell gender from the article — you must know the noun. 
+    Here are the most common <em>l'</em> words with their gender revealed:
+  </div>
+  <table class="pair-table">
+    <thead><tr><th>Word</th><th>Gender</th><th>Meaning</th></tr></thead>
+    <tbody>
+      <tr><td style="font-family:'DM Mono',monospace">l'homme</td><td><span class="badge-m">M</span></td><td class="en-cell">man</td></tr>
+      <tr><td style="font-family:'DM Mono',monospace">l'école</td><td><span class="badge-f">F</span></td><td class="en-cell">school</td></tr>
+      <tr><td style="font-family:'DM Mono',monospace">l'eau</td><td><span class="badge-f">F</span></td><td class="en-cell">water ⚠</td></tr>
+      <tr><td style="font-family:'DM Mono',monospace">l'hôtel</td><td><span class="badge-m">M</span></td><td class="en-cell">hotel</td></tr>
+      <tr><td style="font-family:'DM Mono',monospace">l'hôpital</td><td><span class="badge-m">M</span></td><td class="en-cell">hospital</td></tr>
+      <tr><td style="font-family:'DM Mono',monospace">l'idée</td><td><span class="badge-f">F</span></td><td class="en-cell">idea</td></tr>
+      <tr><td style="font-family:'DM Mono',monospace">l'arbre</td><td><span class="badge-m">M</span></td><td class="en-cell">tree</td></tr>
+      <tr><td style="font-family:'DM Mono',monospace">l'avion</td><td><span class="badge-m">M</span></td><td class="en-cell">airplane</td></tr>
+      <tr><td style="font-family:'DM Mono',monospace">l'amour</td><td><span class="badge-m">M</span></td><td class="en-cell">love</td></tr>
+      <tr><td style="font-family:'DM Mono',monospace">l'heure</td><td><span class="badge-f">F</span></td><td class="en-cell">hour/time</td></tr>
+      <tr><td style="font-family:'DM Mono',monospace">l'été</td><td><span class="badge-m">M</span></td><td class="en-cell">summer</td></tr>
+      <tr><td style="font-family:'DM Mono',monospace">l'année</td><td><span class="badge-f">F</span></td><td class="en-cell">year</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- ═══════════════ CH 7: PLURALS ═══════════════ -->
+<div class="panel" id="tab-plural">
+  <div class="section-head">
+    <h2>Plural Formation</h2>
+    <div class="tagline">How nouns change from singular to plural</div>
+    <div class="rule"></div>
+  </div>
+
+  <div class="concept">
+    <strong>General rule:</strong> Add <em>-s</em> to the singular. That's it for ~80% of words. But French has 6 special patterns worth knowing.
+  </div>
+
+  <div class="plural-rule">
+    <span class="plural-pattern">Regular → + s</span>
+    <span>Most words: <span class="plural-ex">le livre → les livres &nbsp;|&nbsp; la table → les tables</span></span>
+  </div>
+  <div class="plural-rule">
+    <span class="plural-pattern">-s / -x / -z → unchanged</span>
+    <span>Already ends in s/x/z: <span class="plural-ex">le pays → les pays &nbsp;|&nbsp; la voix → les voix</span></span>
+  </div>
+  <div class="plural-rule">
+    <span class="plural-pattern">-eau / -au / -eu → + x</span>
+    <span>Add x not s: <span class="plural-ex">le bateau → les bateaux &nbsp;|&nbsp; le gâteau → les gâteaux</span></span>
+  </div>
+  <div class="plural-rule">
+    <span class="plural-pattern">-al → -aux</span>
+    <span>Most -al words: <span class="plural-ex">l'animal → les animaux &nbsp;|&nbsp; le journal → les journaux</span></span>
+  </div>
+  <div class="plural-rule">
+    <span class="plural-pattern">-ail → -aux (some)</span>
+    <span>Only a few: <span class="plural-ex">le travail → les travaux &nbsp;|&nbsp; le vitrail → les vitraux</span></span>
+  </div>
+  <div class="plural-rule">
+    <span class="plural-pattern">-ou → -oux (7 words)</span>
+    <span>Memorize these 7: <span class="plural-ex">le bijou → les bijoux &nbsp;|&nbsp; le genou → les genoux &nbsp;|&nbsp; le chou → les choux</span></span>
+  </div>
+  <div class="plural-rule" style="border-left-color:var(--red)">
+    <span class="plural-pattern" style="background:var(--red-bg);color:var(--red);border-color:#fca5a5">Irregular — memorize</span>
+    <span><span class="plural-ex">l'œil → les yeux &nbsp;|&nbsp; le ciel → les cieux &nbsp;|&nbsp; monsieur → messieurs</span></span>
+  </div>
+
+  <div class="pattern-head" style="margin-top:1.5rem">The 7 -ou words that take -x (not -s)</div>
+  <div class="word-pills">
+    <span class="pill masc">le bijou → bijoux</span>
+    <span class="pill masc">le caillou → cailloux</span>
+    <span class="pill masc">le chou → choux</span>
+    <span class="pill masc">le genou → genoux</span>
+    <span class="pill masc">le hibou → hiboux</span>
+    <span class="pill masc">le joujou → joujoux</span>
+    <span class="pill masc">le pou → poux</span>
+  </div>
+  <div class="example-sentence" style="margin-top:0.5rem">Mnemonic: <strong>B</strong>ijou <strong>C</strong>aillou <strong>C</strong>hou <strong>G</strong>enou <strong>H</strong>ibou <strong>J</strong>oujou <strong>P</strong>ou — "BCCGHjP"</div>
+</div>
+
+<!-- ═══════════════ CH 8: CHEAT SHEET ═══════════════ -->
+<div class="panel" id="tab-cheatsheet">
+  <div class="section-head">
+    <h2>Cheat Sheet</h2>
+    <div class="tagline">Everything on one page — print it, pin it, memorize it</div>
+    <div class="rule"></div>
+  </div>
+
+  <div class="cheat-grid">
+    <div class="cheat-col m">
+      <h3>🔵 Masculine Endings</h3>
+      <div class="cheat-row"><span class="cheat-ending">-age</span><span class="cheat-ex">le voyage</span></div>
+      <div class="cheat-row"><span class="cheat-ending">-ment</span><span class="cheat-ex">le moment</span></div>
+      <div class="cheat-row"><span class="cheat-ending">-isme</span><span class="cheat-ex">le tourisme</span></div>
+      <div class="cheat-row"><span class="cheat-ending">-eau</span><span class="cheat-ex">le bateau</span></div>
+      <div class="cheat-row"><span class="cheat-ending">-et</span><span class="cheat-ex">le billet</span></div>
+      <div class="cheat-row"><span class="cheat-ending">-ier</span><span class="cheat-ex">le papier</span></div>
+      <div class="cheat-row"><span class="cheat-ending">-in</span><span class="cheat-ex">le jardin</span></div>
+      <div class="cheat-row"><span class="cheat-ending">-oir</span><span class="cheat-ex">le miroir</span></div>
+      <div class="cheat-row"><span class="cheat-ending">-ème</span><span class="cheat-ex">le problème</span></div>
+      <div class="cheat-row"><span class="cheat-ending">-phone</span><span class="cheat-ex">le téléphone</span></div>
+    </div>
+    <div class="cheat-col f">
+      <h3>🩷 Feminine Endings</h3>
+      <div class="cheat-row"><span class="cheat-ending">-tion/-sion</span><span class="cheat-ex">la nation</span></div>
+      <div class="cheat-row"><span class="cheat-ending">-té</span><span class="cheat-ex">la liberté</span></div>
+      <div class="cheat-row"><span class="cheat-ending">-ure</span><span class="cheat-ex">la voiture</span></div>
+      <div class="cheat-row"><span class="cheat-ending">-ette</span><span class="cheat-ex">la serviette</span></div>
+      <div class="cheat-row"><span class="cheat-ending">-ence/-ance</span><span class="cheat-ex">la science</span></div>
+      <div class="cheat-row"><span class="cheat-ending">-ie</span><span class="cheat-ex">la vie</span></div>
+      <div class="cheat-row"><span class="cheat-ending">-ée</span><span class="cheat-ex">l'idée</span></div>
+      <div class="cheat-row"><span class="cheat-ending">-ade</span><span class="cheat-ex">la salade</span></div>
+      <div class="cheat-row"><span class="cheat-ending">-esse</span><span class="cheat-ex">la richesse</span></div>
+      <div class="cheat-row"><span class="cheat-ending">-tude</span><span class="cheat-ex">l'attitude</span></div>
+      <div class="cheat-row"><span class="cheat-ending">-eur (abstract)</span><span class="cheat-ex">la couleur</span></div>
+    </div>
+  </div>
+
+  <div class="pattern-head">Profession transformation patterns</div>
+  <table class="pair-table">
+    <thead><tr><th>Pattern</th><th>→</th><th>Example</th></tr></thead>
+    <tbody>
+      <tr><td class="m-cell">-er</td><td>→</td><td><span class="f-cell">-ère</span> &nbsp; boulan<strong>ger</strong> → boulan<strong>gère</strong></td></tr>
+      <tr><td class="m-cell">-eur</td><td>→</td><td><span class="f-cell">-euse</span> &nbsp; chant<strong>eur</strong> → chant<strong>euse</strong></td></tr>
+      <tr><td class="m-cell">-teur</td><td>→</td><td><span class="f-cell">-trice</span> &nbsp; ac<strong>teur</strong> → ac<strong>trice</strong></td></tr>
+      <tr><td class="m-cell">-ien</td><td>→</td><td><span class="f-cell">-ienne</span> &nbsp; music<strong>ien</strong> → music<strong>ienne</strong></td></tr>
+      <tr><td class="m-cell">-on</td><td>→</td><td><span class="f-cell">-onne</span> &nbsp; cham<strong>pion</strong> → cham<strong>pionne</strong></td></tr>
+      <tr><td class="m-cell">-e</td><td>→</td><td><span class="f-cell">-esse</span> &nbsp; prin<strong>ce</strong> → prin<strong>cesse</strong></td></tr>
+    </tbody>
+  </table>
+
+  <div class="pattern-head">Non-negotiable exceptions to memorize</div>
+  <div class="word-pills">
+    <span class="pill fem">l'eau (F) ← not -eau!</span>
+    <span class="pill masc">le musée (M) ← not -ée!</span>
+    <span class="pill fem">la page (F) ← not -age!</span>
+    <span class="pill fem">la plage (F) ← not -age!</span>
+    <span class="pill masc">le lycée (M) ← not -ée!</span>
+  </div>
+</div>
+
+<!-- ═══════════════ CH 9: QUIZ ═══════════════ -->
+<div class="panel" id="tab-quiz">
+  <div class="section-head">
+    <h2>Gender Quiz</h2>
+    <div class="tagline">Test yourself — tap masculine or feminine</div>
+    <div class="rule"></div>
+  </div>
+
+  <div class="quiz-wrap">
+    <div class="quiz-counter" id="quiz-counter">Question 1 of 20</div>
+
+    <div class="quiz-card" id="quiz-card">
+      <div class="quiz-word" id="quiz-word">voyage</div>
+      <div class="quiz-hint" id="quiz-hint">a trip · ends in -age</div>
+      <div class="quiz-reveal" onclick="revealAnswer()">▸ reveal answer</div>
+      <div class="quiz-answer" id="quiz-answer">
+        <div class="quiz-full m" id="quiz-full">le voyage</div>
+        <div class="quiz-reason" id="quiz-reason">-age ending → masculine (≈90%)</div>
+      </div>
+    </div>
+
+    <div class="quiz-btns">
+      <button class="quiz-btn masc" id="btn-m" onclick="answer('m')">🔵 Masculin (le / un)</button>
+      <button class="quiz-btn fem"  id="btn-f" onclick="answer('f')">🩷 Féminin (la / une)</button>
+    </div>
+
+    <button class="quiz-next" id="quiz-next" onclick="nextQuestion()" style="display:none">NEXT QUESTION →</button>
+    <div class="quiz-score" id="quiz-score">Score: 0 / 0</div>
+  </div>
+</div>
+
+<script>
+/* ── TAB SWITCHING ── */
+const tabs = document.querySelectorAll('.ch-tab');
+const panels = document.querySelectorAll('.panel');
+const TOTAL = tabs.length;
+
+function switchTab(id) {
+  tabs.forEach(t => t.classList.remove('active'));
+  panels.forEach(p => p.classList.remove('active'));
+  const btn = document.querySelector(`[data-tab="${id}"]`);
+  const pan = document.getElementById('tab-' + id);
+  if (btn) btn.classList.add('active');
+  if (pan) pan.classList.add('active');
+  updateProgress(id);
+}
+
+tabs.forEach(t => t.addEventListener('click', () => switchTab(t.dataset.tab)));
+
+function updateProgress(id) {
+  const order = ['intro','articles','masc-end','fem-end','pairs','tricky','plural','cheatsheet','quiz'];
+  const idx = order.indexOf(id);
+  const pct = ((idx + 1) / TOTAL * 100).toFixed(0);
+  document.getElementById('prog-fill').style.width = pct + '%';
+  document.getElementById('prog-label').textContent = `CH ${idx+1} / ${TOTAL}`;
+}
+
+/* ── ENDING TOGGLES ── */
+function toggleEnding(header) {
+  const card = header.closest('.ending-card');
+  card.classList.toggle('open');
+}
+
+/* ── QUIZ ── */
+const questions = [
+  { word:'voyage',      hint:'a trip · ends in -age',       gender:'m', full:'le voyage',      reason:'-age → masculine (90%)' },
+  { word:'nation',      hint:'a nation · ends in -tion',    gender:'f', full:'la nation',      reason:'-tion → always feminine' },
+  { word:'liberté',     hint:'freedom · ends in -té',       gender:'f', full:'la liberté',     reason:'-té → feminine (abstract)' },
+  { word:'bateau',      hint:'a boat · ends in -eau',       gender:'m', full:'le bateau',      reason:'-eau → masculine (almost always)' },
+  { word:'eau',         hint:'water · starts with vowel',   gender:'f', full:"l'eau",          reason:'Exception! -eau is masculine but eau is feminine' },
+  { word:'voiture',     hint:'a car · ends in -ure',        gender:'f', full:'la voiture',     reason:'-ure → feminine' },
+  { word:'gouvernement',hint:'government · ends in -ment',  gender:'m', full:'le gouvernement',reason:'-ment → masculine (always)' },
+  { word:'décision',    hint:'a decision · ends in -sion',  gender:'f', full:'la décision',    reason:'-sion → feminine' },
+  { word:'couleur',     hint:'color · ends in -eur (abstract)', gender:'f', full:'la couleur', reason:'-eur abstract nouns → feminine' },
+  { word:'chanteur',    hint:'singer (male) · ends in -eur', gender:'m', full:'le chanteur',   reason:'-eur for people doing action → masculine' },
+  { word:'musée',       hint:'museum · ends in -ée',        gender:'m', full:'le musée',       reason:'Exception! -ée is usually feminine but musée is masculine' },
+  { word:'idée',        hint:'an idea · ends in -ée',       gender:'f', full:"l'idée",         reason:'-ée → feminine' },
+  { word:'problème',    hint:'a problem · ends in -ème',    gender:'m', full:'le problème',    reason:'-ème → masculine' },
+  { word:'science',     hint:'science · ends in -ence',     gender:'f', full:'la science',     reason:'-ence → feminine' },
+  { word:'baguette',    hint:'a baguette · ends in -ette',  gender:'f', full:'la baguette',    reason:'-ette → feminine (diminutive)' },
+  { word:'jardin',      hint:'a garden · ends in -in',      gender:'m', full:'le jardin',      reason:'-in → masculine' },
+  { word:'page',        hint:'a page · ends in -age',       gender:'f', full:'la page',        reason:'Exception! Most -age = masculine but page is feminine' },
+  { word:'tourisme',    hint:'tourism · ends in -isme',     gender:'m', full:'le tourisme',    reason:'-isme → always masculine' },
+  { word:'plage',       hint:'a beach · ends in -age',      gender:'f', full:'la plage',       reason:'Exception! la plage, not le plage' },
+  { word:'qualité',     hint:'quality · ends in -té',       gender:'f', full:'la qualité',     reason:'-té → feminine' },
+];
+
+let qIdx = 0, score = 0, answered = false;
+
+function loadQuestion() {
+  const q = questions[qIdx];
+  document.getElementById('quiz-word').textContent = q.word;
+  document.getElementById('quiz-hint').textContent = q.hint;
+  document.getElementById('quiz-full').textContent = q.full;
+  document.getElementById('quiz-full').className = 'quiz-full ' + q.gender;
+  document.getElementById('quiz-reason').textContent = q.reason;
+  document.getElementById('quiz-counter').textContent = `Question ${qIdx + 1} of ${questions.length}`;
+  document.getElementById('quiz-answer').classList.remove('shown');
+  document.getElementById('quiz-next').style.display = 'none';
+  document.getElementById('btn-m').className = 'quiz-btn masc';
+  document.getElementById('btn-f').className = 'quiz-btn fem';
+  answered = false;
+}
+
+function revealAnswer() {
+  document.getElementById('quiz-answer').classList.add('shown');
+}
+
+function answer(picked) {
+  if (answered) return;
+  answered = true;
+  const q = questions[qIdx];
+  const correct = picked === q.gender;
+  if (correct) score++;
+  document.getElementById('btn-m').className = 'quiz-btn masc' + (q.gender === 'm' ? ' correct' : (picked === 'm' ? ' wrong' : ''));
+  document.getElementById('btn-f').className = 'quiz-btn fem'  + (q.gender === 'f' ? ' correct' : (picked === 'f' ? ' wrong' : ''));
+  document.getElementById('quiz-answer').classList.add('shown');
+  document.getElementById('quiz-next').style.display = 'block';
+  document.getElementById('quiz-score').textContent = `Score: ${score} / ${qIdx + 1}`;
+}
+
+function nextQuestion() {
+  qIdx = (qIdx + 1) % questions.length;
+  if (qIdx === 0) score = 0;
+  loadQuestion();
+  document.getElementById('quiz-score').textContent = `Score: ${score} / ${qIdx === 0 ? 0 : qIdx}`;
+}
+
+loadQuestion();
+</script>
+<!-- Home Footer -->
+<div style="text-align:center;padding:18px 20px;background:linear-gradient(135deg,#f8fafc,#eff6ff);border-top:1px solid #e2e8f0;">
+  <a href="https://shakti4640.github.io/mon-univers-francais/" style="display:inline-flex;align-items:center;gap:8px;padding:10px 24px;background:linear-gradient(135deg,#002395,#1a56db);color:#fff;text-decoration:none;border-radius:10px;font-size:0.88rem;font-weight:600;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;transition:all 0.2s;box-shadow:0 2px 8px rgba(0,35,149,0.25);" onmouseover="this.style.transform='translateY(-1px)';this.style.boxShadow='0 4px 14px rgba(0,35,149,0.35)'" onmouseout="this.style.transform='none';this.style.boxShadow='0 2px 8px rgba(0,35,149,0.25)'">
+    <span style="font-size:1.1rem">🏠</span> Mon Univers Français
+  </a>
+</div>
+</body>
+</html>
