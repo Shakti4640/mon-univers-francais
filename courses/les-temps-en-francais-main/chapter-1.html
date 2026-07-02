@@ -1,0 +1,1198 @@
+﻿<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TENSE 1: LE PRÉSENT DE L'INDICATIF (Present Tense) — French Tenses Guide</title>
+<link rel="icon" type="image/png" href="images/favicon.png">
+<link rel="stylesheet" href="styles.css">    <style>
+        /* ===== Chapter 1 - Modern Shell ===== */
+
+        /* Hero - compact chapter header inspired by chapter-0 (sticky at top) */
+        .hero-section {
+            position: sticky;
+            top: 0;
+            z-index: 1500;
+            background: linear-gradient(135deg, #002395 0%, #0a3d91 40%, #1a56db 100%);
+            color: #fff;
+            padding: 22px 40px 20px;
+            text-align: center;
+            overflow: hidden;
+            box-shadow: 0 4px 16px rgba(0,35,149,0.22);
+        }
+        .hero-section::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.04'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E") repeat;
+            pointer-events: none;
+        }
+        .hero-crumb {
+            display: inline-flex; align-items: center; gap: 8px;
+            padding: 4px 12px;
+            background: rgba(255,255,255,0.14);
+            border: 1px solid rgba(255,255,255,0.22);
+            border-radius: 999px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+            backdrop-filter: blur(4px);
+        }
+        .hero-num {
+            display: inline-flex; align-items: center; justify-content: center;
+            width: 20px; height: 20px;
+            background: #fff;
+            color: #002395;
+            border-radius: 50%;
+            font-weight: 800;
+            font-size: 0.7rem;
+            letter-spacing: 0;
+        }
+        .hero-title {
+            font-size: 1.45rem;
+            font-weight: 700;
+            letter-spacing: -0.3px;
+            margin: 0 0 4px;
+            text-shadow: 0 2px 8px rgba(0,0,0,0.22);
+            line-height: 1.2;
+        }
+        .hero-sub {
+            font-size: 0.88rem;
+            opacity: 0.92;
+            max-width: 720px;
+            margin: 0 auto;
+            line-height: 1.45;
+        }
+
+        /* =================================================================
+           CONTENT STYLING - rich, varied palette
+           Chapter has a primary "mood" color, but sections, callouts, and
+           tables use different semantic accents so the page doesn't feel
+           monotone. Uses CSS :has() (widely supported as of 2024) to auto-
+           color blockquotes based on the emoji inside them.
+           ================================================================= */
+
+        /* --- Semantic color tokens (stable across chapters) --- */
+        /* blue=tip  amber=warning  green=ok  red=rule/wrong  purple=summary  teal=technique  indigo=info  pink=example */
+
+        /* --- Base typography: slightly larger body text for comfortable reading --- */
+        .content {
+            font-size: 1.12rem;
+            line-height: 1.78;
+        }
+        .content p { font-size: 1.12rem; line-height: 1.78; }
+        .content li { font-size: 1.12rem; line-height: 1.72; }
+        .content td, .content th { font-size: 1.05rem; }
+        .content blockquote p, .content blockquote li { font-size: 1.08rem; }
+
+        /* --- Headings: H2 rotates through accents, H3/H4 follow parent H2 --- */
+        .content h1 { color: #002395; border-bottom: 3px solid #1a56db; padding-bottom: 8px; font-size: 2.05rem; }
+        .content h1 a { color: inherit; text-decoration: none; }
+        .content h1 a:hover { text-decoration: underline; text-decoration-color: #1a56db; }
+
+        .content h2 {
+            margin: 36px 0 14px;
+            padding: 10px 16px 10px 18px;
+            border-radius: 8px;
+            border: none;
+            border-left: 5px solid #002395;
+            background: linear-gradient(90deg, #eff6ff, transparent);
+            font-size: 1.55rem;
+            color: #002395;
+        }
+        /* Rotate H2 accent color across the chapter so each section feels distinct */
+        .content h2:nth-of-type(5n+2) { border-left-color: #7c3aed; background: linear-gradient(90deg, #f5f3ff, transparent); color: #5b21b6; }
+        .content h2:nth-of-type(5n+3) { border-left-color: #0d9488; background: linear-gradient(90deg, #f0fdfa, transparent); color: #0f766e; }
+        .content h2:nth-of-type(5n+4) { border-left-color: #d97706; background: linear-gradient(90deg, #fffbeb, transparent); color: #92400e; }
+        .content h2:nth-of-type(5n+5) { border-left-color: #ED2939; background: linear-gradient(90deg, #fef2f2, transparent); color: #991b1b; }
+
+        .content h3 {
+            color: #0a3d91;
+            margin: 22px 0 10px;
+            font-size: 1.28rem;
+            position: relative;
+            padding-left: 14px;
+        }
+        .content h3::before {
+            content: '';
+            position: absolute;
+            left: 0; top: 0.35em; bottom: 0.35em;
+            width: 3px;
+            background: #1a56db;
+            border-radius: 2px;
+        }
+        .content h4 { color: #0a3d91; margin: 18px 0 8px; font-size: 1.14rem; opacity: 0.9; }
+
+        /* --- HR - a decorative section divider, not a boring line --- */
+        .content hr {
+            border: none;
+            height: 14px;
+            margin: 32px 0;
+            background: none;
+            position: relative;
+            text-align: center;
+        }
+        .content hr::before {
+            content: '';
+            position: absolute;
+            left: 15%; right: 15%; top: 50%;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, #cbd5e1, transparent);
+        }
+        .content hr::after {
+            content: '';
+            position: absolute;
+            left: 50%; top: 50%;
+            width: 8px; height: 8px;
+            transform: translate(-50%, -50%) rotate(45deg);
+            background: #1a56db;
+            border-radius: 2px;
+        }
+
+        /* =================================================================
+           TABLES - single consistent readable style across the whole chapter.
+           All tables use the chapter's mood color for the header so verb
+           conjugation charts that sit next to each other don't feel random.
+           Visual variety comes from H2 section accents and semantic
+           blockquotes, not from tables. Header text uses a subtle text-shadow
+           so <strong> or light-colored inline content inside <th> stays
+           readable against the gradient.
+           ================================================================= */
+        .content table {
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+            margin: 16px 0;
+        }
+        .content table th {
+            background: linear-gradient(135deg, #002395, #1a56db) !important;
+            color: #fff !important;
+            font-weight: 700;
+            font-size: 0.9rem;
+            padding: 11px 16px;
+            text-align: left;
+            text-transform: none;
+            letter-spacing: 0;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.25);
+        }
+        /* Force <strong> INSIDE a header cell to stay white + bold */
+        .content table th strong,
+        .content table th b,
+        .content table th em {
+            color: #fff !important;
+            font-weight: 800 !important;
+        }
+        .content table td {
+            padding: 10px 16px;
+            border: none;
+            border-bottom: 1px solid #f1f5f9;
+            color: #1e293b;
+        }
+        .content table tr:last-child td { border-bottom: none; }
+        .content table tr:nth-child(even) td { background-color: #eff6ff; }
+        .content table tr:hover td { background-color: rgba(0,35,149,0.12); }
+        /* Make <strong> in body cells a bit more prominent and mood-colored */
+        .content table td strong { color: #0a3d91; }
+
+        /* =================================================================
+           BLOCKQUOTES - semantic auto-coloring via emoji markers (CSS :has)
+           Falls back to the mood-color default if no emoji match.
+           ================================================================= */
+        .content blockquote {
+            background: linear-gradient(135deg, #fafbff, #eff6ff);
+            border-left: 4px solid #002395;
+            border-radius: 0 10px 10px 0;
+            padding: 14px 20px;
+            margin: 18px 0;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+            position: relative;
+        }
+        .content blockquote h2 {
+            margin: 0 0 6px;
+            padding: 0;
+            background: none;
+            border: none;
+            color: inherit;
+            font-size: 1.05rem;
+        }
+        .content blockquote p { margin-bottom: 8px; }
+        .content blockquote p:last-child { margin-bottom: 0; }
+
+        /* Tip / insight (blue) */
+        .content blockquote:has(> p:first-child > :where(strong:first-child)) { }
+        .content blockquote:has(p:first-child:first-letter),
+        .content blockquote:where(:has(> p:first-child:first-letter)) {}
+
+        /* Warning / trap -- amber */
+        .content blockquote:has(p:first-child:is(:first-letter)),
+        .content blockquote:has(> p:first-child:nth-child(1)) {}
+
+        /* Use attribute-agnostic :has with text matching via :first-letter is
+           unreliable for emoji. Use a pragmatic approach: class-less target by
+           the emoji character using :has + substring match is not directly
+           possible in CSS, so we drive it from a tiny inline classifier in
+           the same stylesheet via ::marker-like tricks. We settle for a
+           robust alternative: match blockquotes whose first child paragraph
+           starts with specific Unicode ranges using :has() + attr? Not
+           possible either. So we layer on a lightweight JS tagger that adds
+           classes bq-tip / bq-warn / bq-ok / bq-bad / bq-rule / bq-summary.
+           See the <script> block in the page body. */
+
+        /* Semantic classes added by the tiny inline tagger script */
+        .content blockquote.bq-tip {
+            background: linear-gradient(135deg, #eff6ff, #dbeafe);
+            border-left-color: #1e40af;
+        }
+        .content blockquote.bq-tip h2 { color: #1e40af; }
+        .content blockquote.bq-tip strong { color: #1e3a8a; }
+
+        .content blockquote.bq-warn {
+            background: linear-gradient(135deg, #fffbeb, #fef3c7);
+            border-left-color: #d97706;
+        }
+        .content blockquote.bq-warn h2 { color: #92400e; }
+        .content blockquote.bq-warn strong { color: #78350f; }
+
+        .content blockquote.bq-ok {
+            background: linear-gradient(135deg, #f0fdf4, #dcfce7);
+            border-left-color: #16a34a;
+        }
+        .content blockquote.bq-ok h2 { color: #15803d; }
+        .content blockquote.bq-ok strong { color: #14532d; }
+
+        .content blockquote.bq-bad {
+            background: linear-gradient(135deg, #fef2f2, #fee2e2);
+            border-left-color: #dc2626;
+        }
+        .content blockquote.bq-bad h2 { color: #991b1b; }
+        .content blockquote.bq-bad strong { color: #7f1d1d; }
+
+        .content blockquote.bq-rule {
+            background: linear-gradient(135deg, #fdf2f8, #fce7f3);
+            border-left-color: #be185d;
+        }
+        .content blockquote.bq-rule h2 { color: #9d174d; }
+        .content blockquote.bq-rule strong { color: #831843; }
+
+        .content blockquote.bq-summary {
+            background: linear-gradient(135deg, #faf5ff, #ede9fe);
+            border-left: 5px solid #7c3aed;
+            padding: 18px 24px;
+        }
+        .content blockquote.bq-summary h2 { color: #5b21b6; font-size: 1.15rem; }
+        .content blockquote.bq-summary strong { color: #4c1d95; }
+
+        .content blockquote.bq-example {
+            background: linear-gradient(135deg, #f0f9ff, #e0f2fe);
+            border-left-color: #0369a1;
+        }
+        .content blockquote.bq-example h2 { color: #075985; }
+        .content blockquote.bq-example strong { color: #0c4a6e; }
+
+        /* --- Inline --- */
+        /* Pre/code ASCII-art boxes: NEUTRAL, uncolored so they read as plain
+           code output. No mood tinting. Strong !important rules beat the
+           legacy inline "white + gray border" styles that live on each <pre>. */
+        .content pre,
+        .content div.relative > pre {
+            background: #f8fafc !important;
+            background-color: #f8fafc !important;
+            color: #1e293b !important;
+            border: 1px solid #e2e8f0 !important;
+            border-left: 3px solid #cbd5e1 !important;
+            padding: 16px 20px !important;
+            border-radius: 6px !important;
+            margin: 16px 0 !important;
+            box-shadow: none !important;
+            font-size: 0.88rem !important;
+            line-height: 1.5 !important;
+            overflow-x: auto !important;
+        }
+        .content pre code,
+        .content div.relative > pre > code {
+            background: none !important;
+            background-color: transparent !important;
+            color: inherit !important;
+            padding: 0 !important;
+            font-family: 'Consolas','Monaco','Courier New',monospace !important;
+        }
+        .content div.relative { margin: 16px 0; }
+
+        .content code {
+            background: rgba(0,35,149,0.1);
+            color: #0a3d91;
+            padding: 1px 6px;
+            border-radius: 4px;
+            font-size: 0.9em;
+        }
+
+        .content a {
+            color: #002395;
+            text-decoration-color: rgba(0,35,149,0.4);
+            text-underline-offset: 2px;
+        }
+        .content a:hover { text-decoration-color: #002395; }
+
+        .content strong { color: #0f172a; font-weight: 700; }
+        .content em { font-style: italic; }
+        /* Strikethrough "wrong" examples -- must stay clearly readable
+           against any background (white, amber blockquote, red blockquote...).
+           Medium-dark slate with red line-through hits contrast ~5:1 everywhere. */
+        .content del {
+            color: #475569;
+            text-decoration-color: #dc2626;
+            text-decoration-thickness: 2px;
+        }
+        /* Inside colored semantic blockquotes, lock strong/em/del to dark text
+           so the highlight colors inherited from the blockquote don't drown
+           out the words. */
+        .content blockquote.bq-warn strong,
+        .content blockquote.bq-tip strong,
+        .content blockquote.bq-ok strong,
+        .content blockquote.bq-bad strong,
+        .content blockquote.bq-rule strong,
+        .content blockquote.bq-example strong,
+        .content blockquote.bq-summary strong { color: #0f172a !important; }
+        .content blockquote em,
+        .content blockquote em * { color: #1e293b; font-style: italic; }
+        .content blockquote del { color: #475569; text-decoration-color: #dc2626; }
+
+        /* Lists get subtle marker color matching the mood */
+        .content ul li::marker { color: #1a56db; }
+        .content ol li::marker { color: #002395; font-weight: 700; }
+
+        /* Remove the old orphan top "anchor" H1 so we don't have a duplicate title */
+        .chat-message .px-2 > h1:first-of-type { display: none; }
+
+        /* Nav bar accent */
+        .nav-button {
+            background: linear-gradient(135deg, #002395 0%, #1a56db 100%);
+            box-shadow: 0 2px 6px rgba(0,35,149,0.3);
+        }
+        .nav-button:hover { box-shadow: 0 4px 12px rgba(0,35,149,0.4); }
+        .nav-button.home { background: linear-gradient(135deg, #ED2939 0%, #b91c1c 100%); box-shadow: 0 2px 6px rgba(237,41,57,0.3); }
+        .nav-button.home:hover { box-shadow: 0 4px 12px rgba(237,41,57,0.4); }
+
+        /* =================================================================
+           HAMBURGER MENU - fixed top-left, slide-out panel with chapter nav
+           and in-page TOC. Mood-accented. Always visible while scrolling.
+           ================================================================= */
+        .hamb-btn {
+            position: fixed;
+            top: 18px;
+            left: 18px;
+            z-index: 2000;
+            width: 46px;
+            height: 46px;
+            border-radius: 12px;
+            background: #fff;
+            border: 1px solid rgba(0,35,149,0.2);
+            box-shadow: 0 4px 14px rgba(0,0,0,0.12), 0 1px 3px rgba(0,0,0,0.06);
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 5px;
+            padding: 0;
+            transition: all 0.2s ease;
+        }
+        .hamb-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 18px rgba(0,0,0,0.16), 0 2px 4px rgba(0,0,0,0.08);
+            border-color: #1a56db;
+        }
+        .hamb-btn span {
+            display: block;
+            width: 22px;
+            height: 2.5px;
+            border-radius: 2px;
+            background: #002395;
+            transition: transform 0.25s ease, opacity 0.2s ease;
+            transform-origin: center;
+        }
+        .hamb-btn[aria-expanded="true"] span:nth-child(1) {
+            transform: translateY(7.5px) rotate(45deg);
+        }
+        .hamb-btn[aria-expanded="true"] span:nth-child(2) {
+            opacity: 0;
+            transform: scaleX(0);
+        }
+        .hamb-btn[aria-expanded="true"] span:nth-child(3) {
+            transform: translateY(-7.5px) rotate(-45deg);
+        }
+
+        .hamb-backdrop {
+            position: fixed;
+            inset: 0;
+            background: rgba(15,23,42,0.45);
+            backdrop-filter: blur(2px);
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.25s ease, visibility 0.25s ease;
+            z-index: 1998;
+        }
+        .hamb-backdrop.open {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .hamb-panel {
+            position: fixed;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            width: 340px;
+            max-width: 88vw;
+            background: #fff;
+            box-shadow: 4px 0 24px rgba(0,0,0,0.14);
+            z-index: 1999;
+            transform: translateX(-100%);
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        .hamb-panel.open { transform: translateX(0); }
+
+        .hamb-panel-head {
+            background: linear-gradient(135deg, #002395 0%, #0a3d91 50%, #1a56db 100%);
+            color: #fff;
+            padding: 22px 22px 18px;
+            position: relative;
+        }
+        .hamb-panel-head .hp-eyebrow {
+            font-size: 0.72rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            opacity: 0.82;
+            margin-bottom: 4px;
+        }
+        .hamb-panel-head .hp-title {
+            font-size: 1.15rem;
+            font-weight: 700;
+            line-height: 1.3;
+        }
+
+        .hamb-panel-body {
+            flex: 1;
+            overflow-y: auto;
+            padding: 8px 0 20px;
+        }
+        .hamb-panel-body::-webkit-scrollbar { width: 8px; }
+        .hamb-panel-body::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+
+        .hamb-group-title {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            font-weight: 700;
+            color: #64748b;
+            padding: 18px 22px 6px;
+        }
+
+        .hamb-link {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 9px 22px;
+            text-decoration: none;
+            color: #334155;
+            font-size: 0.96rem;
+            line-height: 1.35;
+            border-left: 3px solid transparent;
+            transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+        }
+        .hamb-link:hover {
+            background: #eff6ff;
+            color: #002395;
+            border-left-color: #1a56db;
+        }
+        .hamb-link.current {
+            background: #eff6ff;
+            color: #002395;
+            border-left-color: #002395;
+            font-weight: 600;
+        }
+        .hamb-link .hl-num {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 26px;
+            height: 26px;
+            flex-shrink: 0;
+            border-radius: 6px;
+            background: #f1f5f9;
+            color: #64748b;
+            font-size: 0.75rem;
+            font-weight: 700;
+        }
+        .hamb-link.current .hl-num,
+        .hamb-link:hover .hl-num {
+            background: #002395;
+            color: #fff;
+        }
+        .hamb-link .hl-home {
+            font-size: 1rem;
+        }
+
+        /* Mood-tinted dots for chapter links by mood */
+        .hamb-link.m-indicatif    .hl-dot { background: #002395; }
+        .hamb-link.m-conditionnel .hl-dot { background: #5b21b6; }
+        .hamb-link.m-subjonctif   .hl-dot { background: #0d9488; }
+        .hamb-link.m-imperatif    .hl-dot { background: #ED2939; }
+        .hamb-link.m-other        .hl-dot { background: #d97706; }
+        .hamb-link .hl-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            flex-shrink: 0;
+            margin-left: auto;
+        }
+
+        .hamb-toc-empty {
+            padding: 8px 22px;
+            font-size: 0.88rem;
+            color: #94a3b8;
+            font-style: italic;
+        }
+
+        @media (max-width: 768px) {
+            .hamb-btn { top: 12px; left: 12px; width: 42px; height: 42px; }
+            .hamb-panel { width: 300px; }
+            .hamb-panel-head { padding: 18px 18px 14px; }
+        }
+
+        @media (max-width: 768px) {
+            .hero-section { padding: 16px 16px 14px; }
+            .hero-title { font-size: 1.12rem; }
+            .hero-sub { font-size: 0.8rem; line-height: 1.4; }
+            .content { padding: 24px 16px; }
+            .content table { font-size: 0.88rem; }
+        }
+    </style>
+    <!-- MODERNIZED -->
+</head>
+<body>
+    <!-- ======================= PROGRESS BAR ======================= -->
+    <div id="section-progress-percentage" style="position: fixed; top: 18px; right: 18px; color: #fff; background: #002395; padding: 2px 8px; border-radius: 10px; font-size: 12px; font-weight: 700; z-index: 2001; box-shadow: 0 2px 6px rgba(0,35,149,0.35); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; letter-spacing: 0.02em;">0%</div>
+    <div id="section-progress-container" style="position: fixed; top: 46px; right: 24px; width: 10px; height: 150px; background: rgba(0,35,149,0.15); border: 1.5px solid #002395; border-radius: 6px; overflow: hidden; z-index: 2000; box-shadow: 0 2px 6px rgba(0,0,0,0.08);">
+        <div id="section-progress-bar" style="width: 100%; background: linear-gradient(180deg, #1a56db, #0a3d91); height: 0%; transition: height 0.2s ease;"></div>
+    </div>
+    <script>
+    (function(){
+        var bar = document.getElementById('section-progress-bar');
+        var pct = document.getElementById('section-progress-percentage');
+        if (!bar || !pct) return;
+        function update(){
+            var top = window.scrollY || window.pageYOffset;
+            var docH = document.documentElement.scrollHeight - window.innerHeight;
+            var ratio = docH > 0 ? (top / docH) * 100 : 0;
+            if (ratio < 0) ratio = 0; else if (ratio > 100) ratio = 100;
+            bar.style.height = ratio + '%';
+            pct.textContent = Math.round(ratio) + '%';
+        }
+        window.addEventListener('scroll', update, { passive: true });
+        window.addEventListener('resize', update);
+        update();
+    })();
+    </script>
+    <!-- ======================= /PROGRESS BAR ======================= -->
+    <!-- ======================= HAMBURGER MENU ======================= -->
+    <button class="hamb-btn" id="hambBtn" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="hambPanel">
+        <span></span>
+        <span></span>
+        <span></span>
+    </button>
+    <div class="hamb-backdrop" id="hambBackdrop" aria-hidden="true"></div>
+    <aside class="hamb-panel" id="hambPanel" role="navigation" aria-label="Chapter navigation" aria-hidden="true">
+        <div class="hamb-panel-head">
+            <div class="hp-eyebrow">Indicatif &#183; Chapter 1 of 21</div>
+            <div class="hp-title">Le Pr&#233;sent de l&#39;Indicatif</div>
+        </div>
+        <div class="hamb-panel-body" id="hambBody">
+            <div class="hamb-group-title">All Chapters</div>
+            <a href="index.html" class="hamb-link">
+                <span class="hl-num hl-home">&#8962;</span>
+                <span class="hl-label">Table of Contents</span>
+            </a>
+            <a href="chapter-0.html" class="hamb-link">
+                <span class="hl-num">0</span>
+                <span class="hl-label">Comprehensive Guide (Intro)</span>
+            </a>
+
+                <a href="chapter-1.html" class="hamb-link current m-indicatif" data-chap="1">
+                    <span class="hl-num">1</span>
+                    <span class="hl-label">Le Pr&#233;sent de l&#39;Indicatif</span>
+                    <span class="hl-dot"></span>
+                </a>
+                <a href="chapter-2.html" class="hamb-link m-indicatif" data-chap="2">
+                    <span class="hl-num">2</span>
+                    <span class="hl-label">Le Pass&#233; Compos&#233;</span>
+                    <span class="hl-dot"></span>
+                </a>
+                <a href="chapter-3.html" class="hamb-link m-indicatif" data-chap="3">
+                    <span class="hl-num">3</span>
+                    <span class="hl-label">L&#39;Imparfait</span>
+                    <span class="hl-dot"></span>
+                </a>
+                <a href="chapter-4.html" class="hamb-link m-indicatif" data-chap="4">
+                    <span class="hl-num">4</span>
+                    <span class="hl-label">Le Plus-que-parfait</span>
+                    <span class="hl-dot"></span>
+                </a>
+                <a href="chapter-5.html" class="hamb-link m-indicatif" data-chap="5">
+                    <span class="hl-num">5</span>
+                    <span class="hl-label">Le Pass&#233; Simple</span>
+                    <span class="hl-dot"></span>
+                </a>
+                <a href="chapter-6.html" class="hamb-link m-indicatif" data-chap="6">
+                    <span class="hl-num">6</span>
+                    <span class="hl-label">Le Pass&#233; Ant&#233;rieur</span>
+                    <span class="hl-dot"></span>
+                </a>
+                <a href="chapter-7.html" class="hamb-link m-indicatif" data-chap="7">
+                    <span class="hl-num">7</span>
+                    <span class="hl-label">Le Futur Proche</span>
+                    <span class="hl-dot"></span>
+                </a>
+                <a href="chapter-8.html" class="hamb-link m-indicatif" data-chap="8">
+                    <span class="hl-num">8</span>
+                    <span class="hl-label">Le Futur Simple</span>
+                    <span class="hl-dot"></span>
+                </a>
+                <a href="chapter-9.html" class="hamb-link m-indicatif" data-chap="9">
+                    <span class="hl-num">9</span>
+                    <span class="hl-label">Le Futur Ant&#233;rieur</span>
+                    <span class="hl-dot"></span>
+                </a>
+                <a href="chapter-10.html" class="hamb-link m-indicatif" data-chap="10">
+                    <span class="hl-num">10</span>
+                    <span class="hl-label">Le Pass&#233; R&#233;cent</span>
+                    <span class="hl-dot"></span>
+                </a>
+                <a href="chapter-11.html" class="hamb-link m-conditionnel" data-chap="11">
+                    <span class="hl-num">11</span>
+                    <span class="hl-label">Le Conditionnel Pr&#233;sent</span>
+                    <span class="hl-dot"></span>
+                </a>
+                <a href="chapter-12.html" class="hamb-link m-conditionnel" data-chap="12">
+                    <span class="hl-num">12</span>
+                    <span class="hl-label">Le Conditionnel Pass&#233;</span>
+                    <span class="hl-dot"></span>
+                </a>
+                <a href="chapter-13.html" class="hamb-link m-subjonctif" data-chap="13">
+                    <span class="hl-num">13</span>
+                    <span class="hl-label">Le Subjonctif Pr&#233;sent</span>
+                    <span class="hl-dot"></span>
+                </a>
+                <a href="chapter-14.html" class="hamb-link m-subjonctif" data-chap="14">
+                    <span class="hl-num">14</span>
+                    <span class="hl-label">Le Subjonctif Pass&#233;</span>
+                    <span class="hl-dot"></span>
+                </a>
+                <a href="chapter-15.html" class="hamb-link m-subjonctif" data-chap="15">
+                    <span class="hl-num">15</span>
+                    <span class="hl-label">Le Subjonctif Imparfait</span>
+                    <span class="hl-dot"></span>
+                </a>
+                <a href="chapter-16.html" class="hamb-link m-subjonctif" data-chap="16">
+                    <span class="hl-num">16</span>
+                    <span class="hl-label">Le Subjonctif Plus-que-parfait</span>
+                    <span class="hl-dot"></span>
+                </a>
+                <a href="chapter-17.html" class="hamb-link m-imperatif" data-chap="17">
+                    <span class="hl-num">17</span>
+                    <span class="hl-label">L&#39;Imp&#233;ratif Pr&#233;sent</span>
+                    <span class="hl-dot"></span>
+                </a>
+                <a href="chapter-18.html" class="hamb-link m-imperatif" data-chap="18">
+                    <span class="hl-num">18</span>
+                    <span class="hl-label">L&#39;Imp&#233;ratif Pass&#233;</span>
+                    <span class="hl-dot"></span>
+                </a>
+                <a href="chapter-19.html" class="hamb-link m-other" data-chap="19">
+                    <span class="hl-num">19</span>
+                    <span class="hl-label">Le Participe Pr&#233;sent &amp; le G&#233;rondif</span>
+                    <span class="hl-dot"></span>
+                </a>
+                <a href="chapter-20.html" class="hamb-link m-other" data-chap="20">
+                    <span class="hl-num">20</span>
+                    <span class="hl-label">Le Participe Pass&#233;</span>
+                    <span class="hl-dot"></span>
+                </a>
+                <a href="chapter-21.html" class="hamb-link m-other" data-chap="21">
+                    <span class="hl-num">21</span>
+                    <span class="hl-label">L&#39;Infinitif Pr&#233;sent &amp; Pass&#233;</span>
+                    <span class="hl-dot"></span>
+                </a>
+
+            <div class="hamb-group-title">In This Chapter</div>
+            <div id="hambToc"></div>
+        </div>
+    </aside>
+    <script>
+    (function(){
+        var btn = document.getElementById('hambBtn');
+        var panel = document.getElementById('hambPanel');
+        var backdrop = document.getElementById('hambBackdrop');
+        var toc = document.getElementById('hambToc');
+        if (!btn || !panel) return;
+
+        function open(){
+            btn.setAttribute('aria-expanded', 'true');
+            panel.classList.add('open');
+            panel.setAttribute('aria-hidden','false');
+            backdrop.classList.add('open');
+            document.body.style.overflow = 'hidden';
+        }
+        function close(){
+            btn.setAttribute('aria-expanded', 'false');
+            panel.classList.remove('open');
+            panel.setAttribute('aria-hidden','true');
+            backdrop.classList.remove('open');
+            document.body.style.overflow = '';
+        }
+        btn.addEventListener('click', function(){
+            if (btn.getAttribute('aria-expanded') === 'true') close(); else open();
+        });
+        backdrop.addEventListener('click', close);
+        document.addEventListener('keydown', function(e){
+            if (e.key === 'Escape' && btn.getAttribute('aria-expanded') === 'true') close();
+        });
+        // Any link click closes the menu
+        panel.addEventListener('click', function(e){
+            var a = e.target.closest('a');
+            if (a) { setTimeout(close, 50); }
+        });
+
+        // Auto-build in-page TOC from all H2s inside .content
+        var h2s = document.querySelectorAll('.content h2');
+        if (!h2s.length) {
+            toc.innerHTML = '<div class="hamb-toc-empty">No sections found.</div>';
+            return;
+        }
+        var frag = document.createDocumentFragment();
+        var i = 0;
+        h2s.forEach(function(h){
+            if (!h.id) { h.id = 'sec-' + (++i); }
+            var label = (h.textContent || '').trim();
+            // Strip leading emoji number labels like "1&#8419;" or bare emoji keycaps
+            label = label.replace(/^[\s\u00A0\u20E3\u2728\u2705\u274C\u26A0\u{1F4E6}\u{1F4A1}]+/u,'').trim();
+            if (!label) label = 'Section';
+            var a = document.createElement('a');
+            a.href = '#' + h.id;
+            a.className = 'hamb-link';
+            a.innerHTML = '<span class="hl-num" style="background:#e2e8f0;color:#475569">&#167;</span><span class="hl-label"></span>';
+            a.querySelector('.hl-label').textContent = label;
+            frag.appendChild(a);
+        });
+        toc.appendChild(frag);
+    })();
+    </script>
+    <!-- ======================= /HAMBURGER MENU ======================= -->
+    <div class="container">
+                <div class="hero-section">
+            <div class="hero-crumb">
+                <span class="hero-num">1</span>
+                <span>Indicatif &#183; Chapter 1 of 21</span>
+            </div>
+            <h1 class="hero-title">Le Pr&#233;sent de l&#39;Indicatif</h1>
+            <p class="hero-sub">Current actions, habits, general truths, ongoing states</p>
+        </div>
+
+        <!-- <div class="nav-bar">
+            <a href="chapter-0.html" class="nav-button prev">← Previous</a>
+            <div class="page-info">
+                <a href="index.html" class="nav-button home">📋 Table of Contents</a><br>
+                <span style="margin-top:6px;display:block">Chapter 2 of 22</span>
+            </div>
+            <a href="chapter-2.html" class="nav-button next">Next →</a>
+        </div> -->
+
+        <div class="content">
+            <div class="chat-message" data-index="1" id="chapter-1">
+<div class="px-2"><h1 id="tense-1"><a href="index.html">TENSE 1: LE PRÉSENT DE L'INDICATIF (Present Tense)</a></h1>
+<hr>
+<blockquote>
+<h2>📦 SECTION SUMMARY</h2>
+<p><strong>What it is:</strong> The present tense describes actions happening NOW, general truths, habits, and ongoing states.</p>
+<p><strong>When to USE it:</strong> Current actions, habits, universal truths, narration for vividness, near future/past in casual speech, actions started in the past continuing now (avec <em>depuis</em>).</p>
+<p><strong>When NOT to use it:</strong> Completed past actions (use passé composé), ongoing background past actions (use imparfait), hypothetical situations (use conditionnel), actions after expressions of doubt/emotion/desire (use subjonctif).</p>
+<p><strong>Formation:</strong> Remove -er / -ir / -re ending → add present tense endings.</p>
+<p><strong>Difficulty Level:</strong> ⭐⭐ (Beginner — but irregular verbs make it tricky)</p>
+</blockquote>
+<hr>
+<h2>1️⃣ WHAT IS LE PRÉSENT?</h2>
+<p>The <strong>présent de l'indicatif</strong> is the most fundamental tense in French. It expresses what <strong>is happening right now</strong>, what <strong>generally happens</strong>, and what <strong>is true</strong>. Unlike English, French does NOT distinguish between:</p>
+<ul>
+<li>"I eat" (simple present)</li>
+<li>"I am eating" (present continuous)</li>
+<li>"I do eat" (emphatic present)</li>
+</ul>
+<p>All three = <strong>"Je mange"</strong> in French.</p>
+<blockquote>
+<p>💡 <strong>KEY INSIGHT:</strong> French has NO present continuous form. "Je mange" = I eat / I am eating / I do eat.</p>
+</blockquote>
+<hr>
+<h2>2️⃣ FORMATION (HOW TO CONJUGATE)</h2>
+<h3>🔷 Group 1: -ER Verbs (≈90% of French verbs)</h3>
+<p><strong>Model verb: PARLER (to speak)</strong></p>
+<p>Remove <strong>-er</strong> → stem = <strong>parl-</strong> → add endings:</p>
+<table><thead><tr><th>Subject</th><th>Ending</th><th>Conjugation</th><th>Pronunciation</th></tr></thead><tbody><tr><td>Je</td><td>-e</td><td>je parl<strong>e</strong></td><td>/paʁl/</td></tr><tr><td>Tu</td><td>-es</td><td>tu parl<strong>es</strong></td><td>/paʁl/</td></tr><tr><td>Il/Elle/On</td><td>-e</td><td>il parl<strong>e</strong></td><td>/paʁl/</td></tr><tr><td>Nous</td><td>-ons</td><td>nous parl<strong>ons</strong></td><td>/paʁ.lɔ̃/</td></tr><tr><td>Vous</td><td>-ez</td><td>vous parl<strong>ez</strong></td><td>/paʁ.le/</td></tr><tr><td>Ils/Elles</td><td>-ent</td><td>ils parl<strong>ent</strong></td><td>/paʁl/</td></tr></tbody></table>
+<blockquote>
+<p>⚠️ <strong>PRONUNCIATION TIP:</strong> The endings <strong>-e, -es, -ent</strong> are ALL SILENT! So <em>je parle, tu parles, il parle, ils parlent</em> all sound EXACTLY the same: /paʁl/. Only <strong>nous</strong> and <strong>vous</strong> forms sound different.</p>
+</blockquote>
+<h4>More -ER examples:</h4>
+<p><strong>MANGER (to eat):</strong></p>
+<table><thead><tr><th>Singular</th><th>Plural</th></tr></thead><tbody><tr><td>Je mange</td><td>Nous mang<strong>e</strong>ons ⚠️</td></tr><tr><td>Tu manges</td><td>Vous mangez</td></tr><tr><td>Il mange</td><td>Ils mangent</td></tr></tbody></table>
+<blockquote>
+<p>⚠️ <strong>SPELLING TRAP:</strong> With <em>manger</em>, we keep the <strong>"e"</strong> before <strong>-ons</strong> (→ <em>mangeons</em>, NOT <del>mangons</del>) to preserve the soft /ʒ/ sound.</p>
+</blockquote>
+<p><strong>COMMENCER (to begin):</strong></p>
+<table><thead><tr><th>Singular</th><th>Plural</th></tr></thead><tbody><tr><td>Je commence</td><td>Nous commen<strong>ç</strong>ons ⚠️</td></tr><tr><td>Tu commences</td><td>Vous commencez</td></tr><tr><td>Il commence</td><td>Ils commencent</td></tr></tbody></table>
+<blockquote>
+<p>⚠️ <strong>SPELLING TRAP:</strong> With <em>commencer</em>, we use <strong>"ç"</strong> before <strong>-ons</strong> (→ <em>commençons</em>, NOT <del>commencons</del>) to preserve the soft /s/ sound.</p>
+</blockquote>
+<p><strong>ACHETER (to buy) — stem change verb:</strong></p>
+<table><thead><tr><th>Singular</th><th>Plural</th></tr></thead><tbody><tr><td>J'ach<strong>è</strong>te</td><td>Nous achetons</td></tr><tr><td>Tu ach<strong>è</strong>tes</td><td>Vous achetez</td></tr><tr><td>Il ach<strong>è</strong>te</td><td>Ils ach<strong>è</strong>tent</td></tr></tbody></table>
+<blockquote>
+<p>⚠️ <strong>STEM-CHANGE PATTERN (Boot verbs):</strong> The <strong>è</strong> accent appears in all forms EXCEPT <em>nous</em> and <em>vous</em> — forming a "boot shape" in the conjugation table. Same pattern applies to: <em>lever → lève, peser → pèse, mener → mène</em>.</p>
+</blockquote>
+<p><strong>APPELER (to call) — doubling consonant verb:</strong></p>
+<table><thead><tr><th>Singular</th><th>Plural</th></tr></thead><tbody><tr><td>J'appe<strong>ll</strong>e</td><td>Nous appelons</td></tr><tr><td>Tu appe<strong>ll</strong>es</td><td>Vous appelez</td></tr><tr><td>Il appe<strong>ll</strong>e</td><td>Ils appe<strong>ll</strong>ent</td></tr></tbody></table>
+<blockquote>
+<p>💡 Instead of adding an accent, <em>appeler</em> DOUBLES the <strong>"l"</strong> in the boot forms. Same for <em>jeter → jette</em>.</p>
+</blockquote>
+<p><strong>ENVOYER (to send) — Y→I change:</strong></p>
+<table><thead><tr><th>Singular</th><th>Plural</th></tr></thead><tbody><tr><td>J'envo<strong>i</strong>e</td><td>Nous envoyons</td></tr><tr><td>Tu envo<strong>i</strong>es</td><td>Vous envoyez</td></tr><tr><td>Il envo<strong>i</strong>e</td><td>Ils envo<strong>i</strong>ent</td></tr></tbody></table>
+<blockquote>
+<p>⚠️ <strong>Y → I Rule:</strong> Verbs ending in <strong>-oyer</strong> and <strong>-uyer</strong> MUST change <strong>y → i</strong> in boot forms. Verbs ending in <strong>-ayer</strong> (like <em>payer</em>) can optionally keep the y: <em>je paye</em> OR <em>je paie</em>.</p>
+</blockquote>
+<hr>
+<h3>🔷 Group 2: -IR Verbs (with -iss- expansion)</h3>
+<p><strong>Model verb: FINIR (to finish)</strong></p>
+<p>Remove <strong>-ir</strong> → stem = <strong>fin-</strong> → add endings (with <strong>-iss-</strong> in plural):</p>
+<table><thead><tr><th>Subject</th><th>Conjugation</th></tr></thead><tbody><tr><td>Je</td><td>fin<strong>is</strong></td></tr><tr><td>Tu</td><td>fin<strong>is</strong></td></tr><tr><td>Il/Elle/On</td><td>fin<strong>it</strong></td></tr><tr><td>Nous</td><td>fin<strong>issons</strong></td></tr><tr><td>Vous</td><td>fin<strong>issez</strong></td></tr><tr><td>Ils/Elles</td><td>fin<strong>issent</strong></td></tr></tbody></table>
+<blockquote>
+<p>💡 <strong>HOW TO RECOGNIZE Group 2:</strong> If the present participle ends in <strong>-issant</strong> (finissant), it's Group 2. If not (like <em>partir → partant</em>), it's Group 3 irregular.</p>
+</blockquote>
+<h4>Common Group 2 verbs:</h4>
+<table><thead><tr><th>Verb</th><th>Meaning</th><th>Je form</th><th>Nous form</th></tr></thead><tbody><tr><td>choisir</td><td>to choose</td><td>je choisis</td><td>nous choisissons</td></tr><tr><td>réussir</td><td>to succeed</td><td>je réussis</td><td>nous réussissons</td></tr><tr><td>grandir</td><td>to grow</td><td>je grandis</td><td>nous grandissons</td></tr><tr><td>rougir</td><td>to blush</td><td>je rougis</td><td>nous rougissons</td></tr><tr><td>obéir</td><td>to obey</td><td>j'obéis</td><td>nous obéissons</td></tr><tr><td>réfléchir</td><td>to think/reflect</td><td>je réfléchis</td><td>nous réfléchissons</td></tr><tr><td>remplir</td><td>to fill</td><td>je remplis</td><td>nous remplissons</td></tr><tr><td>guérir</td><td>to heal</td><td>je guéris</td><td>nous guérissons</td></tr><tr><td>bâtir</td><td>to build</td><td>je bâtis</td><td>nous bâtissons</td></tr><tr><td>punir</td><td>to punish</td><td>je punis</td><td>nous punissons</td></tr></tbody></table>
+<hr>
+<h3>🔷 Group 3: -RE Verbs</h3>
+<p><strong>Model verb: VENDRE (to sell)</strong></p>
+<p>Remove <strong>-re</strong> → stem = <strong>vend-</strong> → add endings:</p>
+<table><thead><tr><th>Subject</th><th>Ending</th><th>Conjugation</th></tr></thead><tbody><tr><td>Je</td><td>-s</td><td>je vend<strong>s</strong></td></tr><tr><td>Tu</td><td>-s</td><td>tu vend<strong>s</strong></td></tr><tr><td>Il/Elle/On</td><td>— (nothing!)</td><td>il vend</td></tr><tr><td>Nous</td><td>-ons</td><td>nous vend<strong>ons</strong></td></tr><tr><td>Vous</td><td>-ez</td><td>vous vend<strong>ez</strong></td></tr><tr><td>Ils/Elles</td><td>-ent</td><td>ils vend<strong>ent</strong></td></tr></tbody></table>
+<blockquote>
+<p>⚠️ <strong>Note:</strong> The <strong>il/elle</strong> form has NO ending at all — just the bare stem!</p>
+</blockquote>
+<h4>Common regular -RE verbs:</h4>
+<table><thead><tr><th>Verb</th><th>Meaning</th><th>Je</th><th>Il</th><th>Nous</th></tr></thead><tbody><tr><td>attendre</td><td>to wait</td><td>j'attends</td><td>il attend</td><td>nous attendons</td></tr><tr><td>entendre</td><td>to hear</td><td>j'entends</td><td>il entend</td><td>nous entendons</td></tr><tr><td>perdre</td><td>to lose</td><td>je perds</td><td>il perd</td><td>nous perdons</td></tr><tr><td>répondre</td><td>to answer</td><td>je réponds</td><td>il répond</td><td>nous répondons</td></tr><tr><td>descendre</td><td>to go down</td><td>je descends</td><td>il descend</td><td>nous descendons</td></tr><tr><td>rendre</td><td>to give back</td><td>je rends</td><td>il rend</td><td>nous rendons</td></tr><tr><td>défendre</td><td>to defend</td><td>je défends</td><td>il défend</td><td>nous défendons</td></tr></tbody></table>
+<hr>
+<h3>🔷 IRREGULAR VERBS (The Big Ones You MUST Memorize)</h3>
+<h4>The Essential 10:</h4>
+<p><strong>ÊTRE (to be)</strong> — 🔴 Most important verb in French</p>
+<table><thead><tr><th>Singular</th><th>Plural</th></tr></thead><tbody><tr><td>je <strong>suis</strong></td><td>nous <strong>sommes</strong></td></tr><tr><td>tu <strong>es</strong></td><td>vous <strong>êtes</strong></td></tr><tr><td>il <strong>est</strong></td><td>ils <strong>sont</strong></td></tr></tbody></table>
+<p><strong>AVOIR (to have)</strong> — 🔴 Second most important</p>
+<table><thead><tr><th>Singular</th><th>Plural</th></tr></thead><tbody><tr><td>j'<strong>ai</strong></td><td>nous <strong>avons</strong></td></tr><tr><td>tu <strong>as</strong></td><td>vous <strong>avez</strong></td></tr><tr><td>il <strong>a</strong></td><td>ils <strong>ont</strong></td></tr></tbody></table>
+<p><strong>ALLER (to go)</strong> — 🔴 Only -er verb that's irregular</p>
+<table><thead><tr><th>Singular</th><th>Plural</th></tr></thead><tbody><tr><td>je <strong>vais</strong></td><td>nous <strong>allons</strong></td></tr><tr><td>tu <strong>vas</strong></td><td>vous <strong>allez</strong></td></tr><tr><td>il <strong>va</strong></td><td>ils <strong>vont</strong></td></tr></tbody></table>
+<p><strong>FAIRE (to do/make)</strong></p>
+<table><thead><tr><th>Singular</th><th>Plural</th></tr></thead><tbody><tr><td>je <strong>fais</strong></td><td>nous <strong>faisons</strong> (/fəzɔ̃/)</td></tr><tr><td>tu <strong>fais</strong></td><td>vous <strong>faites</strong></td></tr><tr><td>il <strong>fait</strong></td><td>ils <strong>font</strong></td></tr></tbody></table>
+<blockquote>
+<p>⚠️ <em>Faisons</em> is pronounced /fəzɔ̃/ — the "ai" sounds like "e", NOT like in <em>je fais</em>.</p>
+</blockquote>
+<p><strong>POUVOIR (to be able to / can)</strong></p>
+<table><thead><tr><th>Singular</th><th>Plural</th></tr></thead><tbody><tr><td>je <strong>peux</strong></td><td>nous <strong>pouvons</strong></td></tr><tr><td>tu <strong>peux</strong></td><td>vous <strong>pouvez</strong></td></tr><tr><td>il <strong>peut</strong></td><td>ils <strong>peuvent</strong></td></tr></tbody></table>
+<p><strong>VOULOIR (to want)</strong></p>
+<table><thead><tr><th>Singular</th><th>Plural</th></tr></thead><tbody><tr><td>je <strong>veux</strong></td><td>nous <strong>voulons</strong></td></tr><tr><td>tu <strong>veux</strong></td><td>vous <strong>voulez</strong></td></tr><tr><td>il <strong>veut</strong></td><td>ils <strong>veulent</strong></td></tr></tbody></table>
+<p><strong>DEVOIR (must / to have to)</strong></p>
+<table><thead><tr><th>Singular</th><th>Plural</th></tr></thead><tbody><tr><td>je <strong>dois</strong></td><td>nous <strong>devons</strong></td></tr><tr><td>tu <strong>dois</strong></td><td>vous <strong>devez</strong></td></tr><tr><td>il <strong>doit</strong></td><td>ils <strong>doivent</strong></td></tr></tbody></table>
+<p><strong>SAVOIR (to know — facts/how to)</strong></p>
+<table><thead><tr><th>Singular</th><th>Plural</th></tr></thead><tbody><tr><td>je <strong>sais</strong></td><td>nous <strong>savons</strong></td></tr><tr><td>tu <strong>sais</strong></td><td>vous <strong>savez</strong></td></tr><tr><td>il <strong>sait</strong></td><td>ils <strong>savent</strong></td></tr></tbody></table>
+<p><strong>PRENDRE (to take)</strong></p>
+<table><thead><tr><th>Singular</th><th>Plural</th></tr></thead><tbody><tr><td>je <strong>prends</strong></td><td>nous <strong>prenons</strong></td></tr><tr><td>tu <strong>prends</strong></td><td>vous <strong>prenez</strong></td></tr><tr><td>il <strong>prend</strong></td><td>ils <strong>prennent</strong></td></tr></tbody></table>
+<blockquote>
+<p>⚠️ Note the double <strong>nn</strong> in <em>ils prennent</em>! Same pattern for: <em>apprendre, comprendre, surprendre</em>.</p>
+</blockquote>
+<p><strong>VENIR (to come)</strong></p>
+<table><thead><tr><th>Singular</th><th>Plural</th></tr></thead><tbody><tr><td>je <strong>viens</strong></td><td>nous <strong>venons</strong></td></tr><tr><td>tu <strong>viens</strong></td><td>vous <strong>venez</strong></td></tr><tr><td>il <strong>vient</strong></td><td>ils <strong>viennent</strong></td></tr></tbody></table>
+<blockquote>
+<p>⚠️ Double <strong>nn</strong> in <em>ils viennent</em>! Same pattern for: <em>tenir, devenir, revenir, obtenir</em>.</p>
+</blockquote>
+<h4>More Important Irregulars:</h4>
+<p><strong>DIRE (to say):</strong><br>
+je dis, tu dis, il dit, nous disons, vous <strong>dites</strong> ⚠️, ils disent</p>
+<p><strong>LIRE (to read):</strong><br>
+je lis, tu lis, il lit, nous lisons, vous lisez, ils lisent</p>
+<p><strong>ÉCRIRE (to write):</strong><br>
+j'écris, tu écris, il écrit, nous écrivons, vous écrivez, ils écrivent</p>
+<p><strong>VOIR (to see):</strong><br>
+je vois, tu vois, il voit, nous voyons, vous voyez, ils voient</p>
+<p><strong>CROIRE (to believe):</strong><br>
+je crois, tu crois, il croit, nous croyons, vous croyez, ils croient</p>
+<p><strong>BOIRE (to drink):</strong><br>
+je bois, tu bois, il boit, nous buvons, vous buvez, ils boivent</p>
+<p><strong>CONNAÎTRE (to know — people/places):</strong><br>
+je connais, tu connais, il connaît, nous connaissons, vous connaissez, ils connaissent</p>
+<p><strong>METTRE (to put):</strong><br>
+je mets, tu mets, il met, nous mettons, vous mettez, ils mettent</p>
+<p><strong>PARTIR (to leave) — Group 3 -IR:</strong><br>
+je pars, tu pars, il part, nous partons, vous partez, ils partent</p>
+<p><strong>DORMIR (to sleep) — Group 3 -IR:</strong><br>
+je dors, tu dors, il dort, nous dormons, vous dormez, ils dorment</p>
+<p><strong>OUVRIR (to open) — conjugates like -ER!:</strong><br>
+j'ouvre, tu ouvres, il ouvre, nous ouvrons, vous ouvrez, ils ouvrent</p>
+<blockquote>
+<p>💡 <strong>TECHNIQUE:</strong> <em>Ouvrir, offrir, souffrir, découvrir, couvrir</em> all end in -ir but conjugate with <strong>-ER endings</strong> in the present!</p>
+</blockquote>
+<hr>
+<h2>3️⃣ WHEN TO USE LE PRÉSENT ✅</h2>
+<h3>Use #1: Actions Happening RIGHT NOW</h3>
+<blockquote>
+<p>Something occurring at this very moment.</p>
+</blockquote>
+<table><thead><tr><th>French</th><th>English</th></tr></thead><tbody><tr><td><strong>Je mange</strong> une pomme.</td><td>I am eating an apple.</td></tr><tr><td><strong>Il pleut</strong> dehors.</td><td>It is raining outside.</td></tr><tr><td><strong>Tu lis</strong> un livre ?</td><td>Are you reading a book?</td></tr><tr><td><strong>Elle parle</strong> au téléphone.</td><td>She is talking on the phone.</td></tr><tr><td><strong>Nous regardons</strong> un film.</td><td>We are watching a movie.</td></tr><tr><td><strong>Les enfants jouent</strong> dans le jardin.</td><td>The children are playing in the garden.</td></tr></tbody></table>
+<blockquote>
+<p>💡 <strong>TIP:</strong> Remember — French has NO "-ing" form. <em>Je mange</em> = I eat AND I am eating.</p>
+</blockquote>
+<hr>
+<h3>Use #2: Habits and Routines</h3>
+<blockquote>
+<p>Actions that happen regularly or repeatedly.</p>
+</blockquote>
+<table><thead><tr><th>French</th><th>English</th></tr></thead><tbody><tr><td><strong>Je me lève</strong> à 7 heures chaque matin.</td><td>I get up at 7 every morning.</td></tr><tr><td><strong>Il va</strong> au gym trois fois par semaine.</td><td>He goes to the gym three times a week.</td></tr><tr><td><strong>Nous mangeons</strong> ensemble le dimanche.</td><td>We eat together on Sundays.</td></tr><tr><td><strong>Elle prend</strong> le bus pour aller au travail.</td><td>She takes the bus to go to work.</td></tr><tr><td><strong>Tu bois</strong> toujours du café le matin.</td><td>You always drink coffee in the morning.</td></tr><tr><td><strong>Ils font</strong> du jogging tous les soirs.</td><td>They go jogging every evening.</td></tr></tbody></table>
+<blockquote>
+<p>💡 <strong>Signal words for habits:</strong> <em>toujours</em> (always), <em>souvent</em> (often), <em>parfois</em> (sometimes), <em>chaque jour</em> (every day), <em>d'habitude</em> (usually), <em>le lundi</em> (on Mondays), <em>tous les jours</em> (every day).</p>
+</blockquote>
+<hr>
+<h3>Use #3: General Truths and Facts</h3>
+<blockquote>
+<p>Universal statements, scientific facts, proverbs.</p>
+</blockquote>
+<table><thead><tr><th>French</th><th>English</th></tr></thead><tbody><tr><td>La Terre <strong>tourne</strong> autour du Soleil.</td><td>The Earth revolves around the Sun.</td></tr><tr><td>L'eau <strong>bout</strong> à 100 degrés.</td><td>Water boils at 100 degrees.</td></tr><tr><td>Paris <strong>est</strong> la capitale de la France.</td><td>Paris is the capital of France.</td></tr><tr><td>Qui ne <strong>risque</strong> rien n'<strong>a</strong> rien.</td><td>Nothing ventured, nothing gained.</td></tr><tr><td>Le temps <strong>passe</strong> vite.</td><td>Time passes quickly.</td></tr><tr><td>Les chats <strong>adorent</strong> dormir.</td><td>Cats love to sleep.</td></tr></tbody></table>
+<hr>
+<h3>Use #4: Descriptions and States of Being</h3>
+<blockquote>
+<p>Describing how someone/something IS.</p>
+</blockquote>
+<table><thead><tr><th>French</th><th>English</th></tr></thead><tbody><tr><td>Elle <strong>est</strong> grande et <strong>a</strong> les yeux bleus.</td><td>She is tall and has blue eyes.</td></tr><tr><td>Je <strong>suis</strong> fatigué aujourd'hui.</td><td>I am tired today.</td></tr><tr><td>Cette maison <strong>semble</strong> très vieille.</td><td>This house seems very old.</td></tr><tr><td>Il <strong>fait</strong> beau aujourd'hui.</td><td>The weather is nice today.</td></tr><tr><td>Tu <strong>as</strong> l'air triste.</td><td>You look sad.</td></tr><tr><td>Ce gâteau <strong>sent</strong> bon.</td><td>This cake smells good.</td></tr></tbody></table>
+<hr>
+<h3>Use #5: Actions with DEPUIS (Started in Past, Still Continuing)</h3>
+<blockquote>
+<p>🔴 <strong>THIS IS A MAJOR DIFFERENCE FROM ENGLISH!</strong></p>
+</blockquote>
+<p>In English, we use present perfect ("I have been living..."). In French, we use <strong>PRESENT TENSE + depuis</strong>.</p>
+<table><thead><tr><th>French (PRESENT!)</th><th>English (PRESENT PERFECT!)</th></tr></thead><tbody><tr><td>J'<strong>habite</strong> à Paris <strong>depuis</strong> 5 ans.</td><td>I <strong>have been living</strong> in Paris for 5 years.</td></tr><tr><td>Il <strong>travaille</strong> ici <strong>depuis</strong> 2019.</td><td>He <strong>has been working</strong> here since 2019.</td></tr><tr><td>Nous <strong>attendons depuis</strong> une heure.</td><td>We <strong>have been waiting</strong> for an hour.</td></tr><tr><td>Elle <strong>étudie</strong> le français <strong>depuis</strong> 3 mois.</td><td>She <strong>has been studying</strong> French for 3 months.</td></tr><tr><td>Je <strong>connais</strong> Marie <strong>depuis</strong> l'enfance.</td><td>I <strong>have known</strong> Marie since childhood.</td></tr><tr><td>Tu <strong>joues</strong> du piano <strong>depuis</strong> combien de temps ?</td><td>How long <strong>have you been playing</strong> piano?</td></tr></tbody></table>
+<blockquote>
+<p>⚠️ <strong>COMMON MISTAKE:</strong> English speakers often say <del>"J'ai habité à Paris depuis 5 ans"</del> (passé composé). This is WRONG. You MUST use the present tense with <em>depuis</em> when the action is STILL HAPPENING.</p>
+</blockquote>
+<blockquote>
+<p>💡 <strong>Equivalent structures:</strong></p>
+<ul>
+<li><strong>Depuis</strong> 5 ans = for 5 years / since 5 years ago</li>
+<li><strong>Il y a</strong> 5 ans <strong>que</strong> je travaille ici = I've been working here for 5 years</li>
+<li><strong>Ça fait</strong> 5 ans <strong>que</strong> je travaille ici = It's been 5 years that I've been working here</li>
+<li><strong>Voilà</strong> 5 ans <strong>que</strong> je travaille ici = (same, slightly literary)</li>
+</ul>
+</blockquote>
+<hr>
+<h3>Use #6: Le Présent Narratif / Historique (Historical Present)</h3>
+<blockquote>
+<p>Using present tense to narrate past events vividly — common in literature, journalism, storytelling.</p>
+</blockquote>
+<table><thead><tr><th>French</th><th>English Equivalent</th></tr></thead><tbody><tr><td>En 1789, le peuple <strong>prend</strong> la Bastille.</td><td>In 1789, the people storm the Bastille.</td></tr><tr><td>Napoléon <strong>arrive</strong> au pouvoir en 1799.</td><td>Napoleon comes to power in 1799.</td></tr><tr><td>Il <strong>ouvre</strong> la porte et <strong>voit</strong> un homme étrange.</td><td>He opens the door and sees a strange man.</td></tr><tr><td>Je <strong>marche</strong> dans la rue quand soudain, un chien <strong>court</strong> vers moi.</td><td>I'm walking down the street when suddenly a dog runs toward me.</td></tr></tbody></table>
+<blockquote>
+<p>💡 <strong>WHY use this?</strong> It makes the story feel immediate, vivid, and dramatic — as if the reader is watching it happen in real-time. Very common in French novels and newspapers.</p>
+</blockquote>
+<hr>
+<h3>Use #7: Near Future (Informal)</h3>
+<blockquote>
+<p>Using present tense for something about to happen or planned.</p>
+</blockquote>
+<table><thead><tr><th>French</th><th>English</th></tr></thead><tbody><tr><td>J'<strong>arrive</strong> dans cinq minutes !</td><td>I'm arriving in five minutes!</td></tr><tr><td>On <strong>part</strong> demain matin.</td><td>We're leaving tomorrow morning.</td></tr><tr><td>Le film <strong>commence</strong> à 20h.</td><td>The movie starts at 8 PM.</td></tr><tr><td>Tu <strong>viens</strong> ce soir ?</td><td>Are you coming tonight?</td></tr><tr><td>L'avion <strong>décolle</strong> à midi.</td><td>The plane takes off at noon.</td></tr></tbody></table>
+<blockquote>
+<p>💡 <strong>TIP:</strong> This works for events that are planned, scheduled, or very imminent. For less certain future events, use <em>futur proche</em> or <em>futur simple</em>.</p>
+</blockquote>
+<hr>
+<h3>Use #8: Conditional Sentences with SI (If-clauses — Real/Likely Conditions)</h3>
+<blockquote>
+<p>In <strong>Si + présent → futur/présent</strong> structures.</p>
+</blockquote>
+<table><thead><tr><th>French</th><th>English</th></tr></thead><tbody><tr><td><strong>Si</strong> tu <strong>viens</strong>, je <strong>serai</strong> content.</td><td>If you come, I will be happy.</td></tr><tr><td><strong>Si</strong> il <strong>pleut</strong>, nous <strong>restons</strong> à la maison.</td><td>If it rains, we stay home.</td></tr><tr><td><strong>Si</strong> tu <strong>veux</strong>, on <strong>peut</strong> partir.</td><td>If you want, we can leave.</td></tr><tr><td><strong>Si</strong> elle <strong>n'étudie</strong> pas, elle <strong>va</strong> échouer.</td><td>If she doesn't study, she's going to fail.</td></tr></tbody></table>
+<blockquote>
+<p>⚠️ <strong>CRITICAL RULE:</strong> After <strong>SI</strong> (if), you NEVER use the future tense!</p>
+<ul>
+<li>✅ <strong>Si</strong> tu <strong>viens</strong>... (présent)</li>
+<li>❌ <del><strong>Si</strong> tu <strong>viendras</strong>...</del> (futur — WRONG!)</li>
+</ul>
+</blockquote>
+<hr>
+<h2>4️⃣ WHEN NOT TO USE LE PRÉSENT ❌</h2>
+<h3>❌ Mistake #1: Using Present for Completed Past Actions</h3>
+<table><thead><tr><th>❌ Wrong</th><th>✅ Correct</th><th>Why</th></tr></thead><tbody><tr><td><del>Hier, je <strong>mange</strong> au restaurant.</del></td><td>Hier, j'<strong>ai mangé</strong> au restaurant.</td><td>Completed action → passé composé</td></tr><tr><td><del>La semaine dernière, il <strong>part</strong>.</del></td><td>La semaine dernière, il <strong>est parti</strong>.</td><td>Completed action → passé composé</td></tr></tbody></table>
+<hr>
+<h3>❌ Mistake #2: Using Present for Past Descriptions/Ongoing Past</h3>
+<table><thead><tr><th>❌ Wrong</th><th>✅ Correct</th><th>Why</th></tr></thead><tbody><tr><td><del>Quand j'<strong>ai</strong> 10 ans, j'<strong>aime</strong> le chocolat.</del></td><td>Quand j'<strong>avais</strong> 10 ans, j'<strong>aimais</strong> le chocolat.</td><td>Past state/description → imparfait</td></tr></tbody></table>
+<hr>
+<h3>❌ Mistake #3: Using Present for Hypothetical/Unreal Situations</h3>
+<table><thead><tr><th>❌ Wrong</th><th>✅ Correct</th><th>Why</th></tr></thead><tbody><tr><td><del>Si j'<strong>ai</strong> de l'argent, j'<strong>achète</strong> une Ferrari.</del> (if unreal)</td><td>Si j'<strong>avais</strong> de l'argent, j'<strong>achèterais</strong> une Ferrari.</td><td>Unreal condition → imparfait + conditionnel</td></tr></tbody></table>
+<blockquote>
+<p>💡 If it's a <strong>real</strong> possibility: Si j'<strong>ai</strong> de l'argent, j'<strong>achète</strong>... ✅<br>
+If it's <strong>imaginary/unlikely</strong>: Si j'<strong>avais</strong> de l'argent, j'<strong>achèterais</strong>... ✅</p>
+</blockquote>
+<hr>
+<h3>❌ Mistake #4: Using Present After Expressions Requiring Subjunctive</h3>
+<table><thead><tr><th>❌ Wrong</th><th>✅ Correct</th><th>Why</th></tr></thead><tbody><tr><td><del>Il faut que tu <strong>viens</strong>.</del></td><td>Il faut que tu <strong>viennes</strong>.</td><td><em>Il faut que</em> triggers subjunctive</td></tr><tr><td><del>Je veux qu'il <strong>fait</strong> ses devoirs.</del></td><td>Je veux qu'il <strong>fasse</strong> ses devoirs.</td><td><em>Vouloir que</em> triggers subjunctive</td></tr></tbody></table>
+<hr>
+<h3>❌ Mistake #5: Using Present for "Would" Situations</h3>
+<table><thead><tr><th>❌ Wrong</th><th>✅ Correct</th><th>Why</th></tr></thead><tbody><tr><td><del>Je <strong>veux</strong> un café, s'il vous plaît.</del> (can sound blunt)</td><td>Je <strong>voudrais</strong> un café, s'il vous plaît.</td><td>Politeness → conditionnel</td></tr></tbody></table>
+<blockquote>
+<p>💡 <em>Je veux</em> isn't grammatically wrong, but <em>je voudrais</em> is much more polite. Think of it as "I want" vs. "I would like."</p>
+</blockquote>
+<hr>
+<h2>5️⃣ TECHNIQUES &amp; MEMORY TIPS 🧠</h2>
+<h3>Technique 1: The "Boot Verb" Visualization</h3>
+<div class="relative"><pre style="color: rgb(57, 58, 52); font-family: Consolas, &quot;Bitstream Vera Sans Mono&quot;, &quot;Courier New&quot;, Courier, monospace; direction: ltr; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; font-size: 0.9em; line-height: 1.2em; tab-size: 4; hyphens: none; padding: 1em; margin: 0.5em 0px; overflow: auto; border: 1px solid rgb(221, 221, 221); background-color: white;"><code style="white-space: pre-wrap; word-break: break-all;"><span>   je  ──── tu
+</span>    │         │
+   il  ──── (boot forms: stem change)
+    │         
+  nous ──── vous  (NO stem change)
+    │         │
+  ils  ──── (boot form: stem change)</code></pre></div>
+<p>Draw a boot around je/tu/il/ils — these change their stems. Nous/vous stay "regular."</p>
+<h3>Technique 2: The "Sound Groups" Method</h3>
+<p>For -ER verbs, remember that <strong>4 out of 6 forms sound identical:</strong></p>
+<ul>
+<li>je parle = tu parles = il parle = ils parlent → /paʁl/</li>
+<li>Only <strong>nous parlons</strong> and <strong>vous parlez</strong> sound different</li>
+</ul>
+<h3>Technique 3: Daily Narration Practice</h3>
+<p>Narrate your day IN FRENCH using present tense:</p>
+<blockquote>
+<p><em>"Je me réveille. Je prends une douche. Je mange mon petit-déjeuner. Je vais au travail. Je travaille toute la journée. Je rentre chez moi. Je dîne. Je regarde la télé. Je me couche."</em></p>
+</blockquote>
+<h3>Technique 4: The "BAGS" Verbs Trick for Irregulars</h3>
+<p>The most common irregular verbs can be grouped by their patterns:</p>
+<ul>
+<li><strong>Double stem:</strong> boire (boi-/buv-), devoir (doi-/dev-), recevoir (reçoi-/recev-), venir (vien-/ven-)</li>
+<li><strong>Three stems:</strong> pouvoir (peu-/pouv-/peuv-), vouloir (veu-/voul-/veul-)</li>
+<li><strong>Completely unique:</strong> être, avoir, aller, faire</li>
+</ul>
+<h3>Technique 5: The DEPUIS Mantra</h3>
+<p>Repeat: <em>"In French, DEPUIS = PRESENT. In French, DEPUIS = PRESENT."</em><br>
+Every time you want to say "I have been ___ing for/since..." → use <strong>PRÉSENT + depuis</strong>.</p>
+<hr>
+<h2>6️⃣ PRACTICE SENTENCES (MIXED USES)</h2>
+<table><thead><tr><th>#</th><th>French</th><th>English</th><th>Use</th></tr></thead><tbody><tr><td>1</td><td>Je <strong>parle</strong> trois langues.</td><td>I speak three languages.</td><td>General truth</td></tr><tr><td>2</td><td>Qu'est-ce que tu <strong>fais</strong> ?</td><td>What are you doing?</td><td>Current action</td></tr><tr><td>3</td><td>Il <strong>ne pleut</strong> jamais dans le désert.</td><td>It never rains in the desert.</td><td>General fact</td></tr><tr><td>4</td><td>Nous <strong>déménageons</strong> la semaine prochaine.</td><td>We're moving next week.</td><td>Near future</td></tr><tr><td>5</td><td><strong>Si</strong> tu <strong>as</strong> faim, <strong>mange</strong> !</td><td>If you're hungry, eat!</td><td>Si-clause</td></tr><tr><td>6</td><td>Ils <strong>vivent</strong> à Lyon <strong>depuis</strong> 2010.</td><td>They've been living in Lyon since 2010.</td><td>Depuis</td></tr><tr><td>7</td><td>Je <strong>ne comprends</strong> pas cette question.</td><td>I don't understand this question.</td><td>Current state</td></tr><tr><td>8</td><td>Le train <strong>part</strong> à 14h30.</td><td>The train leaves at 2:30 PM.</td><td>Scheduled event</td></tr><tr><td>9</td><td>Elle <strong>va</strong> au marché tous les samedis.</td><td>She goes to the market every Saturday.</td><td>Habit</td></tr><tr><td>10</td><td>En 1969, l'homme <strong>marche</strong> sur la Lune.</td><td>In 1969, man walks on the Moon.</td><td>Historical present</td></tr><tr><td>11</td><td>Tu <strong>connais</strong> ce restaurant ?</td><td>Do you know this restaurant?</td><td>Current knowledge</td></tr><tr><td>12</td><td>Ça <strong>fait</strong> deux heures qu'on <strong>attend</strong>.</td><td>We've been waiting for two hours.</td><td>Depuis equivalent</td></tr><tr><td>13</td><td>Je <strong>suis</strong> professeur.</td><td>I am a teacher.</td><td>Identity/state</td></tr><tr><td>14</td><td>On <strong>se voit</strong> demain ?</td><td>Shall we meet tomorrow?</td><td>Near future</td></tr><tr><td>15</td><td>Les oiseaux <strong>chantent</strong> le matin.</td><td>Birds sing in the morning.</td><td>General truth</td></tr></tbody></table>
+<hr>
+<h2>7️⃣ NEGATION IN PRESENT TENSE</h2>
+<p>Structure: <strong>NE + verb + PAS</strong> (or other negative words)</p>
+<table><thead><tr><th>Affirmative</th><th>Negative</th></tr></thead><tbody><tr><td>Je <strong>parle</strong> français.</td><td>Je <strong>ne parle pas</strong> français.</td></tr><tr><td>Il <strong>a</strong> un chien.</td><td>Il <strong>n'a pas</strong> de chien.</td></tr><tr><td>Nous <strong>allons</strong> au cinéma.</td><td>Nous <strong>n'allons pas</strong> au cinéma.</td></tr><tr><td>Tu <strong>manges</strong> de la viande.</td><td>Tu <strong>ne manges jamais</strong> de viande.</td></tr><tr><td>Elle <strong>voit</strong> quelqu'un.</td><td>Elle <strong>ne voit personne</strong>.</td></tr><tr><td>Ils <strong>disent</strong> quelque chose.</td><td>Ils <strong>ne disent rien</strong>.</td></tr><tr><td>Je <strong>fume</strong> encore.</td><td>Je <strong>ne fume plus</strong>.</td></tr></tbody></table>
+<blockquote>
+<p>💡 <strong>In spoken French</strong>, the "ne" is very often DROPPED:</p>
+<ul>
+<li>Written: Je <strong>ne</strong> sais <strong>pas</strong> → Spoken: Je sais <strong>pas</strong> /ʃɛpa/</li>
+</ul>
+</blockquote>
+<hr>
+<h2>8️⃣ QUESTION FORMS IN PRESENT TENSE</h2>
+<p>Three ways to ask questions:</p>
+<table><thead><tr><th>Method</th><th>Example</th><th>Register</th></tr></thead><tbody><tr><td><strong>Intonation</strong> (voice rises)</td><td>Tu <strong>parles</strong> français ?</td><td>Informal/spoken</td></tr><tr><td><strong>Est-ce que</strong></td><td>Est-ce que tu <strong>parles</strong> français ?</td><td>Standard/neutral</td></tr><tr><td><strong>Inversion</strong></td><td><strong>Parles</strong>-tu français ?</td><td>Formal/written</td></tr></tbody></table>
+<p>Special inversion cases:<br>
+| Il <strong>aime</strong> le café. → <strong>Aime</strong>-t-il le café ? | (add <strong>-t-</strong> between vowels) |<br>
+| Elle <strong>a</strong> un frère. → <strong>A</strong>-t-elle un frère ? | (add <strong>-t-</strong>) |</p>
+<hr>
+<h2>9️⃣ COMMON EXPRESSIONS USING LE PRÉSENT</h2>
+<table><thead><tr><th>Expression</th><th>Meaning</th><th>Example</th></tr></thead><tbody><tr><td><strong>être en train de</strong> + infinitive</td><td>to be in the process of (= English "-ing")</td><td>Je <strong>suis en train de</strong> manger. (I am eating RIGHT NOW.)</td></tr><tr><td><strong>Il y a</strong></td><td>there is / there are</td><td><strong>Il y a</strong> un chat sur le toit.</td></tr><tr><td><strong>Il faut</strong></td><td>it is necessary / one must</td><td><strong>Il faut</strong> travailler dur.</td></tr><tr><td><strong>Il s'agit de</strong></td><td>it's about</td><td>**Il s'agit d'**un problème grave.</td></tr><tr><td><strong>avoir besoin de</strong></td><td>to need</td><td>J'<strong>ai besoin de</strong> dormir.</td></tr><tr><td><strong>avoir envie de</strong></td><td>to feel like</td><td>J'<strong>ai envie de</strong> voyager.</td></tr><tr><td><strong>avoir l'habitude de</strong></td><td>to be used to</td><td>J'<strong>ai l'habitude de</strong> me lever tôt.</td></tr><tr><td><strong>venir de</strong> + infinitive</td><td>to have just (done something)</td><td>Je <strong>viens de</strong> manger. (I just ate.) — <em>This is actually passé récent!</em></td></tr></tbody></table>
+<blockquote>
+<p>⚠️ <strong>"Être en train de"</strong> is the CLOSEST French gets to English present continuous. Use it when you want to emphasize that something is happening <strong>RIGHT AT THIS MOMENT</strong>:</p>
+<ul>
+<li><em>Je mange</em> = I eat / I'm eating (general)</li>
+<li><em>Je suis en train de manger</em> = I am eating <em>right now</em> (emphasis on ongoing action)</li>
+</ul>
+</blockquote>
+<hr>
+<h2>🔟 COMPLETE EXAMPLE PARAGRAPH</h2>
+<blockquote>
+<p><strong>Mon quotidien (My daily life):</strong></p>
+<p>Je m'appelle Sophie et j'<strong>habite</strong> à Bordeaux depuis cinq ans. Chaque matin, je <strong>me lève</strong> à six heures et demie. Je <strong>prends</strong> une douche rapide, puis je <strong>m'habille</strong> et je <strong>prépare</strong> mon petit-déjeuner. D'habitude, je <strong>mange</strong> des tartines avec du beurre et de la confiture, et je <strong>bois</strong> un grand café. Mon mari <strong>dort</strong> encore quand je <strong>pars</strong> — il <strong>ne commence</strong> pas le travail avant neuf heures.</p>
+<p>Je <strong>travaille</strong> dans un hôpital. Je <strong>suis</strong> infirmière. Mon travail <strong>est</strong> difficile mais je l'<strong>adore</strong>. Mes collègues <strong>sont</strong> formidables et nous <strong>nous entendons</strong> très bien. À midi, nous <strong>déjeunons</strong> ensemble à la cantine.</p>
+<p>Le soir, si je <strong>ne suis</strong> pas trop fatiguée, je <strong>fais</strong> du yoga ou je <strong>lis</strong> un roman. Mon mari et moi, nous <strong>regardons</strong> parfois un film. Le week-end, nous <strong>allons</strong> souvent au marché et nous <strong>cuisinons</strong> ensemble. La vie <strong>est</strong> belle !</p>
+</blockquote>
+<hr>
+<h2>✅ FINAL SUMMARY TABLE</h2>
+<table><thead><tr><th>USE</th><th>EXAMPLE</th><th>SIGNAL WORDS</th></tr></thead><tbody><tr><td>Current action</td><td>Je <strong>mange</strong> maintenant</td><td>maintenant, en ce moment</td></tr><tr><td>Habit/routine</td><td>Il <strong>court</strong> tous les jours</td><td>toujours, souvent, chaque jour, d'habitude</td></tr><tr><td>General truth</td><td>L'eau <strong>gèle</strong> à 0°C</td><td>(none needed)</td></tr><tr><td>Description/state</td><td>Elle <strong>est</strong> belle</td><td>(none needed)</td></tr><tr><td>Since/for (depuis)</td><td>J'<strong>habite</strong> ici depuis 2020</td><td>depuis, il y a...que, ça fait...que</td></tr><tr><td>Historical present</td><td>En 1945, la guerre <strong>finit</strong></td><td>(past dates, but present verb)</td></tr><tr><td>Near future</td><td>On <strong>part</strong> demain</td><td>demain, bientôt, ce soir</td></tr><tr><td>Si-clauses (real)</td><td>Si tu <strong>viens</strong>, on sort</td><td>si</td></tr><tr><td>Scheduled events</td><td>Le train <strong>part</strong> à 8h</td><td>(time expressions)</td></tr></tbody></table>
+<hr>
+</div>
+
+</div>
+<!-- ========== data-index="1" ========== -->
+
+        </div>
+
+        <div class="nav-bar" style="margin-top:0">
+            <a href="chapter-0.html" class="nav-button prev">← Previous</a>
+            <div class="page-info">
+                <a href="index.html" class="nav-button home">📋 Table of Contents</a>
+            </div>
+            <a href="chapter-2.html" class="nav-button next">Next →</a>
+        </div>
+    </div>
+
+
+
+
+
+<script src="script1.js"></script>
+
+<!-- BQ-CLASSIFIER-START -->
+<script>
+(function(){
+  var MAP = [
+    { re: /^[\s\u00A0]*\uD83D\uDCE6/,                     cls: 'bq-summary' }, // package
+    { re: /^[\s\u00A0]*\uD83D\uDCA1/,                     cls: 'bq-tip'     }, // bulb
+    { re: /^[\s\u00A0]*\u26A0/,                           cls: 'bq-warn'    }, // warn
+    { re: /^[\s\u00A0]*\u2705/,                           cls: 'bq-ok'      }, // check
+    { re: /^[\s\u00A0]*\u274C/,                           cls: 'bq-bad'     }, // cross
+    { re: /^[\s\u00A0]*\uD83D\uDD34/,                     cls: 'bq-bad'     }, // red circle
+    { re: /^[\s\u00A0]*\uD83D\uDD11/,                     cls: 'bq-rule'    }, // key
+    { re: /^[\s\u00A0]*\uD83C\uDFAF/,                     cls: 'bq-rule'    }, // target
+    { re: /^[\s\u00A0]*\uD83D\uDCDD/,                     cls: 'bq-example' }, // memo
+    { re: /^[\s\u00A0]*\uD83D\uDD0D/,                     cls: 'bq-example' }, // magnifier
+    { re: /^[\s\u00A0]*\uD83D\uDCCC/,                     cls: 'bq-rule'    }, // pushpin
+    { re: /^[\s\u00A0]*\uD83D\uDCCA/,                     cls: 'bq-summary' }  // chart
+  ];
+  function leadText(bq){
+    // Grab the first ~8 visible characters from the blockquote to match against.
+    var walker = document.createTreeWalker(bq, NodeFilter.SHOW_TEXT, null, false);
+    var out = '', node;
+    while ((node = walker.nextNode()) && out.length < 16) {
+      out += node.nodeValue;
+      if (out.replace(/\s/g,'').length > 4) break;
+    }
+    return out;
+  }
+  document.querySelectorAll('.content blockquote').forEach(function(bq){
+    var t = leadText(bq);
+    for (var i = 0; i < MAP.length; i++) {
+      if (MAP[i].re.test(t)) { bq.classList.add(MAP[i].cls); break; }
+    }
+    // Special-case: blockquote whose first child is an H2 (like "SECTION SUMMARY")
+    // should always be bq-summary if the H2 text starts with a package emoji or
+    // contains "SUMMARY".
+    var firstH2 = bq.querySelector(':scope > h2');
+    if (firstH2 && !bq.className.match(/bq-/)) {
+      var ht = firstH2.textContent || '';
+      if (/SUMMARY|SECTION/i.test(ht)) bq.classList.add('bq-summary');
+    }
+  });
+})();
+</script>
+<!-- BQ-CLASSIFIER-END -->
+</body>
+</html>
