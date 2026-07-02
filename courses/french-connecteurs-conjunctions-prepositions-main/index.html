@@ -1,0 +1,1821 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>French Connectors — Learn It Right</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500;600&display=swap');
+
+:root {
+  --bg:      #f7f4ee;
+  --paper:   #fffefb;
+  --ink:     #1c1810;
+  --dim:     #7a7060;
+  --rule:    #e5ddd0;
+
+  /* type colours */
+  --prep:    #0e6b99;  --prep-bg:  #e8f4fb;  --prep-bd: #90cde8;
+  --coord:   #1a7a3c;  --coord-bg: #eafaf1;  --coord-bd:#7dd3a8;
+  --sub:     #8a3fbf;  --sub-bg:   #f5eeff;  --sub-bd:  #c9a0f0;
+  --adv:     #b45309;  --adv-bg:   #fef3c7;  --adv-bd:  #f59e0b;
+  --loc:     #be185d;  --loc-bg:   #fff0f6;  --loc-bd:  #f9a8cf;
+  --time:    #0f766e;  --time-bg:  #f0fdfa;  --time-bd: #5eead4;
+
+  --good:    #065f46;  --good-bg:  #ecfdf5;
+  --bad:     #991b1b;  --bad-bg:   #fff1f2;
+  --warn:    #92400e;  --warn-bg:  #fffbeb;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 15px;
+  line-height: 1.65;
+}
+
+/* ── TOP BAR ── */
+.topbar {
+  background: var(--ink);
+  color: #f0ebe0;
+  padding: 0.7rem 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+  position: sticky;
+  top: 0;
+  z-index: 200;
+}
+.topbar-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.1rem;
+  font-style: italic;
+  letter-spacing: 0.02em;
+}
+.topbar-title span { color: #f59e0b; font-style: normal; font-weight: 700; }
+
+.progress-wrap {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  flex: 1;
+  max-width: 300px;
+}
+.progress-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.65rem;
+  letter-spacing: 0.1em;
+  color: #a09080;
+  white-space: nowrap;
+}
+.progress-bar { flex: 1; height: 4px; background: #3a3228; border-radius: 2px; overflow: hidden; }
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #f59e0b, #f97316);
+  border-radius: 2px;
+  transition: width 0.4s ease;
+  width: 10%;
+}
+
+/* ── CHAPTER TABS ── */
+.chapter-bar {
+  background: var(--paper);
+  border-bottom: 2px solid var(--rule);
+  display: flex;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.chapter-bar::-webkit-scrollbar { display: none; }
+
+.ch-tab {
+  padding: 0.65rem 1rem;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-family: 'DM Mono', monospace;
+  font-size: 0.61rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--dim);
+  white-space: nowrap;
+  border-bottom: 3px solid transparent;
+  margin-bottom: -2px;
+  transition: all 0.18s;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+.ch-tab:hover { color: var(--ink); }
+.ch-tab.active { color: var(--ink); border-bottom-color: #f59e0b; font-weight: 500; }
+.ch-num {
+  background: var(--ink);
+  color: var(--bg);
+  font-size: 0.52rem;
+  width: 16px; height: 16px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.ch-tab.active .ch-num { background: #f59e0b; color: #fff; }
+
+/* ── PANELS ── */
+.panel { display: none; }
+.panel.active {
+  display: block;
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 2rem 1.2rem 5rem;
+  animation: fadein 0.25s ease;
+}
+@keyframes fadein { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:translateY(0); } }
+
+/* ── SECTION HEADING ── */
+.section-head { margin-bottom: 1.8rem; }
+.section-head h2 {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.85rem;
+  font-weight: 700;
+  line-height: 1.2;
+}
+.section-head .tagline { font-size: 0.85rem; color: var(--dim); margin-top: 0.3rem; }
+.section-head .rule { height: 2px; background: linear-gradient(90deg, var(--ink), transparent); margin-top: 0.8rem; width: 80px; }
+
+/* ── TYPE BADGES ── */
+.badge {
+  display: inline-block;
+  font-family: 'DM Mono', monospace;
+  font-size: 0.6rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-weight: 600;
+  vertical-align: middle;
+  border: 1px solid;
+}
+.badge-prep  { background:var(--prep-bg);  color:var(--prep);  border-color:var(--prep-bd); }
+.badge-coord { background:var(--coord-bg); color:var(--coord); border-color:var(--coord-bd); }
+.badge-sub   { background:var(--sub-bg);   color:var(--sub);   border-color:var(--sub-bd); }
+.badge-adv   { background:var(--adv-bg);   color:var(--adv);   border-color:var(--adv-bd); }
+.badge-loc   { background:var(--loc-bg);   color:var(--loc);   border-color:var(--loc-bd); }
+.badge-time  { background:var(--time-bg);  color:var(--time);  border-color:var(--time-bd); }
+
+/* ── CONCEPT BOX ── */
+.concept {
+  background: var(--paper);
+  border: 1px solid var(--rule);
+  border-left: 4px solid #f59e0b;
+  border-radius: 6px;
+  padding: 1rem 1.3rem;
+  margin-bottom: 1.5rem;
+  font-size: 0.88rem;
+  line-height: 1.6;
+}
+.concept strong { color: #b45309; }
+
+/* ── WARNING / ERROR BOX ── */
+.warn-box {
+  background: var(--warn-bg);
+  border: 1px solid #fcd34d;
+  border-left: 4px solid var(--warn);
+  border-radius: 6px;
+  padding: 0.8rem 1.1rem;
+  font-size: 0.82rem;
+  color: var(--warn);
+  margin-bottom: 1rem;
+}
+.warn-box strong { color: var(--bad); }
+.err { color: var(--bad); text-decoration: line-through; }
+.ok  { color: var(--good); font-weight: 600; }
+
+/* ── CONNECTOR CARDS (expandable) ── */
+.connector-list { display: flex; flex-direction: column; gap: 1rem; margin-bottom: 1.5rem; }
+
+.conn-card {
+  background: var(--paper);
+  border: 1px solid var(--rule);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.conn-header {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  padding: 0.8rem 1.1rem;
+  cursor: pointer;
+  user-select: none;
+  flex-wrap: wrap;
+}
+.conn-word {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--ink);
+}
+.conn-meaning { font-size: 0.8rem; color: var(--dim); flex: 1; }
+.conn-toggle { font-size: 0.8rem; color: var(--dim); transition: transform 0.2s; margin-left: auto; }
+.conn-card.open .conn-toggle { transform: rotate(180deg); }
+
+.conn-body {
+  display: none;
+  padding: 0 1.1rem 1rem;
+  border-top: 1px solid var(--rule);
+}
+.conn-card.open .conn-body { display: block; }
+
+/* ── MINI TABLE ── */
+.mini-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.83rem;
+  margin: 0.8rem 0;
+}
+.mini-table th {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.58rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 0.5rem 0.8rem;
+  text-align: left;
+  border-bottom: 2px solid var(--rule);
+  color: var(--dim);
+}
+.mini-table td {
+  padding: 0.5rem 0.8rem;
+  border-bottom: 1px solid var(--rule);
+  vertical-align: top;
+}
+.mini-table tr:last-child td { border-bottom: none; }
+.mini-table tr:hover td { background: #faf7f2; }
+.fr-cell { font-style: italic; }
+.fr-cell strong { font-style: normal; color: var(--prep); }
+.en-cell { color: var(--dim); font-size: 0.78rem; }
+
+/* ── EXAMPLE SENTENCE ── */
+.ex-sent {
+  font-size: 0.82rem;
+  color: var(--dim);
+  border-left: 2px solid var(--rule);
+  padding-left: 0.8rem;
+  margin: 0.5rem 0;
+  font-style: italic;
+}
+.ex-sent strong { font-style: normal; color: var(--ink); font-weight: 600; }
+.ex-sent em.tr { font-style: normal; color: #aaa; font-size: 0.75rem; }
+
+/* ── PATTERN HEAD ── */
+.pattern-head {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.6rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--dim);
+  margin: 1.4rem 0 0.6rem;
+  padding-bottom: 0.3rem;
+  border-bottom: 1px dashed var(--rule);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* ── COMPARISON TABLE ── */
+.comp-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 0.8rem;
+  margin-bottom: 1.5rem;
+}
+.comp-card {
+  background: var(--paper);
+  border: 1px solid var(--rule);
+  border-radius: 8px;
+  overflow: hidden;
+}
+.comp-card-head {
+  padding: 0.5rem 0.9rem;
+  font-family: 'DM Mono', monospace;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  color: #fff;
+}
+.comp-card-body {
+  padding: 0.7rem 0.9rem;
+  font-size: 0.8rem;
+  line-height: 1.6;
+  color: var(--dim);
+}
+.comp-card-body .key { font-family: 'DM Mono', monospace; color: var(--ink); font-weight: 600; }
+
+/* ── QUICK REFERENCE PILLS ── */
+.pill-group { display: flex; flex-wrap: wrap; gap: 0.45rem; margin: 0.7rem 0; }
+.pill {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.72rem;
+  padding: 0.3rem 0.75rem;
+  border-radius: 20px;
+  cursor: default;
+  transition: transform 0.15s;
+  border: 1px solid;
+}
+.pill:hover { transform: scale(1.05); }
+.pill-prep  { background:var(--prep-bg);  color:var(--prep);  border-color:var(--prep-bd); }
+.pill-coord { background:var(--coord-bg); color:var(--coord); border-color:var(--coord-bd); }
+.pill-sub   { background:var(--sub-bg);   color:var(--sub);   border-color:var(--sub-bd); }
+.pill-adv   { background:var(--adv-bg);   color:var(--adv);   border-color:var(--adv-bd); }
+.pill-loc   { background:var(--loc-bg);   color:var(--loc);   border-color:var(--loc-bd); }
+.pill-time  { background:var(--time-bg);  color:var(--time);  border-color:var(--time-bd); }
+
+/* ── CHEAT SHEET ── */
+.cheat-section { margin-bottom: 1.5rem; }
+.cheat-section h3 {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.65rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  padding: 0.4rem 0.9rem;
+  border-radius: 5px;
+  color: #fff;
+  margin-bottom: 0.5rem;
+}
+.cheat-row {
+  display: flex;
+  align-items: baseline;
+  gap: 0.6rem;
+  padding: 0.4rem 0.8rem;
+  border-bottom: 1px solid var(--rule);
+  font-size: 0.83rem;
+}
+.cheat-row:nth-child(even) { background: #faf7f0; }
+.cheat-fr { font-family: 'DM Mono', monospace; font-weight: 600; min-width: 130px; }
+.cheat-en { color: var(--dim); font-size: 0.75rem; flex: 1; }
+.cheat-note { font-size: 0.7rem; color: #aaa; font-style: italic; }
+
+/* ── QUIZ ── */
+.quiz-wrap { max-width: 520px; margin: 0 auto; }
+.quiz-counter {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.65rem;
+  color: var(--dim);
+  letter-spacing: 0.1em;
+  text-align: center;
+  margin-bottom: 1rem;
+}
+.quiz-card {
+  background: var(--paper);
+  border: 1px solid var(--rule);
+  border-radius: 14px;
+  padding: 2rem 1.5rem;
+  text-align: center;
+  margin-bottom: 1.2rem;
+  min-height: 200px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+.quiz-q-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.6rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--dim);
+}
+.quiz-sentence {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--ink);
+  line-height: 1.45;
+}
+.quiz-blank {
+  display: inline-block;
+  width: 100px;
+  border-bottom: 3px solid var(--ink);
+  margin: 0 4px;
+  vertical-align: baseline;
+}
+.quiz-hint { font-size: 0.75rem; color: var(--dim); }
+.quiz-reveal-btn {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.68rem;
+  color: var(--dim);
+  letter-spacing: 0.08em;
+  cursor: pointer;
+  text-decoration: underline;
+  background: none;
+  border: none;
+  margin-top: 0.4rem;
+}
+.quiz-answer { display: none; flex-direction: column; align-items: center; gap: 0.4rem; margin-top: 0.6rem; }
+.quiz-answer.shown { display: flex; }
+.quiz-ans-word {
+  font-family: 'DM Mono', monospace;
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--prep);
+}
+.quiz-ans-rule { font-size: 0.72rem; color: var(--dim); font-style: italic; }
+
+.quiz-opts {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.65rem;
+  margin-bottom: 1rem;
+}
+.quiz-opt {
+  padding: 0.8rem;
+  border-radius: 9px;
+  border: 2px solid var(--rule);
+  background: var(--paper);
+  cursor: pointer;
+  font-family: 'DM Mono', monospace;
+  font-size: 0.8rem;
+  font-weight: 500;
+  transition: all 0.15s;
+  text-align: center;
+  color: var(--ink);
+}
+.quiz-opt:hover { border-color: var(--prep); color: var(--prep); background: var(--prep-bg); }
+.quiz-opt.correct { background: var(--good-bg); border-color: var(--good); color: var(--good); }
+.quiz-opt.wrong   { background: var(--bad-bg);  border-color: var(--bad);  color: var(--bad); }
+
+.quiz-next {
+  width: 100%;
+  padding: 0.75rem;
+  background: var(--ink);
+  color: var(--bg);
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-family: 'DM Mono', monospace;
+  font-size: 0.73rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  transition: opacity 0.2s;
+  margin-bottom: 0.8rem;
+}
+.quiz-next:hover { opacity: 0.8; }
+
+.quiz-score {
+  text-align: center;
+  font-family: 'DM Mono', monospace;
+  font-size: 0.7rem;
+  color: var(--dim);
+  letter-spacing: 0.05em;
+}
+
+/* ── TIPS GRID ── */
+.tips-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.8rem; margin-bottom: 1.5rem; }
+.tip-card { background: var(--paper); border: 1px solid var(--rule); border-radius: 8px; padding: 1rem; }
+.tip-num { font-family: 'Playfair Display', serif; font-size: 1.8rem; font-weight: 700; color: var(--rule); line-height: 1; margin-bottom: 0.3rem; }
+.tip-title { font-weight: 600; font-size: 0.88rem; margin-bottom: 0.2rem; }
+.tip-body { font-size: 0.79rem; color: var(--dim); line-height: 1.55; }
+
+/* ── STORY BOX ── */
+.story-box {
+  background: linear-gradient(135deg, #1c1810 0%, #2d2416 100%);
+  color: #f0ebe0;
+  border-radius: 12px;
+  padding: 1.5rem 1.8rem;
+  margin-bottom: 1.5rem;
+  font-size: 0.88rem;
+  line-height: 1.85;
+}
+.story-box .story-title {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.6rem;
+  letter-spacing: 0.2em;
+  color: #f59e0b;
+  text-transform: uppercase;
+  margin-bottom: 0.8rem;
+}
+.story-box .hl-prep  { color: #90cde8; font-weight: 600; }
+.story-box .hl-coord { color: #7dd3a8; font-weight: 600; }
+.story-box .hl-sub   { color: #c9a0f0; font-weight: 600; }
+.story-box .hl-adv   { color: #fcd34d; font-weight: 600; }
+
+@media (max-width: 580px) {
+  .tips-grid, .comp-grid { grid-template-columns: 1fr; }
+  .quiz-opts { grid-template-columns: 1fr; }
+  .quiz-sentence { font-size: 1rem; }
+}
+</style>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<div class="topbar">
+  <div class="topbar-title">🇫🇷 <span>Les Connecteurs</span> — Conjunctions &amp; Prepositions</div>
+  <div class="progress-wrap">
+    <div class="progress-label" id="prog-label">CH 1 / 10</div>
+    <div class="progress-bar"><div class="progress-fill" id="prog-fill"></div></div>
+  </div>
+</div>
+
+<!-- CHAPTER TABS -->
+<div class="chapter-bar">
+  <button class="ch-tab active" data-tab="intro">      <span class="ch-num">1</span> The Big Idea </button>
+  <button class="ch-tab"        data-tab="coord">      <span class="ch-num">2</span> Coordinating </button>
+  <button class="ch-tab"        data-tab="cause">      <span class="ch-num">3</span> Cause &amp; Reason </button>
+  <button class="ch-tab"        data-tab="contrast">   <span class="ch-num">4</span> Contrast </button>
+  <button class="ch-tab"        data-tab="time">       <span class="ch-num">5</span> Time </button>
+  <button class="ch-tab"        data-tab="place">      <span class="ch-num">6</span> Place </button>
+  <button class="ch-tab"        data-tab="condition">  <span class="ch-num">7</span> Condition </button>
+  <button class="ch-tab"        data-tab="confusable"> <span class="ch-num">8</span> Confusables </button>
+  <button class="ch-tab"        data-tab="cheatsheet"> <span class="ch-num">9</span> Cheat Sheet </button>
+  <button class="ch-tab"        data-tab="quiz">       <span class="ch-num">10</span> Quiz </button>
+</div>
+
+<!-- ══════════════ CH 1: THE BIG IDEA ══════════════ -->
+<div class="panel active" id="tab-intro">
+  <div class="section-head">
+    <h2>The Big Idea</h2>
+    <div class="tagline">What connectors are and why they matter — before you memorize anything</div>
+    <div class="rule"></div>
+  </div>
+
+  <div class="concept">
+    French connectors are the <strong>glue of the language</strong>. Every sentence you build will use at least one.
+    They fall into two families: <strong>Conjunctions</strong> (linking clauses) and <strong>Prepositions</strong> (linking nouns/pronouns to the rest of a sentence).
+    Master the categories first — then the words fall into place naturally.
+  </div>
+
+  <div class="pattern-head">The 6 types — learn the category first, then the word</div>
+  <div class="comp-grid">
+    <div class="comp-card">
+      <div class="comp-card-head" style="background:var(--coord)">🔗 Coordinating Conjunctions</div>
+      <div class="comp-card-body">Link two <em>equal</em> elements. The famous 7: <span class="key">mais, ou, et, donc, or, ni, car</span><br>Memory trick: <strong>MOEDONIC</strong></div>
+    </div>
+    <div class="comp-card">
+      <div class="comp-card-head" style="background:var(--sub)">🔀 Subordinating Conjunctions</div>
+      <div class="comp-card-body">Connect a dependent clause to a main clause. Often trigger <strong>subjunctive</strong>: <span class="key">bien que, pour que, quoique, avant que</span></div>
+    </div>
+    <div class="comp-card">
+      <div class="comp-card-head" style="background:var(--prep)">📍 Prepositions</div>
+      <div class="comp-card-body">Placed <em>before</em> a noun. Show location, time, direction, manner: <span class="key">à, de, dans, sur, sous, avec, sans, pour</span></div>
+    </div>
+    <div class="comp-card">
+      <div class="comp-card-head" style="background:var(--adv)">💬 Adverbial Connectors</div>
+      <div class="comp-card-body">Link sentences as transitions. Don't change the clause structure: <span class="key">cependant, toutefois, enfin, d'ailleurs, ensuite</span></div>
+    </div>
+    <div class="comp-card">
+      <div class="comp-card-head" style="background:var(--loc)">🗺 Location Expressions</div>
+      <div class="comp-card-body">Compound prepositions of place: <span class="key">à côté de, au milieu de, en face de, loin de, près de</span></div>
+    </div>
+    <div class="comp-card">
+      <div class="comp-card-head" style="background:var(--time)">🕐 Time Expressions</div>
+      <div class="comp-card-body">Compound prepositions of time: <span class="key">avant, après, depuis, pendant, dès que, aussitôt que</span></div>
+    </div>
+  </div>
+
+  <div class="concept" style="border-left-color:var(--sub)">
+    <strong>The Subjunctive Alert 🚨</strong> — Some conjunctions <em>always</em> trigger the subjunctive mood in French. 
+    These must be memorized: <strong>bien que, pour que, avant que, à moins que, quoique, sans que, afin que, quoi que</strong>.
+    Whenever you see these, the verb in the dependent clause must be in subjunctive.
+  </div>
+
+  <div class="tips-grid">
+    <div class="tip-card">
+      <div class="tip-num">01</div>
+      <div class="tip-title">Learn by function, not alphabet</div>
+      <div class="tip-body">Group connectors by what they DO (cause, contrast, time) not by what letter they start with. Your brain retrieves them faster by meaning.</div>
+    </div>
+    <div class="tip-card">
+      <div class="tip-num">02</div>
+      <div class="tip-title">Prepositions contract with le/les</div>
+      <div class="tip-body"><em>à + le = au, à + les = aux, de + le = du, de + les = des</em>. This happens automatically in all compound prepositions.</div>
+    </div>
+    <div class="tip-card">
+      <div class="tip-num">03</div>
+      <div class="tip-title">CAR never starts a sentence</div>
+      <div class="tip-body"><em>Car</em> (because/for) must come in the middle. Use <em>parce que</em> or <em>comme</em> if you need to start with the reason.</div>
+    </div>
+    <div class="tip-card">
+      <div class="tip-num">04</div>
+      <div class="tip-title">Accent marks change meaning</div>
+      <div class="tip-body"><em>ou</em> = or · <em>où</em> = where. <em>sur</em> = on · <em>sûr</em> = sure. <em>a</em> = has · <em>à</em> = to. One accent, completely different word.</div>
+    </div>
+  </div>
+
+  <div class="story-box">
+    <div class="story-title">📖 See them all in one paragraph</div>
+    <span class="hl-adv">D'abord</span>, je suis arrivé <span class="hl-prep">à</span> Paris. <span class="hl-coord">Mais</span> il pleuvait, <span class="hl-coord">donc</span> je suis resté <span class="hl-prep">dans</span> mon hôtel. <span class="hl-sub">Bien qu'</span>il fasse froid, je suis sorti <span class="hl-prep">après</span> le déjeuner. <span class="hl-sub">Parce que</span> je voulais voir la Tour Eiffel, j'ai marché <span class="hl-prep">jusqu'à</span> la Seine. <span class="hl-adv">Enfin</span>, le soleil est apparu! <span class="hl-coord">Et</span> c'était magnifique.
+    <div style="margin-top:0.8rem;font-size:0.75rem;color:#a09080">
+      <span style="color:#90cde8">■</span> prep &nbsp;
+      <span style="color:#7dd3a8">■</span> coordinating &nbsp;
+      <span style="color:#c9a0f0">■</span> subordinating &nbsp;
+      <span style="color:#fcd34d">■</span> adverbial
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════ CH 2: COORDINATING CONJUNCTIONS ══════════════ -->
+<div class="panel" id="tab-coord">
+  <div class="section-head">
+    <h2>Coordinating Conjunctions</h2>
+    <div class="tagline">The 7 essential connectors — MAIS OU ET DONC OR NI CAR</div>
+    <div class="rule"></div>
+  </div>
+
+  <div class="concept">
+    These 7 connect grammatically <strong>equal</strong> elements. They never trigger the subjunctive.
+    The classic French mnemonic is <strong>MOEDONIC</strong> — <em>mais, ou, et, donc, or, ni, car</em>.
+  </div>
+
+  <div class="connector-list">
+
+    <div class="conn-card">
+      <div class="conn-header" onclick="toggleCard(this)">
+        <span class="conn-word">mais</span>
+        <span class="badge badge-coord">COORD</span>
+        <span class="conn-meaning">but — contrast / opposition</span>
+        <span class="conn-toggle">▾</span>
+      </div>
+      <div class="conn-body">
+        <table class="mini-table"><thead><tr><th>French</th><th>English</th></tr></thead><tbody>
+          <tr><td class="fr-cell">Il est fatigué, <strong>mais</strong> il continue.</td><td class="en-cell">He's tired, but he continues.</td></tr>
+          <tr><td class="fr-cell">C'est cher, <strong>mais</strong> c'est bon.</td><td class="en-cell">It's expensive, but it's good.</td></tr>
+          <tr><td class="fr-cell">Je veux venir, <strong>mais</strong> je n'ai pas le temps.</td><td class="en-cell">I want to come, but I don't have time.</td></tr>
+        </tbody></table>
+        <div class="warn-box">⚠ <strong>Non, mais…</strong> as an exclamation expresses surprise or indignation: <em>"Non mais, tu exagères!"</em> (Come on, you're exaggerating!)</div>
+      </div>
+    </div>
+
+    <div class="conn-card">
+      <div class="conn-header" onclick="toggleCard(this)">
+        <span class="conn-word">ou / ou bien</span>
+        <span class="badge badge-coord">COORD</span>
+        <span class="conn-meaning">or — choice / alternative</span>
+        <span class="conn-toggle">▾</span>
+      </div>
+      <div class="conn-body">
+        <table class="mini-table"><thead><tr><th>French</th><th>English</th></tr></thead><tbody>
+          <tr><td class="fr-cell">Café <strong>ou</strong> thé?</td><td class="en-cell">Coffee or tea?</td></tr>
+          <tr><td class="fr-cell"><strong>Ou</strong> tu viens, <strong>ou</strong> tu restes.</td><td class="en-cell">Either you come, or you stay.</td></tr>
+          <tr><td class="fr-cell">Tu peux prendre le train <strong>ou bien</strong> le bus.</td><td class="en-cell">You can take the train or the bus.</td></tr>
+        </tbody></table>
+        <div class="warn-box">⚠ <span class="err">ou</span> vs <span class="ok">où</span> — without accent = "or" · with accent = "where"</div>
+      </div>
+    </div>
+
+    <div class="conn-card">
+      <div class="conn-header" onclick="toggleCard(this)">
+        <span class="conn-word">et</span>
+        <span class="badge badge-coord">COORD</span>
+        <span class="conn-meaning">and — addition</span>
+        <span class="conn-toggle">▾</span>
+      </div>
+      <div class="conn-body">
+        <table class="mini-table"><thead><tr><th>French</th><th>English</th></tr></thead><tbody>
+          <tr><td class="fr-cell">Pierre <strong>et</strong> Marie sont là.</td><td class="en-cell">Pierre and Marie are here.</td></tr>
+          <tr><td class="fr-cell">Je travaille <strong>et</strong> j'étudie.</td><td class="en-cell">I work and study.</td></tr>
+          <tr><td class="fr-cell">Il fait froid <strong>et</strong> il pleut.</td><td class="en-cell">It's cold and it's raining.</td></tr>
+        </tbody></table>
+        <div class="ex-sent">💡 <strong>Et puis</strong> = "and then" for sequence. <em>J'ai mangé, <strong>et puis</strong> je suis sorti.</em></div>
+      </div>
+    </div>
+
+    <div class="conn-card">
+      <div class="conn-header" onclick="toggleCard(this)">
+        <span class="conn-word">donc</span>
+        <span class="badge badge-coord">COORD</span>
+        <span class="conn-meaning">so, therefore — consequence</span>
+        <span class="conn-toggle">▾</span>
+      </div>
+      <div class="conn-body">
+        <table class="mini-table"><thead><tr><th>French</th><th>English</th></tr></thead><tbody>
+          <tr><td class="fr-cell">Il pleut, <strong>donc</strong> je reste à la maison.</td><td class="en-cell">It's raining, so I'm staying home.</td></tr>
+          <tr><td class="fr-cell">Je pense, <strong>donc</strong> je suis.</td><td class="en-cell">I think, therefore I am. (Descartes)</td></tr>
+          <tr><td class="fr-cell">Tu es en retard, <strong>donc</strong> tu dois te dépêcher.</td><td class="en-cell">You're late, so you must hurry.</td></tr>
+        </tbody></table>
+      </div>
+    </div>
+
+    <div class="conn-card">
+      <div class="conn-header" onclick="toggleCard(this)">
+        <span class="conn-word">ni … ni</span>
+        <span class="badge badge-coord">COORD</span>
+        <span class="conn-meaning">neither … nor — double negation</span>
+        <span class="conn-toggle">▾</span>
+      </div>
+      <div class="conn-body">
+        <table class="mini-table"><thead><tr><th>French</th><th>English</th></tr></thead><tbody>
+          <tr><td class="fr-cell">Je n'ai <strong>ni</strong> faim <strong>ni</strong> soif.</td><td class="en-cell">I'm neither hungry nor thirsty.</td></tr>
+          <tr><td class="fr-cell">Il n'est <strong>ni</strong> gentil <strong>ni</strong> méchant.</td><td class="en-cell">He's neither nice nor mean.</td></tr>
+          <tr><td class="fr-cell">Elle ne parle <strong>ni</strong> français <strong>ni</strong> espagnol.</td><td class="en-cell">She speaks neither French nor Spanish.</td></tr>
+        </tbody></table>
+        <div class="warn-box">⚠ Structure: <span class="ok">ne … ni … ni</span> — the verb keeps its <em>ne</em>, but NO article after <em>ni</em>. <br><span class="err">Je n'ai ni le temps ni l'argent</span> → <span class="ok">Je n'ai ni temps ni argent</span> (usually)</div>
+      </div>
+    </div>
+
+    <div class="conn-card">
+      <div class="conn-header" onclick="toggleCard(this)">
+        <span class="conn-word">car</span>
+        <span class="badge badge-coord">COORD</span>
+        <span class="conn-meaning">because, for — explains a reason (formal)</span>
+        <span class="conn-toggle">▾</span>
+      </div>
+      <div class="conn-body">
+        <table class="mini-table"><thead><tr><th>French</th><th>English</th></tr></thead><tbody>
+          <tr><td class="fr-cell">Je reste à la maison, <strong>car</strong> il pleut.</td><td class="en-cell">I'm staying home, for it's raining.</td></tr>
+          <tr><td class="fr-cell">Elle est heureuse, <strong>car</strong> elle a réussi.</td><td class="en-cell">She's happy, because she succeeded.</td></tr>
+        </tbody></table>
+        <div class="warn-box">⚠ <strong>CAR can NEVER start a sentence.</strong> Use <em>parce que</em> or <em>comme</em> instead.<br>
+          <span class="err">Car il pleut, je reste.</span> ❌<br>
+          <span class="ok">Comme il pleut, je reste.</span> ✅<br>
+          <span class="ok">Je reste, car il pleut.</span> ✅
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="pattern-head">Addition connectors (beyond "et")</div>
+  <div class="pill-group">
+    <span class="pill pill-adv">aussi (also)</span>
+    <span class="pill pill-adv">ainsi que (as well as)</span>
+    <span class="pill pill-adv">en plus (in addition)</span>
+    <span class="pill pill-adv">en outre (furthermore)</span>
+    <span class="pill pill-adv">de plus (moreover)</span>
+    <span class="pill pill-adv">d'ailleurs (besides)</span>
+    <span class="pill pill-adv">voire (or even)</span>
+  </div>
+</div>
+
+<!-- ══════════════ CH 3: CAUSE & REASON ══════════════ -->
+<div class="panel" id="tab-cause">
+  <div class="section-head">
+    <h2>Cause &amp; Reason</h2>
+    <div class="tagline">Expressing why — parce que, puisque, comme, car, à cause de…</div>
+    <div class="rule"></div>
+  </div>
+
+  <div class="concept">
+    French has <strong>5 main ways</strong> to say "because" — and they are NOT interchangeable.
+    Each has a different nuance. Getting this right is the mark of an advanced speaker.
+  </div>
+
+  <div class="connector-list">
+
+    <div class="conn-card">
+      <div class="conn-header" onclick="toggleCard(this)">
+        <span class="conn-word">parce que</span>
+        <span class="badge badge-sub">SUBORD</span>
+        <span class="conn-meaning">because — the standard, new information</span>
+        <span class="conn-toggle">▾</span>
+      </div>
+      <div class="conn-body">
+        <div class="ex-sent">→ Gives the <strong>reason</strong> for something. Answers the question "pourquoi?"</div>
+        <table class="mini-table"><thead><tr><th>French</th><th>English</th></tr></thead><tbody>
+          <tr><td class="fr-cell">Je reste à la maison <strong>parce qu'</strong>il pleut.</td><td class="en-cell">I'm staying home <strong>because</strong> it's raining.</td></tr>
+          <tr><td class="fr-cell">Elle pleure <strong>parce qu'</strong>elle est triste.</td><td class="en-cell">She's crying because she's sad.</td></tr>
+          <tr><td class="fr-cell">Pourquoi tu pars? — <strong>Parce que</strong> je suis fatigué.</td><td class="en-cell">Why are you leaving? Because I'm tired.</td></tr>
+        </tbody></table>
+      </div>
+    </div>
+
+    <div class="conn-card">
+      <div class="conn-header" onclick="toggleCard(this)">
+        <span class="conn-word">puisque</span>
+        <span class="badge badge-sub">SUBORD</span>
+        <span class="conn-meaning">since — known / obvious reason</span>
+        <span class="conn-toggle">▾</span>
+      </div>
+      <div class="conn-body">
+        <div class="ex-sent">→ The reason is <strong>already known</strong> to the listener. Often implies "since you already know this…"</div>
+        <table class="mini-table"><thead><tr><th>French</th><th>English</th></tr></thead><tbody>
+          <tr><td class="fr-cell"><strong>Puisque</strong> tu le sais déjà, pourquoi me demandes-tu?</td><td class="en-cell">Since you already know, why are you asking me?</td></tr>
+          <tr><td class="fr-cell"><strong>Puisque</strong> tu es là, aide-moi.</td><td class="en-cell">Since you're here, help me.</td></tr>
+          <tr><td class="fr-cell">Je n'irai pas, <strong>puisqu'</strong>il est malade.</td><td class="en-cell">I won't go, since he's sick.</td></tr>
+        </tbody></table>
+        <div class="warn-box"><strong>puisque vs parce que:</strong> puisque = known reason (listener aware) · parce que = new information (answering "why?")</div>
+      </div>
+    </div>
+
+    <div class="conn-card">
+      <div class="conn-header" onclick="toggleCard(this)">
+        <span class="conn-word">comme</span>
+        <span class="badge badge-sub">SUBORD</span>
+        <span class="conn-meaning">as, since — MUST start the sentence</span>
+        <span class="conn-toggle">▾</span>
+      </div>
+      <div class="conn-body">
+        <div class="ex-sent">→ Always goes at the <strong>beginning</strong> of the sentence when expressing cause.</div>
+        <table class="mini-table"><thead><tr><th>French</th><th>English</th></tr></thead><tbody>
+          <tr><td class="fr-cell"><strong>Comme</strong> il pleuvait, nous sommes restés à la maison.</td><td class="en-cell">Since it was raining, we stayed home.</td></tr>
+          <tr><td class="fr-cell"><strong>Comme</strong> il était fatigué, il est allé se coucher.</td><td class="en-cell">As he was tired, he went to bed.</td></tr>
+        </tbody></table>
+        <div class="warn-box">⚠ <em>Comme</em> has 3 meanings: <strong>cause</strong> (as/since) · <strong>comparison</strong> (like) · <strong>manner</strong> (as). Context determines which.</div>
+      </div>
+    </div>
+
+    <div class="conn-card">
+      <div class="conn-header" onclick="toggleCard(this)">
+        <span class="conn-word">à cause de</span>
+        <span class="badge badge-prep">PREP</span>
+        <span class="conn-meaning">because of — + noun (often negative)</span>
+        <span class="conn-toggle">▾</span>
+      </div>
+      <div class="conn-body">
+        <div class="ex-sent">→ Followed by a <strong>noun or pronoun</strong> (not a clause). Often implies blame.</div>
+        <table class="mini-table"><thead><tr><th>French</th><th>English</th></tr></thead><tbody>
+          <tr><td class="fr-cell">Je suis en retard <strong>à cause de</strong> la pluie.</td><td class="en-cell">I'm late because of the rain.</td></tr>
+          <tr><td class="fr-cell"><strong>À cause de</strong> toi, nous avons manqué le train.</td><td class="en-cell">Because of you, we missed the train.</td></tr>
+          <tr><td class="fr-cell">Le match est annulé <strong>à cause du</strong> mauvais temps.</td><td class="en-cell">The match is cancelled due to bad weather.</td></tr>
+        </tbody></table>
+      </div>
+    </div>
+
+    <div class="conn-card">
+      <div class="conn-header" onclick="toggleCard(this)">
+        <span class="conn-word">grâce à</span>
+        <span class="badge badge-prep">PREP</span>
+        <span class="conn-meaning">thanks to — + noun (positive cause)</span>
+        <span class="conn-toggle">▾</span>
+      </div>
+      <div class="conn-body">
+        <div class="ex-sent">→ Like <em>à cause de</em> but <strong>positive</strong> connotation only.</div>
+        <table class="mini-table"><thead><tr><th>French</th><th>English</th></tr></thead><tbody>
+          <tr><td class="fr-cell">J'ai réussi <strong>grâce à</strong> toi.</td><td class="en-cell">I succeeded thanks to you.</td></tr>
+          <tr><td class="fr-cell"><strong>Grâce au</strong> soleil, il fait chaud aujourd'hui.</td><td class="en-cell">Thanks to the sun, it's warm today.</td></tr>
+        </tbody></table>
+        <div class="warn-box"><span class="err">à cause de</span> ← negative reason &nbsp;|&nbsp; <span class="ok">grâce à</span> ← positive reason</div>
+      </div>
+    </div>
+
+    <div class="conn-card">
+      <div class="conn-header" onclick="toggleCard(this)">
+        <span class="conn-word">en raison de · par suite de · suite à</span>
+        <span class="badge badge-prep">PREP</span>
+        <span class="conn-meaning">due to / following — formal written French</span>
+        <span class="conn-toggle">▾</span>
+      </div>
+      <div class="conn-body">
+        <table class="mini-table"><thead><tr><th>French</th><th>English</th></tr></thead><tbody>
+          <tr><td class="fr-cell"><strong>En raison de</strong> la grève, les trains sont annulés.</td><td class="en-cell">Due to the strike, trains are cancelled.</td></tr>
+          <tr><td class="fr-cell"><strong>Suite à</strong> votre lettre, je vous réponds.</td><td class="en-cell">Further to your letter, I'm replying.</td></tr>
+          <tr><td class="fr-cell"><strong>À la suite de</strong> l'accident, la route est fermée.</td><td class="en-cell">Following the accident, the road is closed.</td></tr>
+        </tbody></table>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══════════════ CH 4: CONTRAST ══════════════ -->
+<div class="panel" id="tab-contrast">
+  <div class="section-head">
+    <h2>Contrast &amp; Concession</h2>
+    <div class="tagline">Although, however, despite, yet — the words that create tension in a sentence</div>
+    <div class="rule"></div>
+  </div>
+
+  <div class="concept">
+    French has many contrast connectors — and they vary in <strong>formality</strong>. Knowing which one to use shows sophistication. The key question: does it take <strong>subjunctive</strong> or not?
+  </div>
+
+  <div class="connector-list">
+
+    <div class="conn-card">
+      <div class="conn-header" onclick="toggleCard(this)">
+        <span class="conn-word">bien que / quoique</span>
+        <span class="badge badge-sub">SUBORD + SUBJ</span>
+        <span class="conn-meaning">although — always + subjunctive</span>
+        <span class="conn-toggle">▾</span>
+      </div>
+      <div class="conn-body">
+        <div class="ex-sent">⚠️ <strong>ALWAYS</strong> followed by subjunctive. This is non-negotiable.</div>
+        <table class="mini-table"><thead><tr><th>French</th><th>English</th></tr></thead><tbody>
+          <tr><td class="fr-cell"><strong>Bien qu'</strong>il <em>soit</em> fatigué, il travaille.</td><td class="en-cell">Although he's tired, he works.</td></tr>
+          <tr><td class="fr-cell"><strong>Bien que</strong> ce <em>soit</em> difficile, j'essaie.</td><td class="en-cell">Although it's difficult, I try.</td></tr>
+          <tr><td class="fr-cell"><strong>Quoiqu'</strong>il <em>pleuve</em>, nous sortons.</td><td class="en-cell">Although it's raining, we go out.</td></tr>
+          <tr><td class="fr-cell"><strong>Bien qu'</strong>elle <em>ait</em> étudié, elle a échoué.</td><td class="en-cell">Although she studied, she failed.</td></tr>
+        </tbody></table>
+        <div class="warn-box"><span class="err">Bien qu'il est fatigué</span> ❌ (indicative) → <span class="ok">Bien qu'il soit fatigué</span> ✅ (subjunctive)</div>
+      </div>
+    </div>
+
+    <div class="conn-card">
+      <div class="conn-header" onclick="toggleCard(this)">
+        <span class="conn-word">malgré / malgré que</span>
+        <span class="badge badge-prep">PREP</span>
+        <span class="conn-meaning">despite — + noun OR + subjunctive (malgré que)</span>
+        <span class="conn-toggle">▾</span>
+      </div>
+      <div class="conn-body">
+        <table class="mini-table"><thead><tr><th>French</th><th>English</th></tr></thead><tbody>
+          <tr><td class="fr-cell"><strong>Malgré</strong> la pluie, nous sommes sortis.</td><td class="en-cell">Despite the rain, we went out.</td></tr>
+          <tr><td class="fr-cell"><strong>Malgré tout</strong>, je viendrai.</td><td class="en-cell">Despite everything, I'll come.</td></tr>
+          <tr><td class="fr-cell"><strong>Malgré le fait que</strong> les conditions soient difficiles…</td><td class="en-cell">Despite the fact that conditions are difficult…</td></tr>
+        </tbody></table>
+        <div class="ex-sent">💡 <strong>Malgré tout</strong> = "despite everything" — very common phrase.</div>
+      </div>
+    </div>
+
+    <div class="conn-card">
+      <div class="conn-header" onclick="toggleCard(this)">
+        <span class="conn-word">cependant · toutefois · néanmoins · pourtant</span>
+        <span class="badge badge-adv">ADVERBIAL</span>
+        <span class="conn-meaning">however / yet / nevertheless</span>
+        <span class="conn-toggle">▾</span>
+      </div>
+      <div class="conn-body">
+        <div class="ex-sent">→ All mean "however/yet" but differ in formality. They connect two SENTENCES (not clauses).</div>
+        <table class="mini-table"><thead><tr><th>Word</th><th>Register</th><th>Example</th></tr></thead><tbody>
+          <tr><td style="font-family:'DM Mono',monospace;font-weight:600">toutefois</td><td class="en-cell">very formal / written</td><td class="fr-cell"><strong>Toutefois</strong>, il continue.</td></tr>
+          <tr><td style="font-family:'DM Mono',monospace;font-weight:600">néanmoins</td><td class="en-cell">very formal / written</td><td class="fr-cell"><strong>Néanmoins</strong>, des progrès ont été faits.</td></tr>
+          <tr><td style="font-family:'DM Mono',monospace;font-weight:600">cependant</td><td class="en-cell">formal / written &amp; spoken</td><td class="fr-cell"><strong>Cependant</strong>, la situation s'améliore.</td></tr>
+          <tr><td style="font-family:'DM Mono',monospace;font-weight:600">pourtant</td><td class="en-cell">neutral / everyday</td><td class="fr-cell">Il est riche. <strong>Pourtant</strong>, il est malheureux.</td></tr>
+        </tbody></table>
+      </div>
+    </div>
+
+    <div class="conn-card">
+      <div class="conn-header" onclick="toggleCard(this)">
+        <span class="conn-word">même si</span>
+        <span class="badge badge-sub">SUBORD</span>
+        <span class="conn-meaning">even if / even though — indicative (NOT subjunctive)</span>
+        <span class="conn-toggle">▾</span>
+      </div>
+      <div class="conn-body">
+        <table class="mini-table"><thead><tr><th>French</th><th>English</th></tr></thead><tbody>
+          <tr><td class="fr-cell"><strong>Même si</strong> je suis fatigué, je viendrai.</td><td class="en-cell">Even if I'm tired, I'll come.</td></tr>
+          <tr><td class="fr-cell"><strong>Même si</strong> tu as raison, je ne change pas d'avis.</td><td class="en-cell">Even if you're right, I won't change my mind.</td></tr>
+        </tbody></table>
+        <div class="warn-box">⚠ <em>Même si</em> uses <strong>indicative</strong>, not subjunctive — unlike <em>bien que</em>. Common mistake!</div>
+      </div>
+    </div>
+
+    <div class="conn-card">
+      <div class="conn-header" onclick="toggleCard(this)">
+        <span class="conn-word">tandis que · alors que · par contre</span>
+        <span class="badge badge-sub">SUBORD / ADVERB</span>
+        <span class="conn-meaning">while / whereas / on the other hand</span>
+        <span class="conn-toggle">▾</span>
+      </div>
+      <div class="conn-body">
+        <table class="mini-table"><thead><tr><th>French</th><th>English</th></tr></thead><tbody>
+          <tr><td class="fr-cell">Je travaille <strong>tandis que</strong> tu te reposes.</td><td class="en-cell">I work while you rest. (contrast or simultaneous)</td></tr>
+          <tr><td class="fr-cell"><strong>Alors qu'</strong>il est riche, il vit simplement.</td><td class="en-cell">Even though he's rich, he lives simply.</td></tr>
+          <tr><td class="fr-cell">Paris est cher. <strong>Par contre</strong>, Lyon est abordable.</td><td class="en-cell">Paris is expensive. On the other hand, Lyon is affordable.</td></tr>
+        </tbody></table>
+      </div>
+    </div>
+
+    <div class="conn-card">
+      <div class="conn-header" onclick="toggleCard(this)">
+        <span class="conn-word">quoi que / quoi qu'il en soit</span>
+        <span class="badge badge-sub">SUBORD + SUBJ</span>
+        <span class="conn-meaning">whatever — + subjunctive</span>
+        <span class="conn-toggle">▾</span>
+      </div>
+      <div class="conn-body">
+        <table class="mini-table"><thead><tr><th>French</th><th>English</th></tr></thead><tbody>
+          <tr><td class="fr-cell"><strong>Quoi que</strong> tu <em>fasses</em>, je t'aimerai.</td><td class="en-cell">Whatever you do, I'll love you.</td></tr>
+          <tr><td class="fr-cell"><strong>Quoi qu'il en soit</strong>, nous devons agir.</td><td class="en-cell">Whatever the case may be, we must act.</td></tr>
+        </tbody></table>
+        <div class="warn-box"><span class="err">quoique</span> (1 word) = "although" · <span class="ok">quoi que</span> (2 words) = "whatever" — spelling changes the meaning entirely!</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══════════════ CH 5: TIME ══════════════ -->
+<div class="panel" id="tab-time">
+  <div class="section-head">
+    <h2>Time Connectors</h2>
+    <div class="tagline">Before, after, since, when, as soon as, until…</div>
+    <div class="rule"></div>
+  </div>
+
+  <div class="concept">
+    Time connectors are among the most frequently used. Key rule: <strong>after <em>quand</em> referring to a future event, use the future tense</strong> — unlike English. And <em>avant que</em> always needs subjunctive.
+  </div>
+
+  <div class="connector-list">
+
+    <div class="conn-card">
+      <div class="conn-header" onclick="toggleCard(this)">
+        <span class="conn-word">quand / lorsque</span>
+        <span class="badge badge-sub">SUBORD</span>
+        <span class="conn-meaning">when — future context needs future tense!</span>
+        <span class="conn-toggle">▾</span>
+      </div>
+      <div class="conn-body">
+        <table class="mini-table"><thead><tr><th>French</th><th>English</th></tr></thead><tbody>
+          <tr><td class="fr-cell"><strong>Quand</strong> je suis arrivé, il était parti.</td><td class="en-cell">When I arrived, he had left. (past)</td></tr>
+          <tr><td class="fr-cell"><strong>Quand</strong> tu <em>arriveras</em>, appelle-moi.</td><td class="en-cell">When you arrive, call me. (future → future tense!)</td></tr>
+          <tr><td class="fr-cell"><strong>Lorsqu'</strong>il entre, tout le monde se lève.</td><td class="en-cell">When he enters, everyone stands up. (formal)</td></tr>
+        </tbody></table>
+        <div class="warn-box">⚠ Future context: <span class="err">Quand tu arrives, appelle-moi</span> ❌ → <span class="ok">Quand tu arriveras, appelle-moi</span> ✅</div>
+      </div>
+    </div>
+
+    <div class="conn-card">
+      <div class="conn-header" onclick="toggleCard(this)">
+        <span class="conn-word">avant / avant de / avant que</span>
+        <span class="badge badge-prep">PREP / CONJ</span>
+        <span class="conn-meaning">before — de + infinitive (same subj.) · que + subjunctive (different subj.)</span>
+        <span class="conn-toggle">▾</span>
+      </div>
+      <div class="conn-body">
+        <table class="mini-table"><thead><tr><th>French</th><th>English</th></tr></thead><tbody>
+          <tr><td class="fr-cell"><strong>Avant de</strong> partir, ferme la porte.</td><td class="en-cell">Before leaving, close the door. (same subject)</td></tr>
+          <tr><td class="fr-cell"><strong>Avant qu'</strong>il <em>parte</em>, donne-lui le message.</td><td class="en-cell">Before he leaves, give him the message. (diff. subjects)</td></tr>
+          <tr><td class="fr-cell"><strong>Avant</strong> le dîner, nous prenons l'apéritif.</td><td class="en-cell">Before dinner, we have aperitifs. (+ noun)</td></tr>
+        </tbody></table>
+        <div class="warn-box">Rule: same subject → <span class="ok">avant de + infinitive</span> · different subjects → <span class="ok">avant que + subjunctive</span></div>
+      </div>
+    </div>
+
+    <div class="conn-card">
+      <div class="conn-header" onclick="toggleCard(this)">
+        <span class="conn-word">après / après avoir</span>
+        <span class="badge badge-prep">PREP / CONJ</span>
+        <span class="conn-meaning">after — après + infinitive passé OR après que + indicative</span>
+        <span class="conn-toggle">▾</span>
+      </div>
+      <div class="conn-body">
+        <table class="mini-table"><thead><tr><th>French</th><th>English</th></tr></thead><tbody>
+          <tr><td class="fr-cell"><strong>Après avoir</strong> mangé, il s'est reposé.</td><td class="en-cell">After eating, he rested. (same subject)</td></tr>
+          <tr><td class="fr-cell"><strong>Après être</strong> arrivé, elle a appelé.</td><td class="en-cell">After arriving, she called.</td></tr>
+          <tr><td class="fr-cell"><strong>Après que</strong> tu seras parti, je fermerai.</td><td class="en-cell">After you leave, I'll close up.</td></tr>
+        </tbody></table>
+      </div>
+    </div>
+
+    <div class="conn-card">
+      <div class="conn-header" onclick="toggleCard(this)">
+        <span class="conn-word">depuis / pendant / il y a / dans</span>
+        <span class="badge badge-time">TIME</span>
+        <span class="conn-meaning">for / since / ago / in — the 4 time duration words</span>
+        <span class="conn-toggle">▾</span>
+      </div>
+      <div class="conn-body">
+        <table class="mini-table"><thead><tr><th>Word</th><th>Use</th><th>Example</th></tr></thead><tbody>
+          <tr><td style="font-family:'DM Mono',monospace;font-weight:600;color:var(--time)">depuis</td><td class="en-cell">still ongoing → present tense</td><td class="fr-cell">J'habite ici <strong>depuis</strong> 5 ans.</td></tr>
+          <tr><td style="font-family:'DM Mono',monospace;font-weight:600;color:var(--time)">pendant</td><td class="en-cell">completed duration → past tense</td><td class="fr-cell">J'ai travaillé <strong>pendant</strong> 2 heures.</td></tr>
+          <tr><td style="font-family:'DM Mono',monospace;font-weight:600;color:var(--time)">il y a</td><td class="en-cell">ago (in the past)</td><td class="fr-cell">Je l'ai vu <strong>il y a</strong> 3 jours.</td></tr>
+          <tr><td style="font-family:'DM Mono',monospace;font-weight:600;color:var(--time)">dans</td><td class="en-cell">in (future)</td><td class="fr-cell">Je pars <strong>dans</strong> 10 minutes.</td></tr>
+        </tbody></table>
+        <div class="warn-box"><span class="err">J'habite ici pendant 5 ans</span> ❌ (ongoing) → <span class="ok">J'habite ici depuis 5 ans</span> ✅<br>
+          <span class="err">J'ai travaillé depuis 2 heures</span> ❌ (completed) → <span class="ok">J'ai travaillé pendant 2 heures</span> ✅</div>
+      </div>
+    </div>
+
+    <div class="conn-card">
+      <div class="conn-header" onclick="toggleCard(this)">
+        <span class="conn-word">aussitôt que / dès que / dès</span>
+        <span class="badge badge-sub">SUBORD</span>
+        <span class="conn-meaning">as soon as — future context → future tense</span>
+        <span class="conn-toggle">▾</span>
+      </div>
+      <div class="conn-body">
+        <table class="mini-table"><thead><tr><th>French</th><th>English</th></tr></thead><tbody>
+          <tr><td class="fr-cell"><strong>Dès que</strong> tu <em>arriveras</em>, appelle-moi.</td><td class="en-cell">As soon as you arrive, call me.</td></tr>
+          <tr><td class="fr-cell"><strong>Aussitôt qu'</strong>il est entré, il a mangé.</td><td class="en-cell">As soon as he entered, he ate.</td></tr>
+          <tr><td class="fr-cell"><strong>Dès</strong> maintenant, agissons.</td><td class="en-cell">From now on, let's act.</td></tr>
+        </tbody></table>
+      </div>
+    </div>
+
+    <div class="conn-card">
+      <div class="conn-header" onclick="toggleCard(this)">
+        <span class="conn-word">jusqu'à / jusqu'à ce que</span>
+        <span class="badge badge-prep">PREP / CONJ</span>
+        <span class="conn-meaning">until — jusqu'à + noun · jusqu'à ce que + subjunctive</span>
+        <span class="conn-toggle">▾</span>
+      </div>
+      <div class="conn-body">
+        <table class="mini-table"><thead><tr><th>French</th><th>English</th></tr></thead><tbody>
+          <tr><td class="fr-cell">J'attendrai <strong>jusqu'à</strong> demain.</td><td class="en-cell">I'll wait until tomorrow. (+ noun)</td></tr>
+          <tr><td class="fr-cell">Attends <strong>jusqu'à ce qu'</strong>il <em>arrive</em>.</td><td class="en-cell">Wait until he arrives. (+ subjunctive)</td></tr>
+          <tr><td class="fr-cell"><strong>Jusqu'ici</strong>, tout va bien.</td><td class="en-cell">So far, everything is fine.</td></tr>
+        </tbody></table>
+        <div class="warn-box"><em>jusqu'à ce que</em> ALWAYS triggers subjunctive.</div>
+      </div>
+    </div>
+
+    <div class="conn-card">
+      <div class="conn-header" onclick="toggleCard(this)">
+        <span class="conn-word">d'abord · ensuite · puis · enfin</span>
+        <span class="badge badge-adv">ADVERBIAL</span>
+        <span class="conn-meaning">first · then · next · finally — sequence</span>
+        <span class="conn-toggle">▾</span>
+      </div>
+      <div class="conn-body">
+        <table class="mini-table"><thead><tr><th>French</th><th>Typical position</th><th>English</th></tr></thead><tbody>
+          <tr><td class="fr-cell"><strong>D'abord</strong>, je me lève.</td><td class="en-cell">sentence start</td><td class="en-cell">First</td></tr>
+          <tr><td class="fr-cell"><strong>Ensuite</strong>, je prends ma douche.</td><td class="en-cell">sentence start</td><td class="en-cell">Then, next</td></tr>
+          <tr><td class="fr-cell"><strong>Puis</strong>, je prends mon café.</td><td class="en-cell">sentence start</td><td class="en-cell">Then (quicker)</td></tr>
+          <tr><td class="fr-cell"><strong>Enfin</strong>, je pars au travail.</td><td class="en-cell">sentence start / mid</td><td class="en-cell">Finally / at last</td></tr>
+        </tbody></table>
+        <div class="ex-sent">💡 <em>Enfin</em> can also mean <strong>"at last" (relief)</strong>: <em>Te voilà <strong>enfin</strong>!</em> (There you are at last!)<br>Or <strong>exasperation</strong>: <em>Mais <strong>enfin</strong>, écoute-moi!</em> (For goodness' sake, listen!)</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══════════════ CH 6: PLACE ══════════════ -->
+<div class="panel" id="tab-place">
+  <div class="section-head">
+    <h2>Location &amp; Direction</h2>
+    <div class="tagline">à, de, dans, sur, sous — and the compound location expressions</div>
+    <div class="rule"></div>
+  </div>
+
+  <div class="concept">
+    The core prepositions <strong>à</strong> (at/to/in) and <strong>de</strong> (of/from) underpin almost everything. Then compound expressions build on top of them. Remember: <strong>à + le = au, à + les = aux, de + le = du, de + les = des</strong>.
+  </div>
+
+  <div class="pattern-head">The core 8 — must know cold</div>
+  <table class="mini-table">
+    <thead><tr><th>Prep</th><th>Core meaning</th><th>Example</th></tr></thead>
+    <tbody>
+      <tr><td style="font-family:'DM Mono',monospace;font-weight:700;color:var(--prep)">à</td><td class="en-cell">at, to, in (cities)</td><td class="fr-cell">Je suis <strong>à</strong> Paris. Je vais <strong>à</strong> la gare.</td></tr>
+      <tr><td style="font-family:'DM Mono',monospace;font-weight:700;color:var(--prep)">de</td><td class="en-cell">of, from</td><td class="fr-cell">Je viens <strong>de</strong> Lyon. C'est le livre <strong>de</strong> Pierre.</td></tr>
+      <tr><td style="font-family:'DM Mono',monospace;font-weight:700;color:var(--prep)">dans</td><td class="en-cell">in, inside (enclosed space)</td><td class="fr-cell">Le chat est <strong>dans</strong> la boîte.</td></tr>
+      <tr><td style="font-family:'DM Mono',monospace;font-weight:700;color:var(--prep)">sur</td><td class="en-cell">on, on top of</td><td class="fr-cell">Le livre est <strong>sur</strong> la table.</td></tr>
+      <tr><td style="font-family:'DM Mono',monospace;font-weight:700;color:var(--prep)">sous</td><td class="en-cell">under</td><td class="fr-cell">Le chat est <strong>sous</strong> la table.</td></tr>
+      <tr><td style="font-family:'DM Mono',monospace;font-weight:700;color:var(--prep)">entre</td><td class="en-cell">between (2 things)</td><td class="fr-cell"><strong>Entre</strong> toi et moi...</td></tr>
+      <tr><td style="font-family:'DM Mono',monospace;font-weight:700;color:var(--prep)">parmi</td><td class="en-cell">among (3+ things)</td><td class="fr-cell"><strong>Parmi</strong> tous les candidats...</td></tr>
+      <tr><td style="font-family:'DM Mono',monospace;font-weight:700;color:var(--prep)">vers</td><td class="en-cell">towards (direction) / around (time)</td><td class="fr-cell">Il marche <strong>vers</strong> la gare. Je viendrai <strong>vers</strong> midi.</td></tr>
+    </tbody>
+  </table>
+
+  <div class="pattern-head">AU + compound expressions — location</div>
+  <div class="connector-list">
+    <div class="conn-card">
+      <div class="conn-header" onclick="toggleCard(this)">
+        <span class="conn-word">au + … (AU family)</span>
+        <span class="badge badge-loc">LOCATION</span>
+        <span class="conn-meaning">au bord de · au bout de · au milieu de · au coin de · au fond de · au cours de · au-dessus de · au-dessous de</span>
+        <span class="conn-toggle">▾</span>
+      </div>
+      <div class="conn-body">
+        <table class="mini-table"><thead><tr><th>Expression</th><th>Meaning</th><th>Example</th></tr></thead><tbody>
+          <tr><td style="font-family:'DM Mono',monospace;color:var(--prep)">au bord de</td><td class="en-cell">at the edge of / by</td><td class="fr-cell">une maison <strong>au bord de</strong> la mer</td></tr>
+          <tr><td style="font-family:'DM Mono',monospace;color:var(--prep)">au bout de</td><td class="en-cell">at the end of / after</td><td class="fr-cell"><strong>Au bout de</strong> la rue / <strong>au bout de</strong> 5 minutes</td></tr>
+          <tr><td style="font-family:'DM Mono',monospace;color:var(--prep)">au milieu de</td><td class="en-cell">in the middle of</td><td class="fr-cell"><strong>Au milieu de</strong> la nuit</td></tr>
+          <tr><td style="font-family:'DM Mono',monospace;color:var(--prep)">au coin de</td><td class="en-cell">at the corner of</td><td class="fr-cell">La banque est <strong>au coin de</strong> la rue.</td></tr>
+          <tr><td style="font-family:'DM Mono',monospace;color:var(--prep)">au fond de</td><td class="en-cell">at the back / bottom of</td><td class="fr-cell">Les clés sont <strong>au fond de</strong> mon sac.</td></tr>
+          <tr><td style="font-family:'DM Mono',monospace;color:var(--prep)">au cours de</td><td class="en-cell">during</td><td class="fr-cell"><strong>Au cours de</strong> la réunion...</td></tr>
+          <tr><td style="font-family:'DM Mono',monospace;color:var(--prep)">au-dessus de</td><td class="en-cell">above</td><td class="fr-cell">L'avion vole <strong>au-dessus des</strong> nuages.</td></tr>
+          <tr><td style="font-family:'DM Mono',monospace;color:var(--prep)">au-dessous de</td><td class="en-cell">below</td><td class="fr-cell">Il fait froid <strong>au-dessous de</strong> zéro.</td></tr>
+          <tr><td style="font-family:'DM Mono',monospace;color:var(--prep)">au-delà de</td><td class="en-cell">beyond</td><td class="fr-cell"><strong>Au-delà de</strong> la montagne...</td></tr>
+          <tr><td style="font-family:'DM Mono',monospace;color:var(--prep)">au sujet de</td><td class="en-cell">about / regarding</td><td class="fr-cell">Je voudrais parler <strong>au sujet de</strong> votre projet.</td></tr>
+        </tbody></table>
+      </div>
+    </div>
+
+    <div class="conn-card">
+      <div class="conn-header" onclick="toggleCard(this)">
+        <span class="conn-word">À + … (À family)</span>
+        <span class="badge badge-loc">LOCATION</span>
+        <span class="conn-meaning">à côté de · à droite de · à gauche de · à l'intérieur de · à l'extérieur de · près de · loin de</span>
+        <span class="conn-toggle">▾</span>
+      </div>
+      <div class="conn-body">
+        <table class="mini-table"><thead><tr><th>Expression</th><th>Meaning</th><th>Example</th></tr></thead><tbody>
+          <tr><td style="font-family:'DM Mono',monospace;color:var(--prep)">à côté de</td><td class="en-cell">next to</td><td class="fr-cell">Assieds-toi <strong>à côté de</strong> moi.</td></tr>
+          <tr><td style="font-family:'DM Mono',monospace;color:var(--prep)">à droite de</td><td class="en-cell">to the right of</td><td class="fr-cell">La banque est <strong>à droite de</strong> la poste.</td></tr>
+          <tr><td style="font-family:'DM Mono',monospace;color:var(--prep)">à gauche de</td><td class="en-cell">to the left of</td><td class="fr-cell">Tournez <strong>à gauche du</strong> feu rouge.</td></tr>
+          <tr><td style="font-family:'DM Mono',monospace;color:var(--prep)">à l'intérieur de</td><td class="en-cell">inside of</td><td class="fr-cell">Il fait chaud <strong>à l'intérieur de</strong> la voiture.</td></tr>
+          <tr><td style="font-family:'DM Mono',monospace;color:var(--prep)">à l'extérieur de</td><td class="en-cell">outside of</td><td class="fr-cell">Les enfants jouent <strong>à l'extérieur du</strong> bâtiment.</td></tr>
+          <tr><td style="font-family:'DM Mono',monospace;color:var(--prep)">près de</td><td class="en-cell">near / close to</td><td class="fr-cell">J'habite <strong>près de</strong> la gare.</td></tr>
+          <tr><td style="font-family:'DM Mono',monospace;color:var(--prep)">loin de</td><td class="en-cell">far from</td><td class="fr-cell">Il vit <strong>loin de</strong> sa famille.</td></tr>
+          <tr><td style="font-family:'DM Mono',monospace;color:var(--prep)">en face de</td><td class="en-cell">opposite / facing</td><td class="fr-cell">La pharmacie est <strong>en face de</strong> la mairie.</td></tr>
+          <tr><td style="font-family:'DM Mono',monospace;color:var(--prep)">autour de</td><td class="en-cell">around</td><td class="fr-cell">Les enfants dansent <strong>autour de</strong> l'arbre.</td></tr>
+          <tr><td style="font-family:'DM Mono',monospace;color:var(--prep)">derrière / devant</td><td class="en-cell">behind / in front of</td><td class="fr-cell"><strong>Derrière</strong> la maison / <strong>devant</strong> l'école.</td></tr>
+        </tbody></table>
+      </div>
+    </div>
+  </div>
+
+  <div class="warn-box" style="border-left-color:var(--loc);color:var(--ink)">
+    <strong>entre vs parmi:</strong> <em>Entre</em> = between exactly 2 things. <em>Parmi</em> = among 3 or more.<br>
+    <span class="err">Parmi toi et moi</span> ❌ → <span class="ok">Entre toi et moi</span> ✅<br>
+    <span class="err">Entre tous les candidats</span> ❌ → <span class="ok">Parmi tous les candidats</span> ✅
+  </div>
+</div>
+
+<!-- ══════════════ CH 7: CONDITION ══════════════ -->
+<div class="panel" id="tab-condition">
+  <div class="section-head">
+    <h2>Condition &amp; Purpose</h2>
+    <div class="tagline">If, unless, in order to, so that — the subjunctive danger zone</div>
+    <div class="rule"></div>
+  </div>
+
+  <div class="concept">
+    Conditional and purpose connectors are where the <strong>subjunctive is most important</strong>.
+    Learn which ones require it and which don't — this is what separates B1 from B2 French.
+  </div>
+
+  <div class="connector-list">
+
+    <div class="conn-card">
+      <div class="conn-header" onclick="toggleCard(this)">
+        <span class="conn-word">si</span>
+        <span class="badge badge-sub">SUBORD</span>
+        <span class="conn-meaning">if — NEVER with future or conditional in the si-clause</span>
+        <span class="conn-toggle">▾</span>
+      </div>
+      <div class="conn-body">
+        <table class="mini-table"><thead><tr><th>Si-clause (condition)</th><th>Main clause (result)</th></tr></thead><tbody>
+          <tr><td class="fr-cell"><strong>Si</strong> tu viens (present)</td><td class="fr-cell">je serai content (future)</td></tr>
+          <tr><td class="fr-cell"><strong>Si</strong> tu venais (imperfect)</td><td class="fr-cell">je serais content (conditional)</td></tr>
+          <tr><td class="fr-cell"><strong>Si</strong> tu étais venu (pluperfect)</td><td class="fr-cell">j'aurais été content (past conditional)</td></tr>
+        </tbody></table>
+        <div class="warn-box"><span class="err">Si tu viendras...</span> ❌ Future NEVER after si.<br><span class="err">Si j'aurais le temps...</span> ❌ Conditional NEVER after si.<br><span class="ok">Si tu viens, je serai content.</span> ✅</div>
+      </div>
+    </div>
+
+    <div class="conn-card">
+      <div class="conn-header" onclick="toggleCard(this)">
+        <span class="conn-word">à moins de / à moins que</span>
+        <span class="badge badge-prep">PREP / CONJ</span>
+        <span class="conn-meaning">unless — de + infinitive (same subj.) · que + subjunctive (different)</span>
+        <span class="conn-toggle">▾</span>
+      </div>
+      <div class="conn-body">
+        <table class="mini-table"><thead><tr><th>French</th><th>English</th></tr></thead><tbody>
+          <tr><td class="fr-cell"><strong>À moins de</strong> partir maintenant, nous serons en retard.</td><td class="en-cell">Unless we leave now, we'll be late.</td></tr>
+          <tr><td class="fr-cell"><strong>À moins qu'</strong>il ne <em>pleuve</em>, nous sortirons.</td><td class="en-cell">Unless it rains, we'll go out.</td></tr>
+        </tbody></table>
+        <div class="ex-sent">💡 <em>À moins que</em> often uses an "expletive ne" before the verb (optional, literary): <em>à moins qu'il ne pleuve.</em></div>
+      </div>
+    </div>
+
+    <div class="conn-card">
+      <div class="conn-header" onclick="toggleCard(this)">
+        <span class="conn-word">sinon / sauf si</span>
+        <span class="badge badge-adv">ADVERB / CONJ</span>
+        <span class="conn-meaning">otherwise / or else / unless</span>
+        <span class="conn-toggle">▾</span>
+      </div>
+      <div class="conn-body">
+        <table class="mini-table"><thead><tr><th>French</th><th>English</th></tr></thead><tbody>
+          <tr><td class="fr-cell">Dépêche-toi, <strong>sinon</strong> tu seras en retard.</td><td class="en-cell">Hurry up, otherwise you'll be late.</td></tr>
+          <tr><td class="fr-cell">Je viendrai, <strong>sauf si</strong> il pleut.</td><td class="en-cell">I'll come, unless it rains.</td></tr>
+        </tbody></table>
+        <div class="warn-box"><em>Sauf si</em> + indicative (casual) · <em>À moins que</em> + subjunctive (formal). Both mean "unless".</div>
+      </div>
+    </div>
+
+    <div class="conn-card">
+      <div class="conn-header" onclick="toggleCard(this)">
+        <span class="conn-word">pour / pour que / afin de / afin que</span>
+        <span class="badge badge-sub">PREP / CONJ</span>
+        <span class="conn-meaning">in order to / so that — same subject: infinitive · different: subjunctive</span>
+        <span class="conn-toggle">▾</span>
+      </div>
+      <div class="conn-body">
+        <table class="mini-table"><thead><tr><th>French</th><th>English</th></tr></thead><tbody>
+          <tr><td class="fr-cell">Je travaille <strong>pour</strong> réussir.</td><td class="en-cell">I work to succeed. (same subject)</td></tr>
+          <tr><td class="fr-cell">Je travaille <strong>pour que</strong> tu <em>réussisses</em>.</td><td class="en-cell">I work so that you succeed. (diff. subjects + subj.)</td></tr>
+          <tr><td class="fr-cell">J'étudie <strong>afin d'</strong>être reçu.</td><td class="en-cell">I study in order to pass. (same subject, formal)</td></tr>
+          <tr><td class="fr-cell">Je parle lentement <strong>afin que</strong> tu <em>comprennes</em>.</td><td class="en-cell">I speak slowly so that you understand. (subj.)</td></tr>
+        </tbody></table>
+        <div class="warn-box">Same subject → <span class="ok">pour / afin de + infinitive</span> · Different subjects → <span class="ok">pour que / afin que + subjunctive</span></div>
+      </div>
+    </div>
+
+    <div class="conn-card">
+      <div class="conn-header" onclick="toggleCard(this)">
+        <span class="conn-word">sans / sans que</span>
+        <span class="badge badge-prep">PREP / CONJ</span>
+        <span class="conn-meaning">without — same subject: sans + infinitive · different: sans que + subjunctive</span>
+        <span class="conn-toggle">▾</span>
+      </div>
+      <div class="conn-body">
+        <table class="mini-table"><thead><tr><th>French</th><th>English</th></tr></thead><tbody>
+          <tr><td class="fr-cell">Il est parti <strong>sans</strong> dire au revoir.</td><td class="en-cell">He left without saying goodbye. (same subject)</td></tr>
+          <tr><td class="fr-cell">Il est parti <strong>sans que</strong> je le <em>sache</em>.</td><td class="en-cell">He left without my knowing. (diff. subjects + subj.)</td></tr>
+          <tr><td class="fr-cell">Je bois mon café <strong>sans</strong> sucre.</td><td class="en-cell">I drink my coffee without sugar. (+ noun)</td></tr>
+        </tbody></table>
+        <div class="warn-box"><em>Sans que</em> ALWAYS triggers subjunctive: <span class="err">sans qu'il le sait</span> ❌ → <span class="ok">sans qu'il le sache</span> ✅</div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="pattern-head">🚨 Subjunctive trigger list — memorize these</div>
+  <div class="pill-group">
+    <span class="pill pill-sub">bien que</span><span class="pill pill-sub">quoique</span>
+    <span class="pill pill-sub">pour que</span><span class="pill pill-sub">afin que</span>
+    <span class="pill pill-sub">avant que</span><span class="pill pill-sub">à moins que</span>
+    <span class="pill pill-sub">sans que</span><span class="pill pill-sub">jusqu'à ce que</span>
+    <span class="pill pill-sub">quoi que</span><span class="pill pill-sub">bien que</span>
+    <span class="pill pill-sub">à condition que</span><span class="pill pill-sub">pourvu que</span>
+  </div>
+</div>
+
+<!-- ══════════════ CH 8: CONFUSABLES ══════════════ -->
+<div class="panel" id="tab-confusable">
+  <div class="section-head">
+    <h2>The Confusables</h2>
+    <div class="tagline">Pairs that look alike or mean similar things — but are NOT the same</div>
+    <div class="rule"></div>
+  </div>
+
+  <div class="connector-list">
+
+    <div class="conn-card">
+      <div class="conn-header" onclick="toggleCard(this)">
+        <span class="conn-word">parce que vs puisque vs comme</span>
+        <span class="badge badge-sub">CAUSE TRIO</span>
+        <span class="conn-meaning">all mean "because/since" but used differently</span>
+        <span class="conn-toggle">▾</span>
+      </div>
+      <div class="conn-body">
+        <table class="mini-table"><thead><tr><th>Word</th><th>When to use</th><th>Example</th></tr></thead><tbody>
+          <tr><td style="font-family:'DM Mono',monospace;color:var(--sub)">parce que</td><td class="en-cell">New info, answering "why?" Can go anywhere.</td><td class="fr-cell">Je reste <strong>parce qu'</strong>il pleut.</td></tr>
+          <tr><td style="font-family:'DM Mono',monospace;color:var(--sub)">puisque</td><td class="en-cell">Reason already known to listener. Not at very start.</td><td class="fr-cell"><strong>Puisque</strong> tu sais déjà…</td></tr>
+          <tr><td style="font-family:'DM Mono',monospace;color:var(--sub)">comme</td><td class="en-cell">MUST start the sentence (cause meaning).</td><td class="fr-cell"><strong>Comme</strong> il pleuvait, je suis resté.</td></tr>
+        </tbody></table>
+      </div>
+    </div>
+
+    <div class="conn-card">
+      <div class="conn-header" onclick="toggleCard(this)">
+        <span class="conn-word">depuis vs pendant vs il y a vs dans</span>
+        <span class="badge badge-time">TIME QUARTET</span>
+        <span class="conn-meaning">all relate to duration — but completely different uses</span>
+        <span class="conn-toggle">▾</span>
+      </div>
+      <div class="conn-body">
+        <table class="mini-table"><thead><tr><th>Word</th><th>Rule</th><th>Example</th></tr></thead><tbody>
+          <tr><td style="font-family:'DM Mono',monospace;color:var(--time)">depuis</td><td class="en-cell">Ongoing now → present/imperfect</td><td class="fr-cell">Je travaille <strong>depuis</strong> 3 ans. (still working)</td></tr>
+          <tr><td style="font-family:'DM Mono',monospace;color:var(--time)">pendant</td><td class="en-cell">Completed duration → passé composé</td><td class="fr-cell">J'ai travaillé <strong>pendant</strong> 3 ans. (done)</td></tr>
+          <tr><td style="font-family:'DM Mono',monospace;color:var(--time)">il y a</td><td class="en-cell">Point in the past → passé composé</td><td class="fr-cell">Je l'ai vu <strong>il y a</strong> 3 jours. (3 days ago)</td></tr>
+          <tr><td style="font-family:'DM Mono',monospace;color:var(--time)">dans</td><td class="en-cell">Future → future tense</td><td class="fr-cell">Je pars <strong>dans</strong> 3 jours. (in 3 days)</td></tr>
+        </tbody></table>
+      </div>
+    </div>
+
+    <div class="conn-card">
+      <div class="conn-header" onclick="toggleCard(this)">
+        <span class="conn-word">quoi que vs quoique</span>
+        <span class="badge badge-sub">SPELLING TRAP</span>
+        <span class="conn-meaning">one space = completely different meaning</span>
+        <span class="conn-toggle">▾</span>
+      </div>
+      <div class="conn-body">
+        <div class="warn-box">
+          <strong>quoi que</strong> (2 words) = "whatever" → <em>Quoi que tu fasses…</em> (Whatever you do…)<br>
+          <strong>quoique</strong> (1 word) = "although" → <em>Quoiqu'il soit fatigué…</em> (Although he's tired…)<br>
+          Both take the <strong>subjunctive</strong>.
+        </div>
+      </div>
+    </div>
+
+    <div class="conn-card">
+      <div class="conn-header" onclick="toggleCard(this)">
+        <span class="conn-word">ou vs où</span>
+        <span class="badge badge-sub">ACCENT TRAP</span>
+        <span class="conn-meaning">or vs where — one accent, one meaning</span>
+        <span class="conn-toggle">▾</span>
+      </div>
+      <div class="conn-body">
+        <div class="warn-box">
+          <strong>ou</strong> (no accent) = "or": <em>Café <strong>ou</strong> thé?</em><br>
+          <strong>où</strong> (with accent) = "where": <em>La ville <strong>où</strong> j'habite.</em><br>
+          Same pronunciation, different spelling and meaning.
+        </div>
+      </div>
+    </div>
+
+    <div class="conn-card">
+      <div class="conn-header" onclick="toggleCard(this)">
+        <span class="conn-word">sur vs sûr</span>
+        <span class="badge badge-sub">ACCENT TRAP</span>
+        <span class="conn-meaning">on vs sure — accent changes category entirely</span>
+        <span class="conn-toggle">▾</span>
+      </div>
+      <div class="conn-body">
+        <div class="warn-box">
+          <strong>sur</strong> (no accent) = "on": <em>Le livre est <strong>sur</strong> la table.</em><br>
+          <strong>sûr</strong> (with accent) = "sure/certain": <em>J'en suis <strong>sûr</strong>.</em>
+        </div>
+      </div>
+    </div>
+
+    <div class="conn-card">
+      <div class="conn-header" onclick="toggleCard(this)">
+        <span class="conn-word">pour vs pour que</span>
+        <span class="badge badge-sub">PURPOSE PAIR</span>
+        <span class="conn-meaning">same or different subject — determines which to use</span>
+        <span class="conn-toggle">▾</span>
+      </div>
+      <div class="conn-body">
+        <table class="mini-table"><thead><tr><th>Rule</th><th>French</th><th>English</th></tr></thead><tbody>
+          <tr><td class="en-cell">Same subject</td><td class="fr-cell">Je travaille <strong>pour</strong> réussir.</td><td class="en-cell">I work to succeed.</td></tr>
+          <tr><td class="en-cell">Different subjects</td><td class="fr-cell">Je travaille <strong>pour que</strong> tu <em>réussisses</em>.</td><td class="en-cell">I work so that you succeed.</td></tr>
+        </tbody></table>
+        <div class="warn-box"><span class="err">Je travaille pour que je réussisse</span> ❌ (same subject — use pour + infinitive)<br><span class="ok">Je travaille pour réussir.</span> ✅</div>
+      </div>
+    </div>
+
+    <div class="conn-card">
+      <div class="conn-header" onclick="toggleCard(this)">
+        <span class="conn-word">pourtant vs pour autant</span>
+        <span class="badge badge-adv">CONTRAST PAIR</span>
+        <span class="conn-meaning">yet vs for all that — positive vs negative contexts</span>
+        <span class="conn-toggle">▾</span>
+      </div>
+      <div class="conn-body">
+        <table class="mini-table"><thead><tr><th>French</th><th>English</th></tr></thead><tbody>
+          <tr><td class="fr-cell">Il est riche, <strong>pourtant</strong> il est malheureux.</td><td class="en-cell">He's rich, yet he's unhappy. (simple contrast)</td></tr>
+          <tr><td class="fr-cell">Il est riche, mais pas heureux <strong>pour autant</strong>.</td><td class="en-cell">He's rich, but not happy for all that. (negative nuance)</td></tr>
+        </tbody></table>
+      </div>
+    </div>
+
+    <div class="conn-card">
+      <div class="conn-header" onclick="toggleCard(this)">
+        <span class="conn-word">près de vs presque</span>
+        <span class="badge badge-prep">NEAR / ALMOST</span>
+        <span class="conn-meaning">near (space) vs almost (degree) — different grammatical roles</span>
+        <span class="conn-toggle">▾</span>
+      </div>
+      <div class="conn-body">
+        <table class="mini-table"><thead><tr><th>French</th><th>English</th></tr></thead><tbody>
+          <tr><td class="fr-cell">J'habite <strong>près de</strong> la gare.</td><td class="en-cell">I live near the station. (preposition, space)</td></tr>
+          <tr><td class="fr-cell">Il y a <strong>près de</strong> 100 personnes.</td><td class="en-cell">There are nearly 100 people. (near = almost, quantity)</td></tr>
+          <tr><td class="fr-cell">J'ai <strong>presque</strong> fini.</td><td class="en-cell">I've almost finished. (adverb, degree)</td></tr>
+        </tbody></table>
+        <div class="warn-box"><span class="err">J'habite presque la gare</span> ❌ → <span class="ok">J'habite près de la gare</span> ✅<br><span class="err">J'ai près de fini</span> ❌ → <span class="ok">J'ai presque fini</span> ✅</div>
+      </div>
+    </div>
+
+    <div class="conn-card">
+      <div class="conn-header" onclick="toggleCard(this)">
+        <span class="conn-word">d'après vs selon</span>
+        <span class="badge badge-prep">ACCORDING TO</span>
+        <span class="conn-meaning">both mean "according to" — but formality differs</span>
+        <span class="conn-toggle">▾</span>
+      </div>
+      <div class="conn-body">
+        <table class="mini-table"><thead><tr><th>d'après</th><th>selon</th></tr></thead><tbody>
+          <tr><td class="fr-cell"><strong>D'après</strong> lui, c'est vrai.</td><td class="fr-cell"><strong>Selon</strong> la loi, c'est interdit.</td></tr>
+          <tr><td class="en-cell">Informal, often with people</td><td class="en-cell">Formal, often with rules/texts</td></tr>
+          <tr><td class="en-cell">In my opinion (d'après moi)</td><td class="en-cell">According to the experts</td></tr>
+        </tbody></table>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══════════════ CH 9: CHEAT SHEET ══════════════ -->
+<div class="panel" id="tab-cheatsheet">
+  <div class="section-head">
+    <h2>Cheat Sheet</h2>
+    <div class="tagline">Everything on one page — by function</div>
+    <div class="rule"></div>
+  </div>
+
+  <div class="cheat-section">
+    <h3 style="background:var(--coord)">🔗 Coordinating — MAIS OU ET DONC OR NI CAR</h3>
+    <div class="cheat-row"><span class="cheat-fr">mais</span><span class="cheat-en">but</span><span class="cheat-note">contrast</span></div>
+    <div class="cheat-row"><span class="cheat-fr">ou / ou bien</span><span class="cheat-en">or / either…or</span><span class="cheat-note">choice</span></div>
+    <div class="cheat-row"><span class="cheat-fr">et / et puis</span><span class="cheat-en">and / and then</span><span class="cheat-note">addition</span></div>
+    <div class="cheat-row"><span class="cheat-fr">donc</span><span class="cheat-en">so, therefore</span><span class="cheat-note">consequence</span></div>
+    <div class="cheat-row"><span class="cheat-fr">ni … ni</span><span class="cheat-en">neither … nor</span><span class="cheat-note">double negation — no article after ni</span></div>
+    <div class="cheat-row"><span class="cheat-fr">car</span><span class="cheat-en">because, for</span><span class="cheat-note">NEVER starts a sentence</span></div>
+  </div>
+
+  <div class="cheat-section">
+    <h3 style="background:var(--sub)">🔀 Cause — Explaining WHY</h3>
+    <div class="cheat-row"><span class="cheat-fr">parce que</span><span class="cheat-en">because</span><span class="cheat-note">standard, answers "pourquoi?"</span></div>
+    <div class="cheat-row"><span class="cheat-fr">puisque</span><span class="cheat-en">since (known reason)</span><span class="cheat-note">listener already knows the reason</span></div>
+    <div class="cheat-row"><span class="cheat-fr">comme</span><span class="cheat-en">as, since</span><span class="cheat-note">MUST start the sentence</span></div>
+    <div class="cheat-row"><span class="cheat-fr">à cause de</span><span class="cheat-en">because of (negative)</span><span class="cheat-note">+ noun only</span></div>
+    <div class="cheat-row"><span class="cheat-fr">grâce à</span><span class="cheat-en">thanks to (positive)</span><span class="cheat-note">+ noun only</span></div>
+    <div class="cheat-row"><span class="cheat-fr">en raison de</span><span class="cheat-en">due to</span><span class="cheat-note">formal, + noun</span></div>
+  </div>
+
+  <div class="cheat-section">
+    <h3 style="background:#7c3aed">⚡ Contrast — All + SUBJUNCTIVE unless noted</h3>
+    <div class="cheat-row"><span class="cheat-fr">bien que / quoique</span><span class="cheat-en">although</span><span class="cheat-note">+ SUBJUNCTIVE always</span></div>
+    <div class="cheat-row"><span class="cheat-fr">même si</span><span class="cheat-en">even if</span><span class="cheat-note">+ INDICATIVE (not subjunctive!)</span></div>
+    <div class="cheat-row"><span class="cheat-fr">malgré</span><span class="cheat-en">despite</span><span class="cheat-note">+ noun only</span></div>
+    <div class="cheat-row"><span class="cheat-fr">pourtant</span><span class="cheat-en">yet, however</span><span class="cheat-note">neutral, between sentences</span></div>
+    <div class="cheat-row"><span class="cheat-fr">cependant</span><span class="cheat-en">however</span><span class="cheat-note">more formal than pourtant</span></div>
+    <div class="cheat-row"><span class="cheat-fr">toutefois / néanmoins</span><span class="cheat-en">however / nevertheless</span><span class="cheat-note">formal written French</span></div>
+    <div class="cheat-row"><span class="cheat-fr">tandis que / alors que</span><span class="cheat-en">while / whereas</span><span class="cheat-note">contrast or simultaneity</span></div>
+    <div class="cheat-row"><span class="cheat-fr">quoi que</span><span class="cheat-en">whatever</span><span class="cheat-note">+ SUBJUNCTIVE · 2 words!</span></div>
+  </div>
+
+  <div class="cheat-section">
+    <h3 style="background:var(--time)">🕐 Time — Sequence & Duration</h3>
+    <div class="cheat-row"><span class="cheat-fr">quand / lorsque</span><span class="cheat-en">when</span><span class="cheat-note">future event → use future tense</span></div>
+    <div class="cheat-row"><span class="cheat-fr">avant de / avant que</span><span class="cheat-en">before</span><span class="cheat-note">de + inf. (same subj.) · que + subj. (diff.)</span></div>
+    <div class="cheat-row"><span class="cheat-fr">après avoir/être + pp</span><span class="cheat-en">after (doing)</span><span class="cheat-note">same subject only</span></div>
+    <div class="cheat-row"><span class="cheat-fr">depuis</span><span class="cheat-en">since / for (ongoing)</span><span class="cheat-note">+ present tense for ongoing actions</span></div>
+    <div class="cheat-row"><span class="cheat-fr">pendant</span><span class="cheat-en">for (completed)</span><span class="cheat-note">+ passé composé for finished actions</span></div>
+    <div class="cheat-row"><span class="cheat-fr">il y a</span><span class="cheat-en">ago</span><span class="cheat-note">point in the past</span></div>
+    <div class="cheat-row"><span class="cheat-fr">dans</span><span class="cheat-en">in (future)</span><span class="cheat-note">dans 3 jours = in 3 days</span></div>
+    <div class="cheat-row"><span class="cheat-fr">dès que / aussitôt que</span><span class="cheat-en">as soon as</span><span class="cheat-note">future event → future tense</span></div>
+    <div class="cheat-row"><span class="cheat-fr">jusqu'à / jusqu'à ce que</span><span class="cheat-en">until</span><span class="cheat-note">jusqu'à ce que + subjunctive</span></div>
+    <div class="cheat-row"><span class="cheat-fr">d'abord · ensuite · puis · enfin</span><span class="cheat-en">first · then · then · finally</span><span class="cheat-note">sequence markers</span></div>
+  </div>
+
+  <div class="cheat-section">
+    <h3 style="background:var(--prep)">📍 Location (key compounds)</h3>
+    <div class="cheat-row"><span class="cheat-fr">à côté de</span><span class="cheat-en">next to</span></div>
+    <div class="cheat-row"><span class="cheat-fr">en face de</span><span class="cheat-en">opposite / facing</span></div>
+    <div class="cheat-row"><span class="cheat-fr">près de / loin de</span><span class="cheat-en">near / far from</span></div>
+    <div class="cheat-row"><span class="cheat-fr">au-dessus de / au-dessous de</span><span class="cheat-en">above / below</span></div>
+    <div class="cheat-row"><span class="cheat-fr">au milieu de</span><span class="cheat-en">in the middle of</span></div>
+    <div class="cheat-row"><span class="cheat-fr">au fond de</span><span class="cheat-en">at the back/bottom of</span></div>
+    <div class="cheat-row"><span class="cheat-fr">au bord de</span><span class="cheat-en">at the edge of / by the side of</span></div>
+    <div class="cheat-row"><span class="cheat-fr">autour de</span><span class="cheat-en">around</span></div>
+    <div class="cheat-row"><span class="cheat-fr">entre / parmi</span><span class="cheat-en">between (2) / among (3+)</span></div>
+  </div>
+
+  <div class="cheat-section">
+    <h3 style="background:var(--adv)">💬 Adverbial Transitions</h3>
+    <div class="cheat-row"><span class="cheat-fr">d'ailleurs</span><span class="cheat-en">besides / by the way</span></div>
+    <div class="cheat-row"><span class="cheat-fr">en outre / de plus</span><span class="cheat-en">furthermore / moreover</span></div>
+    <div class="cheat-row"><span class="cheat-fr">en fait</span><span class="cheat-en">in fact / actually</span></div>
+    <div class="cheat-row"><span class="cheat-fr">c'est pourquoi / c'est ainsi que</span><span class="cheat-en">that's why / that's how</span></div>
+    <div class="cheat-row"><span class="cheat-fr">quant à</span><span class="cheat-en">as for (me/him…)</span></div>
+    <div class="cheat-row"><span class="cheat-fr">quand même</span><span class="cheat-en">anyway / still / all the same</span></div>
+    <div class="cheat-row"><span class="cheat-fr">d'autant plus que</span><span class="cheat-en">all the more since</span></div>
+    <div class="cheat-row"><span class="cheat-fr">selon / d'après</span><span class="cheat-en">according to (formal/informal)</span></div>
+    <div class="cheat-row"><span class="cheat-fr">enfin bref</span><span class="cheat-en">anyway / in short</span></div>
+  </div>
+</div>
+
+<!-- ══════════════ CH 10: QUIZ ══════════════ -->
+<div class="panel" id="tab-quiz">
+  <div class="section-head">
+    <h2>Quiz</h2>
+    <div class="tagline">Choose the correct connector — test all 9 chapters</div>
+    <div class="rule"></div>
+  </div>
+
+  <div class="quiz-wrap">
+    <div class="quiz-counter" id="quiz-counter">Question 1 of 24</div>
+
+    <div class="quiz-card" id="quiz-card">
+      <div class="quiz-q-label">CHOOSE THE CORRECT CONNECTOR</div>
+      <div class="quiz-sentence" id="quiz-sentence"></div>
+      <div class="quiz-hint" id="quiz-hint"></div>
+      <button class="quiz-reveal-btn" onclick="revealAnswer()">▸ show answer + explanation</button>
+      <div class="quiz-answer" id="quiz-answer">
+        <div class="quiz-ans-word" id="quiz-ans-word"></div>
+        <div class="quiz-ans-rule" id="quiz-ans-rule"></div>
+      </div>
+    </div>
+
+    <div class="quiz-opts" id="quiz-opts"></div>
+
+    <button class="quiz-next" id="quiz-next" onclick="nextQ()" style="display:none">NEXT QUESTION →</button>
+    <div class="quiz-score" id="quiz-score">Score: 0 / 0</div>
+  </div>
+</div>
+
+<script>
+/* ── TABS ── */
+const tabs = document.querySelectorAll('.ch-tab');
+const panels = document.querySelectorAll('.panel');
+const ORDER = ['intro','coord','cause','contrast','time','place','condition','confusable','cheatsheet','quiz'];
+
+function switchTab(id) {
+  tabs.forEach(t => t.classList.remove('active'));
+  panels.forEach(p => p.classList.remove('active'));
+  document.querySelector(`[data-tab="${id}"]`).classList.add('active');
+  document.getElementById('tab-' + id).classList.add('active');
+  const idx = ORDER.indexOf(id);
+  document.getElementById('prog-fill').style.width = ((idx+1)/ORDER.length*100) + '%';
+  document.getElementById('prog-label').textContent = `CH ${idx+1} / ${ORDER.length}`;
+}
+tabs.forEach(t => t.addEventListener('click', () => switchTab(t.dataset.tab)));
+
+/* ── CARD TOGGLES ── */
+function toggleCard(header) {
+  header.closest('.conn-card').classList.toggle('open');
+}
+
+/* ── QUIZ DATA ── */
+const questions = [
+  {
+    sentence: "Je suis en retard ___ la pluie.",
+    hint: "Because of... (+ noun, negative connotation)",
+    answer: "à cause de",
+    opts: ["à cause de","grâce à","parce que","puisque"],
+    rule: "à cause de + noun = because of (often negative). grâce à is positive."
+  },{
+    sentence: "___ il pleuvait, nous sommes restés à la maison.",
+    hint: "Since/As it was raining… (must start the sentence)",
+    answer: "Comme",
+    opts: ["Parce que","Car","Comme","Puisque"],
+    rule: "Comme = since/as, but MUST start the sentence for cause meaning."
+  },{
+    sentence: "Je reste à la maison, ___ il pleut.",
+    hint: "Because — middle of sentence, formal alternative to parce que",
+    answer: "car",
+    opts: ["car","comme","puisque","donc"],
+    rule: "Car = because/for. Formal. Never starts a sentence."
+  },{
+    sentence: "___ tu le sais déjà, pourquoi me demandes-tu?",
+    hint: "Since (the reason is known to the listener)",
+    answer: "Puisque",
+    opts: ["Parce que","Puisque","Comme","Car"],
+    rule: "Puisque = since (reason already known to listener). Parce que answers 'why?'"
+  },{
+    sentence: "Il est riche. ___, il n'est pas heureux.",
+    hint: "Yet / however — neutral register",
+    answer: "Pourtant",
+    opts: ["Toutefois","Néanmoins","Pourtant","Cependant"],
+    rule: "Pourtant = yet (neutral, everyday). Toutefois / Néanmoins = very formal written."
+  },{
+    sentence: "___ il soit fatigué, il continue à travailler.",
+    hint: "Although — always followed by subjunctive",
+    answer: "Bien qu'",
+    opts: ["Même si","Bien qu'","Malgré","Quand"],
+    rule: "Bien que = although + SUBJUNCTIVE. Même si = even if + indicative."
+  },{
+    sentence: "___ je suis fatigué, je viendrai.",
+    hint: "Even if — indicative (NOT subjunctive)",
+    answer: "Même si",
+    opts: ["Bien que","Même si","Quoique","Malgré"],
+    rule: "Même si = even if + INDICATIVE. Bien que/quoique = although + subjunctive."
+  },{
+    sentence: "J'habite ici ___ cinq ans.",
+    hint: "For (ongoing, still living here now)",
+    answer: "depuis",
+    opts: ["depuis","pendant","il y a","dans"],
+    rule: "Depuis + present tense = ongoing. Pendant + past tense = completed duration."
+  },{
+    sentence: "J'ai travaillé ___ deux heures.",
+    hint: "For (a completed/finished duration)",
+    answer: "pendant",
+    opts: ["depuis","pendant","il y a","dans"],
+    rule: "Pendant + passé composé = completed duration. Depuis = still ongoing."
+  },{
+    sentence: "Je l'ai vu ___ trois jours.",
+    hint: "Three days ___",
+    answer: "il y a",
+    opts: ["depuis","pendant","il y a","dans"],
+    rule: "Il y a = ago (point in the past). Depuis = since. Dans = in (future)."
+  },{
+    sentence: "___ tu arriveras, appelle-moi.",
+    hint: "When (future context — use future tense in French!)",
+    answer: "Quand",
+    opts: ["Lorsque","Quand","Dès que","Aussitôt que"],
+    rule: "After quand/lorsque/dès que with future meaning, use the future tense (not present like English)."
+  },{
+    sentence: "Avant ___ partir, ferme la porte. (same subject)",
+    hint: "Before + infinitive (same subject = de + infinitive)",
+    answer: "de",
+    opts: ["de","que","qu'il","d'"],
+    rule: "Same subject: avant de + infinitive. Different subjects: avant que + subjunctive."
+  },{
+    sentence: "Je travaille ___ réussir.",
+    hint: "In order to (same subject)",
+    answer: "pour",
+    opts: ["pour que","pour","afin que","à fin que"],
+    rule: "Same subject → pour + infinitive. Different subjects → pour que + subjunctive."
+  },{
+    sentence: "Je travaille ___ tu réussisses.",
+    hint: "So that (different subjects — needs subjunctive)",
+    answer: "pour que",
+    opts: ["pour","pour que","afin de","à cause de"],
+    rule: "Different subjects → pour que + SUBJUNCTIVE. Same subject → pour + infinitive."
+  },{
+    sentence: "Il est parti ___ dire au revoir. (same subject)",
+    hint: "Without + doing something (same subject)",
+    answer: "sans",
+    opts: ["sans","sans que","avant de","malgré"],
+    rule: "Same subject: sans + infinitive. Different subjects: sans que + subjunctive."
+  },{
+    sentence: "Café ___ thé? (or)",
+    hint: "Or — without accent",
+    answer: "ou",
+    opts: ["ou","où","ou bien","soit"],
+    rule: "ou (no accent) = or. où (with accent) = where. Different words, same pronunciation."
+  },{
+    sentence: "La ville ___ j'habite est belle. (where)",
+    hint: "Where — relative pronoun with accent",
+    answer: "où",
+    opts: ["ou","où","que","qui"],
+    rule: "où (with accent) = where (relative pronoun). ou (no accent) = or."
+  },{
+    sentence: "___ tu fasses, je t'aimerai. (whatever)",
+    hint: "Whatever — 2 words, + subjunctive",
+    answer: "Quoi que",
+    opts: ["Quoique","Quoi que","Bien que","Même si"],
+    rule: "Quoi que (2 words) = whatever + subjunctive. Quoique (1 word) = although + subjunctive."
+  },{
+    sentence: "Il est assis ___ moi. (opposite / facing me)",
+    hint: "Opposite / facing (+ de)",
+    answer: "vis-à-vis de",
+    opts: ["en face de","vis-à-vis de","à côté de","autour de"],
+    rule: "Both en face de and vis-à-vis de mean 'opposite/facing', but vis-à-vis de is more formal."
+  },{
+    sentence: "L'avion vole ___ les nuages. (above)",
+    hint: "Above",
+    answer: "au-dessus des",
+    opts: ["au-dessous des","au-dessus des","au fond des","au milieu des"],
+    rule: "au-dessus de = above. au-dessous de = below. Opposites!"
+  },{
+    sentence: "J'ai ___ fini. (almost)",
+    hint: "Almost (degree/completion — adverb)",
+    answer: "presque",
+    opts: ["près de","presque","autour de","environ"],
+    rule: "presque = almost (adverb, degree). près de = near (preposition, space). J'habite près de vs J'ai presque fini."
+  },{
+    sentence: "___ lui, c'est vrai. (according to him — informal)",
+    hint: "According to (informal, often with people)",
+    answer: "D'après",
+    opts: ["Selon","D'après","D'autant plus que","D'ailleurs"],
+    rule: "D'après = according to (informal, with people). Selon = according to (formal, with rules/texts)."
+  },{
+    sentence: "___ Pierre, je n'ai ni faim ___ soif.",
+    hint: "Complete the neither…nor: ni ___ ni",
+    answer: "ni",
+    opts: ["ni","ou","ne","et"],
+    rule: "Structure: ne + verb + ni ... ni. No article after ni (usually): ni faim ni soif."
+  },{
+    sentence: "Dépêche-toi, ___ tu seras en retard!",
+    hint: "Otherwise / or else",
+    answer: "sinon",
+    opts: ["donc","sinon","pourtant","car"],
+    rule: "Sinon = otherwise/or else (consequence of NOT doing something). Donc = therefore (consequence of DOING something)."
+  }
+];
+
+let qIdx = 0, score = 0, answered = false;
+
+function loadQ() {
+  const q = questions[qIdx];
+  document.getElementById('quiz-sentence').textContent = q.sentence;
+  document.getElementById('quiz-hint').textContent = q.hint;
+  document.getElementById('quiz-ans-word').textContent = q.answer;
+  document.getElementById('quiz-ans-rule').textContent = q.rule;
+  document.getElementById('quiz-counter').textContent = `Question ${qIdx+1} of ${questions.length}`;
+  document.getElementById('quiz-answer').classList.remove('shown');
+  document.getElementById('quiz-next').style.display = 'none';
+  answered = false;
+
+  const opts = document.getElementById('quiz-opts');
+  opts.innerHTML = '';
+  const shuffled = [...q.opts].sort(() => Math.random() - 0.5);
+  shuffled.forEach(opt => {
+    const btn = document.createElement('button');
+    btn.className = 'quiz-opt';
+    btn.textContent = opt;
+    btn.onclick = () => checkAnswer(opt, q.answer);
+    opts.appendChild(btn);
+  });
+}
+
+function checkAnswer(picked, correct) {
+  if (answered) return;
+  answered = true;
+  if (picked === correct) score++;
+  document.querySelectorAll('.quiz-opt').forEach(btn => {
+    if (btn.textContent === correct) btn.classList.add('correct');
+    else if (btn.textContent === picked) btn.classList.add('wrong');
+    btn.onclick = null;
+  });
+  document.getElementById('quiz-answer').classList.add('shown');
+  document.getElementById('quiz-next').style.display = 'block';
+  document.getElementById('quiz-score').textContent = `Score: ${score} / ${qIdx+1}`;
+}
+
+function revealAnswer() {
+  document.getElementById('quiz-answer').classList.add('shown');
+}
+
+function nextQ() {
+  qIdx = (qIdx + 1) % questions.length;
+  if (qIdx === 0) { score = 0; }
+  loadQ();
+  if (qIdx > 0) document.getElementById('quiz-score').textContent = `Score: ${score} / ${qIdx}`;
+}
+
+loadQ();
+</script>
+<!-- Home Footer -->
+<div style="text-align:center;padding:18px 20px;background:linear-gradient(135deg,#f8fafc,#eff6ff);border-top:1px solid #e2e8f0;">
+  <a href="https://shakti4640.github.io/mon-univers-francais/" style="display:inline-flex;align-items:center;gap:8px;padding:10px 24px;background:linear-gradient(135deg,#002395,#1a56db);color:#fff;text-decoration:none;border-radius:10px;font-size:0.88rem;font-weight:600;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;transition:all 0.2s;box-shadow:0 2px 8px rgba(0,35,149,0.25);" onmouseover="this.style.transform='translateY(-1px)';this.style.boxShadow='0 4px 14px rgba(0,35,149,0.35)'" onmouseout="this.style.transform='none';this.style.boxShadow='0 2px 8px rgba(0,35,149,0.25)'">
+    <span style="font-size:1.1rem">🏠</span> Mon Univers Français
+  </a>
+</div>
+</body>
+</html>
