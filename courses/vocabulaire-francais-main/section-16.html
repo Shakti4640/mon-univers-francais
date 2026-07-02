@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>📋 SECTION 16: COMMON DOCUMENT STRUCTURE & FORMATTING — Vocabulary Articles</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.7;
+            color: #333;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            min-height: 100vh;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+            padding: 40px 44px;
+        }
+        
+        .content { max-width: 900px; margin: 0 auto; }
+        .content h1 {
+            color: #667eea; margin: 30px 0 16px;
+            padding-bottom: 9px;
+            border-bottom: 3px solid #764ba2;
+            font-size: 1.8em;
+        }
+        .content h2 { color: #4a5568; margin: 24px 0 12px; padding-bottom: 5px; border-bottom: 1px solid #e2e8f0; }
+        .content h3 { color: #553c9a; margin: 20px 0 10px; }
+        .content h4 { color: #374151; margin: 16px 0 8px; }
+        .content p  { margin-bottom: 14px; }
+        .content ul, .content ol { margin: 10px 0 14px 26px; }
+        .content li { margin-bottom: 6px; }
+        .content hr { border: none; border-top: 2px solid #e8edf2; margin: 20px 0; }
+        .content pre {
+            background: #f8fafc; border: 1px solid #e2e8f0;
+            border-left: 4px solid #667eea;
+            padding: 14px; overflow-x: auto; margin: 14px 0; border-radius: 4px;
+        }
+        .content code { font-family: 'Consolas','Monaco','Courier New',monospace; font-size: 0.88em; }
+        .content table { width: 100%; border-collapse: collapse; margin: 16px 0; }
+        .content th { background: #667eea; color: white; padding: 10px 14px; text-align: left; }
+        .content td { padding: 9px 14px; border: 1px solid #ddd; }
+        .content tr:nth-child(even) td { background: #f5f3ff; }
+        .content blockquote {
+            border-left: 4px solid #764ba2; background: #faf5ff;
+            padding: 12px 18px; margin: 14px 0; border-radius: 0 6px 6px 0;
+        }
+        .px-2 { padding: 0; }
+        .chat-message { background: transparent; padding: 0; margin: 0; }
+
+        /* Bottom nav bar only */
+        .nav-bar {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 20px 0;
+            margin-top: 40px;
+            border-top: 2px solid #e2e8f0;
+        }
+        .nav-button {
+            display: inline-flex; align-items: center; gap: 6px;
+            padding: 10px 22px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white !important; text-decoration: none;
+            border-radius: 8px; font-weight: 600; font-size: 0.92em;
+            transition: all 0.2s;
+            box-shadow: 0 2px 6px rgba(102,126,234,0.35);
+        }
+        .nav-button:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(102,126,234,0.45); }
+        .nav-button.disabled { background: #cbd5e1; box-shadow: none; pointer-events: none; }
+        .nav-button.home {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            box-shadow: 0 2px 6px rgba(245,87,108,0.35);
+        }
+        .nav-button.home:hover { box-shadow: 0 4px 12px rgba(245,87,108,0.45); }
+        .page-info { color: #64748b; font-size: 0.88em; text-align: center; }
+
+        /* Progress bar */
+        #progress-track {
+            position: fixed; top: 20px; right: 20px;
+            width: 10px; height: 150px;
+            background: rgba(102,126,234,0.2);
+            border: 2px solid #667eea;
+            border-radius: 6px; overflow: hidden; z-index: 1000;
+        }
+        #progress-fill {
+            width: 100%;
+            background: linear-gradient(180deg, #667eea, #764ba2);
+            height: 0%;
+            transition: height 0.15s ease;
+        }
+        #progress-pct {
+            position: fixed; top: 0px; right: 16px;
+            color: #667eea; font-size: 13px; font-weight: bold;
+            z-index: 1001;
+            text-shadow: 0 1px 2px rgba(255,255,255,0.8);
+            line-height: 20px;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="content">
+            <div class="chat-message" data-index="12">
+<div class="px-2"><h1>📋 SECTION 16: COMMON DOCUMENT STRUCTURE &amp; FORMATTING</h1>
+<h2>Articles Contextuels en Français</h2>
+<hr>
+<h2>📰 ARTICLE 1 : Anatomie d'un document officiel français — Tout ce que vous voyez sur la page, et pourquoi c'est là</h2>
+<hr>
+<p>Camille vient d'être embauchée comme assistante administrative dans une préfecture. Son premier jour de travail est un baptême du feu : on lui confie la rédaction, la mise en forme et l'archivage de dizaines de documents officiels. Sa cheffe, Mme Garnier, lui remet un guide interne de trente pages intitulé <em>« Normes de présentation des documents administratifs »</em>. Voici ce que Camille apprend au fil de cette première semaine — un apprentissage qui va transformer sa compréhension de la structure documentaire française.</p>
+<hr>
+<p><strong>Lundi matin — Les en-têtes et les étiquettes de documents</strong></p>
+<p>Le premier document que Camille doit traiter est un arrêté préfectoral. Mme Garnier lui explique que tout document officiel commence par des éléments d'identification placés en haut de la page. Ces éléments ne sont pas décoratifs — chacun a une fonction précise.</p>
+<p>Tout en haut, le <strong>TITRE</strong> — le mot ou la phrase qui identifie immédiatement la nature du document. Un arrêté porte le <strong>TITRE</strong> « ARRÊTÉ PRÉFECTORAL ». Un avis au public porte le <strong>TITRE</strong> « AVIS AU PUBLIC ». Une note de service porte le <strong>TITRE</strong> « NOTE DE SERVICE ». Le <strong>TITRE</strong> est toujours en majuscules, centré, souvent en gras. C'est la première chose que le lecteur voit — et elle doit suffire à lui dire quel type de document il a entre les mains.</p>
+<p>Juste en dessous du <strong>TITRE</strong>, on trouve l'<strong>OBJET</strong> — une ligne concise qui résume le sujet du document. Par exemple : « <strong>OBJET</strong> : Réglementation du stationnement dans le centre-ville à compter du 1er avril 2025. » L'<strong>OBJET</strong> répond à la question « De quoi parle ce document ? ». Dans une lettre commerciale, on écrirait « <strong>OBJET</strong> : Votre commande n° 4521 » ou « <strong>OBJET</strong> : Demande de remboursement ». L'<strong>OBJET</strong> est toujours placé avant le corps du texte, jamais après.</p>
+<p>À côté ou en dessous de l'<strong>OBJET</strong>, la <strong>RÉFÉRENCE</strong> — un code alphanumérique qui permet de retrouver le document dans les archives. Par exemple : « <strong>RÉFÉRENCE</strong> : PREF/2025/ARR/0042 ». La <strong>RÉFÉRENCE</strong> est l'identifiant unique du document. Dans une correspondance, on distingue parfois deux types de références : les références de l'expéditeur et celles du destinataire, mais dans un document unilatéral comme un arrêté, une seule <strong>RÉFÉRENCE</strong> suffit.</p>
+<p>La <strong>DATE</strong> figure toujours en bonne place — généralement en haut à droite ou juste après la <strong>RÉFÉRENCE</strong>. En France, le format est invariablement JJ/MM/AAAA ou « le [jour] [mois en lettres] [année] » : « le 15 mars 2025 » ou « 15/03/2025 ». Jamais le format américain mois/jour/année. La <strong>DATE</strong> est un élément juridique crucial : elle détermine quand le document a été créé, et donc quand ses effets commencent à courir.</p>
+<p>Certains documents portent la mention <strong>À L'ATTENTION DE</strong> suivie du nom du destinataire : « <strong>À L'ATTENTION DE</strong> Mme la Directrice des Services Techniques ». Cette mention indique que le document, bien qu'il puisse circuler dans un service entier, est principalement adressé à une personne spécifique. C'est une marque de courtoisie et de précision administrative.</p>
+<p>Enfin, certains documents portent des mentions de classification en haut de page. La mention <strong>CONFIDENTIEL</strong> signifie que le document ne doit pas être diffusé en dehors des personnes autorisées. La mention <strong>URGENT</strong> indique que le traitement du document est prioritaire. La mention <strong>IMPORTANT</strong> attire l'attention sur un contenu critique qui nécessite une lecture attentive. Ces mentions sont généralement encadrées, en rouge ou en gras, pour être immédiatement visibles.</p>
+<p>Camille apprend vite que ces étiquettes ne sont pas interchangeables. Un document <strong>CONFIDENTIEL</strong> n'est pas nécessairement <strong>URGENT</strong>, et un document <strong>URGENT</strong> n'est pas nécessairement <strong>CONFIDENTIEL</strong>. Un document peut être les deux à la fois — <strong>URGENT</strong> et <strong>CONFIDENTIEL</strong> — ou ni l'un ni l'autre. Et la mention <strong>IMPORTANT</strong> s'utilise aussi bien en en-tête que dans le corps du texte, à côté d'un paragraphe clé, pour signaler au lecteur qu'il doit porter une attention particulière à ce passage.</p>
+<hr>
+<p><strong>Lundi après-midi — La structure interne d'un document long</strong></p>
+<p>L'après-midi, Camille doit mettre en forme un règlement intérieur de quarante pages. Mme Garnier lui explique la hiérarchie des divisions dans un document long.</p>
+<p>La division la plus large est la <strong>Partie</strong>. Un document complexe peut être divisé en deux ou trois <strong>Parties</strong> majeures : <strong>Partie</strong> I — Dispositions générales, <strong>Partie</strong> II — Droits et obligations, <strong>Partie</strong> III — Sanctions et recours. Chaque <strong>Partie</strong> peut ensuite être subdivisée en <strong>Sous-parties</strong> : <strong>Sous-partie</strong> A, <strong>Sous-partie</strong> B.</p>
+<p>À l'intérieur de chaque <strong>Partie</strong>, on trouve des <strong>Chapitres</strong>. Le <strong>Chapitre</strong> est une division thématique : <strong>Chapitre</strong> 1 — Objet et champ d'application, <strong>Chapitre</strong> 2 — Conditions d'accès, <strong>Chapitre</strong> 3 — Règles de fonctionnement. Les <strong>Chapitres</strong> sont numérotés en chiffres arabes ou romains.</p>
+<p>Chaque <strong>Chapitre</strong> est composé de <strong>Sections</strong>. La <strong>Section</strong> regroupe des articles liés à un même sous-thème : <strong>Section</strong> A — Horaires, <strong>Section</strong> B — Tarification, <strong>Section</strong> C — Sécurité.</p>
+<p>Au sein de chaque <strong>Section</strong>, on trouve des <strong>Articles</strong> — l'unité de base du texte juridique et réglementaire. <strong>Article</strong> 1, <strong>Article</strong> 2, <strong>Article</strong> 3... Chaque <strong>Article</strong> traite d'un point précis. Dans un contrat, dans une loi, dans un règlement, l'<strong>Article</strong> est le niveau de référence : quand on cite un texte, on cite un <strong>Article</strong> (« conformément à l'<strong>Article</strong> 5 du présent règlement »).</p>
+<p>Chaque <strong>Article</strong> peut contenir plusieurs <strong>Paragraphes</strong> — symbolisés par le signe <strong>§</strong>. Le <strong>Paragraphe</strong> est un bloc de texte cohérent à l'intérieur d'un <strong>Article</strong> : <strong>§</strong> 1, <strong>§</strong> 2, <strong>§</strong> 3. Et chaque <strong>Paragraphe</strong> peut lui-même être subdivisé en <strong>Alinéas</strong> — des sous-paragraphes, souvent numérotés ou introduits par un tiret. L'<strong>Alinéa</strong> est la plus petite unité de division d'un texte juridique : « à l'<strong>Alinéa</strong> 2 du <strong>Paragraphe</strong> 3 de l'<strong>Article</strong> 7 du <strong>Chapitre</strong> 2 de la <strong>Partie</strong> I ».</p>
+<p>Dans les textes moins juridiques — guides, manuels, rapports —, on utilise aussi des <strong>Points</strong> pour structurer des listes : <strong>Point</strong> 1, <strong>Point</strong> 2, <strong>Point</strong> 3. Le <strong>Point</strong> est plus informel que l'<strong>Article</strong> : il sert à organiser des idées ou des étapes sans la rigueur juridique de l'<strong>Article</strong>.</p>
+<p>Enfin, certains documents utilisent des <strong>Rubriques</strong> — des sections thématiques dans un formulaire ou un document pratique. Sur un formulaire administratif, la <strong>Rubrique</strong> « Identité » regroupe les champs nom, prénom, date de naissance. La <strong>Rubrique</strong> « Coordonnées » regroupe adresse, téléphone, email. La <strong>Rubrique</strong> « Situation professionnelle » regroupe emploi, employeur, revenus. Le mot <strong>Rubrique</strong> évoque une catégorie thématique plutôt qu'une division hiérarchique.</p>
+<p>Pour naviguer dans un document long, le lecteur dispose d'un <strong>SOMMAIRE</strong> — la table des matières placée au début du document, qui liste les <strong>Parties</strong>, <strong>Chapitres</strong>, <strong>Sections</strong> et <strong>Articles</strong> avec leurs numéros de <strong>page</strong>. Le <strong>SOMMAIRE</strong> permet de trouver rapidement l'information recherchée. À la fin du document, un <strong>Index</strong> alphabétique peut compléter le <strong>SOMMAIRE</strong> en listant les termes clés et les <strong>pages</strong> où ils apparaissent.</p>
+<p>Pour mettre en valeur une information particulièrement importante, le rédacteur peut utiliser un <strong>Encadré</strong> — un bloc de texte entouré d'un cadre, souvent sur fond coloré, qui attire l'œil. L'<strong>Encadré</strong> contient généralement un résumé, un avertissement, un exemple ou une information complémentaire. On le signale parfois par la mention « Information encadrée » ou simplement par sa présentation visuelle distincte.</p>
+<p>Les données chiffrées sont présentées dans des <strong>Tableaux</strong> — des grilles organisées en lignes et colonnes. Le document renvoie au <strong>Tableau</strong> par une mention comme « <strong>Voir tableau</strong> 1 » ou « Cf. <strong>Tableau</strong> des tarifs en <strong>Annexe</strong> ». Les illustrations visuelles sont présentées sous forme de <strong>Figures</strong> (« <strong>Figure</strong> 1 : Plan d'évacuation ») ou de <strong>Schémas</strong> (« <strong>Schéma</strong> explicatif du circuit de validation »). Le <strong>Schéma</strong> est plus technique que la <strong>Figure</strong> : il représente un processus, un mécanisme, une organisation.</p>
+<p>Camille note la hiérarchie complète :</p>
+<blockquote>
+<p><strong>Partie</strong> &gt; <strong>Sous-partie</strong> &gt; <strong>Chapitre</strong> &gt; <strong>Section</strong> &gt; <strong>Article</strong> &gt; <strong>Paragraphe</strong> (§) &gt; <strong>Alinéa</strong> &gt; <strong>Point</strong></p>
+</blockquote>
+<p>Et les éléments visuels complémentaires : <strong>Encadré</strong>, <strong>Tableau</strong>, <strong>Figure</strong>, <strong>Schéma</strong>.</p>
+<hr>
+<p><strong>Mardi — Les références croisées et les renvois</strong></p>
+<p>Le mardi, Camille travaille sur un rapport de cinquante pages. Le texte est truffé de renvois internes et externes — des indications qui orientent le lecteur vers d'autres parties du document ou vers des documents annexes.</p>
+<p>Le renvoi le plus simple est le mot <strong>voir</strong> : « Pour plus de détails, <strong>voir</strong> <strong>Article</strong> 12 » ou « <strong>Voir</strong> <strong>Annexe</strong> 3 ». Le mot <strong>voir</strong> est un signal de navigation : il dit au lecteur « l'information que vous cherchez se trouve ailleurs, allez-y ». Son équivalent abrégé est <strong>cf.</strong> (du latin <em>confer</em>) : « <strong>Cf.</strong> <strong>Annexe</strong> 1 pour le détail des tarifs. »</p>
+<p>Pour renvoyer à une information déjà présentée plus haut dans le document, on utilise <strong>ci-dessus</strong> : « Comme indiqué <strong>ci-dessus</strong>, le délai est de trente jours. » Pour renvoyer à une information qui viendra plus bas, on utilise <strong>ci-dessous</strong> : « Les conditions sont détaillées <strong>ci-dessous</strong>. » Et pour renvoyer à une information qui suivra dans une section ultérieure, on utilise <strong>ci-après</strong> : « Les parties, désignées <strong>ci-après</strong> "le prestataire" et "le client"... »</p>
+<p>Pour faire référence à un document joint au courrier ou au dossier, on utilise <strong>ci-joint</strong> : « Veuillez trouver <strong>ci-joint</strong> le formulaire complété. » Pour un document annexé — c'est-à-dire attaché en fin de document —, on utilise <strong>ci-annexé</strong> : « Le plan est <strong>ci-annexé</strong> au présent rapport. »</p>
+<p>Pour renvoyer à un élément déjà mentionné dans le texte, on utilise <strong>susmentionné</strong> : « L'<strong>Article</strong> <strong>susmentionné</strong> prévoit une exception. » Ou son synonyme <strong>précité</strong> : « Le document <strong>précité</strong> fait référence à la loi de 2018. » Ces deux mots signifient « mentionné plus haut » — ils évitent de répéter une référence complète.</p>
+<p>Pour indiquer un emplacement précis dans un document, on utilise <strong>page</strong> (abrégé <strong>p.</strong>) pour une seule page (« <strong>p.</strong> 12 ») et <strong>pp.</strong> pour plusieurs pages (« <strong>pp.</strong> 15-20 »). Et pour préciser quel côté d'une feuille, on utilise <strong>recto</strong> (le devant) et <strong>verso</strong> (le dos) : « Signez au <strong>recto</strong> et inscrivez la date au <strong>verso</strong>. »</p>
+<p>Camille remarque que ces mots de renvoi forment un système de navigation interne au document. Sans eux, le lecteur serait perdu dans un labyrinthe de pages. Avec eux, chaque information est accessible, chaque référence vérifiable.</p>
+<hr>
+<p><strong>Mercredi — Les formulaires et leurs champs</strong></p>
+<p>Le mercredi, Camille est affectée au guichet d'accueil. Sa mission : aider les usagers à remplir des formulaires administratifs. Elle découvre que chaque formulaire est structuré en <strong>Rubriques</strong> thématiques, et que chaque <strong>Rubrique</strong> contient des champs standardisés.</p>
+<p>La première <strong>Rubrique</strong> est toujours l'identité. Les champs sont invariables :</p>
+<ul>
+<li><strong>Nom</strong> — le nom de famille (en majuscules sur les documents officiels) : DUPONT</li>
+<li><strong>Prénom</strong> — le ou les prénoms : Jean, Marie</li>
+<li><strong>Date de naissance</strong> — au format JJ/MM/AAAA : 15/03/1985</li>
+<li><strong>Lieu de naissance</strong> — la ville (et le pays si né à l'étranger) : Paris</li>
+<li><strong>Nationalité</strong> — française, algérienne, canadienne...</li>
+<li><strong>Sexe</strong> — M (masculin) ou F (féminin)</li>
+<li><strong>Situation familiale</strong> — célibataire, marié(e), pacsé(e), divorcé(e), veuf/veuve</li>
+</ul>
+<p>La deuxième <strong>Rubrique</strong> concerne les coordonnées :</p>
+<ul>
+<li><strong>Adresse</strong> — le numéro, la rue, le bâtiment, l'étage : 15 rue de la Paix, Bât. C, 3ème étage</li>
+<li><strong>Code postal</strong> — cinq chiffres : 75001</li>
+<li><strong>Ville</strong> — le nom de la commune : Paris</li>
+<li><strong>Pays</strong> — si différent de la France : France</li>
+<li><strong>Téléphone</strong> — le numéro fixe : 01 23 45 67 89</li>
+<li><strong>Portable</strong> — le numéro mobile : 06 12 34 56 78</li>
+<li><strong>Email</strong> (ou <strong>Courriel</strong>, le terme officiel français) : <a href="/cdn-cgi/l/email-protection#09676664496c64686065276f7b"><span class="__cf_email__" data-cfemail="8ae4e5e7caefe7ebe3e6a4ecf8">[email&#160;protected]</span></a></li>
+</ul>
+<p>La troisième <strong>Rubrique</strong> concerne la situation professionnelle :</p>
+<ul>
+<li><strong>Profession</strong> — l'intitulé du métier : Ingénieur, Enseignant, Commerçant</li>
+<li><strong>Employeur</strong> — le nom de l'entreprise ou de l'organisme : Société ABC</li>
+<li><strong>Numéro de sécurité sociale</strong> — les quinze chiffres inscrits sur la carte Vitale</li>
+</ul>
+<p>La dernière <strong>Rubrique</strong> de tout formulaire est la validation :</p>
+<ul>
+<li><strong>Signature</strong> — la signature manuscrite du demandeur, obligatoire pour authentifier le document</li>
+<li><strong>Date</strong> — la date à laquelle le formulaire est signé, au format JJ/MM/AAAA</li>
+<li><strong>Lieu</strong> — la ville où le formulaire est signé : « À Paris »</li>
+</ul>
+<p>Certains formulaires comportent un dernier champ, encadré et grisé : <strong>Réservé à l'administration</strong>. Ce champ est strictement interdit aux usagers — c'est l'espace où l'agent administratif inscrit ses propres notes, le numéro de dossier, la date de réception, le nom de l'agent traitant. Camille voit régulièrement des usagers écrire dans cette zone par erreur. Elle doit leur expliquer que « <strong>Réservé à l'administration</strong> » signifie « ne rien inscrire ici ».</p>
+<p>Certains champs sont à choix : le formulaire propose des options, et l'usager doit en sélectionner une. Cela se fait de plusieurs manières :</p>
+<ul>
+<li><strong>Case à cocher</strong> : ☐ Oui ☐ Non — l'usager coche la case correspondante. L'instruction est « <strong>Cocher la case</strong> appropriée ».</li>
+<li><strong>Entourer la réponse</strong> : quand plusieurs options sont imprimées (Célibataire / Marié(e) / Divorcé(e)), l'usager doit <strong>entourer la réponse</strong> qui le concerne.</li>
+<li><strong>Rayer les mentions inutiles</strong> : quand le formulaire propose « Monsieur / Madame », l'usager doit <strong>rayer</strong> la mention qui ne s'applique pas — barrer « Monsieur » s'il est une femme, ou barrer « Madame » s'il est un homme. L'instruction « <strong>Rayer les mentions inutiles</strong> » est extrêmement fréquente sur les formulaires français.</li>
+</ul>
+<hr>
+<p><strong>Mercredi après-midi — Les instructions sur les formulaires</strong></p>
+<p>Camille remarque que chaque formulaire porte des instructions de remplissage, souvent imprimées en italique ou en petits caractères en haut du document. Ces instructions sont standardisées :</p>
+<blockquote>
+<p><em>« <strong>Remplir en majuscules</strong>. »</em></p>
+</blockquote>
+<p>Le formulaire doit être rempli en lettres capitales — COMME CECI — pour garantir la lisibilité. C'est une instruction quasi universelle sur les formulaires administratifs français.</p>
+<blockquote>
+<p><em>« <strong>Écrire lisiblement</strong>. »</em></p>
+</blockquote>
+<p>L'écriture doit être claire et déchiffrable. Un formulaire illisible peut être rejeté.</p>
+<blockquote>
+<p><em>« <strong>Cocher la case</strong> correspondant à votre situation. »</em></p>
+</blockquote>
+<p>Utiliser une croix (✗) ou un coche (✓) dans la <strong>case à cocher</strong> appropriée.</p>
+<blockquote>
+<p><em>« <strong>Rayer les mentions inutiles</strong>. »</em></p>
+</blockquote>
+<p>Barrer les options qui ne s'appliquent pas.</p>
+<blockquote>
+<p><em>« <strong>Entourer la réponse</strong> choisie. »</em></p>
+</blockquote>
+<p>Tracer un cercle autour de la bonne option.</p>
+<blockquote>
+<p><em>« <strong>Ne rien inscrire</strong> dans le cadre ci-dessous. »</em></p>
+</blockquote>
+<p>Zone <strong>réservée à l'administration</strong>. Ne pas écrire dedans.</p>
+<blockquote>
+<p><em>« <strong>Joindre</strong> les pièces justificatives suivantes : ... »</em></p>
+</blockquote>
+<p>Attacher les documents demandés au formulaire.</p>
+<blockquote>
+<p><em>« <strong>Fournir</strong> l'original et deux copies. »</em></p>
+</blockquote>
+<p>Donner le document original accompagné de deux photocopies.</p>
+<blockquote>
+<p><em>« <strong>Signer</strong> et <strong>dater</strong> le formulaire. »</em></p>
+</blockquote>
+<p>Apposer sa <strong>signature</strong> manuscrite et inscrire la <strong>date</strong> du jour.</p>
+<blockquote>
+<p><em>« <strong>Parapher</strong> chaque page. »</em></p>
+</blockquote>
+<p>Inscrire ses initiales en bas de chaque <strong>page</strong> du document. Le paraphe (ou parafe) authentifie chaque <strong>page</strong> et empêche l'ajout ou la substitution de pages.</p>
+<blockquote>
+<p><em>« <strong>Compléter</strong> tous les champs obligatoires. »</em></p>
+</blockquote>
+<p>Remplir toutes les cases marquées d'un astérisque (*) ou signalées comme obligatoires.</p>
+<blockquote>
+<p><em>« <strong>Indiquer</strong> votre numéro de dossier si vous en possédez un. »</em></p>
+</blockquote>
+<p>Inscrire le numéro de référence si applicable.</p>
+<blockquote>
+<p><em>« <strong>Préciser</strong> le motif de votre demande. »</em></p>
+</blockquote>
+<p>Détailler la raison pour laquelle vous faites cette démarche.</p>
+<blockquote>
+<p><em>« <strong>Le cas échéant</strong>, joindre une attestation d'hébergement. »</em></p>
+</blockquote>
+<p>« <strong>Le cas échéant</strong> » signifie « si cela s'applique à votre situation ». Si vous êtes hébergé chez un tiers, vous devez fournir le document. Si vous avez votre propre logement, cette instruction ne vous concerne pas.</p>
+<hr>
+<p><strong>Jeudi — Les mentions de bas de page et les pieds de document</strong></p>
+<p>Le jeudi, Camille est chargée de vérifier la conformité de documents avant leur diffusion. Mme Garnier lui explique que le bas de chaque document — le pied de page — contient des informations aussi importantes que l'en-tête.</p>
+<p>La première mention est la pagination : <strong>Page X sur Y</strong>. Par exemple : « <strong>Page</strong> 3 <strong>sur</strong> 12 ». Cette mention permet de vérifier qu'aucune <strong>page</strong> ne manque. Si vous recevez un contrat de douze <strong>pages</strong> et que la <strong>page</strong> 7 est absente, la pagination vous alerte immédiatement.</p>
+<p>La mention <strong>Document confidentiel</strong> en pied de <strong>page</strong> rappelle à chaque <strong>page</strong> que le contenu ne doit pas être diffusé. Elle est souvent accompagnée de la mention <strong>Ne pas diffuser</strong> — une interdiction explicite de transmettre le document à des tiers.</p>
+<p>La mention <strong>Propriété de</strong> suivie du nom de l'entreprise ou de l'administration indique à qui appartient le document. Elle est souvent complétée par <strong>Tous droits réservés</strong> et le symbole <strong>©</strong> (copyright) suivi de l'année : « © 2025 Préfecture du Bas-Rhin. <strong>Tous droits réservés</strong>. » Ces mentions protègent la propriété intellectuelle du document.</p>
+<p>La mention <strong>Version</strong> indique le numéro d'édition du document : « <strong>Version</strong> 3.2 ». Les documents administratifs et techniques sont régulièrement mis à jour, et le numéro de <strong>version</strong> permet de s'assurer qu'on consulte bien la dernière édition. La <strong>Date de mise à jour</strong> accompagne souvent le numéro de <strong>version</strong> : « <strong>Version</strong> 3.2 — <strong>Date de mise à jour</strong> : 01/02/2025 ». Ainsi, le lecteur sait immédiatement si le document est récent ou obsolète.</p>
+<p>La mention <strong>Réf.</strong> (abréviation de <strong>RÉFÉRENCE</strong>) en pied de <strong>page</strong> rappelle le code d'identification du document pour faciliter l'archivage et la traçabilité : « <strong>Réf.</strong> PREF-2025-0042 ».</p>
+<p>La mention <strong>Imprimé le</strong> suivie de la date indique quand le document a été imprimé. Cette information est utile pour les documents numériques qui peuvent être modifiés : si le document a été <strong>imprimé le</strong> 15 janvier mais que la <strong>version</strong> en ligne a été mise à jour le 20 janvier, l'impression est obsolète.</p>
+<p>La mention <strong>Ce document est valable jusqu'au</strong> suivie d'une date indique la durée de validité. Passé cette date, le document n'a plus de valeur : « <strong>Ce document est valable jusqu'au</strong> 31 décembre 2025. » C'est une mention fréquente sur les attestations, les certificats et les autorisations temporaires.</p>
+<p>Enfin, les mentions de statut du document :</p>
+<ul>
+<li><strong>Original</strong> : c'est le document source, authentique, portant les signatures manuscrites originales. L'<strong>original</strong> a la plus haute valeur juridique.</li>
+<li><strong>Copie</strong> : c'est une reproduction de l'<strong>original</strong>. La <strong>copie</strong> n'a pas la même valeur que l'<strong>original</strong>, sauf si elle est certifiée conforme.</li>
+<li><strong>Duplicata</strong> : c'est un remplacement de l'<strong>original</strong> en cas de perte ou de destruction. Le <strong>duplicata</strong> est délivré par l'autorité qui a émis l'<strong>original</strong> et porte la mention « DUPLICATA ». Il a la même valeur que l'<strong>original</strong>.</li>
+</ul>
+<p>Camille comprend désormais que le pied de <strong>page</strong> n'est pas un espace résiduel — c'est un espace d'information critique qui protège le document, identifie sa version, limite sa diffusion et garantit sa traçabilité.</p>
+<hr>
+<p><strong>Vendredi — Les annexes et les pièces jointes</strong></p>
+<p>Le vendredi, Camille finalise un dossier complet à envoyer au ministère. Le dossier principal fait vingt <strong>pages</strong>, mais il est accompagné de nombreux documents complémentaires.</p>
+<p>Les documents attachés à la fin du dossier principal sont appelés <strong>ANNEXES</strong>. Une <strong>ANNEXE</strong> est un document complémentaire qui fait partie intégrante du dossier : un <strong>tableau</strong> de données, un plan, un <strong>schéma</strong>, un formulaire vierge, un texte réglementaire de référence. Les <strong>annexes</strong> sont numérotées : <strong>Annexe</strong> 1, <strong>Annexe</strong> 2, <strong>Annexe</strong> 3. Dans le corps du texte, on y renvoie par des mentions comme « <strong>Voir</strong> <strong>Annexe</strong> 1 » ou « <strong>Cf.</strong> <strong>Annexe</strong> 3 ».</p>
+<p>Les documents envoyés séparément avec un courrier sont appelés <strong>PIÈCES JOINTES</strong> (abrégé <strong>P.J.</strong> dans les lettres). La <strong>pièce jointe</strong> est un document autonome — une facture, un certificat, une copie de pièce d'identité — qui accompagne la lettre mais n'en fait pas partie. En bas de la lettre, après la <strong>signature</strong>, on liste les <strong>pièces jointes</strong> :</p>
+<blockquote>
+<p><strong>P.J.</strong> :<br>
+1 — Copie de la carte d'identité<br>
+2 — Justificatif de domicile<br>
+3 — Relevé d'identité bancaire</p>
+</blockquote>
+<p>Camille apprend à distinguer <strong>ANNEXE</strong> et <strong>PIÈCE JOINTE</strong> : l'<strong>annexe</strong> fait partie du document principal (elle est reliée, paginée, référencée) ; la <strong>pièce jointe</strong> accompagne le document principal (elle est séparée, autonome, listée).</p>
+<p>Dans le corps du texte, quand on mentionne un document joint, on utilise <strong>ci-joint</strong> : « Veuillez trouver <strong>ci-joint</strong> le formulaire complété. » Quand on mentionne un document annexé, on utilise <strong>ci-annexé</strong> : « Le plan d'évacuation est <strong>ci-annexé</strong>. »</p>
+<hr>
+<h2>📰 ARTICLE 2 : Le guide pratique de Camille — Comment lire, remplir et vérifier n'importe quel document administratif français</h2>
+<hr>
+<p>Après une semaine d'apprentissage intensif, Camille rédige un guide personnel — un aide-mémoire qu'elle affiche au-dessus de son bureau. Ce guide résume tout ce qu'elle a appris sur la structure des documents français. Le voici, tel qu'elle l'a écrit.</p>
+<hr>
+<p><strong>GUIDE DE LECTURE ET DE VÉRIFICATION D'UN DOCUMENT ADMINISTRATIF</strong></p>
+<hr>
+<p><strong>ÉTAPE 1 : Lire l'en-tête — Identifier le document</strong></p>
+<p>Quand je reçois un document, la première chose que je regarde, c'est le haut de la <strong>page</strong>.</p>
+<p>Le <strong>TITRE</strong> me dit ce que c'est : arrêté, avis, note de service, contrat, facture, convocation. Si le <strong>TITRE</strong> est « <strong>CONFIDENTIEL</strong> » ou « <strong>URGENT</strong> », je sais immédiatement que le traitement est prioritaire ou restreint.</p>
+<p>L'<strong>OBJET</strong> me dit de quoi ça parle. C'est le résumé en une ligne. Si quelqu'un me demande « C'est quoi ce document ? », je lis l'<strong>OBJET</strong> et j'ai la réponse.</p>
+<p>La <strong>RÉFÉRENCE</strong> me permet de classer le document et de le retrouver. Chaque fois que je réponds à un courrier, je cite la <strong>RÉFÉRENCE</strong> du document d'origine.</p>
+<p>La <strong>DATE</strong> me dit quand le document a été créé. Elle est essentielle pour calculer les délais : si un document daté du 1er mars m'accorde un délai de trente jours, la date limite est le 31 mars.</p>
+<p>La mention <strong>À L'ATTENTION DE</strong> me dit à qui le document est principalement destiné, même s'il circule dans tout le service.</p>
+<hr>
+<p><strong>ÉTAPE 2 : Naviguer dans le document — Trouver l'information</strong></p>
+<p>Si le document est long, je commence par le <strong>SOMMAIRE</strong> — la table des matières au début. Le <strong>SOMMAIRE</strong> me donne la liste des <strong>Parties</strong>, des <strong>Chapitres</strong>, des <strong>Sections</strong> et des <strong>Articles</strong> avec leurs numéros de <strong>page</strong>. Si je cherche une information précise, je consulte l'<strong>Index</strong> alphabétique à la fin.</p>
+<p>Je repère la hiérarchie des divisions :</p>
+<p><strong>Partie</strong> I → <strong>Chapitre</strong> 1 → <strong>Section</strong> A → <strong>Article</strong> 1 → <strong>Paragraphe</strong> <strong>§</strong> 1 → <strong>Alinéa</strong> 1</p>
+<p>Et je note les éléments visuels :</p>
+<ul>
+<li>Les <strong>Encadrés</strong> contiennent souvent des informations clés, des résumés ou des avertissements — la mention <strong>ATTENTION</strong> ou <strong>IMPORTANT</strong> y figure fréquemment</li>
+<li>Les <strong>Tableaux</strong> présentent les données chiffrées — tarifs, horaires, barèmes</li>
+<li>Les <strong>Figures</strong> illustrent des situations — plans, photos, graphiques</li>
+<li>Les <strong>Schémas</strong> expliquent des processus — circuits de validation, organigrammes</li>
+</ul>
+<hr>
+<p><strong>ÉTAPE 3 : Suivre les renvois — Ne pas perdre le fil</strong></p>
+<p>Quand le texte me dit <strong>voir</strong> <strong>Article</strong> 12 ou <strong>cf.</strong> <strong>Annexe</strong> 3, je vais vérifier. Le renvoi n'est pas une suggestion — c'est une instruction. L'information essentielle peut se trouver ailleurs dans le document.</p>
+<p>Je retiens le système de renvois :</p>
+<ul>
+<li><strong>Voir</strong> / <strong>Cf.</strong> = aller consulter</li>
+<li><strong>Ci-dessus</strong> = déjà dit plus haut</li>
+<li><strong>Ci-dessous</strong> = sera dit plus bas</li>
+<li><strong>Ci-après</strong> = sera dit dans les sections suivantes</li>
+<li><strong>Ci-joint</strong> = document attaché séparément</li>
+<li><strong>Ci-annexé</strong> = document attaché à la fin</li>
+<li><strong>Susmentionné</strong> / <strong>Précité</strong> = déjà mentionné avant</li>
+<li><strong>Page</strong> (<strong>p.</strong>) = une seule <strong>page</strong> ; <strong>pp.</strong> = plusieurs <strong>pages</strong></li>
+<li><strong>Recto</strong> = le devant de la feuille ; <strong>Verso</strong> = le dos</li>
+</ul>
+<p>Quand le texte me dit « Comme indiqué <strong>ci-dessus</strong> » ou « L'<strong>article</strong> <strong>susmentionné</strong> prévoit que... », je dois remonter dans le texte pour retrouver l'information d'origine. Quand il me dit « Les conditions sont détaillées <strong>ci-dessous</strong> » ou « Le formulaire <strong>ci-annexé</strong> doit être complété », je dois continuer ma lecture ou aller à la fin du document.</p>
+<hr>
+<p><strong>ÉTAPE 4 : Remplir un formulaire — Suivre les instructions à la lettre</strong></p>
+<p>Quand je dois remplir un formulaire, je lis d'abord TOUTES les instructions avant d'écrire quoi que ce soit.</p>
+<p>Instructions de format :</p>
+<ul>
+<li><strong>Remplir en majuscules</strong> → J'écris en lettres capitales : DUPONT, pas Dupont</li>
+<li><strong>Écrire lisiblement</strong> → Je m'applique, chaque lettre doit être déchiffrable</li>
+</ul>
+<p>Instructions de sélection :</p>
+<ul>
+<li><strong>Cocher la case</strong> → Je mets une croix ✗ dans la bonne <strong>case à cocher</strong></li>
+<li><strong>Entourer la réponse</strong> → Je trace un cercle autour de la bonne option</li>
+<li><strong>Rayer les mentions inutiles</strong> → Je barre ce qui ne me concerne pas</li>
+</ul>
+<p>Instructions de documents :</p>
+<ul>
+<li><strong>Joindre</strong> → J'attache les documents demandés</li>
+<li><strong>Fournir</strong> → Je donne les pièces requises (original et/ou copies)</li>
+</ul>
+<p>Instructions de validation :</p>
+<ul>
+<li><strong>Signer</strong> → J'appose ma <strong>signature</strong> manuscrite</li>
+<li><strong>Dater</strong> → J'inscris la <strong>date</strong> du jour</li>
+<li><strong>Parapher</strong> → J'inscris mes initiales en bas de chaque <strong>page</strong></li>
+</ul>
+<p>Instructions d'information :</p>
+<ul>
+<li><strong>Compléter</strong> → Je remplis tous les champs</li>
+<li><strong>Indiquer</strong> → J'inscris l'information demandée</li>
+<li><strong>Préciser</strong> → Je donne des détails supplémentaires</li>
+<li><strong>Le cas échéant</strong> → Seulement si ça s'applique à ma situation</li>
+</ul>
+<p>Zone interdite :</p>
+<ul>
+<li><strong>Réservé à l'administration</strong> → Je n'écris RIEN dans cette zone</li>
+<li><strong>Ne rien inscrire</strong> → Idem — c'est l'espace de l'agent, pas le mien</li>
+</ul>
+<p>Je remplis chaque <strong>Rubrique</strong> dans l'ordre :</p>
+<ol>
+<li><strong>Rubrique</strong> Identité : <strong>Nom</strong>, <strong>Prénom</strong>, <strong>Date de naissance</strong>, <strong>Lieu de naissance</strong>, <strong>Nationalité</strong>, <strong>Sexe</strong>, <strong>Situation familiale</strong></li>
+<li><strong>Rubrique</strong> Coordonnées : <strong>Adresse</strong>, <strong>Code postal</strong>, <strong>Ville</strong>, <strong>Pays</strong>, <strong>Téléphone</strong>, <strong>Portable</strong>, <strong>Email</strong> / <strong>Courriel</strong></li>
+<li><strong>Rubrique</strong> Professionnelle : <strong>Profession</strong>, <strong>Employeur</strong>, <strong>Numéro de sécurité sociale</strong></li>
+<li><strong>Rubrique</strong> Validation : <strong>Lieu</strong>, <strong>Date</strong>, <strong>Signature</strong></li>
+</ol>
+<hr>
+<p><strong>ÉTAPE 5 : Vérifier le bas de page — Les informations cachées</strong></p>
+<p>Avant de classer ou d'envoyer un document, je vérifie systématiquement le pied de <strong>page</strong> :</p>
+<ul>
+<li><strong>Page X sur Y</strong> → Toutes les <strong>pages</strong> sont-elles présentes ? Si le document indique « <strong>Page</strong> 5 <strong>sur</strong> 8 » et que je n'ai que six <strong>pages</strong>, il en manque deux.</li>
+<li><strong>Version</strong> + <strong>Date de mise à jour</strong> → Est-ce la dernière <strong>version</strong> ? Si la <strong>date de mise à jour</strong> remonte à deux ans, il existe peut-être une <strong>version</strong> plus récente.</li>
+<li><strong>Réf.</strong> → Le numéro de <strong>référence</strong> est-il correct ? Correspond-il au dossier en cours ?</li>
+<li><strong>Ce document est valable jusqu'au</strong> → Le document est-il encore valide ? S'il a expiré, il n'a plus aucune valeur.</li>
+<li><strong>Imprimé le</strong> → L'impression est-elle récente ? Si le document a été <strong>imprimé le</strong> 1er janvier et que nous sommes en mars, il faut vérifier qu'il n'a pas été modifié entre-temps.</li>
+</ul>
+<p>Mentions de statut :</p>
+<ul>
+<li><strong>Original</strong> → C'est le document authentique, avec les vraies signatures. Je le conserve précieusement.</li>
+<li><strong>Copie</strong> → C'est une reproduction. Elle peut suffire pour certaines démarches, mais d'autres exigent l'<strong>original</strong>.</li>
+<li><strong>Duplicata</strong> → C'est un remplacement officiel de l'<strong>original</strong> perdu. Il a la même valeur.</li>
+</ul>
+<p>Mentions de diffusion :</p>
+<ul>
+<li><strong>Document confidentiel</strong> → Je ne le montre qu'aux personnes autorisées.</li>
+<li><strong>Ne pas diffuser</strong> → Je ne le transmets à personne sans autorisation.</li>
+<li><strong>Propriété de</strong> + <strong>Tous droits réservés</strong> + <strong>©</strong> → Ce document appartient à quelqu'un. Je ne le reproduis pas sans autorisation.</li>
+</ul>
+<hr>
+<p><strong>ÉTAPE 6 : Vérifier les annexes et pièces jointes</strong></p>
+<p>En fin de document :</p>
+<ul>
+<li><strong>ANNEXE</strong> → Documents complémentaires intégrés au dossier. Je vérifie que toutes les <strong>annexes</strong> référencées dans le texte (« <strong>Voir</strong> <strong>Annexe</strong> 1 ») sont bien présentes.</li>
+<li><strong>PIÈCE JOINTE</strong> (<strong>P.J.</strong>) → Documents séparés accompagnant le courrier. Je vérifie que toutes les <strong>pièces jointes</strong> listées après la <strong>signature</strong> sont bien incluses.</li>
+</ul>
+<p>Je retrouve les renvois :</p>
+<ul>
+<li>« <strong>Cf.</strong> <strong>Annexe</strong> 1 » → Je vais vérifier que l'<strong>Annexe</strong> 1 est bien là.</li>
+<li>« Formulaire <strong>ci-annexé</strong> » → Je cherche le formulaire à la fin du document.</li>
+<li>« Document <strong>ci-joint</strong> » → Je vérifie que le document est bien attaché séparément.</li>
+</ul>
+<hr>
+<p><strong>ÉTAPE 7 : Les mentions que je ne dois jamais ignorer</strong></p>
+<p>Certaines mentions, dispersées dans le texte, sont des signaux d'alerte :</p>
+<ul>
+<li><strong>NOTE</strong> → Information complémentaire qui précise ou nuance le texte principal</li>
+<li><strong>REMARQUE</strong> → Commentaire ou observation de l'auteur — souvent un détail important</li>
+<li><strong>ATTENTION</strong> → Mise en garde — quelque chose peut mal tourner si je ne fais pas attention</li>
+<li><strong>IMPORTANT</strong> → Information critique — je dois la lire et la retenir absolument</li>
+</ul>
+<p>Ces mentions sont les panneaux de signalisation du document. Les ignorer, c'est comme ignorer un feu rouge.</p>
+<hr>
+<p>Camille accroche son guide au mur. Six mois plus tard, elle le connaît par cœur. Chaque document qui passe entre ses mains est lu, vérifié, classé selon les mêmes principes. Le <strong>TITRE</strong> lui dit quoi. L'<strong>OBJET</strong> lui dit pourquoi. La <strong>RÉFÉRENCE</strong> lui dit où le classer. La <strong>DATE</strong> lui dit quand. Les renvois — <strong>voir</strong>, <strong>cf.</strong>, <strong>ci-dessus</strong>, <strong>ci-dessous</strong>, <strong>ci-après</strong>, <strong>susmentionné</strong>, <strong>précité</strong> — lui disent où trouver le reste. Les instructions — <strong>remplir en majuscules</strong>, <strong>cocher la case</strong>, <strong>rayer les mentions inutiles</strong>, <strong>signer</strong>, <strong>dater</strong>, <strong>parapher</strong> — lui disent quoi faire. Et le pied de <strong>page</strong> — <strong>Page X sur Y</strong>, <strong>Version</strong>, <strong>Réf.</strong>, <strong>Original</strong>, <strong>Copie</strong>, <strong>Duplicata</strong>, <strong>Confidentiel</strong>, <strong>Tous droits réservés</strong> — lui dit comment protéger et authentifier chaque document.</p>
+<p>La structure d'un document n'est pas un ornement. C'est un langage. Et maintenant, Camille le parle couramment.</p>
+<hr>
+<h2>📝 NOTES D'USAGE IMPORTANTES — Section 16</h2>
+<hr>
+<p><strong>🔹 La hiérarchie des divisions d'un document — du plus grand au plus petit :</strong></p>
+<table><thead><tr><th>Niveau</th><th>Terme</th><th>Usage</th><th>Exemple</th></tr></thead><tbody><tr><td>1 (plus large)</td><td><strong>Partie</strong></td><td>Division majeure</td><td>Partie I — Dispositions générales</td></tr><tr><td>2</td><td><strong>Sous-partie</strong></td><td>Subdivision de la Partie</td><td>Sous-partie A — Champ d'application</td></tr><tr><td>3</td><td><strong>Chapitre</strong></td><td>Division thématique</td><td>Chapitre 1 — Objet</td></tr><tr><td>4</td><td><strong>Section</strong></td><td>Sous-thème</td><td>Section A — Définitions</td></tr><tr><td>5</td><td><strong>Article</strong></td><td>Unité de base (juridique)</td><td>Article 1 — Le présent règlement...</td></tr><tr><td>6</td><td><strong>Paragraphe</strong> (§)</td><td>Bloc dans un Article</td><td>§ 1 — Les conditions...</td></tr><tr><td>7 (plus petit)</td><td><strong>Alinéa</strong></td><td>Sous-paragraphe</td><td>Alinéa 2 — Toutefois...</td></tr><tr><td>Liste</td><td><strong>Point</strong></td><td>Élément de liste</td><td>Point 3 — Documents requis</td></tr></tbody></table>
+<p>⚠️ Au TEF, quand un texte vous dit « conformément à l'<strong>alinéa</strong> 2 du <strong>paragraphe</strong> 3 de l'<strong>article</strong> 7 », c'est une référence très précise. Il faut savoir naviguer dans cette hiérarchie.</p>
+<p><strong>🔹 Les éléments visuels dans un document :</strong></p>
+<table><thead><tr><th>Élément</th><th>Ce que c'est</th><th>Comment on y renvoie</th></tr></thead><tbody><tr><td><strong>Encadré</strong></td><td>Bloc de texte mis en valeur (cadré)</td><td>« Voir l'encadré ci-contre »</td></tr><tr><td><strong>Tableau</strong></td><td>Grille de données (lignes/colonnes)</td><td>« Voir <strong>Tableau</strong> 1 »</td></tr><tr><td><strong>Figure</strong></td><td>Illustration, photo, graphique</td><td>« <strong>Figure</strong> 1 : Plan du site »</td></tr><tr><td><strong>Schéma</strong></td><td>Dessin technique, diagramme</td><td>« <strong>Schéma</strong> explicatif en Annexe »</td></tr><tr><td><strong>Rubrique</strong></td><td>Section thématique d'un formulaire</td><td>« Rubrique Identité »</td></tr></tbody></table>
+<p><strong>🔹 Le système de renvois — comment naviguer dans un document :</strong></p>
+<table><thead><tr><th>Mot</th><th>Direction</th><th>Signification</th><th>Exemple</th></tr></thead><tbody><tr><td><strong>Voir</strong> / <strong>Cf.</strong></td><td>→ ailleurs</td><td>Allez consulter</td><td>Voir Article 12 / Cf. Annexe 1</td></tr><tr><td><strong>Ci-dessus</strong></td><td>↑ en haut</td><td>Déjà dit avant</td><td>Comme indiqué ci-dessus</td></tr><tr><td><strong>Ci-dessous</strong></td><td>↓ en bas</td><td>Sera dit après</td><td>Voir ci-dessous</td></tr><tr><td><strong>Ci-après</strong></td><td>↓↓ plus loin</td><td>Dans une section ultérieure</td><td>Désigné ci-après « le client »</td></tr><tr><td><strong>Ci-joint</strong></td><td>📎 attaché</td><td>Document séparé joint</td><td>Veuillez trouver ci-joint</td></tr><tr><td><strong>Ci-annexé</strong></td><td>📄 en fin</td><td>Document en annexe</td><td>Le plan ci-annexé</td></tr><tr><td><strong>Susmentionné</strong></td><td>↑ déjà dit</td><td>Mentionné plus haut</td><td>L'article susmentionné</td></tr><tr><td><strong>Précité</strong></td><td>↑ déjà dit</td><td>Mentionné précédemment</td><td>Le document précité</td></tr><tr><td><strong>Recto</strong></td><td>devant</td><td>Face avant de la feuille</td><td>Signez au recto</td></tr><tr><td><strong>Verso</strong></td><td>derrière</td><td>Face arrière de la feuille</td><td>Notes au verso</td></tr><tr><td><strong>p.</strong></td><td>une page</td><td>Page unique</td><td>p. 12</td></tr><tr><td><strong>pp.</strong></td><td>plusieurs pages</td><td>Plage de pages</td><td>pp. 15-20</td></tr><tr><td><strong>Page X sur Y</strong></td><td>pagination</td><td>Position dans le document</td><td>Page 3 sur 12</td></tr></tbody></table>
+<p><strong>🔹 Les champs de formulaire — liste standard :</strong></p>
+<table><thead><tr><th>Rubrique</th><th>Champs</th><th>Format</th></tr></thead><tbody><tr><td>Identité</td><td><strong>Nom</strong>, <strong>Prénom</strong>, <strong>Date de naissance</strong>, <strong>Lieu de naissance</strong>, <strong>Nationalité</strong>, <strong>Sexe</strong>, <strong>Situation familiale</strong></td><td>Texte, date, choix</td></tr><tr><td>Coordonnées</td><td><strong>Adresse</strong>, <strong>Code postal</strong>, <strong>Ville</strong>, <strong>Pays</strong>, <strong>Téléphone</strong>, <strong>Portable</strong>, <strong>Email/Courriel</strong></td><td>Texte, nombre</td></tr><tr><td>Professionnel</td><td><strong>Profession</strong>, <strong>Employeur</strong>, <strong>Numéro de sécurité sociale</strong></td><td>Texte, nombre (15 chiffres)</td></tr><tr><td>Validation</td><td><strong>Signature</strong>, <strong>Date</strong>, <strong>Lieu</strong></td><td>Manuscrit</td></tr><tr><td>Administration</td><td><strong>Réservé à l'administration</strong></td><td>NE PAS REMPLIR</td></tr><tr><td>Sélection</td><td><strong>Case à cocher</strong></td><td>☐ Oui ☐ Non</td></tr></tbody></table>
+<p><strong>🔹 Les instructions de formulaire — ce qu'on vous demande de faire :</strong></p>
+<table><thead><tr><th>Instruction</th><th>Action requise</th><th>Exemple</th></tr></thead><tbody><tr><td><strong>Remplir en majuscules</strong></td><td>Écrire en lettres capitales</td><td>DUPONT</td></tr><tr><td><strong>Écrire lisiblement</strong></td><td>Écriture claire et nette</td><td>Pas de pattes de mouche</td></tr><tr><td><strong>Cocher la case</strong></td><td>Mettre une croix dans la case</td><td>☒ Oui</td></tr><tr><td><strong>Rayer les mentions inutiles</strong></td><td>Barrer ce qui ne s'applique pas</td><td><del>Monsieur</del> / Madame</td></tr><tr><td><strong>Entourer la réponse</strong></td><td>Cercler la bonne option</td><td>⭕Marié(e)</td></tr><tr><td><strong>Ne rien inscrire</strong></td><td>Ne pas écrire</td><td>Zone réservée</td></tr><tr><td><strong>Joindre</strong></td><td>Attacher des documents</td><td>Joindre une copie de la CNI</td></tr><tr><td><strong>Fournir</strong></td><td>Donner des documents</td><td>Fournir l'original</td></tr><tr><td><strong>Signer</strong></td><td>Apposer sa signature</td><td>Signature manuscrite</td></tr><tr><td><strong>Dater</strong></td><td>Écrire la date du jour</td><td>15/03/2025</td></tr><tr><td><strong>Parapher</strong></td><td>Inscrire ses initiales</td><td>CD (Camille Dupont)</td></tr><tr><td><strong>Compléter</strong></td><td>Remplir tous les champs</td><td>Ne rien laisser vide</td></tr><tr><td><strong>Indiquer</strong></td><td>Inscrire une information</td><td>Indiquer votre numéro</td></tr><tr><td><strong>Préciser</strong></td><td>Donner des détails</td><td>Préciser le motif</td></tr><tr><td><strong>Le cas échéant</strong></td><td>Si applicable</td><td>Seulement si concerné</td></tr></tbody></table>
+<p><strong>🔹 Les mentions de pied de page — ce qu'elles signifient :</strong></p>
+<table><thead><tr><th>Mention</th><th>Signification</th><th>Pourquoi c'est important</th></tr></thead><tbody><tr><td><strong>Page X sur Y</strong></td><td>Pagination</td><td>Vérifier qu'aucune page ne manque</td></tr><tr><td><strong>Document confidentiel</strong></td><td>Accès restreint</td><td>Ne pas diffuser</td></tr><tr><td><strong>Ne pas diffuser</strong></td><td>Interdiction de transmission</td><td>Strictement interne</td></tr><tr><td><strong>Propriété de</strong></td><td>Appartient à...</td><td>Droits d'auteur</td></tr><tr><td><strong>Tous droits réservés</strong></td><td>Copyright</td><td>Protection légale</td></tr><tr><td><strong>©</strong></td><td>Symbole copyright</td><td>Propriété intellectuelle</td></tr><tr><td><strong>Version</strong></td><td>Numéro d'édition</td><td>S'assurer d'avoir la dernière</td></tr><tr><td><strong>Date de mise à jour</strong></td><td>Dernière modification</td><td>Vérifier l'actualité</td></tr><tr><td><strong>Réf.</strong></td><td>Numéro de référence</td><td>Classement et traçabilité</td></tr><tr><td><strong>Imprimé le</strong></td><td>Date d'impression</td><td>Vérifier si l'impression est à jour</td></tr><tr><td><strong>Ce document est valable jusqu'au</strong></td><td>Date d'expiration</td><td>Au-delà, le document est caduc</td></tr><tr><td><strong>Original</strong></td><td>Document authentique</td><td>Plus haute valeur juridique</td></tr><tr><td><strong>Copie</strong></td><td>Reproduction</td><td>Valeur moindre (sauf certifiée)</td></tr><tr><td><strong>Duplicata</strong></td><td>Remplacement officiel</td><td>Même valeur que l'original</td></tr></tbody></table>
+<p><strong>🔹 ANNEXE vs PIÈCE JOINTE — distinction cruciale :</strong></p>
+<table><thead><tr><th></th><th><strong>Annexe</strong></th><th><strong>Pièce jointe</strong></th></tr></thead><tbody><tr><td>Position</td><td>Intégrée à la fin du document</td><td>Séparée, accompagne le courrier</td></tr><tr><td>Numérotation</td><td>Annexe 1, Annexe 2...</td><td>Listée sous P.J.</td></tr><tr><td>Relation</td><td>Fait partie du document</td><td>Accompagne le document</td></tr><tr><td>Renvoi dans le texte</td><td>« Voir Annexe 1 » / « Ci-annexé »</td><td>« Ci-joint » / « P.J. : »</td></tr><tr><td>Exemple</td><td>Tableau de tarifs en fin de règlement</td><td>Copie de CNI jointe à une lettre</td></tr></tbody></table>
+<p><strong>🔹 Les en-têtes de document — ce que chaque mention vous dit :</strong></p>
+<table><thead><tr><th>Mention</th><th>Question à laquelle elle répond</th><th>Exemple</th></tr></thead><tbody><tr><td><strong>TITRE</strong></td><td>Quel type de document ?</td><td>ARRÊTÉ PRÉFECTORAL</td></tr><tr><td><strong>OBJET</strong></td><td>De quoi parle-t-il ?</td><td>Réglementation du stationnement</td></tr><tr><td><strong>RÉFÉRENCE</strong></td><td>Quel est son numéro d'identification ?</td><td>PREF/2025/ARR/0042</td></tr><tr><td><strong>DATE</strong></td><td>Quand a-t-il été créé ?</td><td>Le 15 mars 2025</td></tr><tr><td><strong>À L'ATTENTION DE</strong></td><td>À qui est-il destiné ?</td><td>Mme la Directrice</td></tr><tr><td><strong>CONFIDENTIEL</strong></td><td>Qui peut le lire ?</td><td>Personnes autorisées seulement</td></tr><tr><td><strong>URGENT</strong></td><td>Quelle est la priorité ?</td><td>Traitement immédiat</td></tr><tr><td><strong>IMPORTANT</strong></td><td>Faut-il y prêter attention ?</td><td>Lecture attentive requise</td></tr></tbody></table>
+<p><strong>🔹 Piège fréquent au TEF — les renvois :</strong></p>
+<p>Quand une question du TEF vous demande une information précise et que le texte contient un renvoi (« <strong>voir</strong> <strong>annexe</strong> 2 », « conditions détaillées <strong>ci-dessous</strong> », « conformément à l'<strong>article</strong> <strong>susmentionné</strong> »), la réponse se trouve souvent dans la partie référencée, PAS dans le paragraphe que vous êtes en train de lire. Suivez toujours les renvois — c'est là que l'information clé se cache.</p>
+<hr>
+<p>✅ <strong>Section 16 terminée. Tous les mots des sous-sections 16.1 à 16.6 ont été intégrés dans les deux articles.</strong></p>
+</div>
+</div>
+
+<!-- ========== data-index="14" ========== -->
+
+        </div>
+    </div>
+
+        <div class="nav-bar">
+            <a href="section-15.html" class="nav-button prev">← Previous</a>
+            <div class="page-info">
+                <a href="index.html" class="nav-button home">📋 Contents</a><br>
+                <span style="margin-top:6px;display:block">Section 16 of 21</span>
+            </div>
+            <a href="section-17.html" class="nav-button next">Next →</a>
+        </div>
+
+    
+    <div id="progress-track"><div id="progress-fill"></div></div>
+    <div id="progress-pct">0%</div>
+
+
+    <script>
+    const fill = document.getElementById('progress-fill');
+    const pct  = document.getElementById('progress-pct');
+    function updateProgress() {
+        const scrollTop = window.scrollY;
+        const docHeight = document.body.scrollHeight - window.innerHeight;
+        const scrolled  = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+        fill.style.height = scrolled + '%';
+        pct.textContent   = Math.round(scrolled) + '%';
+    }
+    window.addEventListener('scroll', updateProgress);
+    updateProgress();
+
+    document.addEventListener('keydown', function(e) {
+        if (['INPUT','TEXTAREA'].includes(document.activeElement.tagName)) return;
+        if (e.key === 'ArrowLeft') {
+            const b = document.querySelector('.nav-button.prev');
+            if (b && !b.classList.contains('disabled')) window.location.href = b.href;
+        }
+        if (e.key === 'ArrowRight') {
+            const b = document.querySelector('.nav-button.next');
+            if (b && !b.classList.contains('disabled')) window.location.href = b.href;
+        }
+    });
+    </script>
+
+</body>
+</html>

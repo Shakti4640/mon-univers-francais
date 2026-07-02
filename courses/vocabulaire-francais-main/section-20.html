@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>📋 SECTION 20: QUICK RECOGNITION PATTERNS — Vocabulary Articles</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.7;
+            color: #333;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            min-height: 100vh;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+            padding: 40px 44px;
+        }
+        
+        .content { max-width: 900px; margin: 0 auto; }
+        .content h1 {
+            color: #667eea; margin: 30px 0 16px;
+            padding-bottom: 9px;
+            border-bottom: 3px solid #764ba2;
+            font-size: 1.8em;
+        }
+        .content h2 { color: #4a5568; margin: 24px 0 12px; padding-bottom: 5px; border-bottom: 1px solid #e2e8f0; }
+        .content h3 { color: #553c9a; margin: 20px 0 10px; }
+        .content h4 { color: #374151; margin: 16px 0 8px; }
+        .content p  { margin-bottom: 14px; }
+        .content ul, .content ol { margin: 10px 0 14px 26px; }
+        .content li { margin-bottom: 6px; }
+        .content hr { border: none; border-top: 2px solid #e8edf2; margin: 20px 0; }
+        .content pre {
+            background: #f8fafc; border: 1px solid #e2e8f0;
+            border-left: 4px solid #667eea;
+            padding: 14px; overflow-x: auto; margin: 14px 0; border-radius: 4px;
+        }
+        .content code { font-family: 'Consolas','Monaco','Courier New',monospace; font-size: 0.88em; }
+        .content table { width: 100%; border-collapse: collapse; margin: 16px 0; }
+        .content th { background: #667eea; color: white; padding: 10px 14px; text-align: left; }
+        .content td { padding: 9px 14px; border: 1px solid #ddd; }
+        .content tr:nth-child(even) td { background: #f5f3ff; }
+        .content blockquote {
+            border-left: 4px solid #764ba2; background: #faf5ff;
+            padding: 12px 18px; margin: 14px 0; border-radius: 0 6px 6px 0;
+        }
+        .px-2 { padding: 0; }
+        .chat-message { background: transparent; padding: 0; margin: 0; }
+
+        /* Bottom nav bar only */
+        .nav-bar {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 20px 0;
+            margin-top: 40px;
+            border-top: 2px solid #e2e8f0;
+        }
+        .nav-button {
+            display: inline-flex; align-items: center; gap: 6px;
+            padding: 10px 22px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white !important; text-decoration: none;
+            border-radius: 8px; font-weight: 600; font-size: 0.92em;
+            transition: all 0.2s;
+            box-shadow: 0 2px 6px rgba(102,126,234,0.35);
+        }
+        .nav-button:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(102,126,234,0.45); }
+        .nav-button.disabled { background: #cbd5e1; box-shadow: none; pointer-events: none; }
+        .nav-button.home {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            box-shadow: 0 2px 6px rgba(245,87,108,0.35);
+        }
+        .nav-button.home:hover { box-shadow: 0 4px 12px rgba(245,87,108,0.45); }
+        .page-info { color: #64748b; font-size: 0.88em; text-align: center; }
+
+        /* Progress bar */
+        #progress-track {
+            position: fixed; top: 20px; right: 20px;
+            width: 10px; height: 150px;
+            background: rgba(102,126,234,0.2);
+            border: 2px solid #667eea;
+            border-radius: 6px; overflow: hidden; z-index: 1000;
+        }
+        #progress-fill {
+            width: 100%;
+            background: linear-gradient(180deg, #667eea, #764ba2);
+            height: 0%;
+            transition: height 0.15s ease;
+        }
+        #progress-pct {
+            position: fixed; top: 0px; right: 16px;
+            color: #667eea; font-size: 13px; font-weight: bold;
+            z-index: 1001;
+            text-shadow: 0 1px 2px rgba(255,255,255,0.8);
+            line-height: 20px;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="content">
+            <div class="chat-message" data-index="20">
+<div class="px-2"><h1>📋 SECTION 20: QUICK RECOGNITION PATTERNS</h1>
+<h2>Articles Contextuels en Français</h2>
+<hr>
+<h2>📰 ARTICLE 1 : L'œil du détective — Comment Isabelle a appris à identifier n'importe quel document en cinq secondes</h2>
+<hr>
+<p>Isabelle est traductrice professionnelle. Chaque jour, elle reçoit des dizaines de documents en français — des factures, des contrats, des avis officiels, des modes d'emploi, des réservations, des polices d'assurance, des bulletins de paie, des baux, des conditions générales, des formulaires administratifs — et elle doit les identifier instantanément pour les orienter vers le bon traducteur spécialisé de son équipe. Elle n'a pas le temps de lire chaque document en entier. Elle a cinq secondes — parfois moins — pour reconnaître ce qu'elle a sous les yeux.</p>
+<p>Au fil des années, Isabelle a développé un système infaillible. Elle ne lit pas le document : elle le <strong>scanne</strong>. Elle repère des mots-clés, des structures, des patterns — des schémas récurrents qui lui permettent d'identifier le type de document, son objectif, ses informations clés et ses pièges potentiels en un clin d'œil.</p>
+<p>Voici son système, tel qu'elle l'enseigne aux nouveaux traducteurs de son agence.</p>
+<hr>
+<p><strong>Leçon 1 — Reconnaître le type de document en cinq secondes</strong></p>
+<p>« La première chose que je fais, » explique Isabelle, « c'est regarder trois zones du document : le haut (le titre et les premières lignes), le milieu (la structure générale) et le bas (la signature, les mentions légales). En cinq secondes, je sais ce que c'est. Voici comment. »</p>
+<p><strong>Si je vois « Facture n° », « Montant TTC », « Échéance »</strong> — c'est une <strong>facture</strong>. Une facture est un document comptable qui réclame un paiement. Ce que je cherche immédiatement : le <strong>montant</strong> total à payer (en euros, TTC), la <strong>date limite de paiement</strong> (l'échéance), et le <strong>mode de paiement</strong> accepté (virement, prélèvement, chèque). La facture est le document le plus fréquent dans la vie quotidienne — électricité, téléphone, gaz, eau, achats en ligne. Chaque facture contient un numéro de facture, un numéro de client, une période de facturation, et un détail des prestations ou consommations.</p>
+<p><strong>Si je vois « Contrat », « Les parties conviennent », « Clauses »</strong> — c'est un <strong>contrat</strong>. Un contrat est un accord juridique entre deux ou plusieurs parties. Ce que je cherche immédiatement : les <strong>obligations</strong> de chaque partie (qui doit faire quoi), la <strong>durée</strong> du contrat (date de début, date de fin, reconduction tacite), et les <strong>conditions</strong> de résiliation (préavis, pénalités). Les contrats contiennent des articles numérotés, des clauses spécifiques, et souvent des conditions générales en annexe.</p>
+<p><strong>Si je vois « Avis d'imposition », « Revenus », « Impôt »</strong> — c'est un <strong>avis d'imposition</strong>. C'est le document que l'administration fiscale envoie aux contribuables pour leur indiquer le montant de l'impôt à payer. Ce que je cherche immédiatement : le <strong>montant</strong> de l'impôt dû, la <strong>date limite</strong> de paiement (l'échéance), et le <strong>numéro de référence</strong> fiscale. L'avis d'imposition contient aussi le revenu fiscal de référence, le nombre de parts fiscales, le taux d'imposition, et les éventuelles réductions ou crédits d'impôt.</p>
+<p><strong>Si je vois « Police n° », « Garanties », « Sinistre »</strong> — c'est un <strong>document d'assurance</strong>. Qu'il s'agisse d'une attestation, d'un contrat ou d'un relevé, le vocabulaire de l'assurance est immédiatement reconnaissable. Ce que je cherche : la <strong>couverture</strong> (quelles garanties sont incluses, quelles exclusions s'appliquent), la <strong>franchise</strong> (le montant à la charge de l'assuré), et la procédure de <strong>déclaration de sinistre</strong> (comment signaler un problème). Les documents d'assurance contiennent toujours un numéro de police, le nom de l'assuré, les garanties souscrites, et les conditions de renouvellement.</p>
+<p><strong>Si je vois « Ordonnance », « Posologie », « mg »</strong> — c'est une <strong>ordonnance</strong> médicale. Ce que je cherche : le nom du <strong>médicament</strong>, la <strong>posologie</strong> (combien, combien de fois par jour, pendant combien de temps), et la <strong>voie d'administration</strong> (orale, cutanée, injectable). Les ordonnances contiennent aussi le nom du médecin prescripteur, le nom du patient, et la mention « renouvelable » ou « non substituable » le cas échéant.</p>
+<p><strong>Si je vois « Bulletin de paie », « Brut », « Net »</strong> — c'est un <strong>bulletin de paie</strong>. C'est le document mensuel qui détaille la rémunération d'un salarié. Ce que je cherche : le <strong>salaire net</strong> à payer (ce que le salarié reçoit réellement), les <strong>cotisations</strong> (les déductions entre le brut et le net), et le <strong>cumul annuel</strong> (le total depuis janvier). Le bulletin de paie contient le salaire brut, les cotisations salariales et patronales, le prélèvement à la source, et le net imposable.</p>
+<p><strong>Si je vois « Bail », « Loyer », « Bailleur/Locataire »</strong> — c'est un <strong>contrat de location</strong>. Ce que je cherche : le montant du <strong>loyer</strong> mensuel (charges comprises ou hors charges), la <strong>durée</strong> du bail (1 an, 3 ans, 9 mois), et les <strong>conditions</strong> de résiliation (préavis, motifs). Les baux contiennent aussi le montant du dépôt de garantie, les obligations du locataire et du bailleur, et les modalités de révision du loyer.</p>
+<p><strong>Si je vois « Mode d'emploi », « Étape », « Attention »</strong> — c'est un <strong>mode d'emploi</strong>. Ce que je cherche : les <strong>étapes</strong> d'installation ou d'utilisation (numérotées), les <strong>avertissements</strong> de sécurité (attention, danger, ne pas), et les <strong>caractéristiques techniques</strong> (dimensions, puissance, tension). Les modes d'emploi contiennent aussi une section de dépannage (problème → solution), une garantie, et les coordonnées du service client.</p>
+<p><strong>Si je vois « Réservation », « Confirmation », « Ref: »</strong> — c'est une <strong>confirmation de réservation</strong>. Que ce soit un hôtel, un vol, un train ou une voiture de location. Ce que je cherche : les <strong>dates</strong> (arrivée/départ, aller/retour), les <strong>détails</strong> de la réservation (type de chambre, numéro de vol, catégorie de véhicule), et la <strong>politique d'annulation</strong> (gratuite jusqu'à telle date, non remboursable). Les confirmations contiennent toujours un numéro de réservation, un code de référence, et les conditions de modification.</p>
+<p><strong>Si je vois « CGU », « L'utilisateur s'engage », « Données »</strong> — ce sont des <strong>conditions générales d'utilisation</strong>. Ce que je cherche : les <strong>droits</strong> de l'utilisateur (droit d'accès, droit de rectification, droit à l'oubli), les <strong>restrictions</strong> (ce qui est interdit), et les <strong>obligations</strong> (ce que l'utilisateur doit faire). Les CGU contiennent aussi la politique de confidentialité, les mentions légales, et les conditions de modification du service.</p>
+<p><strong>Si je vois « Cerfa », « Formulaire »</strong> — c'est un <strong>formulaire officiel</strong>. Les formulaires Cerfa sont les formulaires standardisés de l'administration française, numérotés et identifiables par leur code (Cerfa n° 12345*01). Ce que je cherche : les <strong>champs obligatoires</strong> à remplir, les <strong>documents à joindre</strong>, et les <strong>instructions</strong> de remplissage (remplir en majuscules, cocher la case, rayer les mentions inutiles).</p>
+<hr>
+<p><strong>Leçon 2 — Reconnaître l'objectif du document</strong></p>
+<p>« Une fois que j'ai identifié le <strong>type</strong> de document, » poursuit Isabelle, « je cherche son <strong>objectif</strong> — pourquoi ce document a été envoyé, ce qu'il attend du lecteur. Là encore, des phrases-clés me guident instantanément. »</p>
+<p><strong>Si je vois « Vous devez fournir... », « Pièces à joindre »</strong> — le document <strong>demande des documents</strong>. L'objectif est clair : le destinataire doit rassembler et envoyer des pièces justificatives. L'action requise est d'envoyer les documents demandés, dans le délai indiqué, à l'adresse spécifiée.</p>
+<p><strong>Si je vois « Vous êtes invité(e) à... », « Convocation »</strong> — le document est une <strong>convocation</strong> ou une <strong>invitation</strong>. L'objectif est de faire venir le destinataire quelque part — un rendez-vous, une réunion, un examen, une audience. L'action requise est de se présenter au lieu indiqué, à la date et à l'heure précisées, muni des documents requis.</p>
+<p><strong>Si je vois « Nous vous informons que... »</strong> — le document est une <strong>information</strong>. Son objectif est simplement de transmettre une nouvelle — un changement d'horaires, une modification de tarifs, une décision administrative. L'action requise est de lire et de prendre note. Pas nécessairement d'agir, sauf si le texte le précise.</p>
+<p><strong>Si je vois « Merci de régler... », « Montant dû »</strong> — le document est une <strong>demande de paiement</strong>. L'objectif est évident : le destinataire doit payer. L'action requise est de régler le montant indiqué, avant la date limite, par le moyen de paiement spécifié.</p>
+<p><strong>Si je vois « Votre demande a été acceptée/refusée »</strong> — le document est une <strong>notification de décision</strong>. L'administration communique le résultat d'une demande. L'action requise dépend de la décision : si acceptée, suivre les instructions qui suivent ; si refusée, vérifier les possibilités de recours.</p>
+<p><strong>Si je vois « Rappel : Votre facture... »</strong> — le document est une <strong>relance</strong>. Un paiement est en retard. L'objectif est de rappeler au destinataire qu'il doit payer — et vite. L'action requise est de payer urgemment, sous peine de pénalités ou de suspension de service.</p>
+<p><strong>Si je vois « Votre contrat arrive à échéance »</strong> — le document est un <strong>avis de renouvellement</strong>. Le contrat en cours va bientôt expirer. L'action requise est de décider : renouveler ou ne pas renouveler. Si le contrat prévoit une tacite reconduction, ne rien faire signifie accepter le renouvellement automatique.</p>
+<p><strong>Si je vois « Suite à votre demande... »</strong> — le document est une <strong>réponse à une demande</strong>. Quelqu'un a fait une démarche, et l'organisme répond. L'action requise est de vérifier si la réponse est satisfaisante — et si elle ne l'est pas, d'exercer un recours.</p>
+<p><strong>Si je vois « En cas de désaccord... »</strong> — le document contient des <strong>informations sur les voies de recours</strong>. L'objectif est d'informer le destinataire de ses droits en cas de contestation. L'action requise est de connaître ses droits — délais de recours, organismes compétents, procédures à suivre.</p>
+<p><strong>Si je vois « Pour bénéficier de... »</strong> — le document décrit les <strong>conditions d'éligibilité</strong>. L'objectif est d'expliquer qui peut bénéficier d'un service, d'une aide, d'un avantage. L'action requise est de vérifier si l'on remplit les conditions, et si oui, de faire une demande.</p>
+<hr>
+<p><strong>Leçon 3 — Reconnaître les dates limites</strong></p>
+<p>« Les dates limites, » insiste Isabelle, « sont l'information la plus critique de tout document fonctionnel. Manquer une date limite peut signifier perdre un droit, payer une pénalité, ou voir un dossier classé sans suite. Voici les patterns que je reconnais instantanément. »</p>
+<p><strong>« avant le + [date] »</strong> — C'est une date limite stricte. L'action doit être accomplie AVANT cette date. Pas le jour même (sauf indication contraire), pas le lendemain — AVANT. « Avant le 31 mars » signifie que le 30 mars est le dernier jour utile.</p>
+<p><strong>« au plus tard le + [date] »</strong> — C'est la date limite finale, la plus stricte possible. « Au plus tard le 15 janvier » signifie que le 15 janvier est le dernier jour acceptable — après, c'est trop tard. C'est la formulation la plus contraignante.</p>
+<p><strong>« dans un délai de X jours »</strong> — Le délai se calcule à partir d'une date de référence (souvent la date du courrier, la date de réception, ou la date de l'événement). « Dans un délai de 30 jours » à compter du 1er mars = date limite le 31 mars. Attention : il faut savoir à partir de quand le délai court.</p>
+<p><strong>« sous X jours ouvrés »</strong> — Les <strong>jours ouvrés</strong> excluent les week-ends et les jours fériés. « Sous 5 jours ouvrés » à compter du lundi = réponse au lundi suivant (pas le samedi). C'est un piège classique : 5 jours ouvrés ≠ 5 jours calendaires. Il faut compter correctement en excluant les samedis, dimanches et jours fériés.</p>
+<p><strong>« à compter du + [date] »</strong> — C'est le point de départ d'une période. « À compter du 1er mars » signifie que quelque chose commence le 1er mars. Ce n'est pas une date limite — c'est un début. Mais c'est souvent le point de départ à partir duquel on calcule une date limite.</p>
+<p><strong>« jusqu'au + [date] »</strong> — C'est la fin d'une période de validité. « Jusqu'au 31 décembre » signifie que le document, le droit, l'autorisation reste valide jusqu'à cette date — et pas un jour de plus. Le 1er janvier, c'est fini.</p>
+<p><strong>« passé ce délai »</strong> — Ces deux mots signalent que des <strong>conséquences</strong> suivront si le délai n'est pas respecté. « Passé ce délai, votre demande sera irrecevable » = si vous n'agissez pas à temps, c'est terminé. <strong>Passé ce délai</strong> est toujours suivi d'une mauvaise nouvelle.</p>
+<p><strong>« sans délai »</strong> — Cela signifie <strong>immédiatement</strong>. Pas demain, pas la semaine prochaine — maintenant. « Veuillez nous contacter sans délai » = appelez tout de suite.</p>
+<p><strong>« dès réception »</strong> — L'action doit être accomplie dès que le document est reçu — le jour même, si possible. « Dès réception de ce courrier, veuillez... » = n'attendez pas, agissez immédiatement.</p>
+<p><strong>« sous huitaine »</strong> — Expression traditionnelle signifiant « dans un délai d'environ huit jours ». C'est une semaine, plus ou moins un jour. Utilisé dans le langage juridique et administratif classique.</p>
+<p><strong>« sous quinzaine »</strong> — Même logique : « dans un délai d'environ quinze jours ». Deux semaines, plus ou moins.</p>
+<hr>
+<p><strong>Leçon 4 — Reconnaître les montants et les frais</strong></p>
+<p>« Les montants, » continue Isabelle, « sont le deuxième type d'information critique. Un euro de différence peut changer la réponse à une question du TEF. Voici les patterns. »</p>
+<p><strong>« X € TTC »</strong> — TTC signifie « Toutes Taxes Comprises ». C'est le montant final, celui que vous payez réellement. Il inclut la TVA et toutes les autres taxes. Quand vous voyez TTC, c'est le prix réel, le prix de sortie de caisse.</p>
+<p><strong>« X € HT »</strong> — HT signifie « Hors Taxes ». C'est le montant avant l'ajout des taxes. Pour obtenir le prix réel, il faut ajouter la TVA (généralement 20 % en France, parfois 10 % ou 5,5 % selon les produits). Un prix HT est toujours INFÉRIEUR au prix TTC. C'est un piège classique : ne confondez jamais HT et TTC. La différence est typiquement de 20 %.</p>
+<p><strong>« X € + TVA »</strong> — Même principe que HT : le prix affiché n'inclut pas la TVA. Il faut ajouter le pourcentage de TVA applicable pour obtenir le montant total.</p>
+<p><strong>« Gratuit » / « Sans frais »</strong> — Aucun paiement requis. Mais attention aux astérisques (<em>) qui renvoient souvent à des conditions : « Gratuit</em> — *sous réserve d'un engagement de 12 mois ». La gratuité peut être conditionnelle.</p>
+<p><strong>« À partir de X € »</strong> — C'est un prix minimum. Le prix réel peut être supérieur. « À partir de 29 € » signifie que le prix le moins cher est 29 €, mais que d'autres options coûtent plus. Ne prenez pas « à partir de » pour le prix fixe.</p>
+<p><strong>« Jusqu'à X € »</strong> — C'est un prix maximum. Le prix réel peut être inférieur. « Jusqu'à 500 € de remboursement » signifie que le maximum est 500 €, mais que vous pourriez recevoir moins.</p>
+<p><strong>« X € / mois »</strong> — C'est un tarif mensuel. Pour calculer le coût annuel, multipliez par 12. « 29,99 € / mois » = environ 360 € par an.</p>
+<p><strong>« X € / an »</strong> — C'est un tarif annuel. Pour calculer le coût mensuel, divisez par 12. « 120 € / an » = 10 € par mois.</p>
+<p><strong>« Supplément de X € »</strong> — C'est un coût additionnel qui s'ajoute au prix de base. Le prix total = prix de base + supplément. Ne confondez pas le supplément avec le prix total.</p>
+<p><strong>« Majoration de X% »</strong> — C'est une augmentation, souvent une pénalité. « Majoration de 10% » sur une facture de 100 € = vous payez 110 €. La majoration s'applique en cas de retard de paiement ou de non-respect d'une obligation.</p>
+<p><strong>« Réduction de X% »</strong> — C'est une diminution du prix. « Réduction de 20% » sur un prix de 100 € = vous payez 80 €. La réduction est un avantage — vérifiez les conditions pour en bénéficier.</p>
+<hr>
+<p><strong>Leçon 5 — Reconnaître les informations de contact</strong></p>
+<p>« Les coordonnées, » explique Isabelle, « sont souvent la clé pour répondre aux questions du type "à qui s'adresser". Voici comment je les identifie. »</p>
+<p><strong>« 01/02/03/04/05 XX XX XX XX »</strong> — Un numéro de téléphone fixe français. Les deux premiers chiffres indiquent la région : 01 = Île-de-France (Paris), 02 = Nord-Ouest, 03 = Nord-Est, 04 = Sud-Est, 05 = Sud-Ouest.</p>
+<p><strong>« 06/07 XX XX XX XX »</strong> — Un numéro de téléphone mobile français. 06 est le préfixe historique ; 07 a été ajouté quand les numéros en 06 ont commencé à s'épuiser.</p>
+<p><strong>« 08 XX XX XX XX »</strong> — Un numéro spécial de service. Les numéros en 08 peuvent être gratuits (0800, 0801, 0805), à tarif local (0806 à 0809), ou surtaxés (0810 et au-delà). Attention au coût potentiel.</p>
+<p><strong>« 3XXX »</strong> — Un numéro court de service. Par exemple : 3939 (service public), 3237 (SNCF), 3631 (La Poste). Ces numéros sont faciles à retenir et souvent surtaxés.</p>
+<p><strong>« <a href="/cdn-cgi/l/email-protection#cab2b2b28ab2b2b2e4acb8"><span class="__cf_email__" data-cfemail="255d5d5d655d5d5d0b4357">[email&#160;protected]</span></a> »</strong> — Une adresse email. Le suffixe .fr indique un domaine français. Les adresses en .gouv.fr sont des adresses gouvernementales officielles.</p>
+<p><strong>« <a href="http://www.xxx.fr">www.xxx.fr</a> »</strong> — Un site Internet. C'est souvent le meilleur endroit pour trouver des informations complémentaires, faire des démarches en ligne, ou accéder à son espace personnel.</p>
+<p><strong>« BP XXXX »</strong> — Une boîte postale (BP = Boîte Postale). C'est une adresse postale sans adresse physique — utilisée par les entreprises et les administrations pour centraliser leur courrier.</p>
+<p><strong>« CS XXXXX »</strong> — Un code de service. Utilisé par les grandes administrations pour le tri du courrier. « CS 90000 » n'est pas une adresse physique — c'est un code de routage postal.</p>
+<p><strong>« Service client »</strong> — Le service de contact général. C'est là qu'il faut appeler pour toute question, réclamation ou demande d'information.</p>
+<p><strong>« Numéro vert »</strong> — Un numéro gratuit. L'appel ne coûte rien au demandeur. Les numéros verts commencent généralement par 0800 ou 0805.</p>
+<hr>
+<p><strong>Leçon 6 — Reconnaître le niveau d'obligation</strong></p>
+<p>« Quand un document me dit de faire quelque chose, » précise Isabelle, « la première question que je me pose est : est-ce que c'est <strong>obligatoire</strong>, <strong>recommandé</strong>, ou <strong>facultatif</strong> ? Un seul mot change tout. »</p>
+<p><strong>« obligatoire »</strong> — Vous DEVEZ le faire. Pas de choix, pas de discussion. C'est une exigence. Ne pas le faire entraîne des conséquences — sanctions, pénalités, perte de droits. Réponse à la question « Est-ce requis ? » : OUI.</p>
+<p><strong>« impératif »</strong> — Encore plus fort qu'obligatoire. C'est une urgence, une nécessité absolue. Si un document dit « il est impératif de », c'est le niveau maximum d'obligation. Réponse : OUI, absolument.</p>
+<p><strong>« requis »</strong> — Synonyme d'obligatoire dans un contexte administratif. « Documents requis » = documents que vous devez fournir. Réponse : OUI.</p>
+<p><strong>« exigé »</strong> — Synonyme d'obligatoire, avec une nuance d'insistance. « Une expérience de 3 ans est exigée » = vous ne pouvez pas postuler sans cette expérience. Réponse : OUI.</p>
+<p><strong>« nécessaire »</strong> — Très proche d'obligatoire, mais avec une nuance : c'est un besoin objectif plutôt qu'une règle imposée. « Il est nécessaire de fournir un justificatif » = sans ce justificatif, la procédure ne peut pas avancer. Réponse : OUI, vous devriez le faire.</p>
+<p><strong>« recommandé »</strong> — Ce n'est PAS obligatoire, mais c'est fortement conseillé. « Il est recommandé de conserver une copie » = vous n'êtes pas obligé, mais ce serait prudent. Réponse à la question « Est-ce requis ? » : NON, mais c'est conseillé.</p>
+<p><strong>« conseillé »</strong> — Synonyme de recommandé, légèrement moins formel. « Il est conseillé d'arriver 15 minutes en avance » = ce n'est pas obligatoire, mais c'est une bonne idée. Réponse : NON.</p>
+<p><strong>« facultatif »</strong> — C'est optionnel. Vous pouvez le faire ou ne pas le faire, à votre convenance. « L'assurance annulation est facultative » = vous n'êtes pas obligé de la prendre. Réponse : NON, c'est votre choix.</p>
+<p><strong>« souhaité »</strong> — C'est apprécié mais pas exigé. « Une expérience en management est souhaitée » = c'est un plus, mais vous pouvez postuler sans. Réponse : NON, mais c'est apprécié.</p>
+<p><strong>« si possible »</strong> — Seulement si vous le pouvez. Aucune obligation. « Merci de répondre avant vendredi, si possible » = vendredi serait idéal, mais ce n'est pas une date limite stricte. Réponse : NON, c'est optionnel.</p>
+<p><strong>« le cas échéant »</strong> — Seulement si la situation se présente. « Le cas échéant, fournir un justificatif de revenus » = si cette situation s'applique à vous, fournissez-le ; sinon, ne fournissez rien. Réponse : ça dépend de votre situation.</p>
+<hr>
+<p><strong>Leçon 7 — Les pièges courants dans les documents fonctionnels</strong></p>
+<p>« Enfin, » conclut Isabelle, « voici les pièges que je vois le plus souvent — les erreurs que même les lecteurs expérimentés commettent. »</p>
+<p><strong>Piège 1 : Les dates au format européen</strong></p>
+<p>En France, le format de date est JJ/MM/AAAA — jour/mois/année. Le 05/03/2024 signifie le <strong>5 mars</strong> 2024, PAS le 3 mai. C'est l'inverse du format américain (MM/DD/YYYY). Si vous êtes habitué au format américain, faites très attention. Au TEF, une confusion de date peut transformer une bonne réponse en mauvaise réponse.</p>
+<p><em><em>Piège 2 : Le « Gratuit</em> » avec astérisque</em>*</p>
+<p>Quand un document dit « Gratuit* » avec un astérisque, cherchez immédiatement la note de bas de page ou les conditions en petits caractères. L'astérisque signifie presque toujours : « *Conditions applicables ». La gratuité peut être limitée dans le temps, soumise à un engagement, ou réservée à certains profils. Lisez les petits caractères — c'est là que se cachent les vrais coûts.</p>
+<p><strong>Piège 3 : Les prix « À partir de »</strong></p>
+<p>« À partir de 19,99 € » ne signifie PAS que le prix est 19,99 €. Cela signifie que 19,99 € est le prix <strong>minimum</strong>. Le prix réel peut être beaucoup plus élevé selon les options choisies. « À partir de » est une formule marketing — le prix affiché est le plus attractif possible, pas le plus réaliste.</p>
+<p><strong>Piège 4 : Le « Hors frais de... »</strong></p>
+<p>« 500 € hors frais de dossier » signifie que le prix de 500 € n'inclut PAS les frais de dossier. Le coût total sera 500 € PLUS les frais de dossier (qui peuvent être de 50, 100 ou 200 €). Quand un prix est suivi de « hors frais de... », ajoutez mentalement les frais supplémentaires pour obtenir le coût réel.</p>
+<p><strong>Piège 5 : « Délai indicatif » vs « Délai de rigueur »</strong></p>
+<p>Un <strong>délai indicatif</strong> est approximatif — il donne une idée du temps nécessaire, mais il n'est pas contraignant. « Délai indicatif : 3 semaines » signifie « environ 3 semaines, peut-être plus, peut-être moins ». Un <strong>délai de rigueur</strong> est strict — il ne peut pas être dépassé. « Délai de rigueur : 30 jours » signifie « exactement 30 jours, pas un de plus ». Vérifiez toujours de quel type de délai il s'agit — la conséquence d'un dépassement n'est pas la même.</p>
+<p><strong>Piège 6 : « Net » vs « Brut »</strong></p>
+<p>Sur un bulletin de paie, le salaire <strong>brut</strong> est le montant total avant déductions. Le salaire <strong>net</strong> est ce que le salarié reçoit réellement après les cotisations et le prélèvement à la source. La différence entre brut et net peut atteindre 25 à 30 %. Si une question du TEF demande « combien le salarié reçoit-il ? », la réponse est le <strong>net à payer</strong>, pas le brut. Ne confondez jamais les deux.</p>
+<p><strong>Piège 7 : « TTC » vs « HT »</strong></p>
+<p>TTC (Toutes Taxes Comprises) = le prix final. HT (Hors Taxes) = le prix avant taxes. La TVA standard en France est de 20 %. Un produit à 100 € HT coûte 120 € TTC. Un produit à 120 € TTC coûte 100 € HT. La différence est significative — typiquement 20 %. Si une question demande « quel est le montant à payer ? », c'est presque toujours le TTC.</p>
+<p><strong>Piège 8 : « Jours ouvrés » vs « Jours calendaires »</strong></p>
+<p>Les <strong>jours ouvrés</strong> sont les jours de travail — du lundi au vendredi, hors jours fériés. Les <strong>jours calendaires</strong> sont tous les jours du calendrier — y compris les week-ends et les jours fériés. « 10 jours ouvrés » = environ 2 semaines. « 10 jours calendaires » = exactement 10 jours. La différence est considérable : 10 jours ouvrés ≈ 14 jours calendaires. Comptez correctement selon le type de jours indiqué.</p>
+<p><strong>Piège 9 : La « Tacite reconduction »</strong></p>
+<p>La <strong>tacite reconduction</strong> signifie que le contrat se renouvelle automatiquement si personne ne fait rien. C'est le piège par excellence : si vous oubliez de résilier avant la date limite, le contrat est reconduit pour une nouvelle période — et vous êtes engagé pour un an de plus (ou plus). Quand vous voyez « tacite reconduction », cherchez immédiatement le délai de préavis pour la résiliation (généralement 1 à 2 mois avant l'échéance).</p>
+<p><strong>Piège 10 : « Sauf avis contraire »</strong></p>
+<p>« Sauf avis contraire de votre part » signifie que si vous ne réagissez pas, votre <strong>silence</strong> sera interprété comme un <strong>accord</strong>. C'est l'inverse de la logique habituelle : normalement, ne rien dire ne signifie rien. Mais quand un document dit « sauf avis contraire », ne rien dire = accepter. Si vous n'êtes pas d'accord, vous DEVEZ réagir explicitement, par écrit, dans le délai indiqué.</p>
+<hr>
+<h2>📰 ARTICLE 2 : La checklist d'Isabelle — Analyser n'importe quel document fonctionnel en sept étapes</h2>
+<hr>
+<p>Isabelle a créé une checklist qu'elle utilise pour chaque document qu'elle traite. Cette checklist est devenue la référence dans son agence — et elle la partage aujourd'hui avec quiconque doit comprendre un document fonctionnel français, que ce soit pour le TEF ou pour la vie quotidienne.</p>
+<hr>
+<p><strong>CHECKLIST D'ANALYSE D'UN DOCUMENT FONCTIONNEL</strong></p>
+<hr>
+<p><strong>ÉTAPE 1 — IDENTIFIER LE TYPE DE DOCUMENT</strong></p>
+<p>Trois questions en cinq secondes :</p>
+<p><strong>□ Quel type de document est-ce ?</strong></p>
+<p>Je regarde le titre, les premiers mots, la structure générale. « Facture n° » → facture. « Contrat de... » → contrat. « Avis d'imposition » → document fiscal. « Police n° » → assurance. « Ordonnance » → prescription médicale. « Bulletin de paie » → fiche de salaire. « Bail » → contrat de location. « Mode d'emploi » → instructions. « Réservation » → confirmation de réservation. « CGU » → conditions générales. « Cerfa » / « Formulaire » → formulaire officiel.</p>
+<p><strong>□ Qui est l'expéditeur ?</strong></p>
+<p>Je regarde l'en-tête — le logo, le nom, l'adresse en haut à gauche. C'est l'organisme ou la personne qui a créé le document. La mairie ? La CAF ? Une banque ? Un employeur ? Un bailleur ? L'expéditeur me dit dans quel domaine je me trouve — administratif, financier, médical, commercial.</p>
+<p><strong>□ Qui est le destinataire ?</strong></p>
+<p>Je regarde l'adresse en haut à droite, ou la mention « À l'attention de ». C'est la personne à qui le document est adressé — celle qui doit agir, payer, répondre, se présenter.</p>
+<hr>
+<p><strong>ÉTAPE 2 — TROUVER LES INFORMATIONS CLÉS</strong></p>
+<p>Quatre éléments à repérer immédiatement :</p>
+<p><strong>□ Sujet/Objectif : _______________</strong></p>
+<p>Je lis la ligne d'objet et le premier paragraphe. De quoi parle ce document ? Pourquoi a-t-il été envoyé ? « Nous vous informons que... » → information. « Vous devez fournir... » → demande de documents. « Votre demande a été acceptée » → notification de décision. « Merci de régler... » → demande de paiement.</p>
+<p><strong>□ Dates importantes : _______________</strong></p>
+<p>Je scanne le document à la recherche de toutes les dates. Date du courrier. Date d'effet. Date limite de paiement. Date d'expiration. Date de rendez-vous. Date de début. Date de fin. Je note chaque date et ce à quoi elle correspond. Au TEF, les questions de dates sont les plus fréquentes.</p>
+<p><strong>□ Montants/Prix : _______________</strong></p>
+<p>Je repère tous les chiffres suivis du symbole €. Montant total. Montant HT. TVA. Montant TTC. Franchise. Prime. Loyer. Salaire net. Je vérifie si c'est HT ou TTC, mensuel ou annuel, fixe ou variable.</p>
+<p><strong>□ Numéros de référence : _______________</strong></p>
+<p>Numéro de dossier. Numéro de contrat. Numéro de facture. Numéro de client. Numéro de police. Référence de réservation. Ces numéros permettent d'identifier le dossier et de le retrouver en cas de besoin.</p>
+<hr>
+<p><strong>ÉTAPE 3 — COMPRENDRE LES EXIGENCES</strong></p>
+<p>Quatre questions sur ce que le destinataire doit faire :</p>
+<p><strong>□ Que doit-on faire ? _______________</strong></p>
+<p>Chercher les verbes d'obligation : <em>vous devez</em>, <em>veuillez</em>, <em>il est obligatoire de</em>, <em>vous êtes tenu de</em>, <em>il est impératif de</em>. Si le document dit « vous devez », c'est une obligation. Si le document dit « vous pouvez », c'est une possibilité. Si le document dit « nous vous invitons à », c'est une suggestion.</p>
+<p><strong>□ Pour quand ? _______________</strong></p>
+<p>Chercher les dates limites : <em>avant le</em>, <em>au plus tard le</em>, <em>dans un délai de</em>, <em>sous X jours</em>, <em>dès réception</em>, <em>sans délai</em>. C'est l'urgence du document. Si la date limite est passée, il faut agir immédiatement.</p>
+<p><strong>□ Quels documents sont nécessaires ? _______________</strong></p>
+<p>Chercher les listes de pièces : <em>fournir</em>, <em>joindre</em>, <em>transmettre</em>, <em>pièces justificatives</em>, <em>documents requis</em>. C'est la liste de courses administrative — tout ce qu'il faut rassembler avant de répondre.</p>
+<p><strong>□ Où envoyer/se rendre ? _______________</strong></p>
+<p>Chercher les adresses, les guichets, les sites web : <em>adresser à</em>, <em>déposer à</em>, <em>se présenter à</em>, <em>en ligne sur</em>, <em>espace client</em>. C'est la destination de l'action — physique ou numérique.</p>
+<hr>
+<p><strong>ÉTAPE 4 — NOTER LES CONDITIONS</strong></p>
+<p>Trois types de conditions à repérer :</p>
+<p><strong>□ Critères d'éligibilité : _______________</strong></p>
+<p>Chercher : <em>à condition de</em>, <em>sous réserve de</em>, <em>pour bénéficier de</em>, <em>éligible si</em>, <em>dans la mesure où</em>. Ce sont les prérequis — ce qu'il faut remplir pour avoir droit à quelque chose. Si les critères ne sont pas remplis, la demande sera refusée.</p>
+<p><strong>□ Restrictions : _______________</strong></p>
+<p>Chercher : <em>interdit</em>, <em>ne pas</em>, <em>exclu</em>, <em>limité à</em>, <em>dans la limite de</em>, <em>sauf</em>. Ce sont les limites — ce qui n'est pas couvert, pas autorisé, pas inclus. Les restrictions définissent les frontières du droit ou du service.</p>
+<p><strong>□ Exceptions : _______________</strong></p>
+<p>Chercher : <em>sauf</em>, <em>excepté</em>, <em>à l'exclusion de</em>, <em>hormis</em>, <em>sauf si</em>, <em>à moins que</em>. Ce sont les cas particuliers — les situations où la règle générale ne s'applique pas. Les exceptions peuvent jouer en votre faveur ou en votre défaveur.</p>
+<hr>
+<p><strong>ÉTAPE 5 — VÉRIFIER LES CONSÉQUENCES</strong></p>
+<p>Deux scénarios à identifier :</p>
+<p><strong>□ Que se passe-t-il si on respecte les instructions ? _______________</strong></p>
+<p>Chercher les résultats positifs : <em>votre demande sera traitée</em>, <em>vous bénéficierez de</em>, <em>votre contrat sera renouvelé</em>, <em>vous recevrez</em>. C'est la récompense de l'obéissance administrative — le résultat attendu si tout se passe bien.</p>
+<p><strong>□ Que se passe-t-il si on ne respecte PAS les instructions ? _______________</strong></p>
+<p>Chercher les conséquences négatives : <em>faute de quoi</em>, <em>sans quoi</em>, <em>à défaut</em>, <em>sous peine de</em>, <em>au risque de</em>, <em>passé ce délai</em>, <em>en cas de non-respect</em>. C'est la sanction — ce qui arrive quand on ne fait pas ce qui est demandé. Suspension de droits, pénalités financières, résiliation de contrat, rejet de dossier.</p>
+<hr>
+<p><strong>ÉTAPE 6 — TROUVER LES COORDONNÉES DE CONTACT</strong></p>
+<p>Quatre canaux à identifier :</p>
+<p><strong>□ Téléphone : _______________</strong></p>
+<p>Numéro fixe (01-05), mobile (06-07), numéro spécial (08), numéro court (3XXX), numéro vert (0800/0805 — gratuit). Vérifier les horaires d'ouverture du service téléphonique (souvent « du lundi au vendredi, 9h-17h »).</p>
+<p><strong>□ Email : _______________</strong></p>
+<p>Adresse email du service client, du service concerné, ou de la personne responsable. Format : <a href="/cdn-cgi/l/email-protection#8bf3f3f3cbf3f3f3a5edf9"><span class="__cf_email__" data-cfemail="96eeeeeed6eeeeeeb8f0e4">[email&#160;protected]</span></a>.</p>
+<p><strong>□ Adresse postale : _______________</strong></p>
+<p>Adresse physique du bureau, du guichet, du service. Peut inclure une boîte postale (BP) ou un code de service (CS). Vérifier si l'accueil est sur rendez-vous uniquement.</p>
+<p><strong>□ Site web : _______________</strong></p>
+<p>URL du site Internet, souvent avec mention de l'espace client ou de la rubrique concernée. C'est souvent le moyen le plus rapide pour effectuer des démarches.</p>
+<hr>
+<p><strong>ÉTAPE 7 — VÉRIFICATION FINALE</strong></p>
+<p>Avant de répondre aux questions du TEF — ou avant de traiter un document dans la vie réelle — Isabelle fait une dernière vérification.</p>
+<p><strong>□ Ai-je bien identifié le type de document ?</strong></p>
+<p>Si je me trompe sur le type, je risque de chercher les mauvaises informations. Une facture n'a pas la même structure qu'un contrat. Un avis n'a pas le même objectif qu'une convocation.</p>
+<p><strong>□ Ai-je vérifié TOUTES les dates ?</strong></p>
+<p>Un document peut contenir plusieurs dates limites différentes — une pour le paiement, une pour le recours, une pour la déclaration. La question du TEF porte sur UNE date spécifique — assurez-vous de donner la bonne.</p>
+<p><strong>□ Ai-je distingué HT et TTC ?</strong></p>
+<p>Si la question demande « quel est le montant à payer ? » et que le document indique un montant HT, la réponse n'est PAS ce montant — il faut ajouter la TVA.</p>
+<p><strong>□ Ai-je compté les jours correctement ?</strong></p>
+<p>Jours ouvrés ≠ jours calendaires. 10 jours ouvrés ≈ 14 jours calendaires. Si le document dit « ouvrés », comptez sans les week-ends.</p>
+<p><strong>□ Ai-je repéré la tacite reconduction ?</strong></p>
+<p>Si un contrat se renouvelle automatiquement et que la question demande « que se passe-t-il si le client ne fait rien ? », la réponse est : le contrat est reconduit.</p>
+<p><strong>□ Ai-je lu les notes de bas de page ?</strong></p>
+<p>Les astérisques (*), les notes, les petits caractères, les N.B. — c'est souvent là que se trouvent les conditions réelles, les exceptions, les limitations.</p>
+<p><strong>□ Ai-je fait attention au « sauf avis contraire » ?</strong></p>
+<p>Si le document dit « sauf avis contraire de votre part dans un délai de 15 jours », votre silence = votre accord. Ne pas répondre n'est pas neutre — c'est une acceptation.</p>
+<hr>
+<p>Isabelle referme son guide. Dix ans d'expérience condensés en sept étapes. Sept étapes qui fonctionnent pour n'importe quel document — facture, contrat, avis, assurance, ordonnance, bulletin de paie, bail, mode d'emploi, réservation, CGU, formulaire.</p>
+<p>« Les documents fonctionnels, » dit-elle à ses stagiaires, « ne sont pas compliqués. Ils sont <strong>codifiés</strong>. Chaque type de document a ses mots-clés, sa structure, ses patterns. Une fois que vous connaissez le code, vous pouvez lire n'importe quoi en cinq secondes. Et au TEF, cinq secondes suffisent pour trouver la réponse — si vous savez où chercher. »</p>
+<hr>
+<h2>📝 NOTES D'USAGE IMPORTANTES — Section 20</h2>
+<hr>
+<p><strong>🔹 Reconnaissance du type de document — tableau de synthèse :</strong></p>
+<table><thead><tr><th>Si vous voyez...</th><th>C'est...</th><th>Cherchez...</th></tr></thead><tbody><tr><td>« Facture n° », « Montant TTC », « Échéance »</td><td>Facture</td><td>Montant, date limite, mode de paiement</td></tr><tr><td>« Contrat », « Les parties conviennent », « Clauses »</td><td>Contrat</td><td>Obligations, durée, résiliation</td></tr><tr><td>« Avis d'imposition », « Revenus », « Impôt »</td><td>Avis d'imposition</td><td>Montant dû, échéance, référence</td></tr><tr><td>« Police n° », « Garanties », « Sinistre »</td><td>Assurance</td><td>Couverture, exclusions, franchise</td></tr><tr><td>« Ordonnance », « Posologie », « mg »</td><td>Ordonnance</td><td>Médicament, dosage, fréquence</td></tr><tr><td>« Bulletin de paie », « Brut », « Net »</td><td>Bulletin de paie</td><td>Salaire net, cotisations, cumul</td></tr><tr><td>« Bail », « Loyer », « Bailleur/Locataire »</td><td>Bail / Contrat de location</td><td>Loyer, durée, conditions</td></tr><tr><td>« Mode d'emploi », « Étape », « Attention »</td><td>Mode d'emploi</td><td>Étapes, avertissements, specs</td></tr><tr><td>« Réservation », « Confirmation », « Ref: »</td><td>Confirmation de réservation</td><td>Dates, détails, annulation</td></tr><tr><td>« CGU », « L'utilisateur s'engage », « Données »</td><td>Conditions générales</td><td>Droits, obligations, restrictions</td></tr><tr><td>« Cerfa », « Formulaire »</td><td>Formulaire officiel</td><td>Champs requis, documents à joindre</td></tr></tbody></table>
+<p><strong>🔹 Reconnaissance de l'objectif — tableau de synthèse :</strong></p>
+<table><thead><tr><th>Si vous voyez...</th><th>L'objectif est...</th><th>Action requise</th></tr></thead><tbody><tr><td>« Vous devez fournir... », « Pièces à joindre »</td><td>Demande de documents</td><td>Envoyer les documents</td></tr><tr><td>« Vous êtes invité(e) à... », « Convocation »</td><td>Convocation/Invitation</td><td>Se présenter, répondre</td></tr><tr><td>« Nous vous informons que... »</td><td>Information</td><td>Lire et noter</td></tr><tr><td>« Merci de régler... », « Montant dû »</td><td>Demande de paiement</td><td>Payer le montant</td></tr><tr><td>« Votre demande a été acceptée/refusée »</td><td>Notification de décision</td><td>Noter le résultat, agir si besoin</td></tr><tr><td>« Rappel : Votre facture... »</td><td>Relance</td><td>Payer urgemment</td></tr><tr><td>« Votre contrat arrive à échéance »</td><td>Avis de renouvellement</td><td>Décider de renouveler ou non</td></tr><tr><td>« Suite à votre demande... »</td><td>Réponse à demande</td><td>Vérifier si satisfaisant</td></tr><tr><td>« En cas de désaccord... »</td><td>Information sur les recours</td><td>Connaître ses droits</td></tr><tr><td>« Pour bénéficier de... »</td><td>Conditions d'éligibilité</td><td>Vérifier et postuler si éligible</td></tr></tbody></table>
+<p><strong>🔹 Reconnaissance des dates limites — patterns critiques :</strong></p>
+<table><thead><tr><th>Pattern</th><th>Signification</th><th>Urgence</th></tr></thead><tbody><tr><td>« avant le + [date] »</td><td>Date limite stricte</td><td>⚠️ Impératif</td></tr><tr><td>« au plus tard le + [date] »</td><td>Date limite finale absolue</td><td>🔴 Maximum</td></tr><tr><td>« dans un délai de X jours »</td><td>Calculer à partir d'une référence</td><td>⚠️ Compter les jours</td></tr><tr><td>« sous X jours ouvrés »</td><td>Exclure week-ends et fériés</td><td>⚠️ Compter correctement</td></tr><tr><td>« à compter du + [date] »</td><td>Point de départ d'une période</td><td>🟢 Début</td></tr><tr><td>« jusqu'au + [date] »</td><td>Fin de validité</td><td>⚠️ Fin</td></tr><tr><td>« passé ce délai »</td><td>Conséquences après expiration</td><td>🔴 Danger</td></tr><tr><td>« sans délai »</td><td>Immédiatement</td><td>🔴 Tout de suite</td></tr><tr><td>« dès réception »</td><td>Le jour même</td><td>🔴 Très rapide</td></tr><tr><td>« sous huitaine »</td><td>Environ 8 jours</td><td>🟡 Court</td></tr><tr><td>« sous quinzaine »</td><td>Environ 15 jours</td><td>🟡 Moyen</td></tr></tbody></table>
+<p><strong>🔹 Reconnaissance des montants — patterns financiers :</strong></p>
+<table><thead><tr><th>Pattern</th><th>Signification</th><th>Calcul</th></tr></thead><tbody><tr><td>« X € TTC »</td><td>Prix final tout compris</td><td>C'est ce que vous payez</td></tr><tr><td>« X € HT »</td><td>Prix avant taxes</td><td>Ajouter ~20% pour le TTC</td></tr><tr><td>« X € + TVA »</td><td>Prix + taxe</td><td>Ajouter le % de TVA</td></tr><tr><td>« Gratuit » / « Sans frais »</td><td>Pas de paiement</td><td>Vérifier les conditions (*)</td></tr><tr><td>« À partir de X € »</td><td>Prix minimum</td><td>Le réel peut être plus élevé</td></tr><tr><td>« Jusqu'à X € »</td><td>Prix maximum</td><td>Le réel peut être plus bas</td></tr><tr><td>« X € / mois »</td><td>Tarif mensuel</td><td>× 12 pour l'annuel</td></tr><tr><td>« X € / an »</td><td>Tarif annuel</td><td>÷ 12 pour le mensuel</td></tr><tr><td>« Supplément de X € »</td><td>Coût additionnel</td><td>Ajouter au prix de base</td></tr><tr><td>« Majoration de X% »</td><td>Pénalité/augmentation</td><td>Prix × (1 + X%)</td></tr><tr><td>« Réduction de X% »</td><td>Remise</td><td>Prix × (1 - X%)</td></tr></tbody></table>
+<p><strong>🔹 Reconnaissance des contacts — formats français :</strong></p>
+<table><thead><tr><th>Pattern</th><th>Type</th><th>Note</th></tr></thead><tbody><tr><td>01/02/03/04/05 XX XX XX XX</td><td>Téléphone fixe</td><td>01=Paris, 02=NO, 03=NE, 04=SE, 05=SO</td></tr><tr><td>06/07 XX XX XX XX</td><td>Téléphone mobile</td><td>06 historique, 07 récent</td></tr><tr><td>08 XX XX XX XX</td><td>Numéro spécial</td><td>Peut être surtaxé</td></tr><tr><td>3XXX</td><td>Numéro court</td><td>Service, souvent surtaxé</td></tr><tr><td><a href="/cdn-cgi/l/email-protection#e29a9a9aa29a9a9acc8490"><span class="__cf_email__" data-cfemail="2951515169515151074f5b">[email&#160;protected]</span></a></td><td>Email</td><td>.gouv.fr = gouvernement</td></tr><tr><td><a href="http://www.xxx.fr">www.xxx.fr</a></td><td>Site web</td><td>Information en ligne</td></tr><tr><td>BP XXXX</td><td>Boîte postale</td><td>Adresse postale sans lieu physique</td></tr><tr><td>CS XXXXX</td><td>Code de service</td><td>Routage administratif</td></tr><tr><td>« Service client »</td><td>Contact général</td><td>Questions, réclamations</td></tr><tr><td>« Numéro vert »</td><td>Appel gratuit</td><td>0800/0805</td></tr></tbody></table>
+<p><strong>🔹 Reconnaissance du niveau d'obligation — échelle complète :</strong></p>
+<table><thead><tr><th>Terme</th><th>Niveau</th><th>Requis ?</th><th>Conséquence si non respecté</th></tr></thead><tbody><tr><td><strong>obligatoire</strong></td><td>🔴 Obligatoire</td><td>OUI</td><td>Sanctions, pénalités</td></tr><tr><td><strong>impératif</strong></td><td>🔴 Obligatoire (urgent)</td><td>OUI</td><td>Conséquences graves</td></tr><tr><td><strong>requis</strong></td><td>🔴 Obligatoire</td><td>OUI</td><td>Refus de dossier</td></tr><tr><td><strong>exigé</strong></td><td>🔴 Obligatoire</td><td>OUI</td><td>Refus, exclusion</td></tr><tr><td><strong>nécessaire</strong></td><td>🟠 Quasi-obligatoire</td><td>OUI</td><td>Blocage de procédure</td></tr><tr><td><strong>recommandé</strong></td><td>🟡 Conseillé</td><td>NON</td><td>Risque si non suivi</td></tr><tr><td><strong>conseillé</strong></td><td>🟡 Conseillé</td><td>NON</td><td>Moins optimal</td></tr><tr><td><strong>facultatif</strong></td><td>🟢 Optionnel</td><td>NON</td><td>Aucune</td></tr><tr><td><strong>souhaité</strong></td><td>🟢 Apprécié</td><td>NON</td><td>Aucune</td></tr><tr><td><strong>si possible</strong></td><td>⚪ Optionnel</td><td>NON</td><td>Aucune</td></tr><tr><td><strong>le cas échéant</strong></td><td>⚪ Conditionnel</td><td>Ça dépend</td><td>Selon la situation</td></tr></tbody></table>
+<p><strong>🔹 Les 10 pièges — récapitulatif :</strong></p>
+<table><thead><tr><th>Piège</th><th>Erreur courante</th><th>Bonne pratique</th></tr></thead><tbody><tr><td>1. Dates européennes</td><td>05/03 = mai 3 ?</td><td>NON : 05/03 = 5 mars (JJ/MM)</td></tr><tr><td>2. Gratuit*</td><td>C'est gratuit !</td><td>Lire les conditions après l'astérisque</td></tr><tr><td>3. « À partir de »</td><td>Le prix EST X €</td><td>NON : le prix MINIMUM est X €</td></tr><tr><td>4. « Hors frais de »</td><td>Le total EST X €</td><td>NON : ajouter les frais supplémentaires</td></tr><tr><td>5. Délai indicatif vs rigueur</td><td>Même chose</td><td>NON : indicatif = approximatif, rigueur = strict</td></tr><tr><td>6. Net vs Brut</td><td>Le salaire EST X € brut</td><td>Le salarié REÇOIT le net, pas le brut</td></tr><tr><td>7. TTC vs HT</td><td>Même prix</td><td>NON : ~20% de différence</td></tr><tr><td>8. Jours ouvrés vs calendaires</td><td>10 jours = 10 jours</td><td>NON : 10 ouvrés ≈ 14 calendaires</td></tr><tr><td>9. Tacite reconduction</td><td>Rien ne se passe</td><td>Le contrat se RENOUVELLE automatiquement</td></tr><tr><td>10. Sauf avis contraire</td><td>Mon silence est neutre</td><td>NON : silence = accord</td></tr></tbody></table>
+<p><strong>🔹 Conseil final pour le TEF — la méthode en 3 temps :</strong></p>
+<p><strong>Temps 1 (5 secondes)</strong> — Identifier le document</p>
+<ul>
+<li>Type ? (facture, contrat, avis, assurance, ordonnance, bulletin de paie, bail, mode d'emploi, réservation, CGU, formulaire)</li>
+<li>Expéditeur ? (qui l'envoie)</li>
+<li>Destinataire ? (à qui)</li>
+</ul>
+<p><strong>Temps 2 (15 secondes)</strong> — Lire la question</p>
+<ul>
+<li>Que demande-t-on exactement ?</li>
+<li>Quel type de question ? (localisation, condition, but, V/F/NM, association, inférence)</li>
+<li>Quels mots-clés chercher dans le texte ?</li>
+</ul>
+<p><strong>Temps 3 (40 secondes)</strong> — Trouver la réponse</p>
+<ul>
+<li>Scanner le texte à la recherche des mots-clés</li>
+<li>Vérifier chaque élément de la question contre le texte</li>
+<li>Ne jamais supposer — si le texte ne le dit pas, c'est NON MENTIONNÉ</li>
+<li>Attention aux pièges : dates, montants HT/TTC, jours ouvrés/calendaires</li>
+</ul>
+<p><strong>Total : 1 minute par question. C'est suffisant si vous savez où chercher.</strong></p>
+<hr>
+<p>✅ <strong>Section 20 terminée. Tous les mots des sous-sections 20.1 à 20.8 ont été intégrés dans les deux articles.</strong></p>
+</div>
+</div>
+
+<!-- ========== data-index="22" ========== -->
+
+        </div>
+    </div>
+        <div class="nav-bar">
+            <a href="section-19.html" class="nav-button prev">← Previous</a>
+            <div class="page-info">
+                <a href="index.html" class="nav-button home">📋 Contents</a><br>
+                <span style="margin-top:6px;display:block">Section 20 of 21</span>
+            </div>
+            <a href="section-21.html" class="nav-button next">Next →</a>
+        </div>
+
+
+    
+    <div id="progress-track"><div id="progress-fill"></div></div>
+    <div id="progress-pct">0%</div>
+
+
+    <script>
+    const fill = document.getElementById('progress-fill');
+    const pct  = document.getElementById('progress-pct');
+    function updateProgress() {
+        const scrollTop = window.scrollY;
+        const docHeight = document.body.scrollHeight - window.innerHeight;
+        const scrolled  = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+        fill.style.height = scrolled + '%';
+        pct.textContent   = Math.round(scrolled) + '%';
+    }
+    window.addEventListener('scroll', updateProgress);
+    updateProgress();
+
+    document.addEventListener('keydown', function(e) {
+        if (['INPUT','TEXTAREA'].includes(document.activeElement.tagName)) return;
+        if (e.key === 'ArrowLeft') {
+            const b = document.querySelector('.nav-button.prev');
+            if (b && !b.classList.contains('disabled')) window.location.href = b.href;
+        }
+        if (e.key === 'ArrowRight') {
+            const b = document.querySelector('.nav-button.next');
+            if (b && !b.classList.contains('disabled')) window.location.href = b.href;
+        }
+    });
+    </script>
+
+</body>
+</html>
