@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/png" href="images/favicon.png">
+<title>French Tenses — Moving Parts Machine</title>
+<style>
+  :root {
+    --subject: #3b82f6;
+    --helper: #f59e0b;
+    --verb: #10b981;
+    --object: #8b5cf6;
+    --bg: #0f172a;
+    --card: #1e293b;
+    --text: #e2e8f0;
+    --accent: #38bdf8;
+    --dim: #64748b;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+  }
+  h1 {
+    text-align: center;
+    padding: 1.5rem 1rem 0.5rem;
+    font-size: 1.8rem;
+    background: linear-gradient(135deg, var(--subject), var(--helper), var(--verb), var(--object));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .subtitle { text-align: center; color: var(--dim); font-size: 0.95rem; margin-bottom: 1.2rem; }
+  .legend { display: flex; justify-content: center; gap: 1.5rem; flex-wrap: wrap; padding: 0.5rem 1rem 1.2rem; }
+  .legend-item { display: flex; align-items: center; gap: 0.4rem; font-size: 0.8rem; color: var(--dim); }
+  .legend-dot { width: 12px; height: 12px; border-radius: 4px; }
+  .selector-area { display: flex; flex-wrap: wrap; gap: 1rem; justify-content: center; padding: 0 1rem 1.2rem; max-width: 900px; margin: 0 auto; }
+  .selector-group { text-align: center; }
+  .selector-group label { display: block; font-size: 0.75rem; color: var(--dim); margin-bottom: 0.3rem; text-transform: uppercase; letter-spacing: 1px; }
+  select { background: var(--card); color: var(--text); border: 1px solid #334155; border-radius: 8px; padding: 0.6rem 1rem; font-size: 0.95rem; cursor: pointer; min-width: 280px; }
+  select:hover, select:focus { border-color: var(--accent); outline: none; }
+  .verb-selector { display: flex; justify-content: center; gap: 0.5rem; flex-wrap: wrap; padding: 0 1rem 1.5rem; max-width: 900px; margin: 0 auto; }
+  .verb-btn { background: var(--card); color: var(--dim); border: 1px solid #334155; border-radius: 20px; padding: 0.35rem 0.9rem; font-size: 0.85rem; cursor: pointer; transition: all 0.3s; }
+  .verb-btn:hover { border-color: var(--accent); color: var(--text); }
+  .verb-btn.active { background: var(--accent); color: var(--bg); border-color: var(--accent); font-weight: 600; }
+  .mc { max-width: 900px; margin: 0 auto; padding: 0 1rem; }
+  .machine { background: var(--card); border-radius: 16px; padding: 2rem 1.5rem; margin-bottom: 1rem; border: 1px solid #334155; position: relative; overflow: hidden; }
+  .machine::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, var(--subject), var(--helper), var(--verb), var(--object)); }
+  .machine-label { font-size: 0.75rem; color: var(--dim); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 0.8rem; text-align: center; }
+  .tense-name { text-align: center; font-size: 1.25rem; font-weight: 700; margin-bottom: 0.2rem; color: var(--accent); }
+  .tense-english { text-align: center; font-size: 0.85rem; color: var(--dim); margin-bottom: 1.2rem; }
+  .parts-row { display: flex; justify-content: center; align-items: stretch; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 0.8rem; }
+  .part { border-radius: 12px; padding: 0.8rem 1rem; text-align: center; min-width: 90px; flex: 1; max-width: 200px; transition: all 0.5s cubic-bezier(0.4,0,0.2,1); }
+  .part-label { font-size: 0.6rem; text-transform: uppercase; letter-spacing: 1.5px; opacity: 0.7; margin-bottom: 0.2rem; }
+  .part-value { font-size: 1.2rem; font-weight: 700; }
+  .part-sub { font-size: 0.7rem; opacity: 0.6; margin-top: 0.15rem; }
+  .part.subject { background: rgba(59,130,246,0.15); border: 1px solid rgba(59,130,246,0.3); color: var(--subject); }
+  .part.helper { background: rgba(245,158,11,0.15); border: 1px solid rgba(245,158,11,0.3); color: var(--helper); }
+  .part.verb { background: rgba(16,185,129,0.15); border: 1px solid rgba(16,185,129,0.3); color: var(--verb); }
+  .part.object { background: rgba(139,92,246,0.15); border: 1px solid rgba(139,92,246,0.3); color: var(--object); }
+  .part.empty { background: rgba(100,116,139,0.08); border: 1px dashed rgba(100,116,139,0.3); color: var(--dim); opacity: 0.5; }
+  .part.changed { animation: pulseGlow 0.8s ease-in-out; }
+  @keyframes pulseGlow { 0%{transform:scale(1);box-shadow:none} 50%{transform:scale(1.06);box-shadow:0 0 20px rgba(56,189,248,0.4)} 100%{transform:scale(1);box-shadow:none} }
+  .sentence-row { text-align: center; padding: 0.8rem; background: rgba(56,189,248,0.05); border-radius: 10px; margin-top: 0.5rem; }
+  .sentence-fr { font-size: 1.1rem; font-weight: 600; margin-bottom: 0.2rem; }
+  .sentence-en { font-size: 0.85rem; color: var(--dim); font-style: italic; }
+  .sentence-pa { font-size: 0.9rem; color: #ffffff; font-weight: 600; margin-top: 0.25rem; }
+  .sentence-hi { font-size: 0.9rem; color: #b8860b; font-weight: 600; margin-top: 0.15rem; }
+  .arrow-section { text-align: center; padding: 0.3rem 0; }
+  .arrow-section .arrow { font-size: 1.8rem; color: var(--accent); animation: bounce 1.5s infinite; }
+  @keyframes bounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(4px)} }
+  .arrow-label { font-size: 0.8rem; color: var(--accent); }
+  .section-card { max-width: 900px; margin: 0 auto 1.2rem; padding: 0 1rem; }
+  .card { background: var(--card); border-radius: 16px; padding: 1.5rem; border: 1px solid #334155; }
+  .card.combo { background: linear-gradient(135deg, rgba(56,189,248,0.08), rgba(139,92,246,0.08)); border-color: rgba(56,189,248,0.2); }
+  .card h3 { color: var(--accent); font-size: 1rem; margin-bottom: 1rem; text-align: center; }
+  .formula-text { text-align: center; font-size: 1.05rem; font-weight: 600; padding: 0.7rem; background: rgba(56,189,248,0.08); border-radius: 8px; margin-bottom: 0.8rem; line-height: 1.8; }
+  .formula-text:last-child { margin-bottom: 0; }
+  .s { color: var(--subject); } .h { color: var(--helper); } .v { color: var(--verb); } .o { color: var(--object); } .op { color: var(--dim); }
+  .combo-equation { display: flex; align-items: center; justify-content: center; gap: 0.6rem; flex-wrap: wrap; font-size: 0.95rem; font-weight: 600; }
+  .combo-pill { background: var(--card); border-radius: 10px; padding: 0.5rem 0.8rem; border: 1px solid #475569; }
+  .combo-pill.result { border-color: var(--accent); background: rgba(56,189,248,0.1); color: var(--accent); }
+  .combo-op { color: var(--accent); font-size: 1.4rem; }
+  .combo-desc { text-align: center; margin-top: 0.8rem; color: var(--dim); font-size: 0.85rem; line-height: 1.6; }
+  .conj-table { width: 100%; border-collapse: collapse; }
+  .conj-table th { color: var(--dim); font-size: 0.65rem; text-transform: uppercase; letter-spacing: 1px; padding: 0.4rem; border-bottom: 1px solid #334155; text-align: left; }
+  .conj-table td { padding: 0.4rem; border-bottom: 1px solid rgba(51,65,85,0.5); font-size: 0.85rem; }
+  .conj-table td:nth-child(1) { color: var(--subject); font-weight: 600; }
+  .conj-table td:nth-child(2) { color: var(--helper); }
+  .conj-table td:nth-child(3) { color: var(--verb); }
+  .conj-table td:nth-child(4) { color: var(--dim); font-style: italic; font-size: 0.8rem; }
+  .timeline { display: flex; align-items: center; justify-content: space-between; position: relative; padding: 2rem 0.5rem; }
+  .timeline::before { content: ''; position: absolute; top: 50%; left: 5%; right: 5%; height: 3px; background: linear-gradient(90deg, #475569, var(--accent), #475569); transform: translateY(-50%); }
+  .tl-point { position: relative; text-align: center; z-index: 1; flex: 1; }
+  .tl-dot { width: 14px; height: 14px; border-radius: 50%; background: #475569; margin: 0 auto 0.4rem; border: 2px solid var(--bg); transition: all 0.5s; }
+  .tl-dot.active { background: var(--accent); box-shadow: 0 0 12px rgba(56,189,248,0.5); width: 18px; height: 18px; }
+  .tl-dot.activeB { background: var(--object); box-shadow: 0 0 12px rgba(139,92,246,0.5); width: 18px; height: 18px; }
+  .tl-label { font-size: 0.65rem; color: var(--dim); transition: color 0.3s; }
+  .tl-label.active { color: var(--accent); font-weight: 600; }
+  .tl-label.activeB { color: var(--object); font-weight: 600; }
+  .change-summary { max-width: 900px; margin: 0 auto 1.5rem; padding: 0 1rem; }
+  .change-card { background: rgba(56,189,248,0.06); border: 1px solid rgba(56,189,248,0.15); border-radius: 12px; padding: 1rem 1.5rem; }
+  .change-card h3 { color: var(--accent); font-size: 0.9rem; margin-bottom: 0.6rem; text-align: center; }
+  .change-list { list-style: none; }
+  .change-list li { padding: 0.3rem 0; font-size: 0.9rem; color: var(--text); }
+  .change-list li::before { content: '→ '; color: var(--accent); font-weight: bold; }
+  .tag-fixed { color: var(--dim); font-size: 0.75rem; background: rgba(100,116,139,0.15); padding: 0.15rem 0.5rem; border-radius: 4px; margin-left: 0.3rem; }
+  .tag-changed { color: var(--accent); font-size: 0.75rem; background: rgba(56,189,248,0.15); padding: 0.15rem 0.5rem; border-radius: 4px; margin-left: 0.3rem; }
+  footer { text-align: center; padding: 2rem 1rem; color: var(--dim); font-size: 0.8rem; }
+  footer a { color: var(--accent); text-decoration: none; }
+  @media (max-width: 600px) {
+    h1 { font-size: 1.3rem; }
+    .part { min-width: 70px; padding: 0.6rem 0.4rem; }
+    .part-value { font-size: 0.95rem; }
+    select { min-width: 200px; font-size: 0.85rem; }
+  }
+</style>
+</head>
+<body>
+
+<h1>Les Temps en Français — The Moving Parts Machine</h1>
+<p class="subtitle">See how Subject · Helping Verb · Verb/PP · Object shift between tenses — and how two tenses make a third</p>
+
+<div class="legend">
+  <div class="legend-item"><div class="legend-dot" style="background:var(--subject)"></div> Subject (fixed)</div>
+  <div class="legend-item"><div class="legend-dot" style="background:var(--helper)"></div> Helping Verb</div>
+  <div class="legend-item"><div class="legend-dot" style="background:var(--verb)"></div> Verb / Past Participle</div>
+  <div class="legend-item"><div class="legend-dot" style="background:var(--object)"></div> Object (fixed)</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#ffffff"></div> Punjabi</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#b8860b"></div> Hindi</div>
+</div>
+
+<div class="selector-area">
+  <div class="selector-group">
+    <label>Tense A</label>
+    <select id="tenseA"></select>
+  </div>
+  <div class="selector-group">
+    <label>Tense B (compare)</label>
+    <select id="tenseB"></select>
+  </div>
+</div>
+
+<div class="verb-selector" id="verbSelector"></div>
+
+<div class="mc">
+  <div class="machine" id="machineA">
+    <div class="machine-label">Tense A</div>
+    <div class="tense-name" id="nameA"></div>
+    <div class="tense-english" id="engA"></div>
+    <div class="parts-row" id="partsA"></div>
+    <div class="sentence-row">
+      <div class="sentence-fr" id="sentFrA"></div>
+      <div class="sentence-en" id="sentEnA"></div>
+      <div class="sentence-pa" id="sentPaA"></div>
+      <div class="sentence-hi" id="sentHiA"></div>
+    </div>
+  </div>
+  <div class="arrow-section">
+    <div class="arrow">⬇</div>
+    <div class="arrow-label" id="arrowLabel">What changed?</div>
+  </div>
+  <div class="machine" id="machineB">
+    <div class="machine-label">Tense B</div>
+    <div class="tense-name" id="nameB"></div>
+    <div class="tense-english" id="engB"></div>
+    <div class="parts-row" id="partsB"></div>
+    <div class="sentence-row">
+      <div class="sentence-fr" id="sentFrB"></div>
+      <div class="sentence-en" id="sentEnB"></div>
+      <div class="sentence-pa" id="sentPaB"></div>
+      <div class="sentence-hi" id="sentHiB"></div>
+    </div>
+  </div>
+</div>
+
+<!-- Change Summary -->
+<div class="change-summary">
+  <div class="change-card">
+    <h3>🔄 What Moved Between A → B</h3>
+    <ul class="change-list" id="changeList"></ul>
+  </div>
+</div>
+
+<!-- Formulas -->
+<div class="section-card">
+  <div class="card">
+    <h3>📐 Formation Formulas</h3>
+    <div id="formulaA" class="formula-text"></div>
+    <div id="formulaB" class="formula-text"></div>
+  </div>
+</div>
+
+<!-- Combination -->
+<div class="section-card">
+  <div class="card combo">
+    <h3>🔗 How Two Tenses Combine to Make a Third (Compound Tenses)</h3>
+    <div class="combo-equation" id="comboEquation"></div>
+    <div class="combo-desc" id="comboDesc"></div>
+  </div>
+</div>
+
+<!-- Conjugation -->
+<div class="section-card">
+  <div class="card">
+    <h3 id="conjTitle">Full Conjugation — Tense A</h3>
+    <table class="conj-table">
+      <thead><tr><th>Subject</th><th>Helper</th><th>Verb/PP</th><th>English</th></tr></thead>
+      <tbody id="conjBody"></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- Timeline -->
+<div class="section-card">
+  <div class="card">
+    <h3>⏳ Where on the Timeline?</h3>
+    <div class="timeline" id="timeline"></div>
+  </div>
+</div>
+
+<footer>
+  Reference: <a href="https://shakti4640.github.io/les-temps-en-francais/" target="_blank">Les Temps en Français — Complete Guide</a>
+</footer>
+
+<script src="translations.js"></script>
+<script src="app.js"></script>
+<!-- Home Footer -->
+<div style="text-align:center;padding:20px 20px;background:#0f172a;border-top:1px solid #334155;">
+  <a href="https://shakti4640.github.io/mon-univers-francais/" style="display:inline-flex;align-items:center;gap:8px;padding:10px 24px;background:rgba(56,189,248,0.08);border:1px solid rgba(56,189,248,0.25);color:#38bdf8;text-decoration:none;border-radius:20px;font-size:0.82rem;font-weight:500;font-family:'Segoe UI',system-ui,sans-serif;letter-spacing:0.04em;transition:all 0.2s;" onmouseover="this.style.background='rgba(56,189,248,0.15)';this.style.borderColor='rgba(56,189,248,0.45)';this.style.transform='translateY(-1px)'" onmouseout="this.style.background='rgba(56,189,248,0.08)';this.style.borderColor='rgba(56,189,248,0.25)';this.style.transform='none'">
+    <span style="font-size:1rem">🏠</span> Mon Univers Français
+  </a>
+</div>
+</body>
+</html>
